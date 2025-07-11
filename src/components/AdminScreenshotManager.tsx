@@ -569,7 +569,7 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
               <CInputFileDragDrop
                 isRequired
                 handleDrop={handleDropImage}
-                labelForm="Pharmacy image"
+                labelForm="Screenshots"
                 labelBtn="Browse"
                 acceptFile={FORMAT_INPUT_IMAGE_FILE}
                 inputRef={fileInputRef}
