@@ -1,0 +1,51 @@
+const URL_API = {
+  ADMIN: {
+    AUTH: {
+      V1: {
+        LOGIN: "/api/v1/admin/auth/login",
+        LOGOUT: "/api/v1/admin/auth/logout",
+        CHECK_LOGIN: "/api/v1/admin/auth/check-login",
+      },
+    },
+    MODUL: {
+      V1: {
+        CREATE: "/api/v1/admin/modul/create",
+        UPDATE: "/api/v1/admin/modul/update",
+        GET_LIST: "/api/v1/admin/modul/get-list",
+        DELETE: "/api/v1/admin/modul/delete",
+      },
+    },
+    APP: {
+      V1: {
+        CREATE: "/api/v1/admin/app/create",
+        DETAIL: "/api/v1/admin/app/detail",
+        UPDATE: "/api/v1/admin/app/update",
+        GET_LIST: "/api/v1/admin/app/get-list",
+        DELETE: "/api/v1/admin/app/delete",
+      },
+    },
+    SCREEN: {
+      V1: {
+        CREATE: "/api/v1/admin/screen/create",
+        UPDATE: "/api/v1/admin/screen/update",
+        GET_LIST: "/api/v1/admin/screen/get-list",
+        DELETE: "/api/v1/admin/screen/delete",
+      },
+    },
+  },
+  USER: {
+    APP: {
+      V1: {
+        DETAIL: "/api/v1/user/app/detail",
+        GET_LIST: "/api/v1/user/app/get-list",
+      },
+    },
+    SCREEN: {
+      V1: {
+        GET_LIST: "/api/v1/user/screen/get-list",
+      },
+    },
+  },
+};
+
+export default URL_API;
