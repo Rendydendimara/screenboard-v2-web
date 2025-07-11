@@ -180,7 +180,6 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
         name: screenshot.name,
         url: screenshot.image,
       }));
-      console.log("imagesToProcess", imagesToProcess);
       const results = await processMultipleImages(
         imagesToProcess,
         (processed, total) => {
@@ -334,7 +333,6 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
 
   const getListData = async () => {
     try {
-      console.log("appId", appId);
       let res;
       if (appId) {
         res = await ScreenAPI.getAll({ app: appId });
@@ -810,6 +808,7 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
               <Button
                 onClick={handleBulkUpload}
                 disabled={
+                  isLoadingPost ||
                   bulkFiles.length === 0 ||
                   (!appId && !selectedApp) ||
                   !selectedCategory

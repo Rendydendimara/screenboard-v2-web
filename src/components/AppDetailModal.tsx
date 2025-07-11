@@ -401,9 +401,7 @@ export const AppDetailModal: React.FC<AppDetailModalProps> = ({
           screen={selectedScreen}
           isOpen={!!selectedScreen}
           onClose={() => setSelectedScreen(null)}
-          onImageUpdate={(newImage) => {
-            console.log("Update image:", newImage);
-          }}
+          onImageUpdate={(newImage) => {}}
           allScreens={filteredScreens}
           onScreenChange={handleScreenChange}
         />

@@ -1,69 +1,25 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import AppAPI from "@/api/admin/app/api";
+import { App } from "@/components/AdminAppManager";
+import { AdminScreenshotManager } from "@/components/AdminScreenshotManager";
+import CModalDialogLoading from "@/components/modal-dialog-loading";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/hooks/use-toast";
+import { adapterSingleAppBEToFE } from "@/utils/adapterBEToFE";
 import {
   ArrowLeft,
-  Edit3,
-  Trash2,
-  Star,
-  Download,
-  Smartphone,
   Building,
   Calendar,
-  Plus,
+  Download,
+  Edit3,
+  Smartphone,
+  Star,
+  Trash2,
 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { AdminScreenshotManager } from "@/components/AdminScreenshotManager";
-import { useToast } from "@/hooks/use-toast";
-import { App } from "@/components/AdminAppManager";
-import CModalDialogLoading from "@/components/modal-dialog-loading";
-import AppAPI from "@/api/admin/app/api";
-import { adapterSingleAppBEToFE } from "@/utils/adapterBEToFE";
-
-// Mock data - in a real app this would come from an API
-const mockApps = [
-  {
-    id: 1,
-    name: "Spotify",
-    category: "Music",
-    subcategory: "Streaming",
-    platform: "Both" as const,
-    image: "https://images.unsplash.com/photo-1611339555312-e607c8352fd7?w=150",
-    description:
-      "Music streaming platform with personalized playlists and social features",
-    downloads: "1B+",
-    rating: 4.4,
-    tags: ["Music", "Streaming", "Premium"],
-    color: "#1DB954",
-    company: "Spotify Technology",
-    lastUpdated: "2024-01-15",
-    screenshots: [
-      "https://images.unsplash.com/photo-1611339555312-e607c8352fd7?w=300&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=600&fit=crop",
-    ],
-  },
-  {
-    id: 2,
-    name: "Instagram",
-    category: "Social",
-    subcategory: "Photo Sharing",
-    platform: "Both" as const,
-    image: "https://images.unsplash.com/photo-1611262588024-d12430b98920?w=150",
-    description: "Photo and video sharing social network",
-    downloads: "5B+",
-    rating: 4.1,
-    tags: ["Social", "Photos", "Stories"],
-    color: "#E4405F",
-    company: "Meta Platforms",
-    lastUpdated: "2024-01-20",
-    screenshots: [
-      "https://images.unsplash.com/photo-1611262588024-d12430b98920?w=300&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=300&h=600&fit=crop",
-    ],
-  },
-];
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 const AdminAppDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -77,7 +33,6 @@ const AdminAppDetails: React.FC = () => {
     try {
       const res = await AppAPI.getDetail(id);
       const data = adapterSingleAppBEToFE(res.data);
-      console.log("dataddd", data);
       setApp(data);
     } catch (error: any) {
       toast({

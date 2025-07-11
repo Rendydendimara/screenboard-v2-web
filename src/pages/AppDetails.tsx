@@ -1,9 +1,12 @@
+import UserAppAPI from "@/api/user/app/api";
 import CModalDialogLoading from "@/components/modal-dialog-loading";
 import { ScreenImageModal } from "@/components/ScreenImageModal";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
+import { getImageUrl } from "@/utils";
+import { adapterSingleAppBEToFEPublic } from "@/utils/adapterBEToFE";
 import {
   ArrowLeft,
   Building,
@@ -23,135 +26,6 @@ import {
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AppPublic, ScreenPublic } from "./Index";
-import UserAppAPI from "@/api/user/app/api";
-import { adapterSingleAppBEToFEPublic } from "@/utils/adapterBEToFE";
-import { getImageUrl } from "@/utils";
-
-// interface Screen {
-//   id: string;
-//   name: string;
-//   category: string;
-//   image: string;
-//   description: string;
-// }
-
-// interface App {
-//   id: number;
-//   name: string;
-//   category: string;
-//   subcategory: string;
-//   platform: 'iOS' | 'Android' | 'Both';
-//   image: string;
-//   screenshots: string[];
-//   screens: Screen[];
-//   description: string;
-//   downloads: string;
-//   rating: number;
-//   tags: string[];
-//   color: string;
-//   isLiked: boolean;
-//   featured: boolean;
-//   trending: boolean;
-//   company: string;
-//   lastUpdated: string;
-// }
-
-// Expanded mock data with more apps and detailed content
-// const mockApps: App[] = [
-//   {
-//     id: 1,
-//     name: "Spotify",
-//     category: "Music & Audio",
-//     subcategory: "Music Streaming",
-//     platform: "Both",
-//     image: "https://images.unsplash.com/photo-1611339555312-e607c8352fd7?w=400&h=300&fit=crop",
-//     screenshots: [
-//       "https://images.unsplash.com/photo-1611339555312-e607c8352fd7?w=300&h=600&fit=crop",
-//       "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=600&fit=crop",
-//       "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&h=600&fit=crop",
-//       "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=600&fit=crop&brightness=0.8",
-//       "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=600&fit=crop&contrast=1.2"
-//     ],
-//     screens: [
-//       { id: "1", name: "Home Feed", category: "Discovery", image: "https://images.unsplash.com/photo-1611339555312-e607c8352fd7?w=300&h=600&fit=crop", description: "Main discovery interface with personalized recommendations based on your listening history and preferences" },
-//       { id: "2", name: "Search Results", category: "Discovery", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=600&fit=crop", description: "Comprehensive search results for music, artists, albums, playlists, and podcasts with smart filtering" },
-//       { id: "3", name: "Browse Categories", category: "Discovery", image: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&h=600&fit=crop", description: "Browse music by genre, mood, activity, and curated collections from Spotify editors" },
-//       { id: "4", name: "New Releases", category: "Discovery", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=600&fit=crop&brightness=0.8", description: "Latest music releases, new albums, and trending tracks updated weekly" },
-//       { id: "5", name: "Daily Mix", category: "Discovery", image: "https://images.unsplash.com/photo-1611339555312-e607c8352fd7?w=300&h=600&fit=crop&saturation=1.2", description: "Personalized daily music mixes combining your favorite tracks with new discoveries" },
-//       { id: "6", name: "Player Interface", category: "Playback", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=600&fit=crop&contrast=1.2", description: "Full-screen music player with lyrics, queue management, and social sharing features" },
-//       { id: "7", name: "Queue Management", category: "Playback", image: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&h=600&fit=crop&brightness=0.9", description: "Manage your playing queue, reorder tracks, and see what's coming up next" },
-//       { id: "8", name: "Playlist Creation", category: "Library", image: "https://images.unsplash.com/photo-1611339555312-e607c8352fd7?w=300&h=600&fit=crop&hue=30", description: "Create and customize playlists with drag-and-drop functionality and smart suggestions" },
-//       { id: "9", name: "Your Library", category: "Library", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=600&fit=crop&sepia=0.3", description: "Access all your saved music, playlists, podcasts, and recently played content" },
-//       { id: "10", name: "Profile Settings", category: "Profile", image: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&h=600&fit=crop&saturation=0.8", description: "Customize your profile, privacy settings, and social sharing preferences" },
-//       { id: "11", name: "Friend Activity", category: "Social", image: "https://images.unsplash.com/photo-1611339555312-e607c8352fd7?w=300&h=600&fit=crop&brightness=1.1", description: "See what your friends are listening to and discover music through social connections" },
-//       { id: "12", name: "Collaborative Playlists", category: "Social", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=600&fit=crop&contrast=0.8", description: "Create and manage collaborative playlists with friends and family members" }
-//     ],
-//     description: "Spotify is a comprehensive music streaming platform that offers millions of songs, podcasts, and playlists. With advanced recommendation algorithms, social features, and cross-platform synchronization, it provides a personalized audio experience. The app features high-quality streaming, offline downloads, and seamless integration across all your devices. Whether you're discovering new artists or enjoying your favorite tracks, Spotify adapts to your taste and lifestyle.",
-//     downloads: "1B+",
-//     rating: 4.8,
-//     tags: ["Music", "Streaming", "Social", "Playlists", "Podcasts", "Discovery", "Audio", "Entertainment"],
-//     color: "#1DB954",
-//     isLiked: false,
-//     featured: true,
-//     trending: true,
-//     company: "Spotify Technology S.A.",
-//     lastUpdated: "2024-01-15"
-//   },
-//   {
-//     id: 2,
-//     name: "Instagram",
-//     category: "Social",
-//     subcategory: "Photo Sharing",
-//     platform: "Both",
-//     image: "https://images.unsplash.com/photo-1611262588024-d12430b98920?w=400&h=300&fit=crop",
-//     screenshots: [
-//       "https://images.unsplash.com/photo-1611262588024-d12430b98920?w=300&h=600&fit=crop",
-//       "https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?w=300&h=600&fit=crop",
-//       "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=300&h=600&fit=crop"
-//     ],
-//     screens: [
-//       { id: "13", name: "Feed", category: "Discovery", image: "https://images.unsplash.com/photo-1611262588024-d12430b98920?w=300&h=600&fit=crop", description: "Personalized photo and video feed from accounts you follow" },
-//       { id: "14", name: "Stories", category: "Content", image: "https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?w=300&h=600&fit=crop", description: "View and create temporary stories that disappear after 24 hours" },
-//       { id: "15", name: "Camera", category: "Creation", image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=300&h=600&fit=crop", description: "Built-in camera with filters, effects, and editing tools" }
-//     ],
-//     description: "Instagram is the world's leading photo and video sharing social network, connecting billions of users through visual storytelling. Create and share moments with powerful editing tools, discover trending content, and connect with friends and creators worldwide.",
-//     downloads: "2B+",
-//     rating: 4.6,
-//     tags: ["Social", "Photography", "Video", "Stories", "Reels", "Filters"],
-//     color: "#E4405F",
-//     isLiked: true,
-//     featured: true,
-//     trending: false,
-//     company: "Meta Platforms Inc.",
-//     lastUpdated: "2024-01-20"
-//   },
-//   {
-//     id: 3,
-//     name: "WhatsApp",
-//     category: "Communication",
-//     subcategory: "Messaging",
-//     platform: "Both",
-//     image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=300&fit=crop",
-//     screenshots: [
-//       "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=300&h=600&fit=crop",
-//       "https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?w=300&h=600&fit=crop"
-//     ],
-//     screens: [
-//       { id: "16", name: "Chat List", category: "Communication", image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=300&h=600&fit=crop", description: "Overview of all your conversations and group chats" },
-//       { id: "17", name: "Chat Interface", category: "Communication", image: "https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?w=300&h=600&fit=crop", description: "Send messages, photos, videos, and voice notes with end-to-end encryption" }
-//     ],
-//     description: "WhatsApp is a secure messaging app trusted by over 2 billion users worldwide. Send messages, make voice and video calls, share photos and documents, all with end-to-end encryption to keep your conversations private and secure.",
-//     downloads: "5B+",
-//     rating: 4.5,
-//     tags: ["Messaging", "Calls", "Security", "Groups", "Business", "Voice Notes"],
-//     color: "#25D366",
-//     isLiked: false,
-//     featured: false,
-//     trending: true,
-//     company: "Meta Platforms Inc.",
-//     lastUpdated: "2024-01-18"
-//   }
-// ];
 
 const AppDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -219,7 +93,6 @@ const AppDetails: React.FC = () => {
     try {
       const res = await UserAppAPI.getDetail(id);
       const data = adapterSingleAppBEToFEPublic(res.data);
-      console.log("dataddd", data);
       setApp(data);
     } catch (error: any) {
       toast({
@@ -592,9 +465,7 @@ const AppDetails: React.FC = () => {
           screen={selectedScreen}
           isOpen={!!selectedScreen}
           onClose={() => setSelectedScreen(null)}
-          onImageUpdate={(newImage) => {
-            console.log("Update image:", newImage);
-          }}
+          onImageUpdate={(newImage) => {}}
           allScreens={filteredScreens}
           onScreenChange={handleScreenChange}
         />

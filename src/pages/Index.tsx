@@ -1,23 +1,19 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
-import {
-  Search,
-  Filter,
-  Grid,
-  List,
-  Heart,
-  GitCompare,
-  Plus,
-  X,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import AuthAPI from "@/api/admin/auth/api";
+import UserAppAPI from "@/api/user/app/api";
+import { AppCard } from "@/components/AppCard";
+import { AuthModal } from "@/components/AuthModal";
+import { CompareModal } from "@/components/CompareModal";
+import { FavoritesModal } from "@/components/FavoritesModal";
+import { HeroSection } from "@/components/HeroSection";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -25,20 +21,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { AppCard } from "@/components/AppCard";
-import { CompareModal } from "@/components/CompareModal";
-import { HeroSection } from "@/components/HeroSection";
-import { FavoritesModal } from "@/components/FavoritesModal";
-import { useFavorites } from "@/hooks/useFavorites";
-import { AuthModal } from "@/components/AuthModal";
-import { useAppDispatch, useTypedSelector } from "@/hooks/use-typed-selector";
-import { RootState } from "@/provider/store";
-import AuthAPI from "@/api/admin/auth/api";
-import { logout } from "@/provider/slices/authSlice";
 import { useToast } from "@/hooks/use-toast";
-import { Link } from "react-router-dom";
-import UserAppAPI from "@/api/user/app/api";
+import { useAppDispatch, useTypedSelector } from "@/hooks/use-typed-selector";
+import { useFavorites } from "@/hooks/useFavorites";
+import { logout } from "@/provider/slices/authSlice";
+import { RootState } from "@/provider/store";
 import { adapterListAppBEToFEPublic } from "@/utils/adapterBEToFE";
+import { GitCompare, Grid, Heart, List, Search, X } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 
 export interface ScreenPublic {
   id: string;
@@ -70,212 +61,6 @@ export interface AppPublic {
   company: string;
   lastUpdated: string;
 }
-
-// const mockScreens: ScreenPublic[] = [
-//   {
-//     id: "1",
-//     name: "Homepage",
-//     category: "UI",
-//     image: "https://source.unsplash.com/900x1600?home",
-//     description: "Main screen of the app",
-//     appName: "AwesomeApp",
-//   },
-//   {
-//     id: "2",
-//     name: "Settings",
-//     category: "Settings",
-//     image: "https://source.unsplash.com/900x1600?settings",
-//     description: "AppPublic settings page",
-//     appName: "AwesomeApp",
-//   },
-//   {
-//     id: "3",
-//     name: "Profile",
-//     category: "Profile",
-//     image: "https://source.unsplash.com/900x1600?profile",
-//     description: "User profile screen",
-//     appName: "AwesomeApp",
-//   },
-//   {
-//     id: "4",
-//     name: "Dashboard",
-//     category: "Dashboard",
-//     image: "https://source.unsplash.com/900x1600?dashboard",
-//     description: "Main dashboard view",
-//     appName: "AwesomeApp",
-//   },
-//   {
-//     id: "5",
-//     name: "Product Details",
-//     category: "E-commerce",
-//     image: "https://source.unsplash.com/900x1600?ecommerce",
-//     description: "Details of a product",
-//     appName: "AwesomeApp",
-//   },
-//   {
-//     id: "6",
-//     name: "Checkout",
-//     category: "E-commerce",
-//     image: "https://source.unsplash.com/900x1600?checkout",
-//     description: "Checkout process screen",
-//     appName: "AwesomeApp",
-//   },
-//   {
-//     id: "7",
-//     name: "Article View",
-//     category: "Blog",
-//     image: "https://source.unsplash.com/900x1600?blog",
-//     description: "Viewing a blog article",
-//     appName: "AwesomeApp",
-//   },
-//   {
-//     id: "8",
-//     name: "Contact Us",
-//     category: "Contact",
-//     image: "https://source.unsplash.com/900x1600?contact",
-//     description: "Contact form screen",
-//     appName: "AwesomeApp",
-//   },
-//   {
-//     id: "9",
-//     name: "Image Gallery",
-//     category: "Media",
-//     image: "https://source.unsplash.com/900x1600?gallery",
-//     description: "Display of images",
-//     appName: "AwesomeApp",
-//   },
-//   {
-//     id: "10",
-//     name: "Video Player",
-//     category: "Media",
-//     image: "https://source.unsplash.com/900x1600?video",
-//     description: "Video playback screen",
-//     appName: "AwesomeApp",
-//   },
-// ];
-
-// const listApp: AppPublic[] = [
-//   {
-//     id: 1,
-//     name: "AwesomeApp",
-//     category: "Productivity",
-//     subcategory: "Task Management",
-//     platform: "iOS",
-//     image: "https://source.unsplash.com/400x300?app",
-//     screenshots: [],
-//     screens: mockScreens.slice(0, 5),
-//     description: "An awesome app for managing your tasks.",
-//     downloads: "10K+",
-//     rating: 4.5,
-//     tags: ["productivity", "ios", "task management"],
-//     color: "#4CAF50",
-//     isLiked: false,
-//     featured: true,
-//     trending: true,
-//     company: "Acme Inc.",
-//     lastUpdated: "2023-01-01",
-//   },
-//   {
-//     id: 2,
-//     name: "CoolGame",
-//     category: "Entertainment",
-//     subcategory: "Action",
-//     platform: "Android",
-//     image: "https://source.unsplash.com/400x300?game",
-//     screenshots: [],
-//     screens: mockScreens.slice(2, 7),
-//     description: "A cool game for killing time.",
-//     downloads: "1M+",
-//     rating: 4.8,
-//     tags: ["entertainment", "android", "action"],
-//     color: "#F44336",
-//     isLiked: true,
-//     featured: false,
-//     trending: true,
-//     company: "Beta Games",
-//     lastUpdated: "2023-02-15",
-//   },
-//   {
-//     id: 3,
-//     name: "SmartStudy",
-//     category: "Education",
-//     subcategory: "Learning",
-//     platform: "Both",
-//     image: "https://source.unsplash.com/400x300?education",
-//     screenshots: [],
-//     screens: mockScreens.slice(4, 9),
-//     description: "A smart app for studying.",
-//     downloads: "500K+",
-//     rating: 4.2,
-//     tags: ["education", "ios", "android", "learning"],
-//     color: "#2196F3",
-//     isLiked: false,
-//     featured: true,
-//     trending: false,
-//     company: "Gamma Education",
-//     lastUpdated: "2023-03-20",
-//   },
-//   {
-//     id: 4,
-//     name: "HealthTrack",
-//     category: "Health & Fitness",
-//     subcategory: "Tracking",
-//     platform: "iOS",
-//     image: "https://source.unsplash.com/400x300?health",
-//     screenshots: [],
-//     screens: mockScreens.slice(1, 6),
-//     description: "An app for tracking your health and fitness.",
-//     downloads: "100K+",
-//     rating: 4.6,
-//     tags: ["health", "fitness", "ios", "tracking"],
-//     color: "#9C27B0",
-//     isLiked: true,
-//     featured: false,
-//     trending: false,
-//     company: "Delta Health",
-//     lastUpdated: "2023-04-01",
-//   },
-//   {
-//     id: 5,
-//     name: "MoneyWise",
-//     category: "Finance",
-//     subcategory: "Management",
-//     platform: "Android",
-//     image: "https://source.unsplash.com/400x300?finance",
-//     screenshots: [],
-//     screens: mockScreens.slice(3, 8),
-//     description: "A wise app for managing your money.",
-//     downloads: "250K+",
-//     rating: 4.0,
-//     tags: ["finance", "android", "management"],
-//     color: "#FF9800",
-//     isLiked: false,
-//     featured: false,
-//     trending: false,
-//     company: "Epsilon Finance",
-//     lastUpdated: "2023-05-05",
-//   },
-//   {
-//     id: 6,
-//     name: "TravelMate",
-//     category: "Travel",
-//     subcategory: "Planning",
-//     platform: "Both",
-//     image: "https://source.unsplash.com/400x300?travel",
-//     screenshots: [],
-//     screens: mockScreens.slice(0, 4),
-//     description: "Your best mate for travel planning.",
-//     downloads: "50K+",
-//     rating: 4.3,
-//     tags: ["travel", "ios", "android", "planning"],
-//     color: "#795548",
-//     isLiked: true,
-//     featured: false,
-//     trending: false,
-//     company: "Zeta Travel",
-//     lastUpdated: "2023-06-10",
-//   },
-// ];
 
 const Index = () => {
   const [listApp, setListApp] = useState<AppPublic[]>([]);
@@ -361,7 +146,6 @@ const Index = () => {
     try {
       setIsLoadingGet(true);
       const res = await UserAppAPI.getAll();
-      console.log("res", res.data);
       const dataAdpt = adapterListAppBEToFEPublic(res.data);
       setListApp(dataAdpt);
     } catch (err: any) {

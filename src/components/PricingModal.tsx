@@ -62,7 +62,6 @@ export const PricingModal: React.FC<PricingModalProps> = ({
 
   const handleUpgrade = () => {
     // In a real app, this would integrate with Stripe
-    console.log("Upgrade to Pro plan");
     onClose();
   };
 

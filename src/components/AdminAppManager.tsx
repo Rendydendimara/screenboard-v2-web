@@ -1,3 +1,5 @@
+import AppAPI from "@/api/admin/app/api";
+import { TAppRes } from "@/api/admin/app/type";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -29,12 +31,10 @@ import { useToast } from "@/hooks/use-toast";
 import { UploadImageType } from "@/types";
 import { adapterListAppBEToFE } from "@/utils/adapterBEToFE";
 import { Edit3, ExternalLink, Plus, Save, Star, Trash2 } from "lucide-react";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CInputFileDragDrop, { CInputFilePreview } from "./ui/CInputFileDragDrop";
 import ConfirmDeleteModal from "./ui/confirm-delete-modal";
-import AppAPI from "@/api/admin/app/api";
-import { TAppRes } from "@/api/admin/app/type";
 
 export interface App {
   id: string;
@@ -67,40 +67,6 @@ interface FormData {
   color: string;
   company: string;
 }
-
-// // Mock data - in a real app this would come from an API
-// const mockApps: App[] = [
-//   {
-//     id: "1",
-//     name: "Spotify",
-//     category: "Music",
-//     subcategory: "Streaming",
-//     platform: "Both",
-//     image: "https://images.unsplash.com/photo-1611339555312-e607c8352fd7?w=150",
-//     description: "Music streaming platform",
-//     downloads: "1B+",
-//     rating: 4.4,
-//     tags: ["Music", "Streaming", "Premium"],
-//     color: "#1DB954",
-//     company: "Spotify Technology",
-//     screenshots: [],
-//   },
-//   {
-//     id: "2",
-//     name: "Instagram",
-//     category: "Social",
-//     subcategory: "Photo Sharing",
-//     platform: "Both",
-//     image: "https://images.unsplash.com/photo-1611262588024-d12430b98920?w=150",
-//     description: "Photo and video sharing social network",
-//     downloads: "5B+",
-//     rating: 4.1,
-//     tags: ["Social", "Photos", "Stories"],
-//     color: "#E4405F",
-//     company: "Meta Platforms",
-//     screenshots: [],
-//   },
-// ];
 
 export const AdminAppManager: React.FC = () => {
   const [apps, setApps] = useState<App[]>([]);
@@ -721,7 +687,7 @@ export const AdminAppManager: React.FC = () => {
               >
                 Cancel
               </Button>
-              <Button onClick={handleSubmit}>
+              <Button onClick={handleSubmit} disabled={isLoadingPost}>
                 <Save className="h-4 w-4 mr-2" />
                 {editingApp ? "Update" : "Create"} App
               </Button>
