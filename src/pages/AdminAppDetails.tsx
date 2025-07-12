@@ -135,7 +135,7 @@ const AdminAppDetails: React.FC = () => {
                 </div>
               </div>
             </div>
-            <div className="flex items-center space-x-3">
+            {/* <div className="flex items-center space-x-3">
               <Button
                 variant="outline"
                 onClick={() => navigate(`/admin/app/${app.id}/edit`)}
@@ -151,7 +151,7 @@ const AdminAppDetails: React.FC = () => {
                 <Trash2 className="h-4 w-4 mr-2" />
                 Delete
               </Button>
-            </div>
+            </div> */}
           </div>
         </div>
 

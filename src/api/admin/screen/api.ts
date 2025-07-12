@@ -1,6 +1,6 @@
 import { axiosInstanceWithAuth } from "@/lib/axiosConfig";
 import URL_API from "../../urls";
-import { TScreenPost, TScreenPut } from "./type";
+import { TScreenPost, TScreenPostBulk, TScreenPut } from "./type";
 
 const create = async (payload: TScreenPost) => {
   let formData = new FormData();
@@ -68,11 +68,35 @@ const remove = async (id: string) => {
   return response.data;
 };
 
+const bulkUpload = async (payload: TScreenPostBulk) => {
+  let formData = new FormData();
+  const config = {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  };
+  payload.screens?.forEach((img) => {
+    formData.append("screens", img);
+  });
+
+  formData.append("app", payload.app);
+  formData.append("category", payload.category);
+  formData.append("modul", payload.modul);
+
+  const response = await axiosInstanceWithAuth.post(
+    URL_API.ADMIN.SCREEN.V1.BULK_UPLOAD,
+    formData,
+    config
+  );
+  return response.data;
+};
+
 const ScreenAPI = {
   create,
   getAll,
   update,
   remove,
+  bulkUpload,
 };
 
 export default ScreenAPI;

@@ -16,3 +16,5 @@ export const FORMAT_INPUT_IMAGE_FILE = {
   "image/jpeg": [],
   "image/jpg": [],
 };
+
+export const MAX_FILE_BULK_UPLOAD = 20;

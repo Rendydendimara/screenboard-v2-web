@@ -1,15 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, Download } from 'lucide-react';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { AnnotationOverlay } from '@/components/AnnotationOverlay';
-import { Annotation } from '@/types/annotations';
-import { useDownloadLimit } from '@/hooks/useDownloadLimit';
-import { useScreenHistory } from '@/hooks/useScreenHistory';
-import { MonetizationModal } from '@/components/MonetizationModal';
-import { useToast } from '@/hooks/use-toast';
+import React, { useState, useEffect } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight, Download } from "lucide-react";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { AnnotationOverlay } from "@/components/AnnotationOverlay";
+import { Annotation } from "@/types/annotations";
+import { useDownloadLimit } from "@/hooks/useDownloadLimit";
+import { useScreenHistory } from "@/hooks/useScreenHistory";
+import { MonetizationModal } from "@/components/MonetizationModal";
+import { useToast } from "@/hooks/use-toast";
 
 interface Screen {
   id: string;
@@ -31,39 +37,41 @@ interface ScreenImageModalProps {
 // Mock annotations data
 const mockAnnotations: Annotation[] = [
   {
-    id: '1',
-    screenId: '1',
+    id: "1",
+    screenId: "1",
     appId: 1,
     x: 25,
     y: 30,
-    title: 'Navigation Pattern',
-    description: 'Bottom tab navigation following iOS Human Interface Guidelines with proper touch targets and visual hierarchy.',
-    type: 'ui-pattern',
-    category: 'Navigation',
-    tags: ['iOS', 'tabs', 'navigation', 'accessibility'],
-    createdBy: 'Admin',
-    createdAt: '2024-01-15T10:00:00Z',
-    updatedAt: '2024-01-15T10:00:00Z',
+    title: "Navigation Pattern",
+    description:
+      "Bottom tab navigation following iOS Human Interface Guidelines with proper touch targets and visual hierarchy.",
+    type: "ui-pattern",
+    category: "Navigation",
+    tags: ["iOS", "tabs", "navigation", "accessibility"],
+    createdBy: "Admin",
+    createdAt: "2024-01-15T10:00:00Z",
+    updatedAt: "2024-01-15T10:00:00Z",
     isVisible: true,
-    color: '#3B82F6'
+    color: "#3B82F6",
   },
   {
-    id: '2',
-    screenId: '1',
+    id: "2",
+    screenId: "1",
     appId: 1,
     x: 75,
     y: 15,
-    title: 'Search Interaction',
-    description: 'Search functionality with autocomplete suggestions and recent searches for improved user experience.',
-    type: 'interaction',
-    category: 'Search',
-    tags: ['search', 'autocomplete', 'UX'],
-    createdBy: 'Admin',
-    createdAt: '2024-01-16T14:30:00Z',
-    updatedAt: '2024-01-16T14:30:00Z',
+    title: "Search Interaction",
+    description:
+      "Search functionality with autocomplete suggestions and recent searches for improved user experience.",
+    type: "interaction",
+    category: "Search",
+    tags: ["search", "autocomplete", "UX"],
+    createdBy: "Admin",
+    createdAt: "2024-01-16T14:30:00Z",
+    updatedAt: "2024-01-16T14:30:00Z",
     isVisible: true,
-    color: '#10B981'
-  }
+    color: "#10B981",
+  },
 ];
 
 export const ScreenImageModal: React.FC<ScreenImageModalProps> = ({
@@ -75,16 +83,24 @@ export const ScreenImageModal: React.FC<ScreenImageModalProps> = ({
 }) => {
   const [showAnnotations, setShowAnnotations] = useState(true);
   const [showMonetizationModal, setShowMonetizationModal] = useState(false);
-  const { canDownload, remainingDownloads, recordDownload, DOWNLOAD_LIMIT, downloadData } = useDownloadLimit();
+  const {
+    canDownload,
+    remainingDownloads,
+    recordDownload,
+    DOWNLOAD_LIMIT,
+    downloadData,
+  } = useDownloadLimit();
   const { addToHistory } = useScreenHistory();
   const { toast } = useToast();
-  
-  const currentIndex = allScreens.findIndex(s => s.id === screen.id);
+
+  const currentIndex = allScreens.findIndex((s) => s.id === screen.id);
   const hasPrevious = currentIndex > 0;
   const hasNext = currentIndex < allScreens.length - 1;
 
   // Filter annotations for current screen
-  const screenAnnotations = mockAnnotations.filter(annotation => annotation.screenId === screen.id);
+  const screenAnnotations = mockAnnotations.filter(
+    (annotation) => annotation.screenId === screen.id
+  );
 
   // Record screen view when modal opens
   useEffect(() => {
@@ -93,8 +109,8 @@ export const ScreenImageModal: React.FC<ScreenImageModalProps> = ({
         screenId: screen.id,
         screenName: screen.name,
         category: screen.category,
-        appName: 'Current App', // This should come from props in real implementation
-        action: 'viewed'
+        appName: "Current App", // This should come from props in real implementation
+        action: "viewed",
       });
     }
   }, [isOpen, screen.id, screen.name, screen.category, addToHistory]);
@@ -124,12 +140,12 @@ export const ScreenImageModal: React.FC<ScreenImageModalProps> = ({
         screenId: screen.id,
         screenName: screen.name,
         category: screen.category,
-        appName: 'Current App', // This should come from props in real implementation
-        action: 'downloaded'
+        appName: "Current App", // This should come from props in real implementation
+        action: "downloaded",
       });
 
       // Simulate download
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = screen.image;
       link.download = `${screen.name}-screen.jpg`;
       document.body.appendChild(link);
@@ -138,7 +154,9 @@ export const ScreenImageModal: React.FC<ScreenImageModalProps> = ({
 
       toast({
         title: "Download successful",
-        description: `${screen.name} has been downloaded. ${remainingDownloads - 1} downloads remaining.`,
+        description: `${screen.name} has been downloaded. ${
+          remainingDownloads - 1
+        } downloads remaining.`,
       });
     }
   };
@@ -146,13 +164,16 @@ export const ScreenImageModal: React.FC<ScreenImageModalProps> = ({
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="max-w-6xl max-h-[95vh] overflow-hidden">
+        <DialogContent className="max-w-6xl max-h-[95vh] overflow-y-auto">
           <DialogHeader>
             <div className="flex items-center justify-between">
               <div>
-                <DialogTitle className="text-2xl font-bold">{screen.name}</DialogTitle>
+                <DialogTitle className="text-2xl font-bold">
+                  {screen.name}
+                </DialogTitle>
                 <DialogDescription className="mt-2">
-                  Detailed view of {screen.name} screen from the {screen.category} category
+                  Detailed view of {screen.name} screen from the{" "}
+                  {screen.category} category
                 </DialogDescription>
                 <div className="flex items-center space-x-2 mt-2">
                   <Badge variant="outline">{screen.category}</Badge>
@@ -169,7 +190,7 @@ export const ScreenImageModal: React.FC<ScreenImageModalProps> = ({
                   disabled={!canDownload}
                 >
                   <Download className="h-4 w-4 mr-2" />
-                  {canDownload ? 'Download' : 'Limit Reached'}
+                  {canDownload ? "Download" : "Limit Reached"}
                 </Button>
                 {allScreens.length > 1 && (
                   <>
@@ -213,7 +234,9 @@ export const ScreenImageModal: React.FC<ScreenImageModalProps> = ({
                     imageWidth={384} // max-w-md in pixels
                     imageHeight={683} // aspect-[9/16] calculation
                     showAnnotations={showAnnotations}
-                    onToggleAnnotations={() => setShowAnnotations(!showAnnotations)}
+                    onToggleAnnotations={() =>
+                      setShowAnnotations(!showAnnotations)
+                    }
                   />
                 </div>
               </div>
@@ -221,10 +244,14 @@ export const ScreenImageModal: React.FC<ScreenImageModalProps> = ({
 
             {/* Description */}
             <div className="text-center">
-              <p className="text-gray-600 leading-relaxed">{screen.description}</p>
+              <p className="text-gray-600 leading-relaxed">
+                {screen.description}
+              </p>
               {screenAnnotations.length > 0 && (
                 <p className="text-sm text-gray-500 mt-2">
-                  This screen has {screenAnnotations.length} annotation{screenAnnotations.length !== 1 ? 's' : ''} highlighting UX patterns and interactions.
+                  This screen has {screenAnnotations.length} annotation
+                  {screenAnnotations.length !== 1 ? "s" : ""} highlighting UX
+                  patterns and interactions.
                 </p>
               )}
             </div>
@@ -232,21 +259,27 @@ export const ScreenImageModal: React.FC<ScreenImageModalProps> = ({
             {/* Horizontal Screen Navigation */}
             {allScreens.length > 1 && (
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-center">Browse All Screens</h3>
+                <h3 className="text-lg font-semibold text-center">
+                  Browse All Screens
+                </h3>
                 <ScrollArea className="w-full whitespace-nowrap">
                   <div className="flex w-max space-x-4 p-4">
                     {allScreens.map((screenItem, index) => (
                       <div
                         key={screenItem.id}
                         className={`group cursor-pointer w-32 flex-shrink-0 ${
-                          screenItem.id === screen.id ? 'ring-2 ring-blue-500 rounded-lg' : ''
+                          screenItem.id === screen.id
+                            ? "ring-2 ring-blue-500 rounded-lg"
+                            : ""
                         }`}
-                        onClick={() => onScreenChange && onScreenChange(screenItem)}
+                        onClick={() =>
+                          onScreenChange && onScreenChange(screenItem)
+                        }
                       >
                         <div className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-200">
                           <div className="aspect-[9/16] overflow-hidden relative">
-                            <img 
-                              src={screenItem.image} 
+                            <img
+                              src={screenItem.image}
                               alt={screenItem.name}
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                             />
@@ -255,8 +288,13 @@ export const ScreenImageModal: React.FC<ScreenImageModalProps> = ({
                             )}
                           </div>
                           <div className="p-2">
-                            <h4 className="font-medium text-xs text-center truncate">{screenItem.name}</h4>
-                            <Badge variant="outline" className="text-xs mt-1 w-full justify-center">
+                            <h4 className="font-medium text-xs text-center truncate">
+                              {screenItem.name}
+                            </h4>
+                            <Badge
+                              variant="outline"
+                              className="text-xs mt-1 w-full justify-center"
+                            >
                               {screenItem.category}
                             </Badge>
                           </div>

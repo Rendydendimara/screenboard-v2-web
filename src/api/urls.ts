@@ -30,6 +30,7 @@ const URL_API = {
         UPDATE: "/api/v1/admin/screen/update",
         GET_LIST: "/api/v1/admin/screen/get-list",
         DELETE: "/api/v1/admin/screen/delete",
+        BULK_UPLOAD: "/api/v1/admin/screen/bulk-upload",
       },
     },
   },

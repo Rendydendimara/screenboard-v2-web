@@ -23,19 +23,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { FORMAT_INPUT_IMAGE_FILE } from "@/constant/app";
+import { FORMAT_INPUT_IMAGE_FILE, MAX_FILE_BULK_UPLOAD } from "@/constant/app";
 import { useToast } from "@/hooks/use-toast";
 import { TSelect, UploadImageType } from "@/types";
+import { formatFileSize, getImageUrlFromFile } from "@/utils";
 import { adapterListScreenBEToFE } from "@/utils/adapterBEToFE";
 import { processMultipleImages } from "@/utils/colorExtraction";
-import {
-  FolderOpen,
-  ImageIcon,
-  Palette,
-  Plus,
-  Trash2,
-  Upload,
-} from "lucide-react";
+import { FolderOpen, Palette, Plus, Trash2, Upload } from "lucide-react";
 import React, {
   useCallback,
   useEffect,
@@ -45,6 +39,7 @@ import React, {
 } from "react";
 import AdminPanelWrapperInputImage from "./ui/AdminPanelWrapperInputImage";
 import CInputFileDragDrop, { CInputFilePreview } from "./ui/CInputFileDragDrop";
+import ConfirmDeleteModal from "./ui/confirm-delete-modal";
 
 export interface Screenshot {
   id: string;
@@ -65,52 +60,6 @@ interface AdminScreenshotManagerProps {
   appId?: string;
 }
 
-// Mock data
-const mockScreenshots: Screenshot[] = [
-  {
-    id: "1",
-    name: "Discovery Home",
-    category: "Discovery",
-    image:
-      "https://images.unsplash.com/photo-1611339555312-e607c8352fd7?w=300&h=600&fit=crop",
-    description: "Main discovery screen for finding new music",
-    appId: "1",
-  },
-  {
-    id: "2",
-    name: "Now Playing",
-    category: "Playback",
-    image:
-      "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=600&fit=crop",
-    description: "Current playing song interface",
-    appId: "1",
-  },
-  {
-    id: "3",
-    name: "Playlist View",
-    category: "Library",
-    image:
-      "https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=300&h=600&fit=crop",
-    description: "User playlist interface",
-    appId: "1",
-  },
-  {
-    id: "4",
-    name: "Search Results",
-    category: "Search",
-    image:
-      "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&h=600&fit=crop",
-    description: "Search functionality display",
-    appId: "1",
-  },
-];
-
-const mockApps = [
-  { id: 1, name: "Spotify" },
-  { id: 2, name: "Instagram" },
-  { id: 3, name: "WhatsApp" },
-];
-
 export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
   appId,
 }) => {
@@ -119,6 +68,7 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
   const [isBulkUploadOpen, setIsBulkUploadOpen] = useState(false);
   const [selectedApp, setSelectedApp] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [selectedModul, setSelectedModul] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState("");
   const [bulkFiles, setBulkFiles] = useState<File[]>([]);
   const [isProcessingColors, setIsProcessingColors] = useState(false);
@@ -139,6 +89,7 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
   const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
   const [isLoadingDelete, setIsLoadingDelete] = useState(false);
   const [isLoadingPost, setIsLoadingPost] = useState(false);
+  const [editingScreen, setEditingScreen] = useState<Screenshot | null>(null);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -165,6 +116,15 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
+    if (files.length + bulkFiles.length > MAX_FILE_BULK_UPLOAD) {
+      toast({
+        title: "Max image limit",
+        description: "Max image is 20",
+        variant: "destructive",
+      });
+
+      return;
+    }
     setBulkFiles((prev) => [...prev, ...files]);
   };
 
@@ -177,7 +137,7 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
     try {
       const imagesToProcess = screenshotList.map((screenshot) => ({
         id: screenshot.id,
-        name: screenshot.name,
+        name: screenshot?.name ?? "",
         url: screenshot.image,
       }));
       const results = await processMultipleImages(
@@ -229,35 +189,38 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
   };
 
   const handleBulkUpload = async () => {
-    if (!selectedApp || !selectedCategory) {
+    try {
+      setIsLoadingPost(true);
+      if (!selectedApp || !selectedCategory || !selectedModul) {
+        toast({
+          title: "Missing Information",
+          description:
+            "Please select an app, modul, and category for bulk upload.",
+          variant: "destructive",
+        });
+        return;
+      }
+      await ScreenAPI.bulkUpload({
+        app: selectedApp,
+        category: selectedCategory,
+        modul: selectedModul,
+        screens: bulkFiles,
+      });
+      getListData();
+      handleCloseBulkUpload();
       toast({
-        title: "Missing Information",
-        description: "Please select an app and category for bulk upload.",
+        title: "Bulk Upload Complete",
+        description: `Screenshots uploaded successfully.`,
+      });
+    } catch (err: any) {
+      toast({
+        title: "Error",
+        description: err.response.data.message,
         variant: "destructive",
       });
-      return;
+    } finally {
+      setIsLoadingPost(false);
     }
-
-    const newScreenshots: Screenshot[] = bulkFiles.map((file, index) => ({
-      id: `${Date.now()}-${index}`,
-      name: file.name.replace(/\.[^/.]+$/, ""),
-      category: selectedCategory,
-      image: URL.createObjectURL(file),
-      description: `Screenshot from ${file.name}`,
-      appId: String(selectedApp),
-    }));
-
-    setScreenshots((prev) => [...prev, ...newScreenshots]);
-    setBulkFiles([]);
-    setIsBulkUploadOpen(false);
-
-    toast({
-      title: "Bulk Upload Complete",
-      description: `${newScreenshots.length} screenshots uploaded successfully.`,
-    });
-
-    // Automatically process colors for new screenshots
-    await processColorsForScreenshots(newScreenshots);
   };
 
   const handleSingleAdd = async (e: React.FormEvent) => {
@@ -316,18 +279,43 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
   };
 
   const handleDelete = (id: string, name: string) => {
-    if (window.confirm(`Are you sure you want to delete "${name}"?`)) {
-      setScreenshots((prev) => prev.filter((s) => s.id !== id));
-      toast({
-        title: "Screenshot Deleted",
-        description: `"${name}" has been deleted successfully.`,
-      });
+    const screen = screenshots.find((d) => d.id === id);
+    if (screen) {
+      setEditingScreen(screen);
+      setIsModalOpenDelete(true);
     }
   };
 
+  const handleCloseModalDelete = useCallback(() => {
+    setIsModalOpenDelete(false);
+    setEditingScreen(undefined);
+  }, []);
+
+  const handleConfirmDelete = useCallback(async () => {
+    setIsLoadingDelete(true);
+    try {
+      await ScreenAPI.remove(editingScreen.id);
+      toast({
+        title: "Screenshot Deleted",
+        description: `${editingScreen.name} has been deleted successfully.`,
+      });
+
+      getListData();
+      handleCloseModalDelete();
+    } catch (err: any) {
+      toast({
+        title: "Error",
+        description: err.response.data.message,
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoadingDelete(false);
+    }
+  }, [editingScreen]);
+
   const filteredScreenshots = displayedScreenshots.filter(
     (screenshot) =>
-      screenshot.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      screenshot?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       screenshot.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -437,6 +425,19 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
     });
   }, []);
 
+  const handleCloseBulkUpload = useCallback(() => {
+    setBulkFiles([]);
+    setIsBulkUploadOpen(false);
+    setSelectedApp(appId ?? "");
+    setSelectedCategory("");
+    setSelectedModul("");
+  }, []);
+
+  const handleOpenBulkUpload = useCallback(() => {
+    setSelectedApp(appId ?? "");
+    setIsBulkUploadOpen(true);
+  }, [appId]);
+
   useEffect(() => {
     getListData();
     getDataOptions();
@@ -457,10 +458,7 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
                 <Palette className="h-4 w-4 mr-2" />
                 Process Colors
               </Button>
-              <Button
-                variant="outline"
-                onClick={() => setIsBulkUploadOpen(true)}
-              >
+              <Button variant="outline" onClick={handleOpenBulkUpload}>
                 <Upload className="h-4 w-4 mr-2" />
                 Bulk Upload
               </Button>
@@ -498,7 +496,7 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
                       <div className="w-40 h-72 rounded-lg overflow-hidden bg-gray-100 shadow-md hover:shadow-lg transition-shadow">
                         <img
                           src={screenshot.image}
-                          alt={screenshot.name}
+                          alt={screenshot?.name ?? ""}
                           className="w-full h-full object-cover"
                         />
                         {screenshot.dominantColor && (
@@ -514,7 +512,10 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
                             variant="destructive"
                             size="sm"
                             onClick={() =>
-                              handleDelete(screenshot.id, screenshot.name)
+                              handleDelete(
+                                screenshot.id,
+                                screenshot?.name ?? ""
+                              )
                             }
                             className="opacity-0 group-hover:opacity-100 transition-opacity"
                           >
@@ -524,7 +525,7 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
                       </div>
                       <div className="mt-2 text-xs">
                         <div className="font-medium truncate">
-                          {screenshot.name}
+                          {screenshot?.name ?? ""}
                         </div>
                         {screenshot.colors && (
                           <div className="flex space-x-1 mt-1">
@@ -707,16 +708,35 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
                       <SelectValue placeholder="Choose app" />
                     </SelectTrigger>
                     <SelectContent>
-                      {mockApps.map((app) => (
-                        <SelectItem key={app.id} value={app.id.toString()}>
-                          {app.name}
+                      {listApp.map((app) => (
+                        <SelectItem
+                          key={app.value}
+                          value={app.value.toString()}
+                        >
+                          {app.label}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </div>
               )}
-
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  Select Modul
+                </label>
+                <Select value={selectedModul} onValueChange={setSelectedModul}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Choose modul" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {listModule.map((modul) => (
+                      <SelectItem key={modul.value} value={modul.value}>
+                        {modul.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
               <div>
                 <label className="block text-sm font-medium mb-2">
                   Select Category
@@ -777,8 +797,14 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
                       className="flex items-center justify-between p-2 bg-gray-50 rounded"
                     >
                       <div className="flex items-center space-x-2">
-                        <ImageIcon className="h-4 w-4" />
-                        <span className="text-sm">{file.name}</span>
+                        <img
+                          alt={file.name}
+                          src={getImageUrlFromFile(file)}
+                          className="h-8 w-8 object-cover object-center"
+                        />
+                        <span className="text-sm">
+                          {file.name} ({formatFileSize(file.size)})
+                        </span>
                       </div>
                       <Button
                         variant="ghost"
@@ -801,7 +827,7 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => setIsBulkUploadOpen(false)}
+                onClick={handleCloseBulkUpload}
               >
                 Cancel
               </Button>
@@ -811,7 +837,8 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
                   isLoadingPost ||
                   bulkFiles.length === 0 ||
                   (!appId && !selectedApp) ||
-                  !selectedCategory
+                  !selectedCategory ||
+                  !selectedModul
                 }
               >
                 <Upload className="h-4 w-4 mr-2" />
@@ -821,6 +848,13 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
           </div>
         </DialogContent>
       </Dialog>
+      <ConfirmDeleteModal
+        isOpen={isModalOpenDelete}
+        onClose={handleCloseModalDelete}
+        onConfirm={handleConfirmDelete}
+        isLoadingAction={isLoadingDelete}
+        customerName={editingScreen?.name ?? ""}
+      />
     </div>
   );
 };

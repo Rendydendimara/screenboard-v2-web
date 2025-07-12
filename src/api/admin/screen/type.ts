@@ -26,3 +26,10 @@ export type TScreenRes = {
   deletedBy: string | null; // Referencing User or null
   updatedBy: string | null; // Referencing User or null
 };
+
+export type TScreenPostBulk = {
+  app: string;
+  category: string;
+  modul: string;
+  screens: File[];
+};
