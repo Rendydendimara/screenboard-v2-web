@@ -58,7 +58,7 @@ const AdminAppDetails: React.FC = () => {
           <h2 className="text-2xl font-bold text-gray-900 mb-4">
             App Not Found
           </h2>
-          <Button onClick={() => navigate("/admin")}>
+          <Button onClick={() => navigate("/admin#apps")}>
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Admin
           </Button>
@@ -84,7 +84,7 @@ const AdminAppDetails: React.FC = () => {
         <div className="mb-8">
           <Button
             variant="outline"
-            onClick={() => navigate("/admin")}
+            onClick={() => navigate("/admin#apps")}
             className="mb-4"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
@@ -118,8 +118,10 @@ const AdminAppDetails: React.FC = () => {
                     <Smartphone className="h-3 w-3" />
                     <span>{app.platform}</span>
                   </Badge>
-                  <Badge variant="outline">{app.category}</Badge>
-                  <Badge variant="outline">{app.subcategory}</Badge>
+                  <Badge variant="outline">{app.category?.name ?? "-"}</Badge>
+                  <Badge variant="outline">
+                    {app.subcategory?.name ?? "-"}
+                  </Badge>
                 </div>
                 <div className="flex items-center space-x-4 text-sm text-gray-600">
                   <div className="flex items-center space-x-1">

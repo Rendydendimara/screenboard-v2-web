@@ -174,10 +174,10 @@ const AppDetails: React.FC = () => {
                     <span>{app.platform}</span>
                   </Badge>
                   <Badge variant="outline" className="text-sm px-3 py-1">
-                    {app.category}
+                    {app.category?.name ?? "-"}
                   </Badge>
                   <Badge variant="outline" className="text-sm px-3 py-1">
-                    {app.subcategory}
+                    {app.subcategory?.name ?? "-"}
                   </Badge>
                   {app.featured && (
                     <Badge className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-sm px-3 py-1">
@@ -243,7 +243,7 @@ const AppDetails: React.FC = () => {
         {/* App Screenshots */}
         <div className="mb-8">
           <h2 className="font-bold text-2xl mb-6 text-slate-900 border-b border-slate-200 pb-2">
-            App Screenshots
+            App Thumbnail
           </h2>
           <div className="flex space-x-4 overflow-x-auto pb-4">
             {app.screenshots.map((screenshot, index) => (

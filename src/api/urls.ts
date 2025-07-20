@@ -33,6 +33,22 @@ const URL_API = {
         BULK_UPLOAD: "/api/v1/admin/screen/bulk-upload",
       },
     },
+    CATEGORY: {
+      V1: {
+        CREATE: "/api/v1/admin/category/create",
+        UPDATE: "/api/v1/admin/category/update",
+        GET_LIST: "/api/v1/admin/category/get-list",
+        DELETE: "/api/v1/admin/category/delete",
+      },
+    },
+    SUBCATEGORY: {
+      V1: {
+        CREATE: "/api/v1/admin/subcategory/create",
+        UPDATE: "/api/v1/admin/subcategory/update",
+        GET_LIST: "/api/v1/admin/subcategory/get-list",
+        DELETE: "/api/v1/admin/subcategory/delete",
+      },
+    },
   },
   USER: {
     APP: {
@@ -44,6 +60,21 @@ const URL_API = {
     SCREEN: {
       V1: {
         GET_LIST: "/api/v1/user/screen/get-list",
+      },
+    },
+    CATEGORY: {
+      V1: {
+        GET_LIST: "/api/v1/user/category/get-list",
+      },
+    },
+    SUBCATEGORY: {
+      V1: {
+        GET_LIST: "/api/v1/user/subcategory/get-list",
+      },
+    },
+    MODUL: {
+      V1: {
+        GET_LIST: "/api/v1/user/modul/get-list",
       },
     },
   },

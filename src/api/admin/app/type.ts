@@ -20,8 +20,14 @@ export type TAppPut = {
 export type TAppRes = {
   _id: string;
   name: string;
-  category: string;
-  subcategory: string;
+  category: {
+    _id: string;
+    name: string;
+  };
+  subcategory: {
+    _id: string;
+    name: string;
+  };
   platform: "iOS" | "Android" | "Both";
   iconUrl: string;
   screenshots: string[];
@@ -64,8 +70,14 @@ export type TScreenResPublic = {
 
 export type TAppResPublic = {
   _id: string;
-  category: string;
-  subcategory: string;
+  category: {
+    _id: string;
+    name: string;
+  };
+  subcategory: {
+    _id: string;
+    name: string;
+  };
   platform: "Android" | "iOS" | "Both";
   iconUrl: string;
   screenshots: string[];

@@ -26,6 +26,7 @@ import {
   Globe,
 } from "lucide-react";
 import { AppPublic } from "@/pages/Index";
+import { TCategoryRes } from "@/api/user/category/type";
 
 interface CompareModalProps {
   isOpen: boolean;
@@ -34,6 +35,7 @@ interface CompareModalProps {
   onRemoveApp: (appId: string) => void;
   onAddApp?: (app: AppPublic) => void;
   availableApps?: AppPublic[];
+  categories: TCategoryRes[];
 }
 
 export const CompareModal: React.FC<CompareModalProps> = ({
@@ -43,16 +45,11 @@ export const CompareModal: React.FC<CompareModalProps> = ({
   onRemoveApp,
   onAddApp,
   availableApps = [],
+  categories,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-
-  // Get unique categories from available apps
-  const categories = [
-    "All",
-    ...new Set(availableApps.map((app) => app.category)),
-  ];
 
   const filteredAvailableApps = availableApps.filter((app) => {
     const notInCompare = !apps.find((compareApp) => compareApp.id === app.id);
@@ -60,7 +57,7 @@ export const CompareModal: React.FC<CompareModalProps> = ({
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
     const matchesCategory =
-      selectedCategory === "All" || app.category === selectedCategory;
+      selectedCategory === "All" || app?.category?._id === selectedCategory;
 
     return notInCompare && matchesSearch && matchesCategory;
   });
@@ -318,8 +315,8 @@ export const CompareModal: React.FC<CompareModalProps> = ({
                 </SelectTrigger>
                 <SelectContent className="bg-white">
                   {categories.map((category) => (
-                    <SelectItem key={category} value={category}>
-                      {category}
+                    <SelectItem key={category._id} value={category._id}>
+                      {category.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -347,7 +344,7 @@ export const CompareModal: React.FC<CompareModalProps> = ({
                         {app.name}
                       </h4>
                       <p className="text-xs text-slate-600 truncate">
-                        {app.category}
+                        {app?.category?.name}
                       </p>
                     </div>
                   </div>

@@ -1,5 +1,7 @@
 import AuthAPI from "@/api/admin/auth/api";
 import UserAppAPI from "@/api/user/app/api";
+import CategoryAPI from "@/api/user/category/api";
+import { TCategoryRes } from "@/api/user/category/type";
 import { AppCard } from "@/components/AppCard";
 import { AuthModal } from "@/components/AuthModal";
 import { CompareModal } from "@/components/CompareModal";
@@ -44,8 +46,14 @@ export interface ScreenPublic {
 export interface AppPublic {
   id: string;
   name: string;
-  category: string;
-  subcategory: string;
+  category: {
+    _id: string;
+    name: string;
+  };
+  subcategory: {
+    _id: string;
+    name: string;
+  };
   platform: "iOS" | "Android" | "Both";
   image: string;
   screenshots: string[];
@@ -65,7 +73,9 @@ export interface AppPublic {
 const Index = () => {
   const [listApp, setListApp] = useState<AppPublic[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [selectedCategory, setSelectedCategory] = useState<TCategoryRes | null>(
+    null
+  );
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showFilters, setShowFilters] = useState(false);
   const [showCompare, setShowCompare] = useState(false);
@@ -84,25 +94,14 @@ const Index = () => {
   const onCloseOpenAuth = useCallback(() => {
     setIsOpenAuth(false);
   }, []);
-
-  const categories = useMemo(() => {
-    return ["All", ...new Set(listApp.map((app) => app.category))];
-  }, [listApp]);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 100);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  const [categories, setCategories] = useState<TCategoryRes[]>([]);
 
   const filteredApps = listApp.filter((app) => {
     const matchesSearch = app.name
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
     const matchesCategory =
-      selectedCategory === "All" || app.category === selectedCategory;
+      selectedCategory === null || app.category._id === selectedCategory?._id;
     return matchesSearch && matchesCategory;
   });
 
@@ -159,8 +158,41 @@ const Index = () => {
     }
   };
 
+  const getListDataCategory = async () => {
+    try {
+      setIsLoadingGet(true);
+      const dataRes = await CategoryAPI.getAll();
+      setCategories(dataRes?.data ?? []);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || error.response.data.message,
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoadingGet(false);
+    }
+  };
+
+  const handleChangeCategory = useCallback(
+    (id: string) => {
+      const temp = categories.find((d) => d._id === id);
+      setSelectedCategory(temp);
+    },
+    [categories]
+  );
+
   useEffect(() => {
     getListData();
+    getListDataCategory();
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 100);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
@@ -301,16 +333,17 @@ const Index = () => {
               {/* Category Filter */}
               <div className="flex-1 sm:flex-none sm:min-w-[200px]">
                 <Select
-                  value={selectedCategory}
-                  onValueChange={setSelectedCategory}
+                  value={selectedCategory?._id}
+                  onValueChange={handleChangeCategory}
                 >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select category" />
                   </SelectTrigger>
                   <SelectContent className="bg-white">
-                    {categories.map((category) => (
-                      <SelectItem key={category} value={category}>
-                        {category}
+                    <SelectItem value="All">All</SelectItem>
+                    {categories.map((category, i) => (
+                      <SelectItem key={i} value={category._id}>
+                        {category.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -345,7 +378,7 @@ const Index = () => {
           <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <p className="text-sm text-slate-600">
               Showing {filteredApps.length} of {listApp.length} apps
-              {selectedCategory !== "All" && ` in ${selectedCategory}`}
+              {selectedCategory !== null && ` in ${selectedCategory?.name}`}
             </p>
 
             {/* Active Filters */}
@@ -362,15 +395,15 @@ const Index = () => {
                   />
                 </Badge>
               )}
-              {selectedCategory !== "All" && (
+              {selectedCategory !== null && (
                 <Badge
                   variant="secondary"
                   className="flex items-center space-x-1"
                 >
-                  <span>Category: {selectedCategory}</span>
+                  <span>Category: {selectedCategory?.name}</span>
                   <X
                     className="h-3 w-3 cursor-pointer"
-                    onClick={() => setSelectedCategory("All")}
+                    onClick={() => setSelectedCategory(null)}
                   />
                 </Badge>
               )}
@@ -424,6 +457,7 @@ const Index = () => {
         onRemoveApp={handleRemoveFromCompare}
         onAddApp={handleAddToCompare}
         availableApps={listApp}
+        categories={categories}
       />
 
       <AuthModal isOpen={isOpenAuth} onClose={onCloseOpenAuth} />

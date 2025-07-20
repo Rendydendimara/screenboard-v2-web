@@ -40,6 +40,8 @@ import React, {
 import AdminPanelWrapperInputImage from "./ui/AdminPanelWrapperInputImage";
 import CInputFileDragDrop, { CInputFilePreview } from "./ui/CInputFileDragDrop";
 import ConfirmDeleteModal from "./ui/confirm-delete-modal";
+import { Textarea } from "./ui/textarea";
+import Dropzone from "react-dropzone";
 
 export interface Screenshot {
   id: string;
@@ -53,6 +55,7 @@ export interface Screenshot {
     rgb: { r: number; g: number; b: number };
     percentage: number;
   }>;
+  modul: string;
   dominantColor?: string;
 }
 
@@ -90,6 +93,8 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
   const [isLoadingDelete, setIsLoadingDelete] = useState(false);
   const [isLoadingPost, setIsLoadingPost] = useState(false);
   const [editingScreen, setEditingScreen] = useState<Screenshot | null>(null);
+  const [selectedModuleFilter, setSelectedModulFilter] =
+    useState<TSelect | null>(null);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -114,8 +119,8 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
     ? screenshots.filter((screenshot) => String(screenshot.appId) === appId)
     : screenshots;
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
+  const handleFileSelect = (imageFiles: any) => {
+    const files: any = Array.from(imageFiles || []);
     if (files.length + bulkFiles.length > MAX_FILE_BULK_UPLOAD) {
       toast({
         title: "Max image limit",
@@ -168,14 +173,13 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
       //       ) || screenshot
       //   )
       // );
-
       setScreenshots(updatedScreenshots);
       setImageColors(results);
 
-      toast({
-        title: "Color Analysis Complete",
-        description: `Processed ${results.length} images and extracted color palettes.`,
-      });
+      // toast({
+      //   title: "Color Analysis Complete",
+      //   description: `Processed ${results.length} images and extracted color palettes.`,
+      // });
     } catch (error) {
       console.error("Color processing failed:", error);
       toast({
@@ -313,11 +317,20 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
     }
   }, [editingScreen]);
 
-  const filteredScreenshots = displayedScreenshots.filter(
-    (screenshot) =>
-      screenshot?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      screenshot.category.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredScreenshots = useMemo(() => {
+    return displayedScreenshots.filter((screenshot) => {
+      const matchesSearch =
+        screenshot?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        screenshot.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        screenshot.modul.toLowerCase().includes(searchTerm.toLowerCase());
+
+      const matchesModuleFilter =
+        !selectedModuleFilter ||
+        screenshot.modul === selectedModuleFilter.value;
+
+      return matchesSearch && matchesModuleFilter;
+    });
+  }, [displayedScreenshots, selectedModuleFilter, searchTerm]);
 
   const getListData = async () => {
     try {
@@ -438,6 +451,14 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
     setIsBulkUploadOpen(true);
   }, [appId]);
 
+  const handleChangeModul = useCallback(
+    (id: string) => {
+      const temp = listModule.find((d) => d.value === id);
+      setSelectedModulFilter(temp);
+    },
+    [listModule]
+  );
+
   useEffect(() => {
     getListData();
     getDataOptions();
@@ -450,14 +471,14 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
           <div className="flex items-center justify-between">
             <CardTitle>Screenshot Management</CardTitle>
             <div className="flex space-x-2">
-              <Button
+              {/* <Button
                 variant="outline"
                 onClick={handleProcessAllColors}
                 disabled={isProcessingColors}
               >
                 <Palette className="h-4 w-4 mr-2" />
                 Process Colors
-              </Button>
+              </Button> */}
               <Button variant="outline" onClick={handleOpenBulkUpload}>
                 <Upload className="h-4 w-4 mr-2" />
                 Bulk Upload
@@ -473,11 +494,34 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
           <Tabs defaultValue="screenshots" className="space-y-4">
             <TabsList>
               <TabsTrigger value="screenshots">Screenshots</TabsTrigger>
-              <TabsTrigger value="colors">Color Analysis</TabsTrigger>
+              {/* <TabsTrigger value="colors">Color Analysis</TabsTrigger> */}
             </TabsList>
 
             <TabsContent value="screenshots">
-              <div className="mb-4">
+              <div className="mb-4 flex gap-2 items-start justify-start">
+                {/* Filters and View Controls */}
+                <div className="flex flex-col sm:flex-row gap-4 lg:gap-6">
+                  {/* Category Filter */}
+                  <div className="flex-1 sm:flex-none sm:min-w-[200px]">
+                    <Select
+                      value={selectedModuleFilter?.value}
+                      onValueChange={handleChangeModul}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select Modul" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white">
+                        <SelectItem value={null}>All</SelectItem>
+                        {listModule.map((modul, i) => (
+                          <SelectItem key={i} value={modul.value}>
+                            {modul.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
                 <Input
                   placeholder="Search screenshots..."
                   value={searchTerm}
@@ -548,13 +592,13 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
               </ScrollArea>
             </TabsContent>
 
-            <TabsContent value="colors">
+            {/* <TabsContent value="colors">
               <ColorAnalysis
                 imageColors={imageColors}
                 isProcessing={isProcessingColors}
                 processingProgress={colorProcessingProgress}
               />
-            </TabsContent>
+            </TabsContent> */}
           </Tabs>
         </CardContent>
       </Card>
@@ -566,77 +610,6 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
             <DialogTitle>Add New Screenshot</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSingleAdd} className="space-y-4">
-            <AdminPanelWrapperInputImage>
-              <CInputFileDragDrop
-                isRequired
-                handleDrop={handleDropImage}
-                labelForm="Screenshots"
-                labelBtn="Browse"
-                acceptFile={FORMAT_INPUT_IMAGE_FILE}
-                inputRef={fileInputRef}
-              />
-              <CInputFilePreview
-                src={getImagePreview}
-                labelForm="Preview"
-                onEdit={onEditImage}
-                onRemove={onRemoveImage}
-              />
-            </AdminPanelWrapperInputImage>
-            <div>
-              <label className="block text-sm font-medium mb-2">
-                Screenshot Name
-              </label>
-              <Input
-                value={formData.name}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, name: e.target.value }))
-                }
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2">Modul</label>
-              <Select
-                value={formData.module}
-                onValueChange={(value) =>
-                  setFormData((prev) => ({ ...prev, module: value }))
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select modul" />
-                </SelectTrigger>
-                <SelectContent>
-                  {listModule.map((modul) => (
-                    <SelectItem key={modul.value} value={modul.value}>
-                      {modul.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2">Category</label>
-              <Select
-                value={formData.category}
-                onValueChange={(value) =>
-                  setFormData((prev) => ({ ...prev, category: value }))
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.map((category) => (
-                    <SelectItem key={category} value={category}>
-                      {category}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
             {!appId && (
               <div>
                 <label className="block text-sm font-medium mb-2">App</label>
@@ -659,12 +632,52 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
                 </Select>
               </div>
             )}
-
+            <div>
+              <label className="block text-sm font-medium mb-2">Modul</label>
+              <Select
+                value={formData.module}
+                onValueChange={(value) =>
+                  setFormData((prev) => ({ ...prev, module: value }))
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select modul" />
+                </SelectTrigger>
+                <SelectContent>
+                  {listModule.map((modul) => (
+                    <SelectItem key={modul.value} value={modul.value}>
+                      {modul.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">Category</label>
+              <Select
+                value={formData.category}
+                onValueChange={(value) =>
+                  setFormData((prev) => ({ ...prev, category: value }))
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((category) => (
+                    <SelectItem key={category} value={category}>
+                      {category}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
             <div>
               <label className="block text-sm font-medium mb-2">
                 Description
               </label>
-              <Input
+              <Textarea
+                rows={6}
                 value={formData.description}
                 onChange={(e) =>
                   setFormData((prev) => ({
@@ -674,6 +687,34 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
                 }
               />
             </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Screenshot Name
+              </label>
+              <Input
+                value={formData.name}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, name: e.target.value }))
+                }
+                required
+              />
+            </div>
+            <AdminPanelWrapperInputImage>
+              <CInputFileDragDrop
+                isRequired
+                handleDrop={handleDropImage}
+                labelForm="Screenshots"
+                labelBtn="Browse"
+                acceptFile={FORMAT_INPUT_IMAGE_FILE}
+                inputRef={fileInputRef}
+              />
+              <CInputFilePreview
+                src={getImagePreview}
+                labelForm="Preview"
+                onEdit={onEditImage}
+                onRemove={onRemoveImage}
+              />
+            </AdminPanelWrapperInputImage>
 
             <div className="flex justify-end space-x-3">
               <Button
@@ -763,26 +804,27 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
               <label className="block text-sm font-medium mb-2">
                 Upload Images
               </label>
-              <div
-                className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-gray-400"
-                onClick={() => fileInputRef.current?.click()}
-              >
-                <FolderOpen className="h-12 w-12 mx-auto text-gray-400 mb-4" />
-                <p className="text-gray-600">
-                  Click to select images or drag and drop
-                </p>
-                <p className="text-sm text-gray-500 mt-2">
-                  Supports JPG, PNG, WebP
-                </p>
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-gray-400">
+                <Dropzone
+                  multiple
+                  onDrop={handleFileSelect}
+                  accept={FORMAT_INPUT_IMAGE_FILE}
+                  maxFiles={20}
+                >
+                  {({ getRootProps, getInputProps }) => (
+                    <div className="w-full" {...getRootProps()}>
+                      <input {...getInputProps()} />
+                      <FolderOpen className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+                      <p className="text-gray-600">
+                        Click to select images or drop images
+                      </p>
+                      <p className="text-sm text-gray-500 mt-2">
+                        Supports JPG, PNG, WebP
+                      </p>{" "}
+                    </div>
+                  )}
+                </Dropzone>
               </div>
-              <input
-                ref={fileInputRef}
-                type="file"
-                multiple
-                accept="image/*"
-                onChange={handleFileSelect}
-                className="hidden"
-              />
             </div>
 
             {bulkFiles.length > 0 && (

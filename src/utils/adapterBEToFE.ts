@@ -61,6 +61,7 @@ export const adapterListScreenBEToFE = (data: TScreenRes[]): Screenshot[] => {
       image: getImageUrl(d.image),
       description: d.description,
       appId: d.app,
+      modul: d.modul,
     });
   });
   return result;
