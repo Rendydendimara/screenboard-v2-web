@@ -5,6 +5,7 @@ import CModalDialogLoading from "@/components/modal-dialog-loading";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import ImageWithFallback from "@/components/ui/ImageWithFallback";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { adapterSingleAppBEToFE } from "@/utils/adapterBEToFE";
@@ -13,10 +14,8 @@ import {
   Building,
   Calendar,
   Download,
-  Edit3,
   Smartphone,
   Star,
-  Trash2,
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -95,8 +94,11 @@ const AdminAppDetails: React.FC = () => {
             <div className="flex items-center space-x-6">
               <div className="relative">
                 <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-xl">
-                  <img
-                    src={app.image}
+                  <ImageWithFallback
+                    src={
+                      app?.image ?? "https://source.unsplash.com/400x300?game"
+                    }
+                    fallbackSrc="https://placehold.co/400"
                     alt={app.name}
                     className="w-full h-full object-cover"
                   />

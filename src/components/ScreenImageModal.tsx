@@ -20,7 +20,10 @@ import { useToast } from "@/hooks/use-toast";
 interface Screen {
   id: string;
   name: string;
-  category: string;
+  category?: {
+    _id: string;
+    name: string;
+  };
   image: string;
   description: string;
 }
@@ -108,7 +111,7 @@ export const ScreenImageModal: React.FC<ScreenImageModalProps> = ({
       addToHistory({
         screenId: screen.id,
         screenName: screen.name,
-        category: screen.category,
+        category: screen?.category?.name,
         appName: "Current App", // This should come from props in real implementation
         action: "viewed",
       });
@@ -133,13 +136,17 @@ export const ScreenImageModal: React.FC<ScreenImageModalProps> = ({
       return;
     }
 
-    const success = recordDownload(screen.id, screen.name, screen.category);
+    const success = recordDownload(
+      screen.id,
+      screen.name,
+      screen?.category?.name
+    );
     if (success) {
       // Add to history
       addToHistory({
         screenId: screen.id,
         screenName: screen.name,
-        category: screen.category,
+        category: screen?.category?.name,
         appName: "Current App", // This should come from props in real implementation
         action: "downloaded",
       });
@@ -173,10 +180,10 @@ export const ScreenImageModal: React.FC<ScreenImageModalProps> = ({
                 </DialogTitle>
                 <DialogDescription className="mt-2">
                   Detailed view of {screen.name} screen from the{" "}
-                  {screen.category} category
+                  {screen?.category?.name} category
                 </DialogDescription>
                 <div className="flex items-center space-x-2 mt-2">
-                  <Badge variant="outline">{screen.category}</Badge>
+                  <Badge variant="outline">{screen?.category?.name}</Badge>
                   <Badge variant="secondary" className="text-xs">
                     Downloads remaining: {remainingDownloads}
                   </Badge>
@@ -295,7 +302,7 @@ export const ScreenImageModal: React.FC<ScreenImageModalProps> = ({
                               variant="outline"
                               className="text-xs mt-1 w-full justify-center"
                             >
-                              {screenItem.category}
+                              {screenItem?.category?.name}
                             </Badge>
                           </div>
                         </div>

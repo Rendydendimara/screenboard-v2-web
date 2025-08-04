@@ -36,7 +36,10 @@ import { Link } from "react-router-dom";
 export interface ScreenPublic {
   id: string;
   name: string;
-  category: string;
+  category?: {
+    name: string;
+    _id: string;
+  };
   image: string;
   description: string;
   appName: string;
@@ -101,7 +104,7 @@ const Index = () => {
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
     const matchesCategory =
-      selectedCategory === null || app.category._id === selectedCategory?._id;
+      selectedCategory === null || app?.category?._id === selectedCategory?._id;
     return matchesSearch && matchesCategory;
   });
 
@@ -176,8 +179,12 @@ const Index = () => {
 
   const handleChangeCategory = useCallback(
     (id: string) => {
-      const temp = categories.find((d) => d._id === id);
-      setSelectedCategory(temp);
+      if (id !== "All") {
+        const temp = categories.find((d) => d._id === id);
+        setSelectedCategory(temp);
+      } else {
+        setSelectedCategory(null);
+      }
     },
     [categories]
   );
@@ -452,6 +459,7 @@ const Index = () => {
       {/* Modals */}
       <CompareModal
         isOpen={showCompare}
+        setShowCompare={setShowCompare}
         onClose={() => setShowCompare(false)}
         apps={compareApps}
         onRemoveApp={handleRemoveFromCompare}
@@ -491,7 +499,7 @@ const Index = () => {
                 />
               </div>
               <div className="space-y-2">
-                <Badge variant="outline">{selectedScreen.category}</Badge>
+                {/* <Badge variant="outline">{selectedScreen.category}</Badge> */}
                 <p className="text-sm text-slate-600">
                   {selectedScreen.description}
                 </p>

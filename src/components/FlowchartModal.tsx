@@ -1,25 +1,31 @@
-
-import React, { useState, useCallback } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { 
-  ReactFlow, 
-  Node, 
-  Edge, 
-  useNodesState, 
-  useEdgesState, 
+import { ScreenImageModal } from "@/components/ScreenImageModal";
+import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   Background,
   Controls,
-  MiniMap
-} from '@xyflow/react';
-import '@xyflow/react/dist/style.css';
-import { ScreenImageModal } from '@/components/ScreenImageModal';
+  Edge,
+  MiniMap,
+  Node,
+  ReactFlow,
+  useEdgesState,
+  useNodesState,
+} from "@xyflow/react";
+import "@xyflow/react/dist/style.css";
+import React, { useCallback, useState } from "react";
 
 interface Screen {
   id: string;
   name: string;
-  category: string;
+  category?: {
+    _id: string;
+    name: string;
+  };
   image: string;
   description: string;
 }
@@ -32,81 +38,86 @@ interface FlowchartModalProps {
 
 const initialNodes: Node[] = [
   {
-    id: 'start',
-    type: 'input',
+    id: "start",
+    type: "input",
     position: { x: 250, y: 0 },
-    data: { label: 'App Launch', category: 'Discovery' }
+    data: { label: "App Launch", category: "Discovery" },
   },
   {
-    id: 'discovery',
+    id: "discovery",
     position: { x: 100, y: 100 },
-    data: { label: 'Discovery', category: 'Discovery' }
+    data: { label: "Discovery", category: "Discovery" },
   },
   {
-    id: 'search',
+    id: "search",
     position: { x: 400, y: 100 },
-    data: { label: 'Search', category: 'Discovery' }
+    data: { label: "Search", category: "Discovery" },
   },
   {
-    id: 'playback',
+    id: "playback",
     position: { x: 250, y: 200 },
-    data: { label: 'Playback', category: 'Playback' }
+    data: { label: "Playback", category: "Playback" },
   },
   {
-    id: 'library',
+    id: "library",
     position: { x: 100, y: 300 },
-    data: { label: 'Library', category: 'Library' }
+    data: { label: "Library", category: "Library" },
   },
   {
-    id: 'profile',
+    id: "profile",
     position: { x: 400, y: 300 },
-    data: { label: 'Profile', category: 'Profile' }
+    data: { label: "Profile", category: "Profile" },
   },
   {
-    id: 'social',
+    id: "social",
     position: { x: 250, y: 400 },
-    data: { label: 'Social', category: 'Social' }
-  }
+    data: { label: "Social", category: "Social" },
+  },
 ];
 
 const initialEdges: Edge[] = [
-  { id: 'e1', source: 'start', target: 'discovery', animated: true },
-  { id: 'e2', source: 'start', target: 'search', animated: true },
-  { id: 'e3', source: 'discovery', target: 'playback' },
-  { id: 'e4', source: 'search', target: 'playback' },
-  { id: 'e5', source: 'playback', target: 'library' },
-  { id: 'e6', source: 'playback', target: 'profile' },
-  { id: 'e7', source: 'library', target: 'social' },
-  { id: 'e8', source: 'profile', target: 'social' }
+  { id: "e1", source: "start", target: "discovery", animated: true },
+  { id: "e2", source: "start", target: "search", animated: true },
+  { id: "e3", source: "discovery", target: "playback" },
+  { id: "e4", source: "search", target: "playback" },
+  { id: "e5", source: "playback", target: "library" },
+  { id: "e6", source: "playback", target: "profile" },
+  { id: "e7", source: "library", target: "social" },
+  { id: "e8", source: "profile", target: "social" },
 ];
 
 export const FlowchartModal: React.FC<FlowchartModalProps> = ({
   isOpen,
   onClose,
-  screens
+  screens,
 }) => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [selectedScreen, setSelectedScreen] = useState<Screen | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
 
-  const onNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
-    const category = node.data?.category;
-    if (typeof category === 'string') {
-      setSelectedCategory(category);
-      
-      // Find screens in this category
-      const categoryScreens = screens.filter(screen => screen.category === category);
-      if (categoryScreens.length > 0) {
-        setSelectedScreen(categoryScreens[0]);
-      } else {
-        setSelectedScreen(null);
+  const onNodeClick = useCallback(
+    (event: React.MouseEvent, node: Node) => {
+      const category = node.data?.category;
+      if (typeof category === "string") {
+        setSelectedCategory(category);
+
+        // Find screens in this category
+        const categoryScreens = screens.filter(
+          (screen) => screen?.category?.name === category
+        );
+        if (categoryScreens.length > 0) {
+          setSelectedScreen(categoryScreens[0]);
+        } else {
+          setSelectedScreen(null);
+        }
       }
-    }
-  }, [screens]);
+    },
+    [screens]
+  );
 
   const getCategoryScreens = (category: string): Screen[] => {
-    return screens.filter(screen => screen.category === category);
+    return screens.filter((screen) => screen?.category?.name === category);
   };
 
   const handleScreenChange = (screen: Screen) => {
@@ -118,10 +129,14 @@ export const FlowchartModal: React.FC<FlowchartModalProps> = ({
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="max-w-6xl max-h-[95vh]">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-bold">App User Flow</DialogTitle>
-            <p className="text-gray-600">Click on any node to explore screens in that category</p>
+            <DialogTitle className="text-2xl font-bold">
+              App User Flow
+            </DialogTitle>
+            <p className="text-gray-600">
+              Click on any node to explore screens in that category
+            </p>
           </DialogHeader>
-          
+
           <div className="mt-6">
             <div className="h-96 border rounded-lg">
               <ReactFlow
@@ -131,40 +146,44 @@ export const FlowchartModal: React.FC<FlowchartModalProps> = ({
                 onEdgesChange={onEdgesChange}
                 onNodeClick={onNodeClick}
                 fitView
-                style={{ backgroundColor: '#f8fafc' }}
+                style={{ backgroundColor: "#f8fafc" }}
               >
                 <Background />
                 <Controls />
                 <MiniMap />
               </ReactFlow>
             </div>
-            
+
             {selectedCategory && (
               <div className="mt-6 p-4 bg-slate-50 rounded-lg">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold">{selectedCategory} Screens</h3>
+                  <h3 className="text-lg font-semibold">
+                    {selectedCategory} Screens
+                  </h3>
                   <Badge variant="outline">
                     {getCategoryScreens(selectedCategory).length} screens
                   </Badge>
                 </div>
-                
+
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {getCategoryScreens(selectedCategory).map(screen => (
-                    <div 
-                      key={screen.id} 
+                  {getCategoryScreens(selectedCategory).map((screen) => (
+                    <div
+                      key={screen.id}
                       className="cursor-pointer group"
                       onClick={() => setSelectedScreen(screen)}
                     >
                       <div className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all">
                         <div className="aspect-[9/16] overflow-hidden">
-                          <img 
-                            src={screen.image} 
+                          <img
+                            src={screen.image}
                             alt={screen.name}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                           />
                         </div>
                         <div className="p-2">
-                          <h4 className="font-medium text-sm truncate">{screen.name}</h4>
+                          <h4 className="font-medium text-sm truncate">
+                            {screen.name}
+                          </h4>
                         </div>
                       </div>
                     </div>

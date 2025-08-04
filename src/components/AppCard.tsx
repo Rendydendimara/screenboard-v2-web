@@ -11,6 +11,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { AppPublic } from "@/pages/Index";
+import ImageWithFallback from "./ui/ImageWithFallback";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 interface AppCardProps {
   app: AppPublic;
@@ -43,8 +45,9 @@ export const AppCard: React.FC<AppCardProps> = ({
         <div className="flex p-4 lg:p-6">
           <div className="flex-shrink-0 mr-4 lg:mr-6">
             <div className="relative">
-              <img
-                src={app.image}
+              <ImageWithFallback
+                src={app?.image ?? "https://source.unsplash.com/400x300?game"}
+                fallbackSrc="https://placehold.co/400"
                 alt={app.name}
                 className="w-16 h-16 lg:w-20 lg:h-20 rounded-2xl object-cover group-hover:scale-105 transition-transform"
               />
@@ -55,10 +58,9 @@ export const AppCard: React.FC<AppCardProps> = ({
               )}
             </div>
           </div>
-
           <div className="flex-1 min-w-0">
             <div className="flex flex-col lg:flex-row lg:items-start justify-between mb-3">
-              <div className="flex-1 min-w-0 mb-2 lg:mb-0">
+              <div className="flex-1 w-fit max-w-[300px] mb-2 lg:mb-0">
                 <div className="flex items-center space-x-2 mb-1">
                   <h3 className="text-lg lg:text-xl font-bold text-slate-900 truncate">
                     {app.name}
@@ -77,6 +79,24 @@ export const AppCard: React.FC<AppCardProps> = ({
                 </p>
               </div>
 
+              <div className="flex items-center gap-2">
+                {app.screens.slice(0, 4).map((screen) => (
+                  <div
+                    key={screen.id}
+                    className="aspect-[9/16] rounded-lg overflow-hidden relative"
+                  >
+                    <img
+                      src={screen.image}
+                      alt={screen.name}
+                      className="w-[200px] h-[200px] object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 to-transparent text-white p-2 text-xs">
+                      {screen.name}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
               <div className="flex items-center space-x-2 lg:ml-4">
                 <Button
                   variant="ghost"
@@ -90,23 +110,45 @@ export const AppCard: React.FC<AppCardProps> = ({
                 >
                   <GitCompare className="h-4 w-4" />
                 </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onLike();
-                  }}
-                  className="h-8 w-8 p-0 hover:bg-red-50"
-                >
-                  <Heart
-                    className={`h-4 w-4 ${
-                      app.isLiked
-                        ? "fill-red-500 text-red-500"
-                        : "text-slate-400"
-                    }`}
+                <Tooltip delayDuration={0}>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      // onClick={(e) => {
+                      //   e.stopPropagation();
+                      //   onLike();
+                      // }}
+                      className="h-8 w-8 p-0 hover:bg-red-50"
+                    >
+                      {/* ${
+                          app.isLiked
+                            ? "fill-red-500 text-red-500"
+                            : "text-slate-400"
+                        } */}
+
+                      <Heart className={"h-4 w-4 text-slate-400"} />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent
+                    side="bottom"
+                    align="center"
+                    hidden={false}
+                    children={<p>Comming soon</p>}
+                    // hidden={state !== "collapsed" || isMobile}
+                    // {...tooltip}
                   />
-                </Button>
+                </Tooltip>
+
+                <Link to={`/app/${app.id}`}>
+                  <Button
+                    size="sm"
+                    className="bg-white/90 text-slate-900 hover:bg-white shadow-lg backdrop-blur-sm"
+                  >
+                    <ExternalLink className="h-3 w-3 lg:h-4 lg:w-4 mr-1 lg:mr-2" />
+                    <span className="text-xs lg:text-sm">View</span>
+                  </Button>
+                </Link>
               </div>
             </div>
 
@@ -144,12 +186,12 @@ export const AppCard: React.FC<AppCardProps> = ({
       onClick={onClick}
     >
       <div className="relative overflow-hidden bg-gradient-to-br from-slate-50 to-slate-100 aspect-[4/3]">
-        <img
-          src={app.image}
+        <ImageWithFallback
+          src={app?.image ?? "https://source.unsplash.com/400x300?game"}
+          fallbackSrc="https://placehold.co/400"
           alt={app.name}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
-
         <div className="absolute top-3 lg:top-4 left-3 lg:left-4 flex items-center space-x-2">
           {app.featured && (
             <Badge className="bg-yellow-500 text-white border-0 text-xs">
@@ -174,21 +216,35 @@ export const AppCard: React.FC<AppCardProps> = ({
           >
             <GitCompare className="h-4 w-4" />
           </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={(e) => {
-              e.stopPropagation();
-              onLike();
-            }}
-            className="h-8 w-8 p-0 bg-white/90 backdrop-blur-sm hover:bg-white"
-          >
-            <Heart
-              className={`h-4 w-4 ${
-                app.isLiked ? "fill-red-500 text-red-500" : "text-slate-600"
-              }`}
+          <Tooltip delayDuration={0}>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                // onClick={(e) => {
+                //   e.stopPropagation();
+                //   onLike();
+                // }}
+                className="h-8 w-8 p-0 hover:bg-red-50"
+              >
+                {/* ${
+                          app.isLiked
+                            ? "fill-red-500 text-red-500"
+                            : "text-slate-400"
+                        } */}
+
+                <Heart className={"h-4 w-4 text-slate-400"} />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent
+              side="bottom"
+              align="center"
+              hidden={false}
+              children={<p>Comming soon</p>}
+              // hidden={state !== "collapsed" || isMobile}
+              // {...tooltip}
             />
-          </Button>
+          </Tooltip>
         </div>
 
         <div className="absolute bottom-3 lg:bottom-4 right-3 lg:right-4">

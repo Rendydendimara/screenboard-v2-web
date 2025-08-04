@@ -42,6 +42,9 @@ import CInputFileDragDrop, { CInputFilePreview } from "./ui/CInputFileDragDrop";
 import ConfirmDeleteModal from "./ui/confirm-delete-modal";
 import { Textarea } from "./ui/textarea";
 import Dropzone from "react-dropzone";
+import { AdminCategoryScreenshotManager } from "./AdminCategoryScreenshotManager";
+import { TScreenCategoryRes } from "@/api/admin/screenCategory/type";
+import ScreenCategoryAPI from "@/api/admin/screenCategory/api";
 
 export interface Screenshot {
   id: string;
@@ -95,6 +98,10 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
   const [editingScreen, setEditingScreen] = useState<Screenshot | null>(null);
   const [selectedModuleFilter, setSelectedModulFilter] =
     useState<TSelect | null>(null);
+  const [categories, setCategories] = useState<TScreenCategoryRes[]>([]);
+  const [activeTab, setActiveTab] = useState<"category" | "screenshots">(
+    "screenshots"
+  );
 
   const [formData, setFormData] = useState({
     name: "",
@@ -104,15 +111,6 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
     appId: "",
     module: "",
   });
-
-  const categories = [
-    "Discovery",
-    "Playback",
-    "Library",
-    "Settings",
-    "Profile",
-    "Search",
-  ];
 
   // Filter screenshots by appId if provided
   const displayedScreenshots = appId
@@ -459,9 +457,31 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
     [listModule]
   );
 
+  const getListDataCategory = async () => {
+    try {
+      const dataRes = await ScreenCategoryAPI.getAll();
+      setCategories(dataRes?.data ?? []);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || error.response.data.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleChangeTab = (tab: "category" | "screenshots") => {
+    if (tab === "screenshots") {
+      getListData();
+      getListDataCategory();
+    }
+    setActiveTab(tab);
+  };
+
   useEffect(() => {
     getListData();
     getDataOptions();
+    getListDataCategory();
   }, []);
 
   return (
@@ -491,12 +511,17 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
           </div>
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue="screenshots" className="space-y-4">
+          <Tabs
+            defaultValue="screenshots"
+            className="space-y-4"
+            value={activeTab}
+            onValueChange={handleChangeTab}
+          >
             <TabsList>
               <TabsTrigger value="screenshots">Screenshots</TabsTrigger>
+              <TabsTrigger value="category">Category</TabsTrigger>
               {/* <TabsTrigger value="colors">Color Analysis</TabsTrigger> */}
             </TabsList>
-
             <TabsContent value="screenshots">
               <div className="mb-4 flex gap-2 items-start justify-start">
                 {/* Filters and View Controls */}
@@ -591,7 +616,9 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
                 <ScrollBar orientation="horizontal" />
               </ScrollArea>
             </TabsContent>
-
+            <TabsContent value="category">
+              <AdminCategoryScreenshotManager />
+            </TabsContent>
             {/* <TabsContent value="colors">
               <ColorAnalysis
                 imageColors={imageColors}
@@ -665,8 +692,8 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
                 </SelectTrigger>
                 <SelectContent>
                   {categories.map((category) => (
-                    <SelectItem key={category} value={category}>
-                      {category}
+                    <SelectItem key={category._id} value={category._id}>
+                      {category.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -791,8 +818,8 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
                   </SelectTrigger>
                   <SelectContent>
                     {categories.map((category) => (
-                      <SelectItem key={category} value={category}>
-                        {category}
+                      <SelectItem key={category._id} value={category._id}>
+                        {category.name}
                       </SelectItem>
                     ))}
                   </SelectContent>

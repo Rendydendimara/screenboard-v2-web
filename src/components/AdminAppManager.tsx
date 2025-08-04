@@ -40,6 +40,7 @@ import { useNavigate } from "react-router-dom";
 import CInputFileDragDrop, { CInputFilePreview } from "./ui/CInputFileDragDrop";
 import ConfirmDeleteModal from "./ui/confirm-delete-modal";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import ImageWithFallback from "./ui/ImageWithFallback";
 
 export interface App {
   id: string;
@@ -304,7 +305,7 @@ export const AdminAppManager: React.FC = () => {
 
           toast({
             title: "Category Updated",
-            description: `${formData.name} has been updated successfully.`,
+            description: `${formDataCategory.name} has been updated successfully.`,
           });
         } else {
           await CategoryAPI.create({
@@ -313,7 +314,7 @@ export const AdminAppManager: React.FC = () => {
 
           toast({
             title: "Category Created",
-            description: `${formData.name} has been created successfully.`,
+            description: `${formDataCategory.name} has been created successfully.`,
           });
         }
         getListDataCategory();
@@ -332,7 +333,7 @@ export const AdminAppManager: React.FC = () => {
 
           toast({
             title: "Subcategory Updated",
-            description: `${formData.name} has been updated successfully.`,
+            description: `${formDataSubcategory.name} has been updated successfully.`,
           });
         } else {
           await SubcategoryAPI.create({
@@ -342,7 +343,7 @@ export const AdminAppManager: React.FC = () => {
 
           toast({
             title: "Subcategory Created",
-            description: `${formData.name} has been created successfully.`,
+            description: `${formDataSubcategory.name} has been created successfully.`,
           });
         }
         getListDataSubcategory();
@@ -694,8 +695,12 @@ export const AdminAppManager: React.FC = () => {
                       >
                         <TableCell>
                           <div className="flex items-center space-x-3">
-                            <img
-                              src={app.image}
+                            <ImageWithFallback
+                              src={
+                                app?.image ??
+                                "https://source.unsplash.com/400x300?game"
+                              }
+                              fallbackSrc="https://placehold.co/400"
                               alt={app.name}
                               className="w-10 h-10 rounded-lg object-cover"
                             />

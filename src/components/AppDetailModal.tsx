@@ -1,39 +1,41 @@
-import React, { useState } from "react";
-import {
-  X,
-  Heart,
-  Star,
-  Download,
-  ExternalLink,
-  Smartphone,
-  Monitor,
-  Globe,
-  Share2,
-  Building,
-  Calendar,
-  Eye,
-  Grid3X3,
-  List,
-  GitCompare,
-  GitBranch,
-} from "lucide-react";
+import { FlowchartModal } from "@/components/FlowchartModal";
+import { ScreenImageModal } from "@/components/ScreenImageModal";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { ScreenImageModal } from "@/components/ScreenImageModal";
-import { FlowchartModal } from "@/components/FlowchartModal";
+import {
+  Building,
+  Calendar,
+  Download,
+  ExternalLink,
+  Eye,
+  GitBranch,
+  GitCompare,
+  Globe,
+  Grid3X3,
+  Heart,
+  List,
+  Monitor,
+  Share2,
+  Smartphone,
+  Star,
+} from "lucide-react";
+import React, { useState } from "react";
+import ImageWithFallback from "./ui/ImageWithFallback";
 
 interface Screen {
   id: string;
   name: string;
-  category: string;
+  category?: {
+    _id: string;
+    name: string;
+  };
   image: string;
   description: string;
 }
@@ -97,21 +99,21 @@ export const AppDetailModal: React.FC<AppDetailModalProps> = ({
 
   const screenCategories = [
     "All",
-    ...new Set(app.screens.map((screen) => screen.category)),
+    ...new Set(app.screens.map((screen) => screen?.category?.name)),
   ];
 
   const filteredScreens =
     selectedScreenCategory === "All"
       ? app.screens
       : app.screens.filter(
-          (screen) => screen.category === selectedScreenCategory
+          (screen) => screen?.category?.name === selectedScreenCategory
         );
 
   const groupedScreens = app.screens.reduce((acc, screen) => {
-    if (!acc[screen.category]) {
-      acc[screen.category] = [];
+    if (!acc[screen?.category?.name]) {
+      acc[screen?.category?.name] = [];
     }
-    acc[screen.category].push(screen);
+    acc[screen?.category?.name].push(screen);
     return acc;
   }, {} as Record<string, Screen[]>);
 
@@ -127,8 +129,11 @@ export const AppDetailModal: React.FC<AppDetailModalProps> = ({
             <div className="flex items-center space-x-6">
               <div className="relative">
                 <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-xl">
-                  <img
-                    src={app.image}
+                  <ImageWithFallback
+                    src={
+                      app?.image ?? "https://source.unsplash.com/400x300?game"
+                    }
+                    fallbackSrc="https://placehold.co/400"
                     alt={app.name}
                     className="w-full h-full object-cover"
                   />
@@ -356,7 +361,7 @@ export const AppDetailModal: React.FC<AppDetailModalProps> = ({
                         {screen.name}
                       </h4>
                       <Badge variant="outline" className="text-xs">
-                        {screen.category}
+                        {screen?.category?.name}
                       </Badge>
                     </div>
                     <p className="text-sm text-slate-600 line-clamp-2">

@@ -26,6 +26,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AppPublic, ScreenPublic } from "./Index";
+import ImageWithFallback from "@/components/ui/ImageWithFallback";
 
 const AppDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -57,21 +58,21 @@ const AppDetails: React.FC = () => {
 
   const screenCategories = [
     "All",
-    ...new Set(app?.screens.map((screen) => screen.category)),
+    ...new Set(app?.screens.map((screen) => screen?.category?.name)),
   ];
 
   const filteredScreens =
     selectedScreenCategory === "All"
       ? app?.screens
       : app?.screens.filter(
-          (screen) => screen.category === selectedScreenCategory
+          (screen) => screen?.category?.name === selectedScreenCategory
         );
 
   const groupedScreens = app?.screens.reduce((acc, screen) => {
-    if (!acc[screen.category]) {
-      acc[screen.category] = [];
+    if (!acc[screen?.category?.name]) {
+      acc[screen?.category?.name] = [];
     }
-    acc[screen.category].push(screen);
+    acc[screen?.category?.name].push(screen);
     return acc;
   }, {} as Record<string, ScreenPublic[]>);
 
@@ -150,8 +151,11 @@ const AppDetails: React.FC = () => {
             <div className="flex items-center space-x-6">
               <div className="relative">
                 <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-xl">
-                  <img
-                    src={app.image}
+                  <ImageWithFallback
+                    src={
+                      app?.image ?? "https://source.unsplash.com/400x300?game"
+                    }
+                    fallbackSrc="https://placehold.co/400"
                     alt={app.name}
                     className="w-full h-full object-cover"
                   />
@@ -372,7 +376,7 @@ const AppDetails: React.FC = () => {
                                   variant="outline"
                                   className="text-xs flex-shrink-0"
                                 >
-                                  {screen.category}
+                                  {screen?.category?.name}
                                 </Badge>
                               </div>
                               <p className="text-sm text-slate-600 line-clamp-2">
@@ -426,7 +430,7 @@ const AppDetails: React.FC = () => {
                           {screen.modul}
                         </Badge>
                         <Badge variant="outline" className="text-xs">
-                          {screen.category}
+                          {screen?.category?.name}
                         </Badge>
                       </div>
                       <p className="text-sm text-slate-600 line-clamp-2">

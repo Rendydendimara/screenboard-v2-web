@@ -21,6 +21,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { useTypedSelector } from "@/hooks/use-typed-selector";
 import { RootState } from "@/provider/store";
+import ImageWithFallback from "./ui/ImageWithFallback";
 
 interface App {
   id: number;
@@ -326,8 +327,11 @@ export const AppCRUDModal: React.FC<AppCRUDModalProps> = ({
                   className="flex items-center justify-between p-3 bg-slate-50 rounded-lg"
                 >
                   <div className="flex items-center space-x-3">
-                    <img
-                      src={app.image}
+                    <ImageWithFallback
+                      src={
+                        app?.image ?? "https://source.unsplash.com/400x300?game"
+                      }
+                      fallbackSrc="https://placehold.co/400"
                       alt={app.name}
                       className="w-12 h-12 rounded-lg object-cover"
                     />
