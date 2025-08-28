@@ -3,7 +3,7 @@ import { AppPublic } from "@/pages/Index";
 import { TSelect } from "@/types";
 import { X } from "lucide-react";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import Lightbox from "yet-another-react-lightbox";
+import { FaChevronLeft, FaChevronRight, FaTimes } from "react-icons/fa";
 import ScrollGallery, { ScrollGalleryList } from "./ScrollGallery";
 import ImageWithFallback from "./ui/ImageWithFallback";
 import {
@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import ReactDOM from "react-dom";
 
 interface AppCardProps {
   app: AppPublic;
@@ -38,7 +39,6 @@ export const AppCardCompare: React.FC<AppCardProps> = ({
 
   const handleCloseImageDetail = useCallback(() => {
     setOpenDetailImage(false);
-    // setShowCompare(true);
   }, []);
 
   const getListImageDetail = useMemo(() => {
@@ -83,6 +83,30 @@ export const AppCardCompare: React.FC<AppCardProps> = ({
     }
     return result;
   }, [selectedModuleFilter, app.screens]);
+
+  const prevSlide = () =>
+    setIndexInitialImageOpen((prev) =>
+      prev === 0 ? getListImageDetail.length - 1 : prev - 1
+    );
+
+  const nextSlide = () =>
+    setIndexInitialImageOpen((prev) =>
+      prev === getListImageDetail.length - 1 ? 0 : prev + 1
+    );
+
+  // Keyboard navigation
+  useEffect(() => {
+    if (!openDetailImage) return;
+
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") prevSlide();
+      if (e.key === "ArrowRight") nextSlide();
+      // if (e.key === "Escape") handleCloseImageDetail();
+    };
+
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [openDetailImage]);
 
   useEffect(() => {
     getScreensCategory();
@@ -231,13 +255,51 @@ export const AppCardCompare: React.FC<AppCardProps> = ({
           </div>
         </>
       )}
-      <Lightbox
-        open={openDetailImage}
-        close={handleCloseImageDetail}
-        slides={getListImageDetail}
-        index={indexInitialImageOpen}
-        className="z-[100]" // ⬅️ Lebih tinggi dari Dialog utama
-      />
+
+      {/* Lightbox */}
+      {openDetailImage &&
+        ReactDOM.createPortal(
+          <div className="fixed inset-0 z-[999999] bg-black/90 flex items-center justify-center pointer-events-auto">
+            {/* Close button */}
+            <button
+              onClick={handleCloseImageDetail}
+              className="absolute z-[100000] top-10 right-10 text-white text-2xl"
+            >
+              <FaTimes />
+            </button>
+
+            {/* Prev button */}
+            <button
+              onClick={prevSlide}
+              className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 p-3 rounded-full text-white"
+            >
+              <FaChevronLeft size={20} />
+            </button>
+
+            {/* Next button */}
+            <button
+              onClick={nextSlide}
+              className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 p-3 rounded-full text-white"
+            >
+              <FaChevronRight size={20} />
+            </button>
+
+            {/* Image */}
+            <div className="text-center max-w-4xl px-4">
+              <img
+                src={getListImageDetail[indexInitialImageOpen].src}
+                // alt={getListImageDetail[indexInitialImageOpen].title}
+                className="max-h-[90vh] mx-auto rounded-lg"
+              />
+              {/* <h3 className="mt-4 text-xl font-semibold text-white">
+                    {getListImageDetail[indexInitialImageOpen].title}
+                  </h3> */}
+              {/* <p className="text-gray-300 text-sm">{getListImageDetail[indexInitialImageOpen].caption}</p> */}
+            </div>
+          </div>,
+          document.body
+        )}
     </div>
   );
 };
+8888;

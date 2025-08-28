@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from "react";
+import { AnnotationOverlay } from "@/components/AnnotationOverlay";
+import { MonetizationModal } from "@/components/MonetizationModal";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, Download } from "lucide-react";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { AnnotationOverlay } from "@/components/AnnotationOverlay";
-import { Annotation } from "@/types/annotations";
+import { useToast } from "@/hooks/use-toast";
 import { useDownloadLimit } from "@/hooks/useDownloadLimit";
 import { useScreenHistory } from "@/hooks/useScreenHistory";
-import { MonetizationModal } from "@/components/MonetizationModal";
-import { useToast } from "@/hooks/use-toast";
+import { Annotation } from "@/types/annotations";
+import { ChevronLeft, ChevronRight, Download } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
 
 interface Screen {
   id: string;
@@ -95,6 +95,8 @@ export const ScreenImageModal: React.FC<ScreenImageModalProps> = ({
   } = useDownloadLimit();
   const { addToHistory } = useScreenHistory();
   const { toast } = useToast();
+  const boxRef = useRef<HTMLDivElement | null>(null);
+  const [widthContent, setWidthContent] = useState<number>(0);
 
   const currentIndex = allScreens.findIndex((s) => s.id === screen.id);
   const hasPrevious = currentIndex > 0;
@@ -168,12 +170,28 @@ export const ScreenImageModal: React.FC<ScreenImageModalProps> = ({
     }
   };
 
+  useEffect(() => {
+    const updateWidth = () => {
+      if (boxRef.current) {
+        setWidthContent(boxRef.current.offsetWidth);
+      }
+    };
+
+    updateWidth(); // jalankan sekali
+    window.addEventListener("resize", updateWidth);
+
+    return () => window.removeEventListener("resize", updateWidth);
+  }, [boxRef.current]);
+
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="max-w-6xl max-h-[95vh] overflow-y-auto">
+        <DialogContent
+          ref={boxRef}
+          className="max-w-6xl max-h-[95vh] overflow-y-auto"
+        >
           <DialogHeader>
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col md:flex-row gap-2 md:gap-0 items-center justify-between">
               <div>
                 <DialogTitle className="text-2xl font-bold">
                   {screen.name}
@@ -183,7 +201,9 @@ export const ScreenImageModal: React.FC<ScreenImageModalProps> = ({
                   {screen?.category?.name} category
                 </DialogDescription>
                 <div className="flex items-center space-x-2 mt-2">
-                  <Badge variant="outline">{screen?.category?.name}</Badge>
+                  {screen?.category?.name && (
+                    <Badge variant="outline">{screen?.category?.name}</Badge>
+                  )}
                   <Badge variant="secondary" className="text-xs">
                     Downloads remaining: {remainingDownloads}
                   </Badge>
@@ -230,11 +250,11 @@ export const ScreenImageModal: React.FC<ScreenImageModalProps> = ({
             {/* Main Image with Annotations */}
             <div className="flex justify-center">
               <div className="max-w-md relative">
-                <div className="aspect-[9/16] bg-gray-100 rounded-2xl overflow-hidden shadow-lg relative">
+                <div className="bg-gray-100 rounded-lg overflow-hidden shadow-lg relative">
                   <img
                     src={screen.image}
                     alt={screen.name}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain"
                   />
                   <AnnotationOverlay
                     annotations={screenAnnotations}
@@ -270,7 +290,10 @@ export const ScreenImageModal: React.FC<ScreenImageModalProps> = ({
                   Browse All Screens
                 </h3>
                 <ScrollArea className="w-full whitespace-nowrap">
-                  <div className="flex w-max space-x-4 p-4">
+                  <div
+                    className="flex w-full overflow-x-auto space-x-4 p-4"
+                    style={{ maxWidth: `${widthContent - 50}px` }}
+                  >
                     {allScreens.map((screenItem, index) => (
                       <div
                         key={screenItem.id}
