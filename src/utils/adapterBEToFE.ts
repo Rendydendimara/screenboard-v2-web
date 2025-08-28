@@ -143,7 +143,7 @@ export const adapterSingleAppBEToFEPublic = (
     trending: data.trending,
     lastUpdated: data.updatedAt
       ? new Date(data.updatedAt).toLocaleDateString()
-      : "",
+      : new Date(data.createdAt).toLocaleDateString(),
   };
   return result;
 };

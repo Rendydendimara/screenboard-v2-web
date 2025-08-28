@@ -154,7 +154,7 @@ const AppDetails: React.FC = () => {
 
           {/* App Overview */}
           <div className="mb-8">
-            <div className="flex items-start justify-between">
+            <div className="flex items-start justify-between md:flex-row flex-col">
               <div className="flex items-center space-x-6">
                 <div className="relative">
                   <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-xl">
@@ -176,7 +176,7 @@ const AppDetails: React.FC = () => {
                   <h1 className="text-3xl font-bold text-slate-900 mb-2">
                     {app.name}
                   </h1>
-                  <div className="flex items-center space-x-3 mb-3">
+                  <div className="flex items-start justify-start gap-2 flex-wrap">
                     <Badge
                       variant="secondary"
                       className="flex items-center space-x-1 text-sm px-3 py-1"
@@ -197,7 +197,7 @@ const AppDetails: React.FC = () => {
                       </Badge>
                     )}
                   </div>
-                  <div className="flex items-center space-x-4 text-sm text-slate-600">
+                  <div className="flex mt-2 items-start gap-1 flex-col md:flex-row justify-start text-sm text-slate-600">
                     <div className="flex items-center space-x-1">
                       <Building className="h-4 w-4" />
                       <span>{app.company}</span>
@@ -211,7 +211,7 @@ const AppDetails: React.FC = () => {
                   </div>
                 </div>
               </div>
-              <div className="flex items-center space-x-3">
+              <div className="flex flex-wrap gap-2 justify-start items-center mt-4 md:mt-0">
                 <Button
                   variant="outline"
                   size="sm"
@@ -219,22 +219,22 @@ const AppDetails: React.FC = () => {
                   className="h-10"
                 >
                   <Heart
-                    className={`h-4 w-4 mr-2 ${
+                    className={`h-4 w-4 ${
                       app.isLiked ? "fill-red-500 text-red-500" : ""
                     }`}
                   />
                   {app.isLiked ? "Liked" : "Like"}
                 </Button>
                 <Button variant="outline" size="sm" className="h-10">
-                  <GitCompare className="h-4 w-4 mr-2" />
+                  <GitCompare className="h-4 w-4" />
                   Compare
                 </Button>
                 <Button variant="outline" size="sm" className="h-10">
-                  <Share2 className="h-4 w-4 mr-2" />
+                  <Share2 className="h-4 w-4" />
                   Share
                 </Button>
                 <Button size="sm" className="h-10">
-                  <ExternalLink className="h-4 w-4 mr-2" />
+                  <ExternalLink className="h-4 w-4" />
                   View App
                 </Button>
               </div>
