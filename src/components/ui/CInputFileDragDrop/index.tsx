@@ -60,6 +60,7 @@ const CInputFileDragDrop: React.FC<IProps> = (props) => {
       }
     } else {
       let isHaveError = false;
+      console.log("data", data);
       data.forEach((file: any) => {
         if (file) {
           const fileName = file.name.match(/\.[0-9a-z]+$/i)[0];

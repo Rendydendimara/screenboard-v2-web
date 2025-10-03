@@ -1,3 +1,4 @@
+import AuthAPI from "@/api/admin/auth/api";
 import { AdminAppManager } from "@/components/AdminAppManager";
 import { AdminModuleManager } from "@/components/AdminModuleManager";
 import { AdminScreenshotManager } from "@/components/AdminScreenshotManager";
@@ -5,10 +6,13 @@ import { AdminStats } from "@/components/AdminStats";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useToast } from "@/hooks/use-toast";
 import { useTypedSelector } from "@/hooks/use-typed-selector";
+import { logout } from "@/provider/slices/authSlice";
 import { RootState } from "@/provider/store";
 import { BarChart3, Image, Plus, Shield, Users } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 export default function Admin() {
@@ -17,11 +21,28 @@ export default function Admin() {
   const isAdmin = user?.userType === "administrator";
   const [activeTab, setActiveTab] = useState("stats");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { toast } = useToast();
 
   const handleChangeTab = useCallback((tab: string) => {
     setActiveTab(tab);
     navigate(`#${tab}`);
   }, []);
+
+  const handleLogout = async () => {
+    try {
+      const res = await AuthAPI.logout();
+      if (res.success) {
+        dispatch(logout());
+        navigate("/");
+      }
+    } catch (err: any) {
+      toast({
+        title: "Error",
+        description: err.message,
+      });
+    }
+  };
 
   useEffect(() => {
     const hashOnly = window.location.hash.split("?")[0].replace("#", ""); // hasil: "#reports"
@@ -85,11 +106,8 @@ export default function Admin() {
               <span className="text-sm text-gray-600">
                 Welcome, {user.username}
               </span>
-              <Button
-                variant="outline"
-                onClick={() => (window.location.href = "/")}
-              >
-                Back to App
+              <Button variant="outline" onClick={handleLogout}>
+                Logout
               </Button>
             </div>
           </div>

@@ -209,7 +209,7 @@ const Index = () => {
         title="Screenboard"
         description="Discover and explore amazing mobile app designs. Get inspired by the world's best mobile apps."
       />
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+      <div className="min-h-screen bg-white">
         {/* Fixed Header */}
         <header
           className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -293,25 +293,28 @@ const Index = () => {
                     >
                       Logout
                     </Button>
-                    <Link to="/admin">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="hidden sm:flex items-center space-x-2"
-                      >
-                        Admin
-                      </Button>
-                    </Link>
+                    {user.userType === "administrator" && (
+                      <Link to="/admin">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="hidden sm:flex items-center space-x-2"
+                        >
+                          Admin
+                        </Button>
+                      </Link>
+                    )}
                   </>
                 ) : (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setIsOpenAuth(true)}
-                    className="hidden sm:flex items-center space-x-2"
-                  >
-                    Login
-                  </Button>
+                  <></>
+                  // <Button
+                  //   variant="ghost"
+                  //   size="sm"
+                  //   onClick={() => setIsOpenAuth(true)}
+                  //   className="hidden sm:flex items-center space-x-2"
+                  // >
+                  //   Login
+                  // </Button>
                 )}
               </div>
             </div>
@@ -337,12 +340,23 @@ const Index = () => {
                       placeholder="Search apps..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 w-full"
+                      className="pl-10 w-full rounded-[6px]"
                     />
                   </div>
                 </div>
               )}
 
+              <div className="flex-1 max-w-md">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+                  <Input
+                    placeholder="Search apps..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10 w-full rounded-[6px]"
+                  />
+                </div>
+              </div>
               {/* Filters and View Controls */}
               <div className="flex flex-col sm:flex-row gap-4 lg:gap-6">
                 {/* Category Filter */}
@@ -391,10 +405,10 @@ const Index = () => {
 
             {/* Results Count */}
             <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-              <p className="text-sm text-slate-600">
+              {/* <p className="text-sm text-slate-600">
                 Showing {filteredApps.length} of {listApp.length} apps
                 {selectedCategory !== null && ` in ${selectedCategory?.name}`}
-              </p>
+              </p> */}
 
               {/* Active Filters */}
               <div className="flex flex-wrap gap-2">
@@ -443,7 +457,7 @@ const Index = () => {
             <div
               className={
                 viewMode === "grid"
-                  ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6"
+                  ? "grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6"
                   : "space-y-4 lg:space-y-6"
               }
             >

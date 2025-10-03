@@ -64,10 +64,14 @@ export interface Screenshot {
 
 interface AdminScreenshotManagerProps {
   appId?: string;
+  isHideCategory?: boolean;
+  filterOnlyShowIfHasModul?: boolean;
 }
 
 export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
   appId,
+  isHideCategory = false,
+  filterOnlyShowIfHasModul = false,
 }) => {
   const [screenshots, setScreenshots] = useState<Screenshot[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -478,6 +482,20 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
     setActiveTab(tab);
   };
 
+  const getModuleOptions = useMemo(() => {
+    if (filterOnlyShowIfHasModul) {
+      const usedModuleValues = new Set(
+        displayedScreenshots.map((s) => s.modul)
+      );
+
+      const filteredModule = listModule.filter((m) =>
+        usedModuleValues.has(m.value)
+      );
+      return filteredModule;
+    }
+    return listModule;
+  }, [displayedScreenshots, filterOnlyShowIfHasModul, listModule]);
+
   useEffect(() => {
     getListData();
     getDataOptions();
@@ -519,7 +537,9 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
           >
             <TabsList>
               <TabsTrigger value="screenshots">Screenshots</TabsTrigger>
-              <TabsTrigger value="category">Category</TabsTrigger>
+              {!isHideCategory && (
+                <TabsTrigger value="category">Screenshot Category</TabsTrigger>
+              )}
               {/* <TabsTrigger value="colors">Color Analysis</TabsTrigger> */}
             </TabsList>
             <TabsContent value="screenshots">
@@ -537,7 +557,7 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
                       </SelectTrigger>
                       <SelectContent className="bg-white">
                         <SelectItem value={null}>All</SelectItem>
-                        {listModule.map((modul, i) => (
+                        {getModuleOptions.map((modul, i) => (
                           <SelectItem key={i} value={modul.value}>
                             {modul.label}
                           </SelectItem>
@@ -555,66 +575,62 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
                 />
               </div>
 
-              <ScrollArea className="w-full whitespace-nowrap rounded-md border">
-                <div className="flex w-max space-x-4 p-4">
-                  {filteredScreenshots.map((screenshot) => (
-                    <div
-                      key={screenshot.id}
-                      className="shrink-0 relative group cursor-pointer"
-                    >
-                      <div className="w-40 h-72 rounded-lg overflow-hidden bg-gray-100 shadow-md hover:shadow-lg transition-shadow">
-                        <img
-                          src={screenshot.image}
-                          alt={screenshot?.name ?? ""}
-                          className="w-full h-full object-cover"
+              {/* <ScrollArea className="w-full whitespace-nowrap rounded-md border"> */}
+              {/* <div className="flex w-max space-x-4 p-4"> */}
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {filteredScreenshots.map((screenshot) => (
+                  <div
+                    key={screenshot.id}
+                    className="shrink-0 w-full relative group cursor-pointer"
+                  >
+                    <div className="w-full h-72 rounded-lg overflow-hidden bg-gray-100 shadow-md hover:shadow-lg transition-shadow">
+                      <img
+                        src={screenshot.image}
+                        alt={screenshot?.name ?? ""}
+                        className="w-full h-full object-cover"
+                      />
+                      {screenshot.dominantColor && (
+                        <div
+                          className="absolute top-2 right-2 w-6 h-6 rounded-full border-2 border-white shadow-sm"
+                          style={{
+                            backgroundColor: screenshot.dominantColor,
+                          }}
                         />
-                        {screenshot.dominantColor && (
-                          <div
-                            className="absolute top-2 right-2 w-6 h-6 rounded-full border-2 border-white shadow-sm"
-                            style={{
-                              backgroundColor: screenshot.dominantColor,
-                            }}
-                          />
-                        )}
-                        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all flex items-center justify-center">
-                          <Button
-                            variant="destructive"
-                            size="sm"
-                            onClick={() =>
-                              handleDelete(
-                                screenshot.id,
-                                screenshot?.name ?? ""
-                              )
-                            }
-                            className="opacity-0 group-hover:opacity-100 transition-opacity"
-                          >
-                            <Trash2 className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      </div>
-                      <div className="mt-2 text-xs">
-                        <div className="font-medium truncate">
-                          {screenshot?.name ?? ""}
-                        </div>
-                        {screenshot.colors && (
-                          <div className="flex space-x-1 mt-1">
-                            {screenshot.colors
-                              .slice(0, 3)
-                              .map((color, index) => (
-                                <div
-                                  key={index}
-                                  className="w-3 h-3 rounded-full border border-white"
-                                  style={{ backgroundColor: color.hex }}
-                                />
-                              ))}
-                          </div>
-                        )}
+                      )}
+                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all flex items-center justify-center">
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() =>
+                            handleDelete(screenshot.id, screenshot?.name ?? "")
+                          }
+                          className="opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
                       </div>
                     </div>
-                  ))}
-                </div>
-                <ScrollBar orientation="horizontal" />
-              </ScrollArea>
+                    <div className="mt-2 text-xs">
+                      <div className="font-medium truncate">
+                        {screenshot?.name ?? ""}
+                      </div>
+                      {screenshot.colors && (
+                        <div className="flex space-x-1 mt-1">
+                          {screenshot.colors.slice(0, 3).map((color, index) => (
+                            <div
+                              key={index}
+                              className="w-3 h-3 rounded-full border border-white"
+                              style={{ backgroundColor: color.hex }}
+                            />
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {/* <ScrollBar orientation="horizontal" />
+              </ScrollArea> */}
             </TabsContent>
             <TabsContent value="category">
               <AdminCategoryScreenshotManager />

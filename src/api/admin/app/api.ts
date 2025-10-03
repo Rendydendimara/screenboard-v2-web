@@ -14,6 +14,10 @@ const create = async (payload: TAppPost) => {
     formData.append("screenshots", img);
   });
 
+  if (payload.icon) {
+    formData.append("icon", payload.icon);
+  }
+
   formData.append("name", payload.name);
   formData.append("category", payload.category);
   formData.append("subcategory", payload.subcategory);
@@ -59,6 +63,10 @@ const update = async (payload: TAppPut) => {
   payload.screenshots?.forEach((img) => {
     formData.append("screenshots", img);
   });
+
+  if (payload.icon) {
+    formData.append("icon", payload.icon);
+  }
 
   formData.append("appId", payload.appId);
   formData.append("name", payload.name);

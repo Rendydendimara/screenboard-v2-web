@@ -11,10 +11,12 @@ export type TAppPost = {
   tags: string[];
   color: string;
   company: string;
+  icon?: File;
 };
 export type TAppPut = {
   oldScreenshot: string[];
   appId: string;
+  oldIcon: string;
 } & TAppPost;
 
 export type TAppRes = {
@@ -46,6 +48,7 @@ export type TAppRes = {
   createdBy: string | null; // Referencing User
   deletedBy: string | null; // Referencing User or null
   updatedBy: string | null; // Referencing User or null
+  iconFile?: string;
 };
 
 export type TScreenResPublic = {
@@ -97,4 +100,5 @@ export type TAppResPublic = {
   updatedBy: string;
   deletedBy: string | null;
   name: string;
+  iconFile?: string;
 };

@@ -35,7 +35,13 @@ import { useToast } from "@/hooks/use-toast";
 import { UploadImageType } from "@/types";
 import { adapterListAppBEToFE } from "@/utils/adapterBEToFE";
 import { Edit3, ExternalLink, Plus, Save, Star, Trash2 } from "lucide-react";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import CInputFileDragDrop, { CInputFilePreview } from "./ui/CInputFileDragDrop";
 import ConfirmDeleteModal from "./ui/confirm-delete-modal";
@@ -64,6 +70,7 @@ export interface App {
   screenshots: string[];
   screens: string[];
   lastUpdated?: string;
+  iconFile?: string;
 }
 
 interface FormData {
@@ -137,6 +144,12 @@ export const AdminAppManager: React.FC = () => {
   const [activeTab, setActiveTab] = useState<
     "Apps" | "Category" | "Subcategory"
   >("Apps");
+  const [icon, setIcon] = useState<UploadImageType>({
+    oldImage: "",
+    currentImage: undefined,
+    isHaveChange: false,
+  });
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const resetForm = () => {
     setFormData({
@@ -189,6 +202,21 @@ export const AdminAppManager: React.FC = () => {
     setIsModalOpen(true);
   };
 
+  const handleCancelIcon = () => {
+    setIcon({
+      ...icon,
+      isHaveChange: false,
+    });
+  };
+
+  const onRemoveIcon = useCallback(() => {
+    setIcon({
+      ...icon,
+      isHaveChange: true,
+      currentImage: undefined,
+    });
+  }, []);
+
   const handleEdit = (app: App) => {
     setModalFormType("app");
     setFormData({
@@ -213,6 +241,13 @@ export const AdminAppManager: React.FC = () => {
       });
     });
     setSlideImages(tempImages);
+    console.log("app.iconFile", app.iconFile);
+    setIcon({
+      currentImage: undefined,
+      isHaveChange: false,
+      oldImage: app.iconFile,
+    });
+
     setEditingApp(app);
     setIsModalOpen(true);
   };
@@ -256,6 +291,8 @@ export const AdminAppManager: React.FC = () => {
             company: appData.company,
             oldScreenshot: oldImages,
             appId: editingApp.id.toString(),
+            oldIcon: icon.oldImage,
+            icon: icon.currentImage,
           });
 
           toast({
@@ -283,6 +320,7 @@ export const AdminAppManager: React.FC = () => {
             tags: appData.tags,
             color: appData.color,
             company: appData.company,
+            icon: icon.currentImage,
           });
 
           toast({
@@ -380,23 +418,15 @@ export const AdminAppManager: React.FC = () => {
   );
 
   const handleDropImages = useCallback(
-    (image: File[]) => {
-      if (image.length + slideImages.length > 5) {
-        toast({
-          title: "Error",
-          description: "Maximum images is 5",
-        });
-      } else {
-        let tempBannerImages: UploadImageType[] = [];
-        image.forEach((img) => {
-          tempBannerImages.push({
-            currentImage: img,
+    (image: File) => {
+      if (image) {
+        setSlideImages([
+          {
+            currentImage: image,
             isHaveChange: false,
             oldImage: "",
-          });
-        });
-
-        setSlideImages([...slideImages, ...tempBannerImages]);
+          },
+        ]);
       }
     },
     [slideImages]
@@ -634,6 +664,45 @@ export const AdminAppManager: React.FC = () => {
     isLoadingPost,
   ]);
 
+  const onEditBannerImage = () => {
+    setIcon({
+      ...icon,
+      isHaveChange: true,
+    });
+    if (fileInputRef.current) {
+      fileInputRef.current.click(); // Programmatically open the file dialog
+      setTimeout(() => {
+        if (!fileInputRef.current?.files?.length) {
+          handleCancel(); // Handle file dialog cancel
+        }
+      }, 300); // Delay to allow file selection
+    }
+  };
+
+  const handleCancel = () => {
+    setIcon({
+      ...icon,
+      isHaveChange: false,
+    });
+  };
+
+  const getIconPreview = useMemo(() => {
+    if (icon.currentImage) {
+      return URL.createObjectURL(icon.currentImage);
+    }
+    if (icon.isHaveChange === false && icon.oldImage) {
+      return icon.oldImage;
+    }
+    return "";
+  }, [icon]);
+
+  const handleDropIcon = (image: File) => {
+    setIcon({
+      ...icon,
+      currentImage: image,
+    });
+  };
+
   useEffect(() => {
     getListData();
     getListDataCategory();
@@ -650,7 +719,7 @@ export const AdminAppManager: React.FC = () => {
       >
         <TabsList>
           <TabsTrigger value="Apps">Apps</TabsTrigger>
-          <TabsTrigger value="Category">Category</TabsTrigger>
+          <TabsTrigger value="Category">App Category</TabsTrigger>
           <TabsTrigger value="Subcategory">Subcategory</TabsTrigger>
         </TabsList>
         <TabsContent value="Apps">
@@ -779,10 +848,10 @@ export const AdminAppManager: React.FC = () => {
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle>Category Management</CardTitle>
+                <CardTitle>App Category Management</CardTitle>
                 <Button onClick={handleCreateCategory}>
                   <Plus className="h-4 w-4 mr-2" />
-                  Add New Category
+                  Add New App Category
                 </Button>
               </div>
             </CardHeader>
@@ -934,8 +1003,8 @@ export const AdminAppManager: React.FC = () => {
                   : "Create New App"
                 : modalFormType === "category"
                 ? editingCategory
-                  ? "Edit Category"
-                  : "Create New Category"
+                  ? "Edit App Category"
+                  : "Create New App Category"
                 : editingSubcategory
                 ? "Edit Subcategory"
                 : "Create New Subcategory"}
@@ -1069,6 +1138,23 @@ export const AdminAppManager: React.FC = () => {
                 </div>
 
                 <div>
+                  <CInputFileDragDrop
+                    handleDrop={handleDropIcon}
+                    labelForm="Icon"
+                    labelBtn="Browse"
+                    isRequired
+                    acceptFile={FORMAT_INPUT_IMAGE_FILE}
+                    inputRef={fileInputRef}
+                  />
+                  <CInputFilePreview
+                    src={getIconPreview}
+                    labelForm="Preview"
+                    onEdit={onEditBannerImage}
+                    onRemove={onRemoveIcon}
+                  />
+                </div>
+
+                <div>
                   <label className="block text-sm font-medium mb-2">
                     Description
                   </label>
@@ -1159,9 +1245,8 @@ export const AdminAppManager: React.FC = () => {
                     labelBtn="Browse"
                     label="Thumbnail"
                     isRequired
-                    multiple
                     // inputRef={fileInputRefSlides}
-                    maxFile={5}
+                    maxFile={1}
                     acceptFile={FORMAT_INPUT_IMAGE_FILE}
                   />
                   <div className="flex w-full items-center gap-1 mt-2 overflow-x-scroll max-w-[622px]">
@@ -1250,15 +1335,15 @@ export const AdminAppManager: React.FC = () => {
                 <Save className="h-4 w-4 mr-2" />
                 {modalFormType === "app"
                   ? editingApp
-                    ? "Update App"
-                    : "Create App"
+                    ? "Update"
+                    : "Create"
                   : modalFormType === "category"
                   ? editingCategory
-                    ? "Update Category"
-                    : "Create Category"
+                    ? "Update"
+                    : "Create"
                   : editingSubcategory
-                  ? "Update Subcategory"
-                  : "Create Subcategory"}
+                  ? "Update"
+                  : "Create"}
               </Button>
             </div>
           </form>

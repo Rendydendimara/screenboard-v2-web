@@ -258,7 +258,11 @@ const AdminAppDetails: React.FC = () => {
 
         {/* Screenshots Section */}
         <div className="mt-8">
-          <AdminScreenshotManager appId={String(app.id)} />
+          <AdminScreenshotManager
+            filterOnlyShowIfHasModul
+            isHideCategory
+            appId={String(app.id)}
+          />
         </div>
       </div>
     </div>

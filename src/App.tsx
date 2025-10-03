@@ -9,6 +9,7 @@ import AuthAPI from "./api/admin/auth/api";
 import CModalDialogLoading from "./components/modal-dialog-loading";
 import { useAppDispatch } from "./hooks/use-typed-selector";
 import { setCredentials } from "./provider/slices/authSlice";
+import { LoginAdmin } from "./pages/LoginAdmin";
 
 const App = () => {
   const [loading, setLoading] = useState(true);
@@ -49,6 +50,7 @@ const App = () => {
     <Routes>
       <Route path="/" element={<Index />} />
       <Route path="/app/:id" element={<AppDetails />} />
+      <Route path="/login-admin" element={<LoginAdmin />} />
       <Route path="/admin" element={<Admin />} />
       <Route path="/admin/app/:id" element={<AdminAppDetails />} />
       <Route path="*" element={<NotFound />} />

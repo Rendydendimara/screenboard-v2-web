@@ -14,7 +14,7 @@ export const adapterListAppBEToFE = (data: TAppRes[]): App[] => {
       category: d.category,
       subcategory: d.subcategory,
       platform: d.platform,
-      image: d.iconUrl,
+      image: d.iconFile ? getImageUrl(d.iconFile) : d.iconUrl,
       description: d.description,
       downloads: d.downloads,
       rating: d.rating,
@@ -23,6 +23,7 @@ export const adapterListAppBEToFE = (data: TAppRes[]): App[] => {
       company: d.company,
       screenshots: d.screenshots,
       screens: d.screens,
+      iconFile: d.iconFile,
     });
   });
   return result;
@@ -35,7 +36,7 @@ export const adapterSingleAppBEToFE = (data: TAppRes): App => {
     category: data.category,
     subcategory: data.subcategory,
     platform: data.platform,
-    image: data.iconUrl,
+    image: data.iconFile ? getImageUrl(data.iconFile) : data.iconUrl,
     description: data.description,
     downloads: data.downloads,
     rating: data.rating,
@@ -43,6 +44,7 @@ export const adapterSingleAppBEToFE = (data: TAppRes): App => {
     color: data.color,
     company: data.company,
     screenshots: data.screenshots,
+    iconFile: data.iconFile,
     screens: data.screens,
     lastUpdated: data.updatedAt
       ? new Date(data.updatedAt).toLocaleDateString()
@@ -89,7 +91,7 @@ export const adapterListAppBEToFEPublic = (
       category: d.category,
       subcategory: d.subcategory,
       platform: d.platform,
-      image: d.iconUrl,
+      image: d.iconFile ? getImageUrl(d.iconFile) : d.iconUrl,
       description: d.description,
       downloads: d.downloads,
       rating: d.rating,
@@ -129,7 +131,7 @@ export const adapterSingleAppBEToFEPublic = (
     category: data.category,
     subcategory: data.subcategory,
     platform: data.platform,
-    image: data.iconUrl,
+    image: data.iconFile ? getImageUrl(data.iconFile) : data.iconUrl,
     description: data.description,
     downloads: data.downloads,
     rating: data.rating,

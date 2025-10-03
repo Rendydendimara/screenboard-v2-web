@@ -184,10 +184,10 @@ export const AdminCategoryScreenshotManager = () => {
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle>Category Management</CardTitle>
+            <CardTitle>Screenshot Category Management</CardTitle>
             <Button onClick={handleCreateCategory}>
               <Plus className="h-4 w-4 mr-2" />
-              Add New Category
+              Add New Screenshot Category
             </Button>
           </div>
         </CardHeader>
@@ -254,7 +254,9 @@ export const AdminCategoryScreenshotManager = () => {
         <DialogContent className="max-w-2xl overflow-y-auto max-h-[90%]">
           <DialogHeader>
             <DialogTitle>
-              {editingCategory ? "Edit Category" : "Create New Category"}
+              {editingCategory
+                ? "Edit Screenshot Category"
+                : "Create New Screenshot Category"}
             </DialogTitle>
           </DialogHeader>
 
@@ -285,7 +287,7 @@ export const AdminCategoryScreenshotManager = () => {
               </Button>
               <Button onClick={handleSubmit} disabled={disabledButtonForm}>
                 <Save className="h-4 w-4 mr-2" />
-                {editingCategory ? "Update Category" : "Create Category"}
+                {editingCategory ? "Update" : "Create"}
               </Button>
             </div>
           </form>
