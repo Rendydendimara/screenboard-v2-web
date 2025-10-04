@@ -89,6 +89,7 @@ const Index = () => {
   );
   const [showFavorites, setShowFavorites] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [scrolledSearch, setScrolledSearch] = useState(false);
   const [isOpenAuth, setIsOpenAuth] = useState(false);
   const [isLoadingGet, setIsLoadingGet] = useState(true);
   const user = useTypedSelector((state: RootState) => state.auth.user);
@@ -197,7 +198,8 @@ const Index = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 100);
+      setScrolled(window.scrollY > 80);
+      setScrolledSearch(window.scrollY > 680);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -211,123 +213,143 @@ const Index = () => {
       />
       <div className="min-h-screen bg-white">
         {/* Fixed Header */}
-        <header
-          className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-            scrolled
-              ? "bg-white/90 backdrop-blur-md shadow-sm"
-              : "bg-transparent"
-          }`}
-        >
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-16 lg:h-20">
-              {/* Logo */}
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
-                  <span className="text-white font-bold text-sm lg:text-base">
-                    S
-                  </span>
-                </div>
-                <p className="hidden sm:block text-xl lg:text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  Screenboard
-                </p>
-              </div>
-
-              {/* Search Bar - Responsive */}
-              {scrolled && (
-                <div className="flex-1 max-w-md mx-4 lg:mx-8">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
-                    <Input
-                      placeholder="Search apps..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 w-full bg-white/80 backdrop-blur-sm border-slate-200"
-                    />
+        <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+          <header
+            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+              scrolled
+                ? "bg-white/90 backdrop-blur-md shadow-sm"
+                : "bg-transparent"
+            }`}
+          >
+            <div className="container px-0">
+              <div className="flex items-center justify-between h-16 lg:h-20">
+                {/* Logo */}
+                <div className="flex items-center space-x-2">
+                  <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
+                    <span className="text-white font-bold text-sm lg:text-base">
+                      S
+                    </span>
                   </div>
+                  <p className="hidden sm:block text-xl lg:text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                    Screenboard
+                  </p>
                 </div>
-              )}
 
-              {/* Action Buttons */}
-              <div className="flex items-center space-x-2 lg:space-x-4">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setShowFavorites(true)}
-                  className="hidden sm:flex items-center space-x-2"
-                >
-                  <Heart className="h-4 w-4" />
-                  <span className="hidden lg:inline">Favorites</span>
-                </Button>
-
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setShowCompare(true)}
-                  className="relative"
-                >
-                  <GitCompare className="h-4 w-4" />
-                  {compareApps.length > 0 && (
-                    <Badge className="absolute -top-2 -right-2 h-5 w-5 p-0 flex items-center justify-center text-xs">
-                      {compareApps.length}
-                    </Badge>
-                  )}
-                  <span className="hidden lg:inline ml-2">Compare</span>
-                </Button>
-
-                {/* Mobile Menu Button */}
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setShowFavorites(true)}
-                  className="sm:hidden"
-                >
-                  <Heart className="h-4 w-4" />
-                </Button>
-                {user ? (
-                  <>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={handleLogout}
-                      className="hidden sm:flex items-center space-x-2"
-                    >
-                      Logout
-                    </Button>
-                    {user.userType === "administrator" && (
-                      <Link to="/admin">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="hidden sm:flex items-center space-x-2"
-                        >
-                          Admin
-                        </Button>
-                      </Link>
-                    )}
-                  </>
-                ) : (
-                  <></>
-                  // <Button
-                  //   variant="ghost"
-                  //   size="sm"
-                  //   onClick={() => setIsOpenAuth(true)}
-                  //   className="hidden sm:flex items-center space-x-2"
-                  // >
-                  //   Login
-                  // </Button>
+                {/* Search Bar - Responsive */}
+                {scrolledSearch && (
+                  <div className="flex-1 max-w-md mx-4 lg:mx-8">
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+                      <Input
+                        placeholder="Search apps..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="pl-10 w-full bg-white/80 backdrop-blur-sm border-slate-200"
+                      />
+                    </div>
+                  </div>
                 )}
+
+                {/* Action Buttons */}
+                <div className="flex items-center space-x-2 lg:space-x-4">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowCompare(true)}
+                    className="relative"
+                  >
+                    <GitCompare className="h-4 w-4" />
+                    {compareApps.length > 0 && (
+                      <Badge className="absolute -top-2 -right-2 h-5 w-5 p-0 flex items-center justify-center text-xs">
+                        {compareApps.length}
+                      </Badge>
+                    )}
+                    <span className="hidden lg:inline font-[Inter] font-normal text-[13.3px] leading-[20px] tracking-[0%] text-center align-middle">
+                      Compare
+                    </span>
+                  </Button>
+
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowCompare(true)}
+                    className="relative"
+                  >
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M6.66667 8L5.33333 6.53334L5.73333 5.86667M4 3.33333H12L14 6.66667L8.33333 13C8.28988 13.0443 8.23802 13.0796 8.18078 13.1036C8.12355 13.1277 8.06209 13.1401 8 13.1401C7.93792 13.1401 7.87645 13.1277 7.81922 13.1036C7.76198 13.0796 7.71012 13.0443 7.66667 13L2 6.66667L4 3.33333Z"
+                        stroke="black"
+                        stroke-width="1.3"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+
+                    <span className="hidden lg:inline font-[Inter] font-normal text-[13.3px] leading-[20px] tracking-[0%] text-center align-middle">
+                      Join Us
+                    </span>
+                  </Button>
+
+                  {/* Mobile Menu Button */}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowFavorites(true)}
+                    className="sm:hidden"
+                  >
+                    <Heart className="h-4 w-4" />
+                  </Button>
+                  {user ? (
+                    <>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleLogout}
+                        className="hidden sm:flex items-center space-x-2"
+                      >
+                        Logout
+                      </Button>
+                      {user.userType === "administrator" && (
+                        <Link to="/admin">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="hidden sm:flex items-center space-x-2"
+                          >
+                            Admin
+                          </Button>
+                        </Link>
+                      )}
+                    </>
+                  ) : (
+                    <></>
+                    // <Button
+                    //   variant="ghost"
+                    //   size="sm"
+                    //   onClick={() => setIsOpenAuth(true)}
+                    //   className="hidden sm:flex items-center space-x-2"
+                    // >
+                    //   Login
+                    // </Button>
+                  )}
+                </div>
               </div>
             </div>
+          </header>
+
+          {/* Hero Section */}
+          <div className="pt-16 lg:pt-20">
+            <HeroSection />
           </div>
-        </header>
-
-        {/* Hero Section */}
-        <div className="pt-16 lg:pt-20">
-          <HeroSection />
-        </div>
-
+        </section>
         {/* Main Content */}
-        <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+        <main className="container px-0 py-8 lg:py-12">
           {/* Search and Filters - Mobile Responsive */}
           <div className="mb-8 lg:mb-12">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 lg:gap-6">
@@ -454,26 +476,82 @@ const Index = () => {
               </p>
             </div>
           ) : (
-            <div
-              className={
-                viewMode === "grid"
-                  ? "grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6"
-                  : "space-y-4 lg:space-y-6"
-              }
-            >
-              {filteredApps.map((app) => (
-                <AppCard
-                  key={app.id}
-                  app={app}
-                  viewMode={viewMode}
-                  onLike={() => handleLike(app.id)}
-                  onClick={() => setSelectedApp(app)}
-                  onAddToCompare={() => handleAddToCompare(app)}
-                  isInCompare={compareApps.some(
-                    (compareApp) => compareApp.id === app.id
-                  )}
-                />
-              ))}
+            <div className="relative">
+              <div
+                className={
+                  viewMode === "grid"
+                    ? "grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6"
+                    : "space-y-4 lg:space-y-6"
+                }
+              >
+                {filteredApps
+                  // .slice(0, user ? filteredApps.length : 12)
+                  .map((app) => (
+                    <AppCard
+                      key={app.id}
+                      app={app}
+                      viewMode={viewMode}
+                      onLike={() => handleLike(app.id)}
+                      onClick={() => setSelectedApp(app)}
+                      onAddToCompare={() => handleAddToCompare(app)}
+                      isInCompare={compareApps.some(
+                        (compareApp) => compareApp.id === app.id
+                      )}
+                    />
+                  ))}
+              </div>
+              {!user && (
+                <div className="absolute h-[872px] bottom-0 w-full bg-[linear-gradient(180deg,_rgba(255,_255,_255,_0)_4.01%,_#FFFFFF_62.21%)]">
+                  <div className="flex flex-col w-full gap-[25px] absolute bottom-16">
+                    <div className="flex flex-col gap-3 items-center">
+                      <h5 className="font-['Inter'] font-black text-[80px] leading-[125%] tracking-[0%] text-center bg-gradient-to-r from-slate-900 via-blue-800 to-purple-800 bg-clip-text text-transparent">
+                        Join and get more inspiration from real product
+                      </h5>
+                      <p className="font-[Inter] font-semibold text-[20px] leading-[155%] tracking-[0%] align-middle">
+                        We believe real design give more sense to your design
+                        process
+                      </p>
+                      <Button
+                        variant={viewMode === "grid" ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setIsOpenAuth(true)}
+                        className="w-[163px] gap-2 h-[48px] bg-[linear-gradient(90deg,_#2563EB_0%,_#9333EA_100%)] [box-shadow:0px_10px_15px_-3px_rgba(0,_0,_0,_0.1),_0px_4px_6px_-4px_rgba(0,_0,_0,_0.1)] rounded-[6px] font-[Inter] font-bold text-[17.6px] leading-[28px] tracking-[0%] text-center align-middle"
+                      >
+                        <div className="w-6 h-4">
+                          <svg
+                            width="25"
+                            height="16"
+                            viewBox="0 0 25 16"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <g clip-path="url(#clip0_13_1021)">
+                              <path
+                                d="M3.16674 9.33328C3.04059 9.33371 2.9169 9.29833 2.81005 9.23126C2.70319 9.1642 2.61757 9.06818 2.56311 8.95438C2.50865 8.84059 2.4876 8.71367 2.50241 8.58838C2.51721 8.4631 2.56726 8.34459 2.64674 8.24661L9.24674 1.44661C9.29625 1.38947 9.36372 1.35085 9.43806 1.3371C9.51241 1.32335 9.58923 1.33529 9.6559 1.37095C9.72257 1.40661 9.77513 1.46388 9.80497 1.53335C9.8348 1.60283 9.84013 1.68038 9.82008 1.75328L8.54008 5.76661C8.50233 5.86763 8.48966 5.97629 8.50314 6.08328C8.51662 6.19028 8.55585 6.2924 8.61747 6.3809C8.67909 6.46939 8.76126 6.54162 8.85693 6.59139C8.95259 6.64115 9.05891 6.66696 9.16674 6.66661H13.8334C13.9596 6.66618 14.0833 6.70156 14.1901 6.76863C14.297 6.8357 14.3826 6.93171 14.437 7.04551C14.4915 7.15931 14.5125 7.28622 14.4977 7.41151C14.4829 7.53679 14.4329 7.65531 14.3534 7.75328L7.75341 14.5533C7.7039 14.6104 7.63644 14.649 7.56209 14.6628C7.48774 14.6765 7.41093 14.6646 7.34426 14.6289C7.27759 14.5933 7.22502 14.536 7.19519 14.4665C7.16535 14.3971 7.16002 14.3195 7.18008 14.2466L8.46008 10.2333C8.49782 10.1323 8.5105 10.0236 8.49702 9.91661C8.48354 9.80962 8.4443 9.70749 8.38268 9.619C8.32106 9.5305 8.23889 9.45827 8.14323 9.40851C8.04756 9.35874 7.94125 9.33293 7.83341 9.33328H3.16674Z"
+                                stroke="white"
+                                stroke-width="1.33333"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </g>
+                            <defs>
+                              <clipPath id="clip0_13_1021">
+                                <rect
+                                  width="16"
+                                  height="16"
+                                  fill="white"
+                                  transform="translate(0.5)"
+                                />
+                              </clipPath>
+                            </defs>
+                          </svg>
+                        </div>
+                        Sign Up
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </main>
@@ -490,7 +568,11 @@ const Index = () => {
           categories={categories}
         />
 
-        <AuthModal isOpen={isOpenAuth} onClose={onCloseOpenAuth} />
+        <AuthModal
+          initialMode="login"
+          isOpen={isOpenAuth}
+          onClose={onCloseOpenAuth}
+        />
 
         <FavoritesModal
           isOpen={showFavorites}
