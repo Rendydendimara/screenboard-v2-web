@@ -148,9 +148,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         onClose();
       }
     } catch (error: any) {
+      console.log("error", error);
       toast({
         title: "Error",
-        description: error.response.data.message,
+        description: "Error",
         variant: "destructive",
       });
     }
