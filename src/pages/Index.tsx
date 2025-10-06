@@ -354,7 +354,7 @@ const Index = () => {
           <div className="mb-8 lg:mb-12">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 lg:gap-6">
               {/* Search Bar - Desktop */}
-              {!scrolled && (
+              {!scrolledSearch && (
                 <div className="flex-1 max-w-md">
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -368,17 +368,6 @@ const Index = () => {
                 </div>
               )}
 
-              <div className="flex-1 max-w-md">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
-                  <Input
-                    placeholder="Search apps..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 w-full rounded-[6px]"
-                  />
-                </div>
-              </div>
               {/* Filters and View Controls */}
               <div className="flex flex-col sm:flex-row gap-4 lg:gap-6">
                 {/* Category Filter */}
