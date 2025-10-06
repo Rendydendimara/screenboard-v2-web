@@ -85,6 +85,16 @@ const URL_API = {
         GET_LIST: "/api/v1/user/modul/get-list",
       },
     },
+    AUTH: {
+      V1: {
+        LOGIN: "/api/v1/user/auth/login",
+        REGISTER: "/api/v1/user/auth/register",
+        LOGOUT: "/api/v1/user/auth/logout",
+        CHECK_LOGIN: "/api/v1/user/auth/check-login",
+        LOGIN_GOOGLE: "/api/v1/user/auth/google-login",
+        SIGNUP_GOOGLE: "/api/v1/user/auth/google-signup",
+      },
+    },
   },
 };
 

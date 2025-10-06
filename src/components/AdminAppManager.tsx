@@ -241,7 +241,6 @@ export const AdminAppManager: React.FC = () => {
       });
     });
     setSlideImages(tempImages);
-    console.log("app.iconFile", app.iconFile);
     setIcon({
       currentImage: undefined,
       isHaveChange: false,

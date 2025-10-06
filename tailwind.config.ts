@@ -8,6 +8,12 @@ export default {
     "./app/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
   ],
+  safelist: [
+    {
+      pattern:
+        /text-(heading-1|heading-2|heading-3|heading-4|heading-5|heading-6|body-1|body-2|body-3|body-4|body|title|label-1|label-2|label-3)/,
+    },
+  ],
   prefix: "",
   theme: {
     container: {
@@ -18,6 +24,123 @@ export default {
       },
     },
     extend: {
+      fontSize: {
+        "12px": "0.75rem",
+        "14px": "0.875rem",
+        "16px": "1rem",
+        "18px": "1.125rem",
+        "20px": "1.25rem",
+        "24px": "1.5rem",
+        "28px": "1.75rem",
+        "32px": "2rem",
+        "36px": "2.25rem",
+        "40px": "2.5rem",
+        "heading-1": [
+          "3.75rem",
+          {
+            lineHeight: "90px",
+            letterSpacing: "0.5px", // 0.01em is 1% of the element font size
+          },
+        ],
+        "heading-2": [
+          "3rem",
+          {
+            lineHeight: "72px",
+            letterSpacing: "0.5px",
+          },
+        ],
+        "heading-3": [
+          "2.5rem",
+          {
+            lineHeight: "60px",
+            letterSpacing: "0.5px",
+          },
+        ],
+        "heading-4": [
+          "2rem",
+          {
+            lineHeight: "48px",
+            letterSpacing: "0.5px",
+          },
+        ],
+        "heading-5": [
+          "1.75rem",
+          {
+            lineHeight: "42px",
+            letterSpacing: "0.5px",
+          },
+        ],
+        "heading-6": [
+          "1.5rem",
+          {
+            lineHeight: "36px",
+            letterSpacing: "0.5px",
+          },
+        ],
+        "body-1": [
+          "1rem",
+          {
+            lineHeight: "24px",
+            letterSpacing: "0.25px",
+          },
+        ],
+        "body-2": [
+          "0.875rem",
+          {
+            lineHeight: "20px",
+            letterSpacing: "0.25px",
+          },
+        ],
+        "body-3": [
+          "0.875rem",
+          {
+            lineHeight: "20px",
+            letterSpacing: "0.25px",
+          },
+        ],
+        body: [
+          "0.75rem",
+          {
+            lineHeight: "15px",
+            letterSpacing: "0.25px",
+          },
+        ],
+        title: [
+          "1.125rem",
+          {
+            lineHeight: "28px",
+            letterSpacing: "0.5px",
+          },
+        ],
+        "label-1": [
+          "0.875rem",
+          {
+            lineHeight: "22px",
+            letterSpacing: "0.1px",
+          },
+        ],
+        "label-2": [
+          "0.75rem",
+          {
+            lineHeight: "16px",
+            letterSpacing: "0.1px",
+          },
+        ],
+        "label-3": [
+          "0.625rem",
+          {
+            lineHeight: "12px",
+            letterSpacing: "0.1px",
+          },
+        ],
+        "body-4": [
+          "0.875rem",
+          {
+            lineHeight: "20px",
+            letterSpacing: "0.07px",
+          },
+        ],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -92,6 +215,8 @@ export default {
       },
       fontFamily: {
         sans: ["Inter", "ui-sans-serif", "system-ui"], // jadikan default
+        primary: ["Inter", "sans-serif"],
+        secondary: ["Inter", "sans-serif"],
       },
       fontWeight: {
         hairline: "100",

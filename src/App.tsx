@@ -5,7 +5,7 @@ import Index from "@/pages/Index";
 import NotFound from "@/pages/NotFound";
 import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
-import AuthAPI from "./api/admin/auth/api";
+import AdminAuthAPI from "./api/admin/auth/api";
 import CModalDialogLoading from "./components/modal-dialog-loading";
 import { useAppDispatch } from "./hooks/use-typed-selector";
 import { setCredentials } from "./provider/slices/authSlice";
@@ -18,7 +18,7 @@ const App = () => {
   const checkLogin = async () => {
     try {
       const token = localStorage.getItem("token") ?? "";
-      const data = await AuthAPI.checkIsLogin(token);
+      const data = await AdminAuthAPI.checkIsLogin(token);
       dispatch(
         setCredentials({
           token: data.data.token,

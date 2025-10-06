@@ -18,3 +18,14 @@ export const FORMAT_INPUT_IMAGE_FILE = {
 };
 
 export const MAX_FILE_BULK_UPLOAD = 20;
+
+export const USERS_ROLES = [
+  "Manager",
+  "UI UXDesigner",
+  "Graphic Designer",
+  "Marketing",
+  "Developer",
+  "Analyst",
+  "Founder",
+  "Other",
+];

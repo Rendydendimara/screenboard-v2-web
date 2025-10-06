@@ -27,10 +27,10 @@ const logout = async () => {
   return response.data;
 };
 
-const AuthAPI = {
+const AdminAuthAPI = {
   login,
   checkIsLogin,
   logout,
 };
 
-export default AuthAPI;
+export default AdminAuthAPI;

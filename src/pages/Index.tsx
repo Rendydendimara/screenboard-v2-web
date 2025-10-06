@@ -1,4 +1,4 @@
-import AuthAPI from "@/api/admin/auth/api";
+import AdminAuthAPI from "@/api/admin/auth/api";
 import UserAppAPI from "@/api/user/app/api";
 import CategoryAPI from "@/api/user/category/api";
 import { TCategoryRes } from "@/api/user/category/type";
@@ -133,7 +133,7 @@ const Index = () => {
 
   const handleLogout = async () => {
     try {
-      const res = await AuthAPI.logout();
+      const res = await AdminAuthAPI.logout();
       if (res.success) {
         dispatch(logout());
         window.location.reload();
@@ -484,7 +484,13 @@ const Index = () => {
                     : "space-y-4 lg:space-y-6"
                 }
               >
-                {filteredApps
+                {[
+                  ...filteredApps,
+                  ...filteredApps,
+                  ...filteredApps,
+                  ...filteredApps,
+                  ...filteredApps,
+                ]
                   // .slice(0, user ? filteredApps.length : 12)
                   .map((app) => (
                     <AppCard

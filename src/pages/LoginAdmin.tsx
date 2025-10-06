@@ -1,4 +1,4 @@
-import AuthAPI from "@/api/admin/auth/api";
+import AdminAuthAPI from "@/api/admin/auth/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -27,7 +27,7 @@ export const LoginAdmin = () => {
     if (mode === "login") {
       try {
         setIsSubmitting(true);
-        const data = await AuthAPI.login({ email, password });
+        const data = await AdminAuthAPI.login({ email, password });
         dispatch(
           setCredentials({
             token: data.data.token,

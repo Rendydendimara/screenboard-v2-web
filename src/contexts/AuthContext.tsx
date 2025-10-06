@@ -1,4 +1,4 @@
-import AuthAPI from "@/api/admin/auth/api";
+import AdminAuthAPI from "@/api/admin/auth/api";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface User {
@@ -46,7 +46,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setIsLoading(true);
     try {
       // Simulate API call
-      const data = await AuthAPI.login({ email, password });
+      const data = await AdminAuthAPI.login({ email, password });
 
       await new Promise((resolve) => setTimeout(resolve, 1000));
       const user = {

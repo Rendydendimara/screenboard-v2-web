@@ -1,4 +1,4 @@
-import AuthAPI from "@/api/admin/auth/api";
+import AdminAuthAPI from "@/api/admin/auth/api";
 import { AdminAppManager } from "@/components/AdminAppManager";
 import { AdminModuleManager } from "@/components/AdminModuleManager";
 import { AdminScreenshotManager } from "@/components/AdminScreenshotManager";
@@ -31,7 +31,7 @@ export default function Admin() {
 
   const handleLogout = async () => {
     try {
-      const res = await AuthAPI.logout();
+      const res = await AdminAuthAPI.logout();
       if (res.success) {
         dispatch(logout());
         navigate("/");
