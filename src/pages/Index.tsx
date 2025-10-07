@@ -32,7 +32,7 @@ import { RootState } from "@/provider/store";
 import { adapterListAppBEToFEPublic } from "@/utils/adapterBEToFE";
 import { GitCompare, Grid, Heart, List, Search, X } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export interface ScreenPublic {
   id: string;
@@ -99,6 +99,7 @@ const Index = () => {
   const onCloseOpenAuth = useCallback(() => {
     setIsOpenAuth(false);
   }, []);
+  const navigate = useNavigate();
   const [categories, setCategories] = useState<TCategoryRes[]>([]);
 
   const filteredApps = listApp.filter((app) => {
@@ -146,12 +147,22 @@ const Index = () => {
     }
   };
 
+  const gotoDetail = useCallback((id: string) => {
+    navigate(`/app/${id}`);
+  }, []);
+
   const getListData = async () => {
     try {
       setIsLoadingGet(true);
       const res = await UserAppAPI.getAll();
       const dataAdpt = adapterListAppBEToFEPublic(res.data);
-      setListApp(dataAdpt);
+      setListApp([
+        ...dataAdpt,
+        ...dataAdpt,
+        ...dataAdpt,
+        ...dataAdpt,
+        ...dataAdpt,
+      ]);
     } catch (err: any) {
       toast({
         title: "Error",
@@ -473,27 +484,20 @@ const Index = () => {
                     : "space-y-4 lg:space-y-6"
                 }
               >
-                {[
-                  ...filteredApps,
-                  ...filteredApps,
-                  ...filteredApps,
-                  ...filteredApps,
-                  ...filteredApps,
-                ]
-                  // .slice(0, user ? filteredApps.length : 12)
-                  .map((app) => (
-                    <AppCard
-                      key={app.id}
-                      app={app}
-                      viewMode={viewMode}
-                      onLike={() => handleLike(app.id)}
-                      onClick={() => setSelectedApp(app)}
-                      onAddToCompare={() => handleAddToCompare(app)}
-                      isInCompare={compareApps.some(
-                        (compareApp) => compareApp.id === app.id
-                      )}
-                    />
-                  ))}
+                {filteredApps.map((app, i) => (
+                  <AppCard
+                    key={i}
+                    app={app}
+                    viewMode={viewMode}
+                    onLike={() => handleLike(app.id)}
+                    onClick={() => setSelectedApp(app)}
+                    onDetail={() => gotoDetail(app.id)}
+                    onAddToCompare={() => handleAddToCompare(app)}
+                    isInCompare={compareApps.some(
+                      (compareApp) => compareApp.id === app.id
+                    )}
+                  />
+                ))}
               </div>
               {!user && (
                 <div className="absolute h-[872px] bottom-0 w-full bg-[linear-gradient(180deg,_rgba(255,_255,_255,_0)_4.01%,_#FFFFFF_62.21%)]">

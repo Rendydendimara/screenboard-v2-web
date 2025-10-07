@@ -21,6 +21,7 @@ interface AppCardProps {
   onClick: () => void;
   onAddToCompare?: () => void;
   isInCompare?: boolean;
+  onDetail: () => void;
 }
 
 export const AppCard: React.FC<AppCardProps> = ({
@@ -30,6 +31,7 @@ export const AppCard: React.FC<AppCardProps> = ({
   onClick,
   onAddToCompare,
   isInCompare = false,
+  onDetail,
 }) => {
   const handleCompareClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -40,7 +42,7 @@ export const AppCard: React.FC<AppCardProps> = ({
     return (
       <div
         className="group bg-white rounded-2xl border border-slate-200 hover:border-slate-300 transition-all duration-300 hover:shadow-xl cursor-pointer overflow-hidden"
-        onClick={onClick}
+        onClick={onDetail}
       >
         <div className="flex p-4 lg:p-6">
           <div className="flex-shrink-0 mr-4 lg:mr-6">
@@ -182,7 +184,10 @@ export const AppCard: React.FC<AppCardProps> = ({
 
   return (
     <div className="w-full py-6 gap-4 flex-col flex min-h-[680px] bg-[#FFFFFF] border-[1px] border-[solid] border-[#E2E8F0] rounded-[24px]">
-      <div className="flex flex-col items-start gap-5 px-4">
+      <div
+        className="flex flex-col items-start gap-5 px-4 hover:cursor-pointer"
+        onClick={onDetail}
+      >
         <div className="flex items-center gap-6">
           <ImageWithFallback
             src={app?.image ?? "https://source.unsplash.com/400x300?game"}
