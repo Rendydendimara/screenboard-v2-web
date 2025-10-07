@@ -1,13 +1,21 @@
 import { ScreenPublic } from "@/pages/Index";
+import clsx from "clsx";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Badge } from "./ui/badge";
 
 type Props = {
   screens: ScreenPublic[];
   handleClickImage: (i: number) => void;
+  hideInfo?: boolean;
+  viewMode?: "grid" | "list";
 };
 
-const ScrollGallery = ({ screens, handleClickImage }: Props) => {
+const ScrollGallery = ({
+  screens,
+  handleClickImage,
+  hideInfo = false,
+  viewMode = "grid",
+}: Props) => {
   const [visibleCount, setVisibleCount] = useState(6);
 
   const loadMore = useCallback(() => {
@@ -23,28 +31,46 @@ const ScrollGallery = ({ screens, handleClickImage }: Props) => {
   }, [screens]);
 
   return (
-    <div className="grid grid-cols-1 gap-2 max-h-[90vh] overflow-y-auto p-2">
+    <div
+      className={clsx(
+        viewMode === "grid"
+          ? "grid grid-cols-1 gap-2 max-h-[90vh] overflow-y-auto"
+          : "flex items-center gap-2 overflow-x-auto"
+      )}
+    >
       {visibleScreens.map((screen, i) => (
         <div key={screen.id} className="group cursor-pointer">
-          <div className="aspect-[9/16] bg-slate-100 rounded-lg overflow-hidden mb-2">
+          <div
+            className={clsx(
+              "bg-slate-100 rounded-lg overflow-hidden",
+              viewMode === "grid" ? "aspect-[9/16]" : "",
+              !hideInfo && "mb-2",
+              viewMode === "grid" ? "w-full h-full" : "w-[205px] h-[453px]"
+            )}
+          >
             <img
               src={screen.image}
               alt={screen.name}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform hover:cursor-pointer"
+              className={clsx(
+                "rounded-[8px] object-cover group-hover:scale-105 transition-transform hover:cursor-pointer",
+                viewMode === "grid" ? "w-full h-full" : "w-[205px] h-[453px]"
+              )}
               onClick={() => handleClickImage(i)}
             />
           </div>
-          <div className="text-center">
-            <p className="text-xs font-medium text-slate-900 truncate">
-              {screen.name}
-            </p>
-            <Badge variant="outline" className="text-xs mt-1 mr-2">
-              {screen.modul}
-            </Badge>
-            <Badge variant="outline" className="text-xs mt-1">
-              {screen?.category?.name ?? "-"}
-            </Badge>
-          </div>
+          {!hideInfo && (
+            <div className="text-center">
+              <p className="text-xs font-medium text-slate-900 truncate">
+                {screen.name}
+              </p>
+              <Badge variant="outline" className="text-xs mt-1 mr-2">
+                {screen.modul}
+              </Badge>
+              <Badge variant="outline" className="text-xs mt-1">
+                {screen?.category?.name ?? "-"}
+              </Badge>
+            </div>
+          )}
         </div>
       ))}
 

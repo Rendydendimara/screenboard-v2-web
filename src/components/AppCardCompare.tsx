@@ -1,10 +1,9 @@
-import { Button } from "@/components/ui/button";
 import { AppPublic } from "@/pages/Index";
 import { TSelect } from "@/types";
-import { X } from "lucide-react";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import ReactDOM from "react-dom";
 import { FaChevronLeft, FaChevronRight, FaTimes } from "react-icons/fa";
-import ScrollGallery, { ScrollGalleryList } from "./ScrollGallery";
+import ScrollGallery from "./ScrollGallery";
 import ImageWithFallback from "./ui/ImageWithFallback";
 import {
   Select,
@@ -13,7 +12,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import ReactDOM from "react-dom";
 
 interface AppCardProps {
   app: AppPublic;
@@ -115,143 +113,153 @@ export const AppCardCompare: React.FC<AppCardProps> = ({
   return (
     <div
       key={app.id}
-      className={`bg-white border border-slate-200 rounded-xl overflow-hidden ${
+      className={`overflow-hidden ${
         viewMode === "list" ? "flex flex-col sm:flex-row" : ""
       }`}
     >
       {viewMode === "grid" ? (
         <>
-          <div className="p-4 lg:p-6 border-b border-slate-100">
-            <div className="flex items-start justify-between mb-3">
-              <div className="flex items-center space-x-3 flex-1 min-w-0">
-                <ImageWithFallback
-                  src={app?.image ?? "https://source.unsplash.com/400x300?game"}
-                  fallbackSrc="https://placehold.co/400"
-                  alt={app.name}
-                  className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl object-cover flex-shrink-0"
-                />
-                <div className="min-w-0">
-                  <h3 className="font-semibold text-base lg:text-lg truncate">
-                    {app.name}
-                  </h3>
-                  <p className="text-sm text-slate-500 truncate">
-                    {app.company}
-                  </p>
+          <div className="w-full flex rounded-2xl items-center gap-6 p-4 border border-solid border-[E0E1E1]">
+            <div className="w-[122px] flex flex-col gap-8">
+              <div className="flex flex-col items-end gap-[9px]">
+                <div className="flex flex-col items-end gap-4">
+                  <ImageWithFallback
+                    src={
+                      app?.image ?? "https://source.unsplash.com/400x300?game"
+                    }
+                    fallbackSrc="https://placehold.co/400"
+                    alt={app.name}
+                    className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl object-cover flex-shrink-0"
+                  />
+                  <div className="flex flex-col items-end">
+                    <h3 className="font-semibold text-base lg:text-lg text-right">
+                      {app.name}
+                    </h3>
+                    <p className="text-sm text-right">{app.company}</p>
+                  </div>
                 </div>
+                <p
+                  onClick={() => onRemoveApp(app.id)}
+                  className="hover:cursor-pointer font-[Inter] font-normal text-[14px] leading-[155%] tracking-[-0.2%] align-middle underline [text-decoration-style:solid] [text-decoration-skip-ink:auto]"
+                >
+                  Remove
+                </p>
               </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => onRemoveApp(app.id)}
-                className="h-8 w-8 p-0 hover:bg-red-50 hover:text-red-600 flex-shrink-0"
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
 
-            {/* <div className="flex items-center justify-center mb-4">
-                        <Badge
-                          variant="secondary"
-                          className="flex items-center space-x-1"
-                        >
-                          {getPlatformIcon(app.platform)}
-                          <span className="text-xs lg:text-sm">
-                            {app.platform}
-                          </span>
-                        </Badge>
-                      </div> */}
-          </div>
-          <div className="flex-1 sm:flex-none w-full p-4">
-            <Select
-              value={selectedModuleFilter?.value}
-              onValueChange={handleChangeModul}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select Category" />
-              </SelectTrigger>
-              <SelectContent className="bg-white">
-                <SelectItem value={null}>All</SelectItem>
-                {listCategory.map((category, i) => (
-                  <SelectItem key={i} value={category.value}>
-                    {category.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="p-4 lg:p-6">
-            <h4 className="font-medium mb-3 text-sm lg:text-base">
-              Screens ({getScreenFiltered?.length ?? 0})
-            </h4>
-            <ScrollGallery
-              screens={getScreenFiltered}
-              handleClickImage={handleClickImage}
-            />
+              <div className="flex-1 sm:flex-none sm:min-w-[122px]">
+                <Select
+                  value={selectedModuleFilter?.value}
+                  onValueChange={handleChangeModul}
+                >
+                  <SelectTrigger className="w-full rounded-xl">
+                    <SelectValue placeholder="All category" />
+                  </SelectTrigger>
+                  <SelectContent
+                    className="bg-white rounded-[12px]"
+                    classNameMenu="!m-0 !p-0"
+                  >
+                    <SelectItem
+                      className="!items-start !py-[9px] !px-2"
+                      isRemoveCheckIndocator
+                      value="All"
+                    >
+                      All category
+                    </SelectItem>
+                    {listCategory.map((category, i) => (
+                      <SelectItem
+                        className="!items-start !py-[9px] !px-2 truncate"
+                        key={i}
+                        value={category.value}
+                        isRemoveCheckIndocator
+                        withRoundedEdge
+                      >
+                        {category.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="w-[328px] flex flex-col gap-2 max-h-[885px] overflow-y-auto">
+              <ScrollGallery
+                screens={getScreenFiltered}
+                handleClickImage={handleClickImage}
+                hideInfo
+              />
+            </div>
           </div>
         </>
       ) : (
         <>
-          <div className="w-full sm:w-32 lg:w-40 h-32 flex-shrink-0">
-            <ImageWithFallback
-              src={app?.image ?? "https://source.unsplash.com/400x300?game"}
-              fallbackSrc="https://placehold.co/400"
-              alt={app.name}
-              className="w-full h-full object-cover"
-            />
-          </div>
-          <div className="flex-1 p-4 lg:p-6">
-            <div className="flex items-start justify-between mb-2">
-              <div className="flex-1 min-w-0">
-                <h3 className="font-semibold text-base lg:text-lg truncate">
-                  {app.name}
-                </h3>
-                <p className="text-sm text-slate-500 truncate">{app.company}</p>
+          <div className="w-full flex rounded-2xl items-center gap-6 p-4 border border-solid border-[E0E1E1]">
+            <div className="w-[122px] flex flex-col gap-8">
+              <div className="flex flex-col items-end gap-[9px]">
+                <div className="flex flex-col items-end gap-4">
+                  <ImageWithFallback
+                    src={
+                      app?.image ?? "https://source.unsplash.com/400x300?game"
+                    }
+                    fallbackSrc="https://placehold.co/400"
+                    alt={app.name}
+                    className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl object-cover flex-shrink-0"
+                  />
+                  <div className="flex flex-col items-end">
+                    <h3 className="font-semibold text-base lg:text-lg text-right">
+                      {app.name}
+                    </h3>
+                    <p className="text-sm text-right">{app.company}</p>
+                  </div>
+                </div>
+                <p
+                  onClick={() => onRemoveApp(app.id)}
+                  className="hover:cursor-pointer font-[Inter] font-normal text-[14px] leading-[155%] tracking-[-0.2%] align-middle underline [text-decoration-style:solid] [text-decoration-skip-ink:auto]"
+                >
+                  Remove
+                </p>
               </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => onRemoveApp(app.id)}
-                className="h-8 w-8 p-0 hover:bg-red-50 hover:text-red-600 ml-2 flex-shrink-0"
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-            <div className="flex-1 sm:flex-none w-full p-4">
-              <Select
-                value={selectedModuleFilter?.value}
-                onValueChange={handleChangeModul}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select Category" />
-                </SelectTrigger>
-                <SelectContent className="bg-white">
-                  <SelectItem value={null}>All</SelectItem>
-                  {listCategory.map((category, i) => (
-                    <SelectItem key={i} value={category.value}>
-                      {category.label}
+
+              <div className="flex-1 sm:flex-none sm:min-w-[122px]">
+                <Select
+                  value={selectedModuleFilter?.value}
+                  onValueChange={handleChangeModul}
+                >
+                  <SelectTrigger className="w-full rounded-xl">
+                    <SelectValue placeholder="All category" />
+                  </SelectTrigger>
+                  <SelectContent
+                    className="bg-white rounded-[12px]"
+                    classNameMenu="!m-0 !p-0"
+                  >
+                    <SelectItem
+                      className="!items-start !py-[9px] !px-2"
+                      isRemoveCheckIndocator
+                      value="All"
+                    >
+                      All category
                     </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                    {listCategory.map((category, i) => (
+                      <SelectItem
+                        className="!items-start !py-[9px] !px-2 truncate"
+                        key={i}
+                        value={category.value}
+                        isRemoveCheckIndocator
+                        withRoundedEdge
+                      >
+                        {category.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
-            <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 mb-3">
-              {/* <Badge
-                          variant="secondary"
-                          className="flex items-center space-x-1 w-fit"
-                        >
-                          {getPlatformIcon(app.platform)}
-                          <span className="text-xs lg:text-sm">
-                            {app.platform}
-                          </span>
-                        </Badge> */}
-              <span className="text-sm text-slate-600">
-                {getScreenFiltered?.length ?? 0} screens
-              </span>
+            <div className="w-full max-w-[846px] flex gap-2 h-[453px] overflow-x-auto">
+              <ScrollGallery
+                viewMode={viewMode}
+                screens={getScreenFiltered}
+                handleClickImage={handleClickImage}
+                hideInfo
+              />
             </div>
-            <ScrollGalleryList
-              screens={getScreenFiltered}
-              handleClickImage={handleClickImage}
-            />
           </div>
         </>
       )}
@@ -302,4 +310,3 @@ export const AppCardCompare: React.FC<AppCardProps> = ({
     </div>
   );
 };
-8888;

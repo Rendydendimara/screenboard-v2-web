@@ -15,15 +15,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { AppPublic } from "@/pages/Index";
-import {
-  Globe,
-  LayoutGrid,
-  List,
-  Monitor,
-  Plus,
-  Search,
-  Smartphone,
-} from "lucide-react";
+import clsx from "clsx";
+import { Globe, Monitor, Search, Smartphone } from "lucide-react";
 import React, { useState } from "react";
 import "yet-another-react-lightbox/styles.css";
 import { AppCardCompare } from "./AppCardCompare";
@@ -90,7 +83,10 @@ export const CompareModal: React.FC<CompareModalProps> = ({
           //   e.preventDefault();
           //   setShowCompare(true);
           // }}
-          className="max-w-[1120px] p-[52px] !rounded-[32px] max-h-[90vh] overflow-auto"
+          className={clsx(
+            "max-w-[1120px] p-[52px] !rounded-[32px] overflow-auto",
+            apps.length > 0 ? "max-h-[95vh]" : "max-h-[90vh]"
+          )}
         >
           <DialogHeader>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -115,7 +111,7 @@ export const CompareModal: React.FC<CompareModalProps> = ({
                     >
                       <path
                         d="M2.66699 13.3333V2.66663M5.33366 2.66663V2.67329M8.00033 2.66663V2.67329M10.667 2.66663V2.67329M13.3337 2.66663V2.67329M8.00033 5.33329V5.33996M13.3337 5.33329V5.33996M5.33366 7.99996V8.00663M8.00033 7.99996V8.00663M10.667 7.99996V8.00663M13.3337 7.99996V8.00663M8.00033 10.6666V10.6733M13.3337 10.6666V10.6733M5.33366 13.3333V13.34M8.00033 13.3333V13.34M10.667 13.3333V13.34M13.3337 13.3333V13.34"
-                        stroke="white"
+                        stroke={viewMode === "grid" ? "white" : "black"}
                         stroke-width="1.3"
                         stroke-linecap="round"
                         stroke-linejoin="round"
@@ -138,13 +134,13 @@ export const CompareModal: React.FC<CompareModalProps> = ({
                     >
                       <path
                         d="M2.66699 2.66663H13.3337M2.66699 5.33329V5.33996M8.00033 5.33329V5.33996M13.3337 5.33329V5.33996M2.66699 7.99996V8.00663M5.33366 7.99996V8.00663M8.00033 7.99996V8.00663M10.667 7.99996V8.00663M13.3337 7.99996V8.00663M2.66699 10.6666V10.6733M8.00033 10.6666V10.6733M13.3337 10.6666V10.6733M2.66699 13.3333V13.34M5.33366 13.3333V13.34M8.00033 13.3333V13.34M10.667 13.3333V13.34M13.3337 13.3333V13.34"
-                        stroke="black"
+                        stroke={viewMode === "list" ? "white" : "black"}
                         stroke-width="1.3"
                         stroke-linecap="round"
                         stroke-linejoin="round"
                       />
                     </svg>
-                    Top Diwn
+                    Top Down
                   </Button>
                 </div>
               )}
@@ -188,7 +184,7 @@ export const CompareModal: React.FC<CompareModalProps> = ({
                 viewMode === "grid"
                   ? {
                       gridTemplateColumns: `repeat(${Math.min(
-                        apps.length,
+                        2,
                         3
                       )}, minmax(0, 1fr))`,
                     }
@@ -203,10 +199,151 @@ export const CompareModal: React.FC<CompareModalProps> = ({
                   onRemoveApp={onRemoveApp}
                 />
               ))}
+              {apps.length === 1 && (
+                <div className="flex justify-center items-center">
+                  {/* h-[185px */}
+                  <div className="w-[506px] rounded-2xl gap-3 p-6 border flex flex-col items-start border-solid border-[#E0E1E1]">
+                    <div className="flex gap-6 flex-col items-center">
+                      <div className="flex gap-3 items-center">
+                        <div className="flex-1 sm:flex-none sm:min-w-[115px]">
+                          <Select
+                            value={selectedCategory}
+                            onValueChange={setSelectedCategory}
+                          >
+                            <SelectTrigger className="w-full rounded-xl">
+                              <SelectValue placeholder="Select category" />
+                            </SelectTrigger>
+                            <SelectContent
+                              className="bg-white rounded-[12px]"
+                              classNameMenu="!m-0 !p-0"
+                            >
+                              <SelectItem
+                                className="!items-start !py-[9px] !px-2"
+                                isRemoveCheckIndocator
+                                value="All"
+                              >
+                                All category
+                              </SelectItem>
+                              {categories.map((category, i) => (
+                                <SelectItem
+                                  className="!items-start !py-[9px] !px-2 truncate"
+                                  key={i}
+                                  value={category._id}
+                                  isRemoveCheckIndocator
+                                  withRoundedEdge
+                                >
+                                  {category.name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="relative lg:col-span-1 w-[308px]">
+                          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[#323638]" />
+                          <Input
+                            placeholder="Search app"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="pl-9 placeholder:text-Semantic_Text_Placeholder_1 rounded-xl text-body-4 !font-normal placeholder:font-normal"
+                          />
+                        </div>
+                      </div>
+
+                      <Button
+                        size="sm"
+                        className="bg-gradient-to-r w-[375px] rounded-2xl from-blue-500 to-purple-600 text-white border-0 px-4 h-11 py-2 text-sm lg:text-base"
+                      >
+                        Find Competitor
+                      </Button>
+                    </div>
+                    <div className="flex items-start flex-col gap-3 w-full">
+                      {filteredAvailableApps.length > 0 && (
+                        <div className="flex items-start gap-6 overflow-x-auto max-w-[435px]">
+                          {filteredAvailableApps.map((app) => (
+                            <div
+                              key={app.id}
+                              className="w-full min-w-[264px] min-h-[262px] rounded-2xl flex flex-col items-start gap-6 border border-solid border-[#E0E1E1]"
+                            >
+                              <div className="w-full flex items-center justify-between p-3">
+                                <div className="flex items-center gap-4">
+                                  <ImageWithFallback
+                                    src={
+                                      app?.image ??
+                                      "https://source.unsplash.com/400x300?game"
+                                    }
+                                    fallbackSrc="https://placehold.co/400"
+                                    alt={app.name}
+                                    className="w-10 h-10 lg:w-12 lg:h-12 rounded-[8px] object-cover flex-shrink-0"
+                                  />
+                                  <div className="flex flex-col gap-4 items-start">
+                                    <h3 className="font-semibold text-base lg:text-lg truncate">
+                                      {app.name}
+                                    </h3>
+                                    <p className="text-sm text-black font-normal truncate">
+                                      {app.company}
+                                    </p>
+                                  </div>
+                                </div>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => onAddApp(app)}
+                                  className="h-[18px] w-[18px] p-0 m-0 flex-shrink-0 border-none"
+                                >
+                                  <svg
+                                    width="12"
+                                    height="13"
+                                    viewBox="0 0 12 13"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M6 1.25V11.75M0.75 6.5H11.25"
+                                      stroke="black"
+                                      stroke-width="1.4"
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                    />
+                                  </svg>
+                                </Button>
+                              </div>
+                              <div className="flex items-start gap-2 px-3 overflow-x-auto max-w-[264px]">
+                                {app.screens.map((screenshot, i) => (
+                                  <ImageWithFallback
+                                    src={
+                                      screenshot.image ??
+                                      "https://source.unsplash.com/400x300?game"
+                                    }
+                                    key={i}
+                                    fallbackSrc="https://placehold.co/400"
+                                    alt={screenshot.name}
+                                    className="w-[74px] h-[163px] rounded-[8px] object-cover flex-shrink-0"
+                                  />
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {searchTerm && filteredAvailableApps.length === 0 && (
+                        <div className="text-center py-8 text-slate-500">
+                          <p className="text-sm">
+                            No apps found matching "{searchTerm}" in{" "}
+                            {selectedCategory === "All"
+                              ? "any category"
+                              : selectedCategory}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
-          {canAddMoreApps && onAddApp && (
+          {apps.length === 0 && canAddMoreApps && onAddApp ? (
             <div className="mt-6">
               <div className="flex items-center gap-3 mb-6">
                 <div className="flex-1 sm:flex-none sm:min-w-[115px]">
@@ -253,124 +390,125 @@ export const CompareModal: React.FC<CompareModalProps> = ({
                   />
                 </div>
               </div>
-
-              <div className="flex items-start flex-col gap-3 w-full">
-                <p className="font-[Inter] font-medium text-[14px] leading-[155%] tracking-[-0.2%] align-middle">
-                  Trending Apps
-                </p>
-                <div className="flex items-start gap-6 overflow-x-auto max-w-[1016px]  ">
-                  {filteredAvailableApps.map((app) => (
-                    <div
-                      key={app.id}
-                      className="w-full min-w-[264px] min-h-[262px] rounded-2xl flex flex-col items-start gap-6 border border-solid border-[#E0E1E1]"
-                    >
-                      <div className="w-full flex items-center justify-between p-3">
-                        <div className="flex items-center gap-4">
-                          <ImageWithFallback
-                            src={
-                              app?.image ??
-                              "https://source.unsplash.com/400x300?game"
-                            }
-                            fallbackSrc="https://placehold.co/400"
-                            alt={app.name}
-                            className="w-10 h-10 lg:w-12 lg:h-12 rounded-[8px] object-cover flex-shrink-0"
-                          />
-                          <div className="flex flex-col gap-4 items-start">
-                            <h3 className="font-semibold text-base lg:text-lg truncate">
-                              {app.name}
-                            </h3>
-                            <p className="text-sm text-black font-normal truncate">
-                              {app.company}
-                            </p>
-                          </div>
-                        </div>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => onAddApp(app)}
-                          className="h-[18px] w-[18px] p-0 m-0 flex-shrink-0 border-none"
-                        >
-                          <svg
-                            width="12"
-                            height="13"
-                            viewBox="0 0 12 13"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M6 1.25V11.75M0.75 6.5H11.25"
-                              stroke="black"
-                              stroke-width="1.4"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
+              {apps.length === 0 && (
+                <div className="flex items-start flex-col gap-3 w-full">
+                  <p className="font-[Inter] font-medium text-[14px] leading-[155%] tracking-[-0.2%] align-middle">
+                    Trending Apps
+                  </p>
+                  <div className="flex items-start gap-6 overflow-x-auto max-w-[1016px]">
+                    {filteredAvailableApps.map((app) => (
+                      <div
+                        key={app.id}
+                        className="w-full min-w-[264px] min-h-[262px] rounded-2xl flex flex-col items-start gap-6 border border-solid border-[#E0E1E1]"
+                      >
+                        <div className="w-full flex items-center justify-between p-3">
+                          <div className="flex items-center gap-4">
+                            <ImageWithFallback
+                              src={
+                                app?.image ??
+                                "https://source.unsplash.com/400x300?game"
+                              }
+                              fallbackSrc="https://placehold.co/400"
+                              alt={app.name}
+                              className="w-10 h-10 lg:w-12 lg:h-12 rounded-[8px] object-cover flex-shrink-0"
                             />
-                          </svg>
-                        </Button>
+                            <div className="flex flex-col gap-4 items-start">
+                              <h3 className="font-semibold text-base lg:text-lg truncate">
+                                {app.name}
+                              </h3>
+                              <p className="text-sm text-black font-normal truncate">
+                                {app.company}
+                              </p>
+                            </div>
+                          </div>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => onAddApp(app)}
+                            className="h-[18px] w-[18px] p-0 m-0 flex-shrink-0 border-none"
+                          >
+                            <svg
+                              width="12"
+                              height="13"
+                              viewBox="0 0 12 13"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M6 1.25V11.75M0.75 6.5H11.25"
+                                stroke="black"
+                                stroke-width="1.4"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </svg>
+                          </Button>
+                        </div>
+                        <div className="flex items-start gap-2 px-3 overflow-x-auto max-w-[264px]">
+                          {app.screens.map((screenshot, i) => (
+                            <ImageWithFallback
+                              src={
+                                screenshot.image ??
+                                "https://source.unsplash.com/400x300?game"
+                              }
+                              key={i}
+                              fallbackSrc="https://placehold.co/400"
+                              alt={screenshot.name}
+                              className="w-[74px] h-[163px] rounded-[8px] object-cover flex-shrink-0"
+                            />
+                          ))}
+                        </div>
                       </div>
-                      <div className="flex items-start gap-2 px-3 overflow-x-auto max-w-[264px]">
-                        {app.screens.map((screenshot, i) => (
-                          <ImageWithFallback
-                            src={
-                              screenshot.image ??
-                              "https://source.unsplash.com/400x300?game"
-                            }
-                            key={i}
-                            fallbackSrc="https://placehold.co/400"
-                            alt={screenshot.name}
-                            className="w-[74px] h-[163px] rounded-[8px] object-cover flex-shrink-0"
-                          />
-                        ))}
-                      </div>
-                    </div>
 
-                    // <div
-                    //   key={app.id}
-                    //   className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors"
-                    // >
-                    //   <div className="flex items-center space-x-3 min-w-0 flex-1">
-                    //     <ImageWithFallback
-                    //       src={
-                    //         app?.image ??
-                    //         "https://source.unsplash.com/400x300?game"
-                    //       }
-                    //       fallbackSrc="https://placehold.co/400"
-                    //       alt={app.name}
-                    //       className="w-8 h-8 rounded-lg object-cover flex-shrink-0"
-                    //     />
-                    //     <div className="min-w-0">
-                    //       <h4 className="font-medium text-sm truncate">
-                    //         {app.name}
-                    //       </h4>
-                    //       <p className="text-xs text-slate-600 truncate">
-                    //         {app?.category?.name}
-                    //       </p>
-                    //     </div>
-                    //   </div>
-                    //   <Button
-                    //     variant="outline"
-                    //     size="sm"
-                    //     onClick={() => onAddApp(app)}
-                    //     className="h-8 w-8 p-0 flex-shrink-0"
-                    //   >
-                    //     <Plus className="h-3 w-3" />
-                    //   </Button>
-                    // </div>
-                  ))}
-                </div>
-
-                {searchTerm && filteredAvailableApps.length === 0 && (
-                  <div className="text-center py-8 text-slate-500">
-                    <p className="text-sm">
-                      No apps found matching "{searchTerm}" in{" "}
-                      {selectedCategory === "All"
-                        ? "any category"
-                        : selectedCategory}
-                    </p>
+                      // <div
+                      //   key={app.id}
+                      //   className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors"
+                      // >
+                      //   <div className="flex items-center space-x-3 min-w-0 flex-1">
+                      //     <ImageWithFallback
+                      //       src={
+                      //         app?.image ??
+                      //         "https://source.unsplash.com/400x300?game"
+                      //       }
+                      //       fallbackSrc="https://placehold.co/400"
+                      //       alt={app.name}
+                      //       className="w-8 h-8 rounded-lg object-cover flex-shrink-0"
+                      //     />
+                      //     <div className="min-w-0">
+                      //       <h4 className="font-medium text-sm truncate">
+                      //         {app.name}
+                      //       </h4>
+                      //       <p className="text-xs text-slate-600 truncate">
+                      //         {app?.category?.name}
+                      //       </p>
+                      //     </div>
+                      //   </div>
+                      //   <Button
+                      //     variant="outline"
+                      //     size="sm"
+                      //     onClick={() => onAddApp(app)}
+                      //     className="h-8 w-8 p-0 flex-shrink-0"
+                      //   >
+                      //     <Plus className="h-3 w-3" />
+                      //   </Button>
+                      // </div>
+                    ))}
                   </div>
-                )}
-              </div>
+
+                  {searchTerm && filteredAvailableApps.length === 0 && (
+                    <div className="text-center py-8 text-slate-500">
+                      <p className="text-sm">
+                        No apps found matching "{searchTerm}" in{" "}
+                        {selectedCategory === "All"
+                          ? "any category"
+                          : selectedCategory}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
-          )}
+          ) : null}
           {!canAddMoreApps && (
             <div className="text-center mt-6 lg:mt-8 p-4 bg-amber-50 rounded-xl">
               <p className="text-amber-800 text-sm lg:text-base">
@@ -381,9 +519,6 @@ export const CompareModal: React.FC<CompareModalProps> = ({
           )}
         </DialogContent>
       </Dialog>
-      {/* <Button className="bg-red-500" onClick={() => setOpenDetailImage(true)}>
-        Open Manually
-      </Button> */}
     </>
   );
 };
