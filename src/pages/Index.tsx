@@ -1,5 +1,6 @@
 import AdminAuthAPI from "@/api/admin/auth/api";
 import UserAppAPI from "@/api/user/app/api";
+import UserAuthAPI from "@/api/user/auth/api";
 import CategoryAPI from "@/api/user/category/api";
 import { TCategoryRes } from "@/api/user/category/type";
 import { AppCard } from "@/components/AppCard";
@@ -121,7 +122,7 @@ const Index = () => {
 
   const handleAddToCompare = (app: AppPublic) => {
     if (
-      compareApps.length < 3 &&
+      compareApps.length < 2 &&
       !compareApps.some((compareApp) => compareApp.id === app.id)
     ) {
       setCompareApps([...compareApps, app]);
@@ -134,7 +135,12 @@ const Index = () => {
 
   const handleLogout = async () => {
     try {
-      const res = await AdminAuthAPI.logout();
+      let res;
+      if (user.userType === "administrator") {
+        res = await AdminAuthAPI.logout();
+      } else {
+        res = await UserAuthAPI.logout();
+      }
       if (res.success) {
         dispatch(logout());
         window.location.reload();
