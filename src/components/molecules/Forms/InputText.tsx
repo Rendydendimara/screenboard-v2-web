@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
 import clsx from "clsx";
 import { Eye, EyeOff } from "lucide-react";
 import { useFormControl } from "./FormControl";
 import { FormHelperText } from "./FormHelperText";
 import { FormErrorMessage } from "./FormErrorMessage";
+import { Input } from "@/components/ui/input";
 
 export interface InputTextProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -16,6 +17,7 @@ export interface InputTextProps
   inputValidation?: "onlyNumber" | "phoneNumber";
   classNameLabel?: string;
   withTogglePassword?: boolean; // <-- tambahan
+  leftIcon?: ReactNode;
 }
 
 export function InputText({
@@ -34,6 +36,7 @@ export function InputText({
   placeholder,
   type = "text",
   withTogglePassword = false, // default false
+  leftIcon,
   ...rest
 }: InputTextProps) {
   const { id } = useFormControl();
@@ -74,7 +77,8 @@ export function InputText({
         />
       )}
       <div className="relative">
-        <input
+        {leftIcon}
+        {/* <input
           id={id}
           name={name}
           value={value ?? ""}
@@ -90,8 +94,25 @@ export function InputText({
             className
           )}
           {...rest}
-        />
+        /> */}
 
+        <Input
+          id={id}
+          name={name}
+          value={value ?? ""}
+          placeholder={placeholder}
+          type={isPasswordField ? (showPassword ? "text" : "password") : type}
+          onChange={handleOnChange}
+          className={clsx(
+            "h-8 rounded-[8px] pl-8 !text-body-4 pt-[5px]",
+            isInvalid
+              ? "border-red-500 focus:ring-1 focus:ring-red-500"
+              : "border-gray-300 focus:border-gray-900 focus:ring-1 focus:ring-gray-900/10",
+            isPasswordField || leftIcon ? "pr-10" : "", // padding ekstra biar ga ketimpa tombol
+            className
+          )}
+          {...rest}
+        />
         {isPasswordField && (
           <button
             type="button"
