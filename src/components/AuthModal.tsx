@@ -116,10 +116,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   };
 
   const isDisableSubmit = useMemo(() => {
-    console.log("formik.errors", formik.errors);
-
     const isInvalid = !formik.isValid || !formik.dirty;
-    console.log("isInvalid", isInvalid);
     return isInvalid;
   }, [formik.values, formik.dirty, formik.isValid]);
 
@@ -148,7 +145,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         onClose();
       }
     } catch (error: any) {
-      console.log("error", error);
       toast({
         title: "Error",
         description: "Error",
@@ -156,10 +152,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       });
     }
   };
-
-  useEffect(() => {
-    console.log("formik.errors", formik.errors);
-  }, [formik.errors]);
 
   useEffect(() => {
     setMode("login");
