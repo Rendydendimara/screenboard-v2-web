@@ -165,7 +165,7 @@ const AppDetails: React.FC = () => {
   };
 
   // 🔹 Group by kategori agar bisa ditampilkan per section
-  const groupedScreensFilter = filteredScreens.reduce((acc, screen) => {
+  const groupedScreensFilter = filteredScreens?.reduce((acc, screen) => {
     const categoryName = screen.category?.name || "Uncategorized";
     if (!acc[categoryName]) acc[categoryName] = [];
     acc[categoryName].push(screen);
@@ -623,7 +623,7 @@ const AppDetails: React.FC = () => {
                     <div className="h-8 py-2 px-4 flex items-center justify-center font-[Inter] font-bold text-[16px] leading-[16px] tracking-[0%] text-[#020817] rounded-full border border-solid border-[#E2E8F0]">
                       {key}
                     </div>
-                    <div className="flex items-start w-full max-w-full pr-5 overflow-x-auto gap-7">
+                    <div className="flex items-start max-w-full pr-5 overflow-x-auto gap-7">
                       {screens.map((screen, i) => (
                         <div
                           key={i}
@@ -640,7 +640,7 @@ const AppDetails: React.FC = () => {
                             }
                             fallbackSrc="https://placehold.co/400"
                             alt={screen.name}
-                            className="min-w-[272px] h-[603px] object-cover rounded-[8px]"
+                            className="min-w-[272px] max-w-[272px]  h-[603px] object-cover rounded-[8px]"
                           />
                         </div>
                       ))}
