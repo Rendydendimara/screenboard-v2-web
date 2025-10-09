@@ -17,12 +17,14 @@ interface AppCardProps {
   app: AppPublic;
   viewMode: "grid" | "list";
   onRemoveApp?: (id: string) => void;
+  onLightboxOpenChange?: (isOpen: boolean) => void;
 }
 
 export const AppCardCompare: React.FC<AppCardProps> = ({
   app,
   viewMode,
   onRemoveApp,
+  onLightboxOpenChange,
 }) => {
   const [openDetailImage, setOpenDetailImage] = useState(false);
   const [indexInitialImageOpen, setIndexInitialImageOpen] = useState(0);
@@ -30,14 +32,19 @@ export const AppCardCompare: React.FC<AppCardProps> = ({
     useState<TSelect | null>(null);
   const [listCategory, setListCategory] = useState<TSelect[]>([]);
 
-  const handleClickImage = useCallback((i: number) => {
-    setIndexInitialImageOpen(i);
-    setOpenDetailImage(true);
-  }, []);
+  const handleClickImage = useCallback(
+    (i: number) => {
+      setIndexInitialImageOpen(i);
+      setOpenDetailImage(true);
+      onLightboxOpenChange?.(true);
+    },
+    [onLightboxOpenChange]
+  );
 
   const handleCloseImageDetail = useCallback(() => {
     setOpenDetailImage(false);
-  }, []);
+    onLightboxOpenChange?.(false);
+  }, [onLightboxOpenChange]);
 
   const getListImageDetail = useMemo(() => {
     if (app) {
@@ -97,9 +104,18 @@ export const AppCardCompare: React.FC<AppCardProps> = ({
     if (!openDetailImage) return;
 
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "ArrowLeft") prevSlide();
-      if (e.key === "ArrowRight") nextSlide();
-      // if (e.key === "Escape") handleCloseImageDetail();
+      if (e.key === "ArrowLeft") {
+        e.stopPropagation();
+        prevSlide();
+      }
+      if (e.key === "ArrowRight") {
+        e.stopPropagation();
+        nextSlide();
+      }
+      if (e.key === "Escape") {
+        e.stopPropagation();
+        handleCloseImageDetail();
+      }
     };
 
     window.addEventListener("keydown", handleKey);
@@ -119,7 +135,7 @@ export const AppCardCompare: React.FC<AppCardProps> = ({
     >
       {viewMode === "grid" ? (
         <>
-          <div className="w-full flex rounded-2xl items-center gap-6 p-4 border border-solid border-[E0E1E1]">
+          <div className="w-full flex rounded-2xl items-center gap-6 px-4 border border-solid border-[E0E1E1]">
             <div className="w-[122px] flex flex-col gap-8">
               <div className="flex flex-col items-end gap-[9px]">
                 <div className="flex flex-col items-end gap-4">
@@ -185,6 +201,7 @@ export const AppCardCompare: React.FC<AppCardProps> = ({
                 screens={getScreenFiltered}
                 handleClickImage={handleClickImage}
                 hideInfo
+                classNameFirstImage="mt-4"
               />
             </div>
           </div>

@@ -502,6 +502,7 @@ const Index = () => {
                     isInCompare={compareApps.some(
                       (compareApp) => compareApp.id === app.id
                     )}
+                    setSelectedScreen={setSelectedScreen}
                   />
                 ))}
               </div>

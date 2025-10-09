@@ -10,7 +10,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { AppPublic } from "@/pages/Index";
+import { AppPublic, ScreenPublic } from "@/pages/Index";
 import ImageWithFallback from "./ui/ImageWithFallback";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
@@ -22,6 +22,7 @@ interface AppCardProps {
   onAddToCompare?: () => void;
   isInCompare?: boolean;
   onDetail: () => void;
+  setSelectedScreen: React.Dispatch<React.SetStateAction<ScreenPublic>>;
 }
 
 export const AppCard: React.FC<AppCardProps> = ({
@@ -32,6 +33,7 @@ export const AppCard: React.FC<AppCardProps> = ({
   onAddToCompare,
   isInCompare = false,
   onDetail,
+  setSelectedScreen,
 }) => {
   const handleCompareClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -84,6 +86,7 @@ export const AppCard: React.FC<AppCardProps> = ({
               <div className="flex items-center gap-2">
                 {app.screens.slice(0, 4).map((screen) => (
                   <div
+                    onClick={() => setSelectedScreen(screen)}
                     key={screen.id}
                     className="aspect-[9/16] rounded-lg overflow-hidden relative"
                   >
@@ -365,6 +368,7 @@ export const AppCard: React.FC<AppCardProps> = ({
           //   className="aspect-[9/16] rounded-lg overflow-hidden relative"
           // >
           <img
+            onClick={() => setSelectedScreen(screen)}
             src={screen.image}
             alt={screen.name}
             className="w-[190px] h-[417px] rounded-[8px] object-cover group-hover:scale-105 transition-transform duration-500"

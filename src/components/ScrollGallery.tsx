@@ -8,6 +8,7 @@ type Props = {
   handleClickImage: (i: number) => void;
   hideInfo?: boolean;
   viewMode?: "grid" | "list";
+  classNameFirstImage?: string;
 };
 
 const ScrollGallery = ({
@@ -15,6 +16,7 @@ const ScrollGallery = ({
   handleClickImage,
   hideInfo = false,
   viewMode = "grid",
+  classNameFirstImage,
 }: Props) => {
   const [visibleCount, setVisibleCount] = useState(6);
 
@@ -34,12 +36,18 @@ const ScrollGallery = ({
     <div
       className={clsx(
         viewMode === "grid"
-          ? "grid grid-cols-1 gap-2 max-h-[90vh] overflow-y-auto"
+          ? "grid grid-cols-1 gap-2 max-h-[90vh] overflow-y-auto pb-4"
           : "flex items-center gap-2 overflow-x-auto"
       )}
     >
       {visibleScreens.map((screen, i) => (
-        <div key={screen.id} className="group cursor-pointer">
+        <div
+          key={screen.id}
+          className={clsx(
+            "group cursor-pointer",
+            i === 0 && classNameFirstImage
+          )}
+        >
           <div
             className={clsx(
               "bg-slate-100 rounded-lg overflow-hidden",

@@ -17,7 +17,7 @@ import {
 import { AppPublic } from "@/pages/Index";
 import clsx from "clsx";
 import { Globe, Monitor, Search, Smartphone } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "yet-another-react-lightbox/styles.css";
 import { AppCardCompare } from "./AppCardCompare";
 import ImageWithFallback from "./ui/ImageWithFallback";
@@ -48,6 +48,7 @@ export const CompareModal: React.FC<CompareModalProps> = ({
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [openDetailImage, setOpenDetailImage] = useState(false);
   const [indexInitialImageOpen, setIndexInitialImageOpen] = useState(0);
+  const [isChildModalOpen, setIsChildModalOpen] = useState(false);
 
   const filteredAvailableApps = availableApps.filter((app) => {
     const notInCompare = !apps.find((compareApp) => compareApp.id === app.id);
@@ -75,10 +76,29 @@ export const CompareModal: React.FC<CompareModalProps> = ({
     }
   };
 
+  // Keyboard navigation
+  useEffect(() => {
+    if (!openDetailImage) return;
+
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setShowCompare(true);
+      }
+    };
+
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [openDetailImage]);
+
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent
+          onEscapeKeyDown={(e) => {
+            if (isChildModalOpen) {
+              e.preventDefault();
+            }
+          }}
           // onCloseAutoFocus={(e) => {
           //   e.preventDefault();
           //   setShowCompare(true);
@@ -197,6 +217,7 @@ export const CompareModal: React.FC<CompareModalProps> = ({
                   app={app}
                   viewMode={viewMode}
                   onRemoveApp={onRemoveApp}
+                  onLightboxOpenChange={setIsChildModalOpen}
                 />
               ))}
               {apps.length === 1 && (
