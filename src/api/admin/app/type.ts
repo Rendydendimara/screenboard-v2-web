@@ -101,4 +101,5 @@ export type TAppResPublic = {
   deletedBy: string | null;
   name: string;
   iconFile?: string;
+  isLiked: boolean;
 };

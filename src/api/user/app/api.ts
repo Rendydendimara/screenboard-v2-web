@@ -9,7 +9,7 @@ const getAll = async () => {
 };
 
 const getDetail = async (id: string) => {
-  const response = await axiosInstanceNoAuth.get(
+  const response = await axiosInstanceWithAuth.get(
     `${URL_API.USER.APP.V1.DETAIL}/${id}`
   );
   return response.data;

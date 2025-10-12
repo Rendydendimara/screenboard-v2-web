@@ -95,6 +95,12 @@ const URL_API = {
         SIGNUP_GOOGLE: "/api/v1/user/auth/google-signup",
       },
     },
+    APP_LIKE: {
+      V1: {
+        LIKE: "/api/v1/user/app-like/like",
+        DISLIKE: "/api/v1/user/app-like/dislike",
+      },
+    },
   },
 };
 

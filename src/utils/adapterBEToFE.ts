@@ -100,7 +100,7 @@ export const adapterListAppBEToFEPublic = (
       company: d.company,
       screenshots: d.screenshots,
       screens: screens,
-      isLiked: false,
+      isLiked: d.isLiked,
       featured: d.featured,
       trending: d.trending,
       lastUpdated: d.updatedAt
@@ -140,7 +140,7 @@ export const adapterSingleAppBEToFEPublic = (
     company: data.company,
     screenshots: data.screenshots,
     screens: screens,
-    isLiked: false,
+    isLiked: data.isLiked,
     featured: data.featured,
     trending: data.trending,
     lastUpdated: data.updatedAt

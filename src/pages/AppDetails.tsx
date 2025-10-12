@@ -1,20 +1,30 @@
+import AdminAuthAPI from "@/api/admin/auth/api";
 import UserAppAPI from "@/api/user/app/api";
+import AppLikeAPI from "@/api/user/appLike/api";
+import UserAuthAPI from "@/api/user/auth/api";
+import CategoryAPI from "@/api/user/category/api";
+import { TCategoryRes } from "@/api/user/category/type";
+import { CompareModal } from "@/components/CompareModal";
 import CModalDialogLoading from "@/components/modal-dialog-loading";
 import { ScreenImageModal } from "@/components/ScreenImageModal";
+import SEO from "@/components/SEO";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import ImageWithFallback from "@/components/ui/ImageWithFallback";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
-import { getImageUrl } from "@/utils";
+import { useAppDispatch, useTypedSelector } from "@/hooks/use-typed-selector";
+import { logout } from "@/provider/slices/authSlice";
+import { RootState } from "@/provider/store";
 import {
   adapterListAppBEToFEPublic,
   adapterSingleAppBEToFEPublic,
 } from "@/utils/adapterBEToFE";
+import clsx from "clsx";
 import {
   ArrowLeft,
   Building,
   Calendar,
-  ChevronRight,
   ExternalLink,
   GitCompare,
   Globe,
@@ -29,17 +39,6 @@ import {
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { AppPublic, ScreenPublic } from "./Index";
-import ImageWithFallback from "@/components/ui/ImageWithFallback";
-import SEO from "@/components/SEO";
-import { useAppDispatch, useTypedSelector } from "@/hooks/use-typed-selector";
-import { RootState } from "@/provider/store";
-import AdminAuthAPI from "@/api/admin/auth/api";
-import UserAuthAPI from "@/api/user/auth/api";
-import { logout } from "@/provider/slices/authSlice";
-import clsx from "clsx";
-import { CompareModal } from "@/components/CompareModal";
-import { TCategoryRes } from "@/api/user/category/type";
-import CategoryAPI from "@/api/user/category/api";
 
 const AppDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -95,17 +94,34 @@ const AppDetails: React.FC = () => {
     return acc;
   }, {} as Record<string, ScreenPublic[]>);
 
-  const toggleLike = () => {
-    if (user) {
-      setApp({
-        ...app,
-        isLiked: !app.isLiked,
-      });
+  const toggleLike = async () => {
+    try {
+      if (user) {
+        if (app.isLiked) {
+          await AppLikeAPI.dislike({ appId: app.id });
+          setApp({
+            ...app,
+            isLiked: !app.isLiked,
+          });
+        } else {
+          await AppLikeAPI.like({ appId: app.id });
+          setApp({
+            ...app,
+            isLiked: !app.isLiked,
+          });
+        }
+        toast({
+          title: app?.isLiked ? "Removed from favorites" : "Added to favorites",
+          description: `${app?.name} has been ${
+            app?.isLiked ? "removed from" : "added to"
+          } your favorites.`,
+        });
+      }
+    } catch (error: any) {
       toast({
-        title: app?.isLiked ? "Removed from favorites" : "Added to favorites",
-        description: `${app?.name} has been ${
-          app?.isLiked ? "removed from" : "added to"
-        } your favorites.`,
+        title: "Error",
+        description: error.response.data.message || error.message,
+        variant: "destructive",
       });
     }
   };

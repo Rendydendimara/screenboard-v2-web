@@ -1,5 +1,6 @@
 import AdminAuthAPI from "@/api/admin/auth/api";
 import UserAppAPI from "@/api/user/app/api";
+import AppLikeAPI from "@/api/user/appLike/api";
 import UserAuthAPI from "@/api/user/auth/api";
 import CategoryAPI from "@/api/user/category/api";
 import { TCategoryRes } from "@/api/user/category/type";
@@ -112,10 +113,40 @@ const Index = () => {
     return matchesSearch && matchesCategory;
   });
 
-  const handleLike = (appId: string) => {
-    listApp.find((app) => app.id === appId)!.isLiked = !listApp.find(
-      (app) => app.id === appId
-    )!.isLiked;
+  const handleLike = async (appId: string, isLike: boolean) => {
+    try {
+      if (user) {
+        const currentIndex = listApp.findIndex((s) => s.id === appId);
+        const listAppAny: any = listApp;
+        if (isLike) {
+          await AppLikeAPI.dislike({ appId: appId });
+        } else {
+          await AppLikeAPI.like({ appId: appId });
+        }
+        setListApp([
+          ...listAppAny.slice(0, currentIndex),
+          {
+            ...listAppAny[currentIndex],
+            isLiked: !isLike,
+          },
+          ...listAppAny.slice(currentIndex + 1, listAppAny.length),
+        ]);
+        toast({
+          title: listAppAny[currentIndex]?.isLiked
+            ? "Removed from favorites"
+            : "Added to favorites",
+          description: `${listAppAny[currentIndex]?.name} has been ${
+            listAppAny[currentIndex]?.isLiked ? "removed from" : "added to"
+          } your favorites.`,
+        });
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.response.data.message || error.message,
+        variant: "destructive",
+      });
+    }
   };
 
   const [selectedApp, setSelectedApp] = useState<AppPublic | null>(null);
@@ -164,10 +195,10 @@ const Index = () => {
       const dataAdpt = adapterListAppBEToFEPublic(res.data);
       setListApp([
         ...dataAdpt,
-        ...dataAdpt,
-        ...dataAdpt,
-        ...dataAdpt,
-        ...dataAdpt,
+        // ...dataAdpt,
+        // ...dataAdpt,
+        // ...dataAdpt,
+        // ...dataAdpt,
       ]);
     } catch (err: any) {
       toast({
@@ -495,7 +526,7 @@ const Index = () => {
                     key={i}
                     app={app}
                     viewMode={viewMode}
-                    onLike={() => handleLike(app.id)}
+                    onLike={() => handleLike(app.id, app.isLiked)}
                     onClick={() => setSelectedApp(app)}
                     onDetail={() => gotoDetail(app.id)}
                     onAddToCompare={() => handleAddToCompare(app)}

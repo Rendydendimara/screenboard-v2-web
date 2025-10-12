@@ -13,6 +13,9 @@ import { Link } from "react-router-dom";
 import { AppPublic, ScreenPublic } from "@/pages/Index";
 import ImageWithFallback from "./ui/ImageWithFallback";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
+import clsx from "clsx";
+import { useTypedSelector } from "@/hooks/use-typed-selector";
+import { RootState } from "@/provider/store";
 
 interface AppCardProps {
   app: AppPublic;
@@ -35,6 +38,8 @@ export const AppCard: React.FC<AppCardProps> = ({
   onDetail,
   setSelectedScreen,
 }) => {
+  const user = useTypedSelector((state: RootState) => state.auth.user);
+
   const handleCompareClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     onAddToCompare?.();
@@ -42,12 +47,12 @@ export const AppCard: React.FC<AppCardProps> = ({
 
   if (viewMode === "list") {
     return (
-      <div
-        className="group bg-white rounded-2xl border border-slate-200 hover:border-slate-300 transition-all duration-300 hover:shadow-xl cursor-pointer overflow-hidden"
-        onClick={onDetail}
-      >
+      <div className="group bg-white rounded-2xl border border-slate-200 hover:border-slate-300 transition-all duration-300 hover:shadow-xl  overflow-hidden">
         <div className="flex p-4 lg:p-6">
-          <div className="flex-shrink-0 mr-4 lg:mr-6">
+          <div
+            onClick={onDetail}
+            className="flex-shrink-0 mr-4 lg:mr-6a hover:cursor-pointer"
+          >
             <div className="relative">
               <ImageWithFallback
                 src={app?.image ?? "https://source.unsplash.com/400x300?game"}
@@ -115,35 +120,38 @@ export const AppCard: React.FC<AppCardProps> = ({
                 >
                   <GitCompare className="h-4 w-4" />
                 </Button>
-                <Tooltip delayDuration={0}>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      // onClick={(e) => {
-                      //   e.stopPropagation();
-                      //   onLike();
-                      // }}
-                      className="h-8 w-8 p-0 hover:bg-red-50"
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onLike();
+                  }}
+                  className={clsx(
+                    "h-8 w-8 p-0 hover:bg-red-50",
+                    app.isLiked ? "!bg-[#9333EA] !text-white" : "text-slate-400"
+                  )}
+                >
+                  {user ? (
+                    <Heart className={"h-4 w-4"} />
+                  ) : (
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
                     >
-                      {/* ${
-                          app.isLiked
-                            ? "fill-red-500 text-red-500"
-                            : "text-slate-400"
-                        } */}
-
-                      <Heart className={"h-4 w-4 text-slate-400"} />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent
-                    side="bottom"
-                    align="center"
-                    hidden={false}
-                    children={<p>Comming soon</p>}
-                    // hidden={state !== "collapsed" || isMobile}
-                    // {...tooltip}
-                  />
-                </Tooltip>
+                      <path
+                        d="M5.3335 7.33333V4.66667C5.3335 3.95942 5.61445 3.28115 6.11454 2.78105C6.61464 2.28095 7.29292 2 8.00016 2C8.70741 2 9.38568 2.28095 9.88578 2.78105C10.3859 3.28115 10.6668 3.95942 10.6668 4.66667V7.33333M3.3335 8.66667C3.3335 8.31304 3.47397 7.97391 3.72402 7.72386C3.97407 7.47381 4.31321 7.33333 4.66683 7.33333H11.3335C11.6871 7.33333 12.0263 7.47381 12.2763 7.72386C12.5264 7.97391 12.6668 8.31304 12.6668 8.66667V12.6667C12.6668 13.0203 12.5264 13.3594 12.2763 13.6095C12.0263 13.8595 11.6871 14 11.3335 14H4.66683C4.31321 14 3.97407 13.8595 3.72402 13.6095C3.47397 13.3594 3.3335 13.0203 3.3335 12.6667V8.66667ZM7.3335 10.6667C7.3335 10.8435 7.40373 11.013 7.52876 11.1381C7.65378 11.2631 7.82335 11.3333 8.00016 11.3333C8.17697 11.3333 8.34654 11.2631 8.47157 11.1381C8.59659 11.013 8.66683 10.8435 8.66683 10.6667C8.66683 10.4899 8.59659 10.3203 8.47157 10.1953C8.34654 10.0702 8.17697 10 8.00016 10C7.82335 10 7.65378 10.0702 7.52876 10.1953C7.40373 10.3203 7.3335 10.4899 7.3335 10.6667Z"
+                        stroke="black"
+                        stroke-width="1.33333"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  )}
+                </Button>
 
                 <Link to={`/app/${app.id}`}>
                   <Button
@@ -187,11 +195,11 @@ export const AppCard: React.FC<AppCardProps> = ({
 
   return (
     <div className="w-full py-6 gap-4 flex-col flex min-h-[680px] bg-[#FFFFFF] border-[1px] border-[solid] border-[#E2E8F0] rounded-[24px]">
-      <div
-        className="flex flex-col items-start gap-5 px-4 hover:cursor-pointer"
-        onClick={onDetail}
-      >
-        <div className="flex items-center gap-6">
+      <div className="flex flex-col items-start gap-5 px-4">
+        <div
+          className="flex items-center gap-6  hover:cursor-pointer"
+          onClick={onDetail}
+        >
           <ImageWithFallback
             src={app?.image ?? "https://source.unsplash.com/400x300?game"}
             fallbackSrc="https://placehold.co/400"
@@ -328,35 +336,38 @@ export const AppCard: React.FC<AppCardProps> = ({
                   />
                 </svg>
               </Button>
-              <Tooltip delayDuration={0}>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    // onClick={(e) => {
-                    //   e.stopPropagation();
-                    //   onLike();
-                    // }}
-                    className="h-8 w-8 p-0 hover:bg-red-50"
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onLike();
+                }}
+                className={clsx(
+                  "h-8 w-8 p-0 hover:bg-red-50",
+                  app.isLiked ? "!bg-[#9333EA] !text-white" : "text-slate-400"
+                )}
+              >
+                {user ? (
+                  <Heart className={"h-4 w-4"} />
+                ) : (
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
                   >
-                    {/* ${
-                          app.isLiked
-                            ? "fill-red-500 text-red-500"
-                            : "text-slate-400"
-                        } */}
-
-                    <Heart className={"h-4 w-4 text-slate-400"} />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent
-                  side="bottom"
-                  align="center"
-                  hidden={false}
-                  children={<p>Comming soon</p>}
-                  // hidden={state !== "collapsed" || isMobile}
-                  // {...tooltip}
-                />
-              </Tooltip>
+                    <path
+                      d="M5.3335 7.33333V4.66667C5.3335 3.95942 5.61445 3.28115 6.11454 2.78105C6.61464 2.28095 7.29292 2 8.00016 2C8.70741 2 9.38568 2.28095 9.88578 2.78105C10.3859 3.28115 10.6668 3.95942 10.6668 4.66667V7.33333M3.3335 8.66667C3.3335 8.31304 3.47397 7.97391 3.72402 7.72386C3.97407 7.47381 4.31321 7.33333 4.66683 7.33333H11.3335C11.6871 7.33333 12.0263 7.47381 12.2763 7.72386C12.5264 7.97391 12.6668 8.31304 12.6668 8.66667V12.6667C12.6668 13.0203 12.5264 13.3594 12.2763 13.6095C12.0263 13.8595 11.6871 14 11.3335 14H4.66683C4.31321 14 3.97407 13.8595 3.72402 13.6095C3.47397 13.3594 3.3335 13.0203 3.3335 12.6667V8.66667ZM7.3335 10.6667C7.3335 10.8435 7.40373 11.013 7.52876 11.1381C7.65378 11.2631 7.82335 11.3333 8.00016 11.3333C8.17697 11.3333 8.34654 11.2631 8.47157 11.1381C8.59659 11.013 8.66683 10.8435 8.66683 10.6667C8.66683 10.4899 8.59659 10.3203 8.47157 10.1953C8.34654 10.0702 8.17697 10 8.00016 10C7.82335 10 7.65378 10.0702 7.52876 10.1953C7.40373 10.3203 7.3335 10.4899 7.3335 10.6667Z"
+                      stroke="black"
+                      stroke-width="1.33333"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                )}
+              </Button>
             </div>
           </div>
         </div>
@@ -375,136 +386,6 @@ export const AppCard: React.FC<AppCardProps> = ({
           />
           // </div>
         ))}
-      </div>
-    </div>
-  );
-
-  return (
-    <div
-      className="group bg-white rounded-2xl lg:rounded-3xl border border-slate-200 hover:border-slate-300 transition-all duration-300 hover:shadow-xl cursor-pointer overflow-hidden"
-      onClick={onClick}
-    >
-      <div className="relative overflow-hidden bg-gradient-to-br from-slate-50 to-slate-100 aspect-[4/3]">
-        <ImageWithFallback
-          src={app?.image ?? "https://source.unsplash.com/400x300?game"}
-          fallbackSrc="https://placehold.co/400"
-          alt={app.name}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-        />
-        <div className="absolute top-3 lg:top-4 left-3 lg:left-4 flex items-center space-x-2">
-          {app.featured && (
-            <Badge className="bg-yellow-500 text-white border-0 text-xs">
-              Featured
-            </Badge>
-          )}
-          {app.trending && (
-            <Badge className="bg-green-500 text-white border-0 text-xs">
-              Trending
-            </Badge>
-          )}
-        </div>
-
-        <div className="absolute top-3 lg:top-4 right-3 lg:right-4 flex items-center space-x-1">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleCompareClick}
-            className={`h-8 w-8 p-0 bg-white/90 backdrop-blur-sm ${
-              isInCompare ? "bg-blue-100 text-blue-600" : "hover:bg-white"
-            }`}
-          >
-            <GitCompare className="h-4 w-4" />
-          </Button>
-          <Tooltip delayDuration={0}>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="sm"
-                // onClick={(e) => {
-                //   e.stopPropagation();
-                //   onLike();
-                // }}
-                className="h-8 w-8 p-0 hover:bg-red-50"
-              >
-                {/* ${
-                          app.isLiked
-                            ? "fill-red-500 text-red-500"
-                            : "text-slate-400"
-                        } */}
-
-                <Heart className={"h-4 w-4 text-slate-400"} />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent
-              side="bottom"
-              align="center"
-              hidden={false}
-              children={<p>Comming soon</p>}
-              // hidden={state !== "collapsed" || isMobile}
-              // {...tooltip}
-            />
-          </Tooltip>
-        </div>
-
-        <div className="absolute bottom-3 lg:bottom-4 right-3 lg:right-4">
-          <Link to={`/app/${app.id}`}>
-            <Button
-              size="sm"
-              className="bg-white/90 text-slate-900 hover:bg-white shadow-lg backdrop-blur-sm"
-            >
-              <ExternalLink className="h-3 w-3 lg:h-4 lg:w-4 mr-1 lg:mr-2" />
-              <span className="text-xs lg:text-sm">View</span>
-            </Button>
-          </Link>
-        </div>
-      </div>
-
-      <div className="p-4 lg:p-6">
-        <div className="flex items-start justify-between mb-3">
-          <div className="flex-1 min-w-0">
-            <h3 className="text-lg lg:text-xl font-bold text-slate-900 truncate mb-1">
-              {app.name}
-            </h3>
-            <p className="text-sm text-slate-600 truncate">{app.company}</p>
-          </div>
-        </div>
-
-        <p className="text-sm text-slate-700 mb-4 line-clamp-2">
-          {app.description}
-        </p>
-
-        <div className="flex items-center space-x-4 text-sm text-slate-500 mb-3">
-          <div className="flex items-center space-x-2">
-            <Star className="h-4 w-4" />
-            <span>{app.rating}</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Download className="h-4 w-4" />
-            <span>{app.downloads}</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Smartphone className="h-4 w-4" />
-            <span>{app.platform}</span>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-2 mt-4">
-          {app.screens.slice(0, 4).map((screen) => (
-            <div
-              key={screen.id}
-              className="aspect-[9/16] rounded-lg overflow-hidden relative"
-            >
-              <img
-                src={screen.image}
-                alt={screen.name}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 to-transparent text-white p-2 text-xs">
-                {screen.name}
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
     </div>
   );
