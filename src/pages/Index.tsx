@@ -75,6 +75,7 @@ export interface AppPublic {
   trending: boolean;
   company: string;
   lastUpdated: string;
+  countries?: string[];
 }
 
 const Index = () => {
@@ -320,7 +321,7 @@ const Index = () => {
                         {compareApps.length}
                       </Badge>
                     )}
-                    <span className="hidden lg:inline font-[Inter] font-normal text-[13.3px] leading-[20px] tracking-[0%] text-center align-middle">
+                    <span className="lg:inline font-[Inter] font-normal text-[13.3px] leading-[20px] tracking-[0%] text-center align-middle">
                       Compare
                     </span>
                   </Button>
@@ -347,7 +348,7 @@ const Index = () => {
                       />
                     </svg>
 
-                    <span className="hidden lg:inline font-[Inter] font-normal text-[13.3px] leading-[20px] tracking-[0%] text-center align-middle">
+                    <span className="lg:inline font-[Inter] font-normal text-[13.3px] leading-[20px] tracking-[0%] text-center align-middle">
                       Join Us
                     </span>
                   </Button>

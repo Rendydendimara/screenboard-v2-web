@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ImageWithFallback from "@/components/ui/ImageWithFallback";
 import { Separator } from "@/components/ui/separator";
+import { COUNTRIES } from "@/components/ui/CountryMultiSelect";
 import { useToast } from "@/hooks/use-toast";
 import { adapterSingleAppBEToFE } from "@/utils/adapterBEToFE";
 import {
@@ -14,6 +15,7 @@ import {
   Building,
   Calendar,
   Download,
+  Globe,
   Smartphone,
   Star,
 } from "lucide-react";
@@ -137,6 +139,30 @@ const AdminAppDetails: React.FC = () => {
                     </span>
                   </div>
                 </div>
+                {app.countries && app.countries.length > 0 && (
+                  <div className="flex items-start gap-2 mt-3">
+                    <Globe className="h-4 w-4 text-gray-600 mt-0.5" />
+                    <div className="flex flex-wrap gap-1.5">
+                      {app.countries.map((countryName) => {
+                        const country = COUNTRIES.find(
+                          (c) => c.name === countryName
+                        );
+                        if (!country) return null;
+                        return (
+                          <div
+                            key={countryName}
+                            className="inline-flex items-center gap-1 px-2 py-0.5 bg-gray-100 rounded-md text-xs"
+                          >
+                            <span className="text-base">{country.flag}</span>
+                            <span className="text-gray-700">
+                              {country.name}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
             {/* <div className="flex items-center space-x-3">

@@ -47,6 +47,7 @@ import CInputFileDragDrop, { CInputFilePreview } from "./ui/CInputFileDragDrop";
 import ConfirmDeleteModal from "./ui/confirm-delete-modal";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import ImageWithFallback from "./ui/ImageWithFallback";
+import { CountryMultiSelect } from "./ui/CountryMultiSelect";
 
 export interface App {
   id: string;
@@ -71,6 +72,7 @@ export interface App {
   screens: string[];
   lastUpdated?: string;
   iconFile?: string;
+  countries?: string[];
 }
 
 interface FormData {
@@ -85,6 +87,7 @@ interface FormData {
   tags: string;
   color: string;
   company: string;
+  countries: string[];
 }
 
 interface FormDataCategory {
@@ -132,6 +135,7 @@ export const AdminAppManager: React.FC = () => {
     tags: "",
     color: "#000000",
     company: "",
+    countries: [],
   });
   const [formDataCategory, setFormDataCategory] = useState<FormDataCategory>({
     name: "",
@@ -164,6 +168,7 @@ export const AdminAppManager: React.FC = () => {
       tags: "",
       color: "#000000",
       company: "",
+      countries: [],
     });
     setSlideImages([]);
     setEditingApp(null);
@@ -218,6 +223,7 @@ export const AdminAppManager: React.FC = () => {
   }, []);
 
   const handleEdit = (app: App) => {
+    console.log("app", app);
     setModalFormType("app");
     setFormData({
       name: app.name,
@@ -231,6 +237,7 @@ export const AdminAppManager: React.FC = () => {
       tags: app.tags.join(", "),
       color: app.color,
       company: app.company,
+      countries: app?.countries ?? [],
     });
     let tempImages: UploadImageType[] = [];
     app.screenshots.forEach((img) => {
@@ -292,6 +299,7 @@ export const AdminAppManager: React.FC = () => {
             appId: editingApp.id.toString(),
             oldIcon: icon.oldImage,
             icon: icon.currentImage,
+            countries: appData.countries,
           });
 
           toast({
@@ -320,6 +328,7 @@ export const AdminAppManager: React.FC = () => {
             color: appData.color,
             company: appData.company,
             icon: icon.currentImage,
+            countries: appData.countries,
           });
 
           toast({
@@ -1232,6 +1241,19 @@ export const AdminAppManager: React.FC = () => {
                       setFormData((prev) => ({ ...prev, tags: e.target.value }))
                     }
                     placeholder="Design, Mobile, UI/UX"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Countries
+                  </label>
+                  <CountryMultiSelect
+                    value={formData.countries}
+                    onChange={(countries) =>
+                      setFormData((prev) => ({ ...prev, countries }))
+                    }
+                    placeholder="Select available countries..."
                   />
                 </div>
 

@@ -11,6 +11,7 @@ import { ScreenImageModalV2 } from "@/components/ScreenImageModalV2";
 import SEO from "@/components/SEO";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { COUNTRIES } from "@/components/ui/CountryMultiSelect";
 import ImageWithFallback from "@/components/ui/ImageWithFallback";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
@@ -302,7 +303,7 @@ const AppDetails: React.FC = () => {
                         {compareApps.length}
                       </Badge>
                     )} */}
-                  <span className="hidden lg:inline font-[Inter] font-normal text-[13.3px] leading-[20px] tracking-[0%] text-center align-middle">
+                  <span className="lg:inline font-[Inter] font-normal text-[13.3px] leading-[20px] tracking-[0%] text-center align-middle">
                     Compare
                   </span>
                 </Button>
@@ -329,7 +330,7 @@ const AppDetails: React.FC = () => {
                     />
                   </svg>
 
-                  <span className="hidden lg:inline font-[Inter] font-normal text-[13.3px] leading-[20px] tracking-[0%] text-center align-middle">
+                  <span className="lg:inline font-[Inter] font-normal text-[13.3px] leading-[20px] tracking-[0%] text-center align-middle">
                     Join Us
                   </span>
                 </Button>
@@ -404,6 +405,30 @@ const AppDetails: React.FC = () => {
                     </span>
                   </div>
                 </div>
+                {app.countries && app.countries.length > 0 && (
+                  <div className="flex items-start gap-2 mt-3">
+                    <Globe className="h-4 w-4 text-slate-600 mt-0.5" />
+                    <div className="flex flex-wrap gap-1.5">
+                      {app.countries.map((countryName) => {
+                        const country = COUNTRIES.find(
+                          (c) => c.name === countryName
+                        );
+                        if (!country) return null;
+                        return (
+                          <div
+                            key={countryName}
+                            className="inline-flex items-center gap-1 px-2 py-0.5 bg-white/80 backdrop-blur-sm rounded-md text-xs border border-slate-200"
+                          >
+                            <span className="text-base">{country.flag}</span>
+                            <span className="text-slate-700">
+                              {country.name}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
                 <div className="flex items-start justify-start gap-2 mt-3 flex-wrap">
                   <Badge
                     variant="outline"

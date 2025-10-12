@@ -29,6 +29,7 @@ const create = async (payload: TAppPost) => {
   formData.append("tags", JSON.stringify(payload.tags));
   formData.append("color", payload.color);
   formData.append("company", payload.company);
+  formData.append("countries", JSON.stringify(payload.countries));
 
   const response = await axiosInstanceWithAuth.post(
     URL_API.ADMIN.APP.V1.CREATE,
@@ -81,6 +82,8 @@ const update = async (payload: TAppPut) => {
   formData.append("color", payload.color);
   formData.append("company", payload.company);
   formData.append("oldScreenshot", JSON.stringify(payload.oldScreenshot));
+  formData.append("countries", JSON.stringify(payload.countries));
+
   const response = await axiosInstanceWithAuth.put(
     URL_API.ADMIN.APP.V1.UPDATE,
     formData,

@@ -24,6 +24,7 @@ export const adapterListAppBEToFE = (data: TAppRes[]): App[] => {
       screenshots: d.screenshots,
       screens: d.screens,
       iconFile: d.iconFile,
+      countries: d?.countries ?? [],
     });
   });
   return result;
@@ -49,6 +50,7 @@ export const adapterSingleAppBEToFE = (data: TAppRes): App => {
     lastUpdated: data.updatedAt
       ? new Date(data.updatedAt).toLocaleDateString()
       : "",
+    countries: data?.countries ?? [],
   };
   return result;
 };
@@ -106,6 +108,7 @@ export const adapterListAppBEToFEPublic = (
       lastUpdated: d.updatedAt
         ? new Date(d.updatedAt).toLocaleDateString()
         : "",
+      countries: d?.countries ?? [],
     });
   });
   return result;
@@ -146,6 +149,7 @@ export const adapterSingleAppBEToFEPublic = (
     lastUpdated: data.updatedAt
       ? new Date(data.updatedAt).toLocaleDateString()
       : new Date(data.createdAt).toLocaleDateString(),
+    countries: data?.countries ?? [],
   };
   return result;
 };
