@@ -108,7 +108,7 @@ export const ScreenImageModalV2: React.FC<ScreenImageModalProps> = ({
                   {screen.modul}
                 </DialogTitle>
                 <DialogDescription className="mt-2">
-                  {screen.name} - {screen?.category?.name}
+                  {screen.modul} - {screen.name} - {screen?.category?.name}
                 </DialogDescription>
               </div>
             </div>

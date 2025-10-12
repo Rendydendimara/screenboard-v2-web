@@ -9,7 +9,7 @@ export const HeroSection: React.FC = ({
   handleStartExploring: () => void;
 }) => {
   return (
-    <section className="py-12 lg:py-20 container px-0">
+    <section className="py-10 md:py-12 lg:py-20 container px-4 md:px-0">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-10 left-10 w-20 h-20 bg-blue-500 rounded-full blur-xl animate-pulse"></div>
@@ -18,13 +18,13 @@ export const HeroSection: React.FC = ({
       </div>
 
       <div className="w-full">
-        <div className="w-[786px] flex flex-col items-start gap-8">
+        <div className="w-full md:w-[786px] flex flex-col items-start gap-4 md:gap-8">
           {/* Main Heading */}
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold bg-gradient-to-r from-slate-900 via-blue-800 to-purple-800 bg-clip-text text-transparent leading-[72px] tracking-[0%] align-middle">
+          <h1 className="leading-[32px] text-[32px] md:text-6xl xl:text-7xl font-bold bg-gradient-to-r from-slate-900 via-blue-800 to-purple-800 bg-clip-text text-transparent md:leading-[72px] tracking-[0%] align-middle">
             Simple Site That Enhance Design Journey
           </h1>
           {/* Subtitle */}
-          <p className="text-lg sm:text-xl text-slate-600 font-[Inter] font-normal sm:!leading-[32px] tracking-[0%] align-middle w-[650px]">
+          <p className="font-normal text-[16px] leading-[150%]  md:text-xl text-slate-600 font-[Inter] mg:!leading-[32px] tracking-[0%] align-middle w-full md:w-[650px]">
             Explore thousands of carefully curated mobile applications. Compare
             features, discover UI patterns, and find inspiration for your next
             project.

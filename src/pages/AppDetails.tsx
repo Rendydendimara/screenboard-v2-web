@@ -273,7 +273,7 @@ const AppDetails: React.FC = () => {
       <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
         <header className="bg-transparent">
           <div className="container px-0">
-            <div className="flex items-center justify-between h-16 lg:h-20">
+            <div className="flex items-center justify-between h-16 lg:h-20 px-4 md:px-0">
               {/* Logo */}
               <Link to="/">
                 <div className="flex items-center space-x-2">
@@ -373,7 +373,7 @@ const AppDetails: React.FC = () => {
         </header>
 
         {/* App Overview */}
-        <div className="mb-8 container px-0 pt-3 pb-10">
+        <div className="mb-8 container px-4 md:px-0 pt-3 pb-10">
           <div className="flex items-center justify-between md:flex-row flex-col">
             <div className="flex items-start space-x-6">
               <div className="relative">
@@ -494,13 +494,13 @@ const AppDetails: React.FC = () => {
       </section>
 
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50">
-        <div className="container px-0 py-12">
+        <div className="container px-4 md:px-0 py-12">
           {/* UI Screens Collection */}
           <div className="mb-8">
             {/* Scr Filters */}
-            <div className="flex items-center justify-between mb-9">
+            <div className="flex flex-col md:flex-row items-start gap-3 md:gap-0 md:items-center justify-between mb-9">
               <div className="flex items-center space-x-4">
-                <div className="flex items-center space-x-2">
+                <div className="flex flex-col md:flex-row items-start gap-2 md:gap-0 md:items-center md:space-x-2">
                   <span className="text-sm font-medium text-slate-700">
                     Category:
                   </span>
@@ -608,29 +608,11 @@ const AppDetails: React.FC = () => {
                                     </div>
                                   </div>
                                 </div>
-                                <div className="p-4">
-                                  <div className="flex items-center justify-between mb-2">
-                                    <h4 className="font-[Inter] font-medium text-[12px] leading-[100%] tracking-[0%] align-middle text-[#565D61]">
-                                      {screen.name}
-                                    </h4>
-                                    <Badge
-                                      variant="outline"
-                                      className="text-xs flex-shrink-0"
-                                    >
-                                      {screen.modul}
-                                    </Badge>
-                                    <Badge
-                                      variant="outline"
-                                      className="text-xs flex-shrink-0"
-                                    >
-                                      {screen?.category?.name}
-                                    </Badge>
-                                  </div>
-                                  <p className="text-sm text-slate-600 line-clamp-2">
-                                    {screen.description}
-                                  </p>
-                                </div>
                               </div>
+                              <h4 className="font-[Inter] mt-1 font-medium text-[12px] leading-[100%] tracking-[0%] align-middle text-[#565D61]">
+                                {screen.modul} - {screen?.category?.name} -{" "}
+                                {screen.name}
+                              </h4>
                             </div>
                           ))}
                         </div>
@@ -658,6 +640,7 @@ const AppDetails: React.FC = () => {
                           onClick={() => setSelectedScreen(screen)}
                         >
                           <h4 className="font-[Inter] font-medium text-[12px] leading-[100%] tracking-[0%] align-middle text-[#565D61]">
+                            {screen.modul} - {screen?.category?.name} -{" "}
                             {screen.name}
                           </h4>
                           <ImageWithFallback

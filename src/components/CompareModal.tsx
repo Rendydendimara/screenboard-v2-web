@@ -104,7 +104,7 @@ export const CompareModal: React.FC<CompareModalProps> = ({
           //   setShowCompare(true);
           // }}
           className={clsx(
-            "max-w-[1120px] p-[52px] !rounded-[32px] overflow-auto",
+            "md:max-w-[1120px] p-6 md:p-[52px] !rounded-[32px] overflow-auto",
             apps.length > 0 ? "max-h-[95vh]" : "max-h-[90vh]"
           )}
         >
@@ -416,11 +416,11 @@ export const CompareModal: React.FC<CompareModalProps> = ({
                   <p className="font-[Inter] font-medium text-[14px] leading-[155%] tracking-[-0.2%] align-middle">
                     Trending Apps
                   </p>
-                  <div className="flex items-start gap-6 overflow-x-auto max-w-[1016px]">
+                  <div className="flex items-start gap-6 overflow-x-auto max-w-[325px] md:max-w-[1016px] w-full">
                     {filteredAvailableApps.map((app) => (
                       <div
                         key={app.id}
-                        className="w-full min-w-[264px] min-h-[262px] rounded-2xl flex flex-col items-start gap-6 border border-solid border-[#E0E1E1]"
+                        className="w-full md:min-w-[264px] min-h-[262px] rounded-2xl flex flex-col items-start gap-6 border border-solid border-[#E0E1E1]"
                       >
                         <div className="w-full flex items-center justify-between p-3">
                           <div className="flex items-center gap-4">

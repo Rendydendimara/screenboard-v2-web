@@ -32,6 +32,7 @@ import { useFavorites } from "@/hooks/useFavorites";
 import { logout } from "@/provider/slices/authSlice";
 import { RootState } from "@/provider/store";
 import { adapterListAppBEToFEPublic } from "@/utils/adapterBEToFE";
+import clsx from "clsx";
 import { GitCompare, Grid, Heart, List, Search, X } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -251,8 +252,10 @@ const Index = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 80);
-      setScrolledSearch(window.scrollY > 680);
+      const isMobile = window.innerWidth <= 375;
+
+      setScrolled(isMobile ? window.scrollY > 80 : window.scrollY > 80);
+      setScrolledSearch(isMobile ? window.scrollY > 400 : window.scrollY > 680);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -275,7 +278,7 @@ const Index = () => {
             }`}
           >
             <div className="container px-0">
-              <div className="flex items-center justify-between h-16 lg:h-20">
+              <div className="flex items-center justify-between h-16 lg:h-20 px-4 md:px-6 lg:px-0">
                 {/* Logo */}
                 <div className="flex items-center space-x-2">
                   <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
@@ -350,14 +353,14 @@ const Index = () => {
                   </Button>
 
                   {/* Mobile Menu Button */}
-                  <Button
+                  {/* <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => setShowFavorites(true)}
                     className="sm:hidden"
                   >
                     <Heart className="h-4 w-4" />
-                  </Button>
+                  </Button> */}
                   {user ? (
                     <>
                       <Button
@@ -402,7 +405,7 @@ const Index = () => {
           </div>
         </section>
         {/* Main Content */}
-        <main className="container px-0 py-8 lg:py-12">
+        <main className="container px-4 py-6 md:px-0 md:py-8 lg:py-12">
           {/* Search and Filters - Mobile Responsive */}
           <div className="mb-8 lg:mb-12">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 lg:gap-6">
@@ -422,9 +425,9 @@ const Index = () => {
               )}
 
               {/* Filters and View Controls */}
-              <div className="flex flex-col sm:flex-row gap-4 lg:gap-6">
+              <div className="flex flex-row md:flex-col sm:flex-row gap-4 lg:gap-6">
                 {/* Category Filter */}
-                <div className="flex-1 sm:flex-none sm:min-w-[200px]">
+                <div className="md:flex-1 sm:flex-none min-w-[139px] md:min-w-[200px]">
                   <Select
                     value={selectedCategory?._id}
                     onValueChange={handleChangeCategory}
@@ -432,10 +435,22 @@ const Index = () => {
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
-                    <SelectContent className="bg-white">
-                      <SelectItem value="All">All</SelectItem>
+                    <SelectContent classNameMenu="!m-0 !p-0">
+                      <SelectItem
+                        className="!items-start !py-[9px] !px-2"
+                        isRemoveCheckIndocator
+                        value="All"
+                      >
+                        All
+                      </SelectItem>
                       {categories.map((category, i) => (
-                        <SelectItem key={i} value={category._id}>
+                        <SelectItem
+                          className="!items-start !py-[9px] !px-2 truncate"
+                          isRemoveCheckIndocator
+                          withRoundedEdge
+                          key={i}
+                          value={category._id}
+                        >
                           {category.name}
                         </SelectItem>
                       ))}
@@ -468,7 +483,12 @@ const Index = () => {
             </div>
 
             {/* Results Count */}
-            <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <div
+              className={clsx(
+                "mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2",
+                !searchTerm && "hidden"
+              )}
+            >
               {/* <p className="text-sm text-slate-600">
                 Showing {filteredApps.length} of {listApp.length} apps
                 {selectedCategory !== null && ` in ${selectedCategory?.name}`}
@@ -546,10 +566,10 @@ const Index = () => {
                 <div className="absolute h-[872px] bottom-0 w-full bg-[linear-gradient(180deg,_rgba(255,_255,_255,_0)_4.01%,_#FFFFFF_62.21%)]">
                   <div className="flex flex-col w-full gap-[25px] absolute bottom-16">
                     <div className="flex flex-col gap-3 items-center">
-                      <h5 className="font-['Inter'] font-black text-[80px] leading-[125%] tracking-[0%] text-center bg-gradient-to-r from-slate-900 via-blue-800 to-purple-800 bg-clip-text text-transparent">
+                      <h5 className="font-['Inter'] font-black text-[32px] md:text-[80px] leading-[125%] tracking-[0%] text-center bg-gradient-to-r from-slate-900 via-blue-800 to-purple-800 bg-clip-text text-transparent">
                         Join and get more inspiration from real product
                       </h5>
-                      <p className="font-[Inter] font-semibold text-[20px] leading-[155%] tracking-[0%] align-middle">
+                      <p className="font-[Inter] font-semibold text:[16px] md:text-[20px] leading-[155%] tracking-[0%] align-middle">
                         We believe real design give more sense to your design
                         process
                       </p>
