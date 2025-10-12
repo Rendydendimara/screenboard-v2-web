@@ -3,7 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Sparkles, Zap, Heart, Star } from "lucide-react";
 
-export const HeroSection: React.FC = () => {
+export const HeroSection: React.FC = ({
+  handleStartExploring,
+}: {
+  handleStartExploring: () => void;
+}) => {
   return (
     <section className="py-12 lg:py-20 container px-0">
       {/* Background Pattern */}
@@ -27,7 +31,10 @@ export const HeroSection: React.FC = () => {
           </p>
 
           {/* Badge */}
-          <div className="flex justify-center mb-6 lg:mb-8">
+          <div
+            onClick={handleStartExploring}
+            className="flex justify-center mb-6 lg:mb-8 hover:!cursor-pointer z-[10]"
+          >
             <Badge className="bg-gradient-to-r from-blue-500 to-purple-600 text-white border-0 px-4 py-2 text-sm lg:text-base">
               <Zap className="h-5 w-5 mr-2" />
               Start Exploring

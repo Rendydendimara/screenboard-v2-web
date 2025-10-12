@@ -139,6 +139,8 @@ const Index = () => {
             listAppAny[currentIndex]?.isLiked ? "removed from" : "added to"
           } your favorites.`,
         });
+      } else {
+        setIsOpenAuth(true);
       }
     } catch (error: any) {
       toast({
@@ -240,9 +242,12 @@ const Index = () => {
   );
 
   useEffect(() => {
-    getListData();
     getListDataCategory();
   }, []);
+
+  useEffect(() => {
+    getListData();
+  }, [user]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -320,7 +325,7 @@ const Index = () => {
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => setShowCompare(true)}
+                    onClick={() => setIsOpenAuth(true)}
                     className="relative"
                   >
                     <svg
@@ -393,7 +398,7 @@ const Index = () => {
 
           {/* Hero Section */}
           <div className="pt-16 lg:pt-20">
-            <HeroSection />
+            <HeroSection handleStartExploring={() => setIsOpenAuth(true)} />
           </div>
         </section>
         {/* Main Content */}

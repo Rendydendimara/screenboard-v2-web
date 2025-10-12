@@ -53,7 +53,7 @@ const createAxiosInstanceWithAuth = (): AxiosInstance => {
       if (error.response && error.response.status === 401) {
         // If unauthorized, dispatch logout action
         store.dispatch(logout());
-        window.location.href = "/login";
+        window.location.href = "/";
       }
       return Promise.reject(error);
     }
@@ -81,7 +81,7 @@ const createAxiosInstanceNoAuth = (): AxiosInstance => {
         // If unauthorized, dispatch logout action
         store.dispatch(logout());
         localStorage.removeItem("token");
-        window.location.href = "/login";
+        window.location.href = "/";
       }
       return Promise.reject(error);
     }

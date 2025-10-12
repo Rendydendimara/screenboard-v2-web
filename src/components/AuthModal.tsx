@@ -16,7 +16,7 @@ import clsx from "clsx";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useFormik } from "formik";
 import { Loader2 } from "lucide-react";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { FormControl } from "./molecules/Forms/FormControl";
 import { InputText } from "./molecules/Forms/InputText";
@@ -45,6 +45,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [mode, setMode] = useState<"login" | "register">(initialMode);
   const dispatch = useAppDispatch();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const { toast } = useToast();
   const formik = useFormik({
     initialValues: {
@@ -69,6 +70,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         otherwise: (schema) => schema.notRequired(),
       }),
     }),
+    validateOnChange: false,
+    validateOnBlur: false,
     onSubmit: async (values, { setSubmitting }) => {
       try {
         setIsSubmitting(true);
@@ -113,12 +116,19 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
   const toggleMode = () => {
     setMode(mode === "login" ? "register" : "login");
+    setIsFormSubmitted(false);
   };
 
-  const isDisableSubmit = useMemo(() => {
-    const isInvalid = !formik.isValid || !formik.dirty;
-    return isInvalid;
-  }, [formik.values, formik.dirty, formik.isValid]);
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsFormSubmitted(true);
+
+    const errors = await formik.validateForm();
+
+    if (Object.keys(errors).length === 0) {
+      formik.handleSubmit(e);
+    }
+  };
 
   const googleAuth = async () => {
     try {
@@ -156,34 +166,38 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   useEffect(() => {
     setMode("login");
     formik.resetForm();
+    setIsFormSubmitted(false);
   }, [isOpen]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md !rounded-[32px] !gap-6 p-8">
         <DialogHeader>
-          <DialogTitle className="font-bold text-left text-heading-6">
+          <DialogTitle className="!font-bold text-left !text-heading-6">
             {mode === "login" ? "Login" : "Sign Up"}
           </DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={formik.handleSubmit} className="space-y-4">
+        <form onSubmit={handleFormSubmit} className="space-y-4">
           {mode === "register" && (
             <div className="space-y-2">
-              <FormControl isRequired isInvalid={!!formik.errors.name}>
+              <FormControl
+                isRequired={false}
+                isInvalid={isFormSubmitted && !!formik.errors.name}
+              >
                 <InputText
                   autoFocus={false}
                   id="name"
                   type="text"
                   placeholder="John Doe"
-                  required
+                  required={false}
                   label="Full Name"
                   onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
+                  // onBlur={formik.handleBlur}
                   name="name"
-                  isRequired
+                  isRequired={false}
                   value={formik.values.name}
-                  isInvalid={!!formik.errors.name}
+                  isInvalid={isFormSubmitted && !!formik.errors.name}
                   errorMessage={formik.errors.name}
                   leftIcon={
                     <svg
@@ -209,20 +223,23 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           )}
 
           <div className="space-y-2">
-            <FormControl isRequired isInvalid={!!formik.errors.email}>
+            <FormControl
+              isRequired={false}
+              isInvalid={isFormSubmitted && !!formik.errors.email}
+            >
               <InputText
                 autoFocus={false}
                 id="email"
                 type="email"
                 placeholder="hi@thebeaverops.com"
-                required
+                required={false}
                 label="Email"
                 onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
+                // onBlur={formik.handleBlur}
                 name="email"
-                isRequired
+                isRequired={false}
                 value={formik.values.email}
-                isInvalid={!!formik.errors.email}
+                isInvalid={isFormSubmitted && !!formik.errors.email}
                 errorMessage={formik.errors.email}
                 leftIcon={
                   <svg
@@ -248,7 +265,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
           {mode === "register" && (
             <div className="space-y-2">
-              <FormControlSelect label="Roles">
+              <FormControlSelect
+                label="Roles"
+                isRequired={false}
+                isInvalid={isFormSubmitted && !!formik.errors.role}
+                errorMessage={formik.errors.role}
+              >
                 <Select
                   value={formik.values.role}
                   onValueChange={(value) => formik.setFieldValue("role", value)}
@@ -298,20 +320,23 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
           <div className="flex flex-col w-full gap-2">
             <div className="space-y-2">
-              <FormControl isRequired isInvalid={!!formik.errors.password}>
+              <FormControl
+                isRequired={false}
+                isInvalid={isFormSubmitted && !!formik.errors.password}
+              >
                 <InputText
                   autoFocus={false}
                   id="password"
                   type="password"
                   placeholder="***********"
-                  required
+                  required={false}
                   label="Password"
                   onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
+                  // onBlur={formik.handleBlur}
                   name="password"
-                  isRequired
+                  isRequired={false}
                   value={formik.values.password}
-                  isInvalid={!!formik.errors.password}
+                  isInvalid={isFormSubmitted && !!formik.errors.password}
                   errorMessage={formik.errors.password}
                   leftIcon={
                     <svg
@@ -346,10 +371,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               type="submit"
               className={clsx(
                 "font-bold bg-gradient-to-r from-blue-500 to-purple-600 text-white border-0 px-4 py-3 h-11 w-full rounded-2xl text-sm lg:text-base",
-                isSubmitting && "cursor-progress",
-                isDisableSubmit && "cursor-not-allowed"
+                isSubmitting && "cursor-progress"
               )}
-              disabled={isSubmitting || isDisableSubmit}
+              disabled={isSubmitting}
             >
               {isSubmitting ? (
                 <Loader2 className="h-4 w-4 animate-spin mr-2" />
@@ -357,53 +381,55 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               {mode === "login" ? "Login" : "Create Account"}
             </Button>
             <p className="text-body-4 font-normal text-black">Or</p>
-            <Button
-              type="submit"
-              variant="outline"
-              className="font-bold px-4 py-3 h-11 w-full rounded-2xl text-sm lg:text-base"
-              onClick={googleAuth}
-            >
-              <svg
-                width="17"
-                height="16"
-                viewBox="0 0 17 16"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+            <div className="p-[1px] w-full rounded-[16px] bg-gradient-to-r from-blue-600 to-purple-600">
+              <Button
+                type="submit"
+                variant="outline"
+                onClick={googleAuth}
+                className="w-full h-11 font-bold text-sm lg:text-base rounded-[16px] bg-white text-black"
               >
-                <path
-                  opacity="0.987"
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M7.70875 1.06099C8.43375 0.979994 8.86275 0.979994 9.64175 1.06099C11.0207 1.26509 12.299 1.90248 13.2918 2.88099C12.6209 3.51513 11.9588 4.15852 11.3058 4.81099C10.0551 3.75099 8.65909 3.50633 7.11775 4.07699C5.98709 4.59699 5.19975 5.43966 4.75575 6.60499C4.03019 6.06482 3.31409 5.51207 2.60775 4.94699C2.55867 4.92116 2.5026 4.9117 2.44775 4.91999C3.56975 2.75666 5.32309 1.46999 7.70775 1.05999"
-                  fill="#F44336"
-                />
-                <path
-                  opacity="0.997"
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M2.44576 4.92C2.50243 4.91133 2.5561 4.92033 2.60676 4.947C3.3131 5.51208 4.0292 6.06483 4.75476 6.605C4.64059 7.05906 4.56862 7.52269 4.53976 7.99C4.56443 8.442 4.6361 8.88566 4.75476 9.321L2.49976 11.116C1.51776 9.064 1.49976 6.99866 2.44576 4.92Z"
-                  fill="#FFC107"
-                />
-                <path
-                  opacity="0.999"
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M13.1846 13.29C12.4824 12.6708 11.7474 12.0899 10.9826 11.55C11.7492 11.0087 12.2146 10.266 12.3786 9.32199H8.62158V6.71299C10.7882 6.69499 12.9539 6.71332 15.1186 6.76799C15.5292 8.99799 15.0549 11.0087 13.6956 12.8C13.5339 12.9718 13.3627 13.1354 13.1846 13.29Z"
-                  fill="#448AFF"
-                />
-                <path
-                  opacity="0.993"
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M4.755 9.32202C5.575 11.36 7.07833 12.3114 9.265 12.176C9.87883 12.105 10.4673 11.8905 10.983 11.55C11.7483 12.0914 12.4823 12.6714 13.185 13.29C12.0716 14.2905 10.6521 14.8841 9.158 14.974C8.81854 15.0012 8.47746 15.0012 8.138 14.974C5.59267 14.674 3.71333 13.388 2.5 11.116L4.755 9.32202Z"
-                  fill="#43A047"
-                />
-              </svg>
+                <svg
+                  width="17"
+                  height="16"
+                  viewBox="0 0 17 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    opacity="0.987"
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M7.70875 1.06099C8.43375 0.979994 8.86275 0.979994 9.64175 1.06099C11.0207 1.26509 12.299 1.90248 13.2918 2.88099C12.6209 3.51513 11.9588 4.15852 11.3058 4.81099C10.0551 3.75099 8.65909 3.50633 7.11775 4.07699C5.98709 4.59699 5.19975 5.43966 4.75575 6.60499C4.03019 6.06482 3.31409 5.51207 2.60775 4.94699C2.55867 4.92116 2.5026 4.9117 2.44775 4.91999C3.56975 2.75666 5.32309 1.46999 7.70775 1.05999"
+                    fill="#F44336"
+                  />
+                  <path
+                    opacity="0.997"
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M2.44576 4.92C2.50243 4.91133 2.5561 4.92033 2.60676 4.947C3.3131 5.51208 4.0292 6.06483 4.75476 6.605C4.64059 7.05906 4.56862 7.52269 4.53976 7.99C4.56443 8.442 4.6361 8.88566 4.75476 9.321L2.49976 11.116C1.51776 9.064 1.49976 6.99866 2.44576 4.92Z"
+                    fill="#FFC107"
+                  />
+                  <path
+                    opacity="0.999"
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M13.1846 13.29C12.4824 12.6708 11.7474 12.0899 10.9826 11.55C11.7492 11.0087 12.2146 10.266 12.3786 9.32199H8.62158V6.71299C10.7882 6.69499 12.9539 6.71332 15.1186 6.76799C15.5292 8.99799 15.0549 11.0087 13.6956 12.8C13.5339 12.9718 13.3627 13.1354 13.1846 13.29Z"
+                    fill="#448AFF"
+                  />
+                  <path
+                    opacity="0.993"
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M4.755 9.32202C5.575 11.36 7.07833 12.3114 9.265 12.176C9.87883 12.105 10.4673 11.8905 10.983 11.55C11.7483 12.0914 12.4823 12.6714 13.185 13.29C12.0716 14.2905 10.6521 14.8841 9.158 14.974C8.81854 15.0012 8.47746 15.0012 8.138 14.974C5.59267 14.674 3.71333 13.388 2.5 11.116L4.755 9.32202Z"
+                    fill="#43A047"
+                  />
+                </svg>
 
-              {mode === "login"
-                ? "Sign In using Google"
-                : "Sign Up using Google"}
-            </Button>
+                {mode === "login"
+                  ? "Sign In using Google"
+                  : "Sign Up using Google"}
+              </Button>
+            </div>
           </div>
         </form>
 

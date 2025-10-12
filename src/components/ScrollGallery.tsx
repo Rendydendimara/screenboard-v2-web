@@ -35,6 +35,7 @@ const ScrollGallery = ({
   return (
     <div
       className={clsx(
+        "styled-scrollbar-black w-full",
         viewMode === "grid"
           ? "grid grid-cols-1 gap-2 max-h-[90vh] overflow-y-auto pb-4"
           : "flex items-center gap-2 overflow-x-auto"
@@ -51,7 +52,7 @@ const ScrollGallery = ({
           <div
             className={clsx(
               "bg-slate-100 rounded-lg overflow-hidden",
-              viewMode === "grid" ? "aspect-[9/16]" : "",
+              // viewMode === "grid" ? "aspect-[9/16]" : "",
               !hideInfo && "mb-2",
               viewMode === "grid" ? "w-full h-full" : "w-[205px] h-[453px]"
             )}
@@ -60,8 +61,10 @@ const ScrollGallery = ({
               src={screen.image}
               alt={screen.name}
               className={clsx(
-                "rounded-[8px] object-cover group-hover:scale-105 transition-transform hover:cursor-pointer",
-                viewMode === "grid" ? "w-full h-full" : "w-[205px] h-[453px]"
+                "rounded-[8px] group-hover:scale-105 transition-transform hover:cursor-pointer",
+                viewMode === "grid"
+                  ? "w-[328px] h-[723px]"
+                  : "w-[205px] h-[453px]"
               )}
               onClick={() => handleClickImage(i)}
             />

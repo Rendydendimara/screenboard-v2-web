@@ -6,6 +6,7 @@ interface FormControlProps {
   children: ReactNode;
   className?: string;
   label?: string;
+  errorMessage?: string;
 }
 
 export function FormControlSelect({
@@ -13,6 +14,8 @@ export function FormControlSelect({
   className,
   label,
   isRequired = true,
+  isInvalid = false,
+  errorMessage,
 }: FormControlProps) {
   return (
     <div className="space-y-2 w-full">
@@ -21,6 +24,9 @@ export function FormControlSelect({
         {isRequired && <span className="text-red-500">*</span>}
       </label>
       {children}
+      {isInvalid && errorMessage && (
+        <p className="text-xs text-red-500 mt-1">{errorMessage}</p>
+      )}
     </div>
   );
 }

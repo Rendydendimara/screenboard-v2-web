@@ -431,7 +431,7 @@ export const CompareModal: React.FC<CompareModalProps> = ({
                               }
                               fallbackSrc="https://placehold.co/400"
                               alt={app.name}
-                              className="w-10 h-10 lg:w-12 lg:h-12 rounded-[8px] object-cover flex-shrink-0"
+                              className="w-10 h-10 lg:w-12 lg:h-12 rounded-[8px] object-contain flex-shrink-0"
                             />
                             <div className="flex flex-col gap-4 items-start">
                               <h3 className="font-semibold text-base lg:text-lg truncate">

@@ -18,6 +18,7 @@ export interface InputTextProps
   classNameLabel?: string;
   withTogglePassword?: boolean; // <-- tambahan
   leftIcon?: ReactNode;
+  autoFocus?: boolean;
 }
 
 export function InputText({
@@ -37,6 +38,7 @@ export function InputText({
   type = "text",
   withTogglePassword = false, // default false
   leftIcon,
+  autoFocus,
   ...rest
 }: InputTextProps) {
   const { id } = useFormControl();
@@ -103,6 +105,7 @@ export function InputText({
           placeholder={placeholder}
           type={isPasswordField ? (showPassword ? "text" : "password") : type}
           onChange={handleOnChange}
+          autoFocus={autoFocus}
           className={clsx(
             "h-8 rounded-[8px] pl-8 !text-body-4 pt-[5px]",
             isInvalid

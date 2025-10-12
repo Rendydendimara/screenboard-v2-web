@@ -145,7 +145,7 @@ export const AppCardCompare: React.FC<AppCardProps> = ({
                     }
                     fallbackSrc="https://placehold.co/400"
                     alt={app.name}
-                    className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl object-cover flex-shrink-0"
+                    className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl object-contain flex-shrink-0"
                   />
                   <div className="flex flex-col items-end">
                     <h3 className="font-semibold text-base lg:text-lg text-right">
@@ -196,7 +196,7 @@ export const AppCardCompare: React.FC<AppCardProps> = ({
                 </Select>
               </div>
             </div>
-            <div className="w-[328px] flex flex-col gap-2 max-h-[885px] overflow-y-auto">
+            <div className="w-full flex flex-col gap-2 max-h-[885px] overflow-y-auto">
               <ScrollGallery
                 screens={getScreenFiltered}
                 handleClickImage={handleClickImage}
@@ -218,7 +218,7 @@ export const AppCardCompare: React.FC<AppCardProps> = ({
                     }
                     fallbackSrc="https://placehold.co/400"
                     alt={app.name}
-                    className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl object-cover flex-shrink-0"
+                    className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl object-contain flex-shrink-0"
                   />
                   <div className="flex flex-col items-end">
                     <h3 className="font-semibold text-base lg:text-lg text-right">

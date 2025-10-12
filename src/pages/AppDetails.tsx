@@ -4,9 +4,10 @@ import AppLikeAPI from "@/api/user/appLike/api";
 import UserAuthAPI from "@/api/user/auth/api";
 import CategoryAPI from "@/api/user/category/api";
 import { TCategoryRes } from "@/api/user/category/type";
+import { AuthModal } from "@/components/AuthModal";
 import { CompareModal } from "@/components/CompareModal";
 import CModalDialogLoading from "@/components/modal-dialog-loading";
-import { ScreenImageModal } from "@/components/ScreenImageModal";
+import { ScreenImageModalV2 } from "@/components/ScreenImageModalV2";
 import SEO from "@/components/SEO";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -36,7 +37,7 @@ import {
   Smartphone,
   Star,
 } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { AppPublic, ScreenPublic } from "./Index";
 
@@ -60,6 +61,7 @@ const AppDetails: React.FC = () => {
   const [compareApps, setCompareApps] = useState<AppPublic[]>([]);
   const [listApp, setListApp] = useState<AppPublic[]>([]);
   const [categories, setCategories] = useState<TCategoryRes[]>([]);
+  const [isOpenAuth, setIsOpenAuth] = useState(false);
 
   const getPlatformIcon = (platform: string) => {
     switch (platform) {
@@ -116,6 +118,8 @@ const AppDetails: React.FC = () => {
             app?.isLiked ? "removed from" : "added to"
           } your favorites.`,
         });
+      } else {
+        setIsOpenAuth(true);
       }
     } catch (error: any) {
       toast({
@@ -189,7 +193,6 @@ const AppDetails: React.FC = () => {
   }, {} as Record<string, any[]>);
 
   useEffect(() => {
-    getAppDetail();
     getListData();
     getListDataCategory();
   }, []);
@@ -226,6 +229,14 @@ const AppDetails: React.FC = () => {
       });
     }
   };
+
+  const onCloseOpenAuth = useCallback(() => {
+    setIsOpenAuth(false);
+  }, []);
+
+  useEffect(() => {
+    getAppDetail();
+  }, [user]);
 
   if (isLoadingDetail) {
     return (
@@ -299,7 +310,7 @@ const AppDetails: React.FC = () => {
                 <Button
                   variant="ghost"
                   size="sm"
-                  // onClick={() => setShowCompare(true)}
+                  onClick={() => setIsOpenAuth(true)}
                   className="relative"
                 >
                   <svg
@@ -373,7 +384,7 @@ const AppDetails: React.FC = () => {
                     }
                     fallbackSrc="https://placehold.co/400"
                     alt={app.name}
-                    className="w-full h-full object-cover shadow-2xl"
+                    className="w-full h-full object-contain shadow-2xl"
                   />
                 </div>
               </div>
@@ -517,8 +528,8 @@ const AppDetails: React.FC = () => {
                           className={clsx(
                             "text-[10px] font-bold",
                             selectedScreenCategory === category
-                              ? "bg-[#9333EA] text-white"
-                              : "bg-[#F1F5F9] text-[#0F172A]"
+                              ? "!bg-[#9333EA] text-white"
+                              : "!bg-[#F1F5F9] text-[#0F172A]"
                           )}
                         >
                           {category === "All"
@@ -599,7 +610,7 @@ const AppDetails: React.FC = () => {
                                 </div>
                                 <div className="p-4">
                                   <div className="flex items-center justify-between mb-2">
-                                    <h4 className="font-semibold text-slate-900 truncate">
+                                    <h4 className="font-[Inter] font-medium text-[12px] leading-[100%] tracking-[0%] align-middle text-[#565D61]">
                                       {screen.name}
                                     </h4>
                                     <Badge
@@ -646,7 +657,7 @@ const AppDetails: React.FC = () => {
                           className="w-full flex flex-col items-start gap-1 hover:cursor-pointer"
                           onClick={() => setSelectedScreen(screen)}
                         >
-                          <h4 className="font-[Inter] w-full font-medium text-[12px] leading-[100%] tracking-[0%]">
+                          <h4 className="font-[Inter] font-medium text-[12px] leading-[100%] tracking-[0%] align-middle text-[#565D61]">
                             {screen.name}
                           </h4>
                           <ImageWithFallback
@@ -670,7 +681,7 @@ const AppDetails: React.FC = () => {
 
         {/* Scr Image Modal */}
         {selectedScreen && (
-          <ScreenImageModal
+          <ScreenImageModalV2
             screen={selectedScreen}
             isOpen={!!selectedScreen}
             onClose={() => setSelectedScreen(null)}
@@ -692,6 +703,12 @@ const AppDetails: React.FC = () => {
           categories={categories}
         />
       </div>
+
+      <AuthModal
+        initialMode="login"
+        isOpen={isOpenAuth}
+        onClose={onCloseOpenAuth}
+      />
     </>
   );
 };
