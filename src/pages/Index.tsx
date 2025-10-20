@@ -30,6 +30,10 @@ import { useToast } from "@/hooks/use-toast";
 import { useAppDispatch, useTypedSelector } from "@/hooks/use-typed-selector";
 import { useFavorites } from "@/hooks/useFavorites";
 import { logout } from "@/provider/slices/authSlice";
+import {
+  addToCompare,
+  removeFromCompare,
+} from "@/provider/slices/compareSlice";
 import { RootState } from "@/provider/store";
 import { adapterListAppBEToFEPublic } from "@/utils/adapterBEToFE";
 import clsx from "clsx";
@@ -87,7 +91,6 @@ const Index = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showFilters, setShowFilters] = useState(false);
   const [showCompare, setShowCompare] = useState(false);
-  const [compareApps, setCompareApps] = useState<AppPublic[]>([]);
   const [selectedScreen, setSelectedScreen] = useState<ScreenPublic | null>(
     null
   );
@@ -97,6 +100,9 @@ const Index = () => {
   const [isOpenAuth, setIsOpenAuth] = useState(false);
   const [isLoadingGet, setIsLoadingGet] = useState(true);
   const user = useTypedSelector((state: RootState) => state.auth.user);
+  const compareApps = useTypedSelector(
+    (state: RootState) => state.compare.compareApps
+  );
   const dispatch = useAppDispatch();
   const { favorites: favoriteScreens, toggleFavorite } = useFavorites();
   const { toast } = useToast();
@@ -156,16 +162,11 @@ const Index = () => {
   const [selectedApp, setSelectedApp] = useState<AppPublic | null>(null);
 
   const handleAddToCompare = (app: AppPublic) => {
-    if (
-      compareApps.length < 2 &&
-      !compareApps.some((compareApp) => compareApp.id === app.id)
-    ) {
-      setCompareApps([...compareApps, app]);
-    }
+    dispatch(addToCompare(app));
   };
 
   const handleRemoveFromCompare = (appId: string) => {
-    setCompareApps(compareApps.filter((app) => app.id !== appId));
+    dispatch(removeFromCompare(appId));
   };
 
   const handleLogout = async () => {
@@ -242,6 +243,11 @@ const Index = () => {
     },
     [categories]
   );
+
+  const handleOpenAuthModal = useCallback(() => {
+    if (user) return;
+    setIsOpenAuth(true);
+  }, [user]);
 
   useEffect(() => {
     getListDataCategory();
@@ -325,33 +331,34 @@ const Index = () => {
                       Compare
                     </span>
                   </Button>
-
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setIsOpenAuth(true)}
-                    className="relative"
-                  >
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 16 16"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
+                  {!user && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleOpenAuthModal}
+                      className="relative"
                     >
-                      <path
-                        d="M6.66667 8L5.33333 6.53334L5.73333 5.86667M4 3.33333H12L14 6.66667L8.33333 13C8.28988 13.0443 8.23802 13.0796 8.18078 13.1036C8.12355 13.1277 8.06209 13.1401 8 13.1401C7.93792 13.1401 7.87645 13.1277 7.81922 13.1036C7.76198 13.0796 7.71012 13.0443 7.66667 13L2 6.66667L4 3.33333Z"
-                        stroke="black"
-                        stroke-width="1.3"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                    </svg>
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M6.66667 8L5.33333 6.53334L5.73333 5.86667M4 3.33333H12L14 6.66667L8.33333 13C8.28988 13.0443 8.23802 13.0796 8.18078 13.1036C8.12355 13.1277 8.06209 13.1401 8 13.1401C7.93792 13.1401 7.87645 13.1277 7.81922 13.1036C7.76198 13.0796 7.71012 13.0443 7.66667 13L2 6.66667L4 3.33333Z"
+                          stroke="black"
+                          stroke-width="1.3"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
 
-                    <span className="lg:inline font-[Inter] font-normal text-[13.3px] leading-[20px] tracking-[0%] text-center align-middle">
-                      Join Us
-                    </span>
-                  </Button>
+                      <span className="lg:inline font-[Inter] font-normal text-[13.3px] leading-[20px] tracking-[0%] text-center align-middle">
+                        Join Us
+                      </span>
+                    </Button>
+                  )}
 
                   {/* Mobile Menu Button */}
                   {/* <Button
@@ -402,7 +409,7 @@ const Index = () => {
 
           {/* Hero Section */}
           <div className="pt-16 lg:pt-20">
-            <HeroSection handleStartExploring={() => setIsOpenAuth(true)} />
+            <HeroSection handleStartExploring={handleOpenAuthModal} />
           </div>
         </section>
         {/* Main Content */}

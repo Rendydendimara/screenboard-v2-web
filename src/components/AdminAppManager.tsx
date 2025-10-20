@@ -223,7 +223,6 @@ export const AdminAppManager: React.FC = () => {
   }, []);
 
   const handleEdit = (app: App) => {
-    console.log("app", app);
     setModalFormType("app");
     setFormData({
       name: app.name,

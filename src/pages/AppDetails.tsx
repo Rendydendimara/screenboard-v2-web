@@ -17,6 +17,10 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
 import { useAppDispatch, useTypedSelector } from "@/hooks/use-typed-selector";
 import { logout } from "@/provider/slices/authSlice";
+import {
+  addToCompare,
+  removeFromCompare,
+} from "@/provider/slices/compareSlice";
 import { RootState } from "@/provider/store";
 import {
   adapterListAppBEToFEPublic,
@@ -59,7 +63,9 @@ const AppDetails: React.FC = () => {
   const [app, setApp] = useState<AppPublic | null>(null);
   const [isLoadingDetail, setIsLoadingDetail] = useState(true);
   const [showCompare, setShowCompare] = useState(false);
-  const [compareApps, setCompareApps] = useState<AppPublic[]>([]);
+  const compareApps = useTypedSelector(
+    (state: RootState) => state.compare.compareApps
+  );
   const [listApp, setListApp] = useState<AppPublic[]>([]);
   const [categories, setCategories] = useState<TCategoryRes[]>([]);
   const [isOpenAuth, setIsOpenAuth] = useState(false);
@@ -173,16 +179,11 @@ const AppDetails: React.FC = () => {
   };
 
   const handleAddToCompare = (app: AppPublic) => {
-    if (
-      compareApps.length < 2 &&
-      !compareApps.some((compareApp) => compareApp.id === app.id)
-    ) {
-      setCompareApps([...compareApps, app]);
-    }
+    dispatch(addToCompare(app));
   };
 
   const handleRemoveFromCompare = (appId: string) => {
-    setCompareApps(compareApps.filter((app) => app.id !== appId));
+    dispatch(removeFromCompare(appId));
   };
 
   // 🔹 Group by kategori agar bisa ditampilkan per section
@@ -234,6 +235,27 @@ const AppDetails: React.FC = () => {
   const onCloseOpenAuth = useCallback(() => {
     setIsOpenAuth(false);
   }, []);
+
+  const handleChangeCategory = useCallback((category: string) => {
+    setSelectedScreenCategory(category);
+    toast({
+      title: `Change to category ${category}`,
+      description: "",
+      variant: "default",
+    });
+  }, []);
+
+  const handleOpenAuthModal = useCallback(() => {
+    if (user) return;
+    setIsOpenAuth(true);
+  }, [user]);
+
+  const handleAddCompare = useCallback(() => {
+    const ids = compareApps.map((d) => d.id);
+    if (ids.includes(app.id)) return;
+    handleAddToCompare(app);
+    setShowCompare(true);
+  }, [compareApps, app]);
 
   useEffect(() => {
     getAppDetail();
@@ -298,42 +320,43 @@ const AppDetails: React.FC = () => {
                   className="relative"
                 >
                   <GitCompare className="h-4 w-4" />
-                  {/* {compareApps.length > 0 && (
-                      <Badge className="absolute -top-2 -right-2 h-5 w-5 p-0 flex items-center justify-center text-xs">
-                        {compareApps.length}
-                      </Badge>
-                    )} */}
+                  {compareApps.length > 0 && (
+                    <Badge className="absolute -top-2 -right-2 h-5 w-5 p-0 flex items-center justify-center text-xs">
+                      {compareApps.length}
+                    </Badge>
+                  )}
                   <span className="lg:inline font-[Inter] font-normal text-[13.3px] leading-[20px] tracking-[0%] text-center align-middle">
                     Compare
                   </span>
                 </Button>
-
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setIsOpenAuth(true)}
-                  className="relative"
-                >
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
+                {!user && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleOpenAuthModal}
+                    className="relative"
                   >
-                    <path
-                      d="M6.66667 8L5.33333 6.53334L5.73333 5.86667M4 3.33333H12L14 6.66667L8.33333 13C8.28988 13.0443 8.23802 13.0796 8.18078 13.1036C8.12355 13.1277 8.06209 13.1401 8 13.1401C7.93792 13.1401 7.87645 13.1277 7.81922 13.1036C7.76198 13.0796 7.71012 13.0443 7.66667 13L2 6.66667L4 3.33333Z"
-                      stroke="black"
-                      stroke-width="1.3"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M6.66667 8L5.33333 6.53334L5.73333 5.86667M4 3.33333H12L14 6.66667L8.33333 13C8.28988 13.0443 8.23802 13.0796 8.18078 13.1036C8.12355 13.1277 8.06209 13.1401 8 13.1401C7.93792 13.1401 7.87645 13.1277 7.81922 13.1036C7.76198 13.0796 7.71012 13.0443 7.66667 13L2 6.66667L4 3.33333Z"
+                        stroke="black"
+                        stroke-width="1.3"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
 
-                  <span className="lg:inline font-[Inter] font-normal text-[13.3px] leading-[20px] tracking-[0%] text-center align-middle">
-                    Join Us
-                  </span>
-                </Button>
+                    <span className="lg:inline font-[Inter] font-normal text-[13.3px] leading-[20px] tracking-[0%] text-center align-middle">
+                      Join Us
+                    </span>
+                  </Button>
+                )}
 
                 {user ? (
                   <>
@@ -489,10 +512,7 @@ const AppDetails: React.FC = () => {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => {
-                  handleAddToCompare(app);
-                  setShowCompare(true);
-                }}
+                onClick={handleAddCompare}
                 className="h-10 rounded-[6px] py-[1px] px-[13px] font-normal"
               >
                 <GitCompare className="h-4 w-4" />
@@ -539,7 +559,7 @@ const AppDetails: React.FC = () => {
                             : "outline"
                         }
                         size="sm"
-                        onClick={() => setSelectedScreenCategory(category)}
+                        onClick={() => handleChangeCategory(category)}
                         className={clsx(
                           "h-[38px] text-xs font-normal py-2 px-3 rounded-[6px]",
                           selectedScreenCategory === category
@@ -664,10 +684,6 @@ const AppDetails: React.FC = () => {
                           className="w-full flex flex-col items-start gap-1 hover:cursor-pointer"
                           onClick={() => setSelectedScreen(screen)}
                         >
-                          <h4 className="font-[Inter] font-medium text-[12px] leading-[100%] tracking-[0%] align-middle text-[#565D61]">
-                            {screen.modul} - {screen?.category?.name} -{" "}
-                            {screen.name}
-                          </h4>
                           <ImageWithFallback
                             src={
                               screen?.image ??
@@ -677,6 +693,18 @@ const AppDetails: React.FC = () => {
                             alt={screen.name}
                             className="min-w-[272px] max-w-[272px]  h-[603px] object-cover rounded-[8px]"
                           />
+                          <h4
+                            className="font-[Inter] font-medium text-[12px] leading-[100%] tracking-[0%] align-middle text-[#565D61]"
+                            style={{
+                              display: "-webkit-box",
+                              WebkitLineClamp: 2,
+                              WebkitBoxOrient: "vertical",
+                              overflow: "hidden",
+                            }}
+                          >
+                            {screen.modul} - {screen?.category?.name} -{" "}
+                            {screen.name}
+                          </h4>
                         </div>
                       ))}
                     </div>

@@ -58,7 +58,7 @@ export const AppCard: React.FC<AppCardProps> = ({
                 src={app?.image ?? "https://source.unsplash.com/400x300?game"}
                 fallbackSrc="https://placehold.co/400"
                 alt={app.name}
-                className="w-16 h-16 lg:w-20 lg:h-20 rounded-2xl object-contain group-hover:scale-105 transition-transform"
+                className="w-[114px] h-[72px] rounded-[8px] object-cover group-hover:scale-105 transition-transform"
               />
               {app.featured && (
                 <div className="absolute -top-2 -right-2 w-5 h-5 lg:w-6 lg:h-6 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
@@ -67,6 +67,7 @@ export const AppCard: React.FC<AppCardProps> = ({
               )}
             </div>
           </div>
+
           <div className="flex-1 min-w-0">
             <div className="flex flex-col lg:flex-row lg:items-start justify-between mb-3">
               <div className="flex-1 w-fit max-w-[300px] mb-2 lg:mb-0">
@@ -204,7 +205,7 @@ export const AppCard: React.FC<AppCardProps> = ({
             src={app?.image ?? "https://source.unsplash.com/400x300?game"}
             fallbackSrc="https://placehold.co/400"
             alt={app.name}
-            className="w-[114px] h-[72px] rounded-[8px] object-center object-contain group-hover:scale-105 transition-transform duration-500"
+            className="w-[114px] h-[72px] rounded-[8px] object-cover group-hover:scale-105 transition-transform"
           />
           <div className="flex flex-col items-start gap-1">
             <h5 className="font-['Inter'] not-italic font-bold text-[19.5px] leading-[28px] items-center text-[#0F172A]">
