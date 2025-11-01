@@ -110,12 +110,13 @@ export function InputText({
             "h-8 rounded-[8px] pl-8 !text-body-4 pt-[5px]",
             isInvalid
               ? "border-red-500 focus:ring-1 focus:ring-red-500"
-              : "border-gray-300 focus:border-gray-900 focus:ring-1 focus:ring-gray-900/10",
+              : "focus:![box-shadow:0px_0px_0px_2.5px_rgba(232,_208,_253,_1)] focus:!border-[1px] focus:!border-solid focus:!border-[rgba(147,51,234,1)]", //"border-gray-300 focus:border-gray-900 focus:ring-1 focus:ring-gray-900/10",
             isPasswordField || leftIcon ? "pr-10" : "", // padding ekstra biar ga ketimpa tombol
             className
           )}
           {...rest}
         />
+        {/* [box-shadow:0px_0px_0px_2.5px_rgba(232,_208,_253,_1)] border-[1px] border-solid border-[rgba(147,51,234,1)] */}
         {isPasswordField && (
           <button
             type="button"

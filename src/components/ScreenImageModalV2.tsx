@@ -17,6 +17,7 @@ import { Annotation } from "@/types/annotations";
 import clsx from "clsx";
 import { ChevronLeft, ChevronRight, Download } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 interface Screen {
   id: string;
@@ -102,25 +103,48 @@ export const ScreenImageModalV2: React.FC<ScreenImageModalProps> = ({
           )}
         >
           <DialogHeader>
-            <div className="flex flex-col md:flex-row gap-2 md:gap-0 items-center justify-between">
-              <div>
-                <DialogTitle className="text-2xl font-bold">
-                  {screen.modul}
-                </DialogTitle>
-                <DialogDescription className="mt-2">
-                  {screen.modul} - {screen.name} - {screen?.category?.name}
-                </DialogDescription>
-              </div>
+            <div className="flex flex-col md:flex-row gap-2 md:gap-0 items-center justify-between !h-[32px]">
+              <DialogTitle className="text-2xl font-bold !h-[32px]">
+                {screen.modul}
+              </DialogTitle>
             </div>
           </DialogHeader>
-          <ScrollArea className="w-full whitespace-nowrap">
-            <div
-              className="flex w-full overflow-x-auto space-x-4"
-              style={{ maxWidth: `${widthContent - 50}px` }}
-            >
-              {allScreens.map((screenItem, index) => (
+          <div
+            className="flex w-full overflow-x-auto space-x-4"
+            style={{ maxWidth: `${widthContent - 50}px` }}
+          >
+            {allScreens.map((screenItem) => (
+              <div key={screenItem.id}>
+                <Tooltip delayDuration={0}>
+                  <TooltipTrigger asChild>
+                    <p
+                      className="mb-1 font-[Inter] font-medium text-[14.91px] leading-[100%] tracking-[0%] text-[#565D61]
+                 overflow-hidden text-ellipsis break-words 
+                 [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical]"
+                    >
+                      {`${screenItem.modul} - ${screenItem.category.name} - ${screenItem.name}`
+                        .length > 43
+                        ? `${screenItem.modul} - ${screenItem.category.name} - ${screenItem.name}`.slice(
+                            0,
+                            43
+                          ) + "..."
+                        : `${screenItem.modul} - ${screenItem.category.name} - ${screenItem.name}`}
+                    </p>
+                  </TooltipTrigger>
+                  <TooltipContent
+                    side="bottom"
+                    align="center"
+                    hidden={
+                      `${screenItem.modul} - ${screenItem.category.name} - ${screenItem.name}`
+                        .length < 43
+                    }
+                    children={
+                      <p className="font-[Inter] font-medium text-[14.91px] leading-[100%] tracking-[0%] text-[#565D61]">{`${screenItem.modul} - ${screenItem.category.name} - ${screenItem.name}`}</p>
+                    }
+                  />
+                </Tooltip>
+
                 <div
-                  key={screenItem.id}
                   className={`group cursor-pointer w-[338px] flex-shrink-0 ${
                     screenItem.id === screen.id
                       ? "ring-2 ring-blue-500 rounded-lg"
@@ -128,12 +152,12 @@ export const ScreenImageModalV2: React.FC<ScreenImageModalProps> = ({
                   }`}
                   onClick={() => onScreenChange && onScreenChange(screenItem)}
                 >
-                  <div className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-200">
+                  <div className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-2xl transition-shadow duration-200">
                     <div className="overflow-hidden relative">
                       <img
                         src={screenItem.image}
                         alt={screenItem.name}
-                        className="w-[338px] h-[749px] group-hover:scale-105 object-contain transition-transform duration-200"
+                        className="w-[338px] h-[749px] object-contain transition-all duration-200 rounded-xl"
                       />
                       {screenItem.id === screen.id && (
                         <div className="absolute inset-0 border border-blue-500 rounded-lg"></div>
@@ -141,10 +165,9 @@ export const ScreenImageModalV2: React.FC<ScreenImageModalProps> = ({
                     </div>
                   </div>
                 </div>
-              ))}
-            </div>
-            <ScrollBar orientation="horizontal" />
-          </ScrollArea>
+              </div>
+            ))}
+          </div>
         </DialogContent>
       </Dialog>
 

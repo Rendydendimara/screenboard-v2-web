@@ -63,6 +63,7 @@ const URL_API = {
       V1: {
         DETAIL: "/api/v1/user/app/detail",
         GET_LIST: "/api/v1/user/app/get-list",
+        GET_LIST_FAVORITES: "/api/v1/user/app/get-list-favorites",
       },
     },
     SCREEN: {

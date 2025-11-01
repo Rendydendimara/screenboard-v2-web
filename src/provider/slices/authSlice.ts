@@ -14,6 +14,7 @@ export interface User {
   token: string;
   createdAt: string;
   isPremium: boolean;
+  appLikes: string[];
 }
 
 const initialState: AuthState = {

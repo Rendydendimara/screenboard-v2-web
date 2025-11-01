@@ -13,10 +13,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { COUNTRIES } from "@/components/ui/CountryMultiSelect";
 import ImageWithFallback from "@/components/ui/ImageWithFallback";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
 import { useAppDispatch, useTypedSelector } from "@/hooks/use-typed-selector";
-import { logout } from "@/provider/slices/authSlice";
+import { logout, setCredentials } from "@/provider/slices/authSlice";
 import {
   addToCompare,
   removeFromCompare,
@@ -69,6 +68,8 @@ const AppDetails: React.FC = () => {
   const [listApp, setListApp] = useState<AppPublic[]>([]);
   const [categories, setCategories] = useState<TCategoryRes[]>([]);
   const [isOpenAuth, setIsOpenAuth] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [scrolledCategories, setScrolledCategories] = useState(false);
 
   const getPlatformIcon = (platform: string) => {
     switch (platform) {
@@ -112,12 +113,30 @@ const AppDetails: React.FC = () => {
             ...app,
             isLiked: !app.isLiked,
           });
+          dispatch(
+            setCredentials({
+              token: user.token,
+              user: {
+                ...user,
+                appLikes: user.appLikes.filter((d) => d !== app.id),
+              },
+            })
+          );
         } else {
           await AppLikeAPI.like({ appId: app.id });
           setApp({
             ...app,
             isLiked: !app.isLiked,
           });
+          dispatch(
+            setCredentials({
+              token: user.token,
+              user: {
+                ...user,
+                appLikes: [...user.appLikes, app.id],
+              },
+            })
+          );
         }
         toast({
           title: app?.isLiked ? "Removed from favorites" : "Added to favorites",
@@ -261,6 +280,19 @@ const AppDetails: React.FC = () => {
     getAppDetail();
   }, [user]);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const isMobile = window.innerWidth <= 200;
+
+      setScrolled(isMobile ? window.scrollY > 20 : window.scrollY > 20);
+      setScrolledCategories(
+        isMobile ? window.scrollY > 400 : window.scrollY > 300
+      );
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   if (isLoadingDetail) {
     return (
       <div>
@@ -294,7 +326,14 @@ const AppDetails: React.FC = () => {
 
       {/* Navigation */}
       <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-        <header className="bg-transparent">
+        <header
+          className={clsx(
+            "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+            scrolled
+              ? "bg-white/90 backdrop-blur-md shadow-sm"
+              : "bg-transparent"
+          )}
+        >
           <div className="container px-0">
             <div className="flex items-center justify-between h-16 lg:h-20 px-4 md:px-0">
               {/* Logo */}
@@ -305,14 +344,41 @@ const AppDetails: React.FC = () => {
                       S
                     </span>
                   </div>
-                  <p className="hidden sm:block text-xl lg:text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                    Screenboard
-                  </p>
                 </div>
               </Link>
 
               {/* Action Buttons */}
-              <div className="flex items-center space-x-2 lg:space-x-4">
+              <div className="flex items-center gap-[10px]">
+                {user && (
+                  <Link to="/favorites">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleOpenAuthModal}
+                      className="relative"
+                    >
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M12.6666 9.33333C13.66 8.36 14.6666 7.19333 14.6666 5.66667C14.6666 4.69421 14.2803 3.76158 13.5927 3.07394C12.9051 2.38631 11.9724 2 11 2C9.82665 2 8.99998 2.33333 7.99998 3.33333C6.99998 2.33333 6.17331 2 4.99998 2C4.02752 2 3.09489 2.38631 2.40725 3.07394C1.71962 3.76158 1.33331 4.69421 1.33331 5.66667C1.33331 7.2 2.33331 8.36667 3.33331 9.33333L7.99998 14L12.6666 9.33333Z"
+                          stroke="#94A3B8"
+                          stroke-width="1.33333"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+
+                      <span className="font-[Inter] font-normal text-[13.3px] leading-[20px] tracking-[0%] text-center align-middle text-[#020817]">
+                        Favorites ({user.appLikes.length})
+                      </span>
+                    </Button>
+                  </Link>
+                )}
                 <Button
                   onClick={() => setShowCompare(true)}
                   variant="ghost"
@@ -358,13 +424,31 @@ const AppDetails: React.FC = () => {
                   </Button>
                 )}
 
-                {user ? (
-                  <>
+                {user && (
+                  <div className="flex items-center gap-2 px-3">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M4 14V12.6667C4 11.9594 4.28095 11.2811 4.78105 10.781C5.28115 10.281 5.95942 10 6.66667 10H9.33333C10.0406 10 10.7189 10.281 11.219 10.781C11.719 11.2811 12 11.9594 12 12.6667V14M5.33333 4.66667C5.33333 5.37391 5.61428 6.05219 6.11438 6.55229C6.61448 7.05238 7.29276 7.33333 8 7.33333C8.70724 7.33333 9.38552 7.05238 9.88562 6.55229C10.3857 6.05219 10.6667 5.37391 10.6667 4.66667C10.6667 3.95942 10.3857 3.28115 9.88562 2.78105C9.38552 2.28095 8.70724 2 8 2C7.29276 2 6.61448 2.28095 6.11438 2.78105C5.61428 3.28115 5.33333 3.95942 5.33333 4.66667Z"
+                        stroke="black"
+                        stroke-width="1.33333"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                    <p className="font-[Inter] font-normal text-[13.3px] leading-[20px] tracking-[0%] text-center align-middle text-[#020817]">
+                      {user.username}
+                    </p>
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={handleLogout}
-                      className="hidden sm:flex items-center space-x-2"
+                      className="hidden sm:flex items-center space-x-2 font-[Inter] font-normal text-[13.3px] leading-[20px] tracking-[0%] text-center align-middle underline [text-decoration-style:solid] [text-decoration-skip-ink:auto] !text-[#4475EE]"
                     >
                       Logout
                     </Button>
@@ -379,25 +463,99 @@ const AppDetails: React.FC = () => {
                         </Button>
                       </Link>
                     )}
-                  </>
-                ) : (
-                  <></>
-                  // <Button
-                  //   variant="ghost"
-                  //   size="sm"
-                  //   onClick={() => setIsOpenAuth(true)}
-                  //   className="hidden sm:flex items-center space-x-2"
-                  // >
-                  //   Login
-                  // </Button>
+                  </div>
                 )}
+              </div>
+            </div>
+          </div>
+          <div
+            className={clsx(
+              "container px-4 md:px-0 transition-all duration-300 ease-in-out overflow-hidden",
+              scrolledCategories
+                ? "max-h-[500px] opacity-100 translate-y-0"
+                : "max-h-0 opacity-0 -translate-y-4 pointer-events-none"
+            )}
+          >
+            {/* Scr Filters */}
+            <div className="flex flex-col md:flex-row items-start gap-3 md:gap-0 md:items-center justify-between mb-9">
+              <div className="flex items-center space-x-4">
+                <div className="flex flex-col md:flex-row items-start gap-2 md:gap-0 md:items-center md:space-x-2">
+                  <span className="text-sm font-medium text-slate-700">
+                    Category:
+                  </span>
+                  <div className="flex flex-wrap gap-2">
+                    {screenCategories.map((category) => (
+                      <Button
+                        key={category}
+                        variant={
+                          selectedScreenCategory === category
+                            ? "default"
+                            : "outline"
+                        }
+                        size="sm"
+                        onClick={() => handleChangeCategory(category)}
+                        className={clsx(
+                          "h-[38px] text-xs font-normal py-2 px-3 rounded-[6px]",
+                          selectedScreenCategory === category
+                            ? "!bg-[#0F172A]"
+                            : "bg-transparent"
+                        )}
+                      >
+                        {category}
+                        <Badge
+                          variant="secondary"
+                          className={clsx(
+                            "text-[10px] font-bold",
+                            selectedScreenCategory === category
+                              ? "!bg-[#9333EA] text-white"
+                              : "!bg-[#F1F5F9] text-[#0F172A]"
+                          )}
+                        >
+                          {category === "All"
+                            ? app?.screens.length
+                            : groupedScreens[category]?.length || 0}
+                        </Badge>
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center bg-white rounded-lg p-1 gap-2">
+                <Button
+                  variant={screenViewMode === "grid" ? "default" : "ghost"}
+                  size="sm"
+                  onClick={() => setScreenViewMode("grid")}
+                  className={clsx(
+                    "h-9 p-3 rounded-[6px]",
+                    screenViewMode === "grid"
+                      ? "bg-[#0F172A]"
+                      : "border border-solid border-[#E2E8F0]"
+                  )}
+                >
+                  <Grid3X3 className="h-3 w-3" />
+                  Grid
+                </Button>
+                <Button
+                  variant={screenViewMode === "list" ? "default" : "ghost"}
+                  size="sm"
+                  onClick={() => setScreenViewMode("list")}
+                  className={clsx(
+                    "h-9 p-3 rounded-[6px]",
+                    screenViewMode === "list"
+                      ? "bg-[#0F172A]"
+                      : "border border-solid border-[#E2E8F0]"
+                  )}
+                >
+                  <List className="h-3 w-3" />
+                  List
+                </Button>
               </div>
             </div>
           </div>
         </header>
 
         {/* App Overview */}
-        <div className="mb-8 container px-4 md:px-0 pt-3 pb-10">
+        <div className="pt-24 px-0 pb-[40px] container">
           <div className="flex items-center justify-between md:flex-row flex-col">
             <div className="flex items-start space-x-6">
               <div className="relative">
@@ -427,6 +585,23 @@ const AppDetails: React.FC = () => {
                       Updated {new Date(app.lastUpdated).toLocaleDateString()}
                     </span>
                   </div>
+                  {app.countries && app.countries.length > 0 ? (
+                    <div className="flex items-center space-x-1">
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 14 14"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M6.66667 0C2.99067 0 0 2.99067 0 6.66667C0 10.3427 2.99067 13.3333 6.66667 13.3333C10.3427 13.3333 13.3333 10.3427 13.3333 6.66667C13.3333 2.99067 10.3427 0 6.66667 0ZM1.33333 6.66667C1.33333 6.06733 1.43733 5.492 1.62067 4.954L2.66667 6L4 7.33333V8.66667L5.33333 10L6 10.6667V11.954C3.374 11.624 1.33333 9.38133 1.33333 6.66667ZM10.8867 9.91533C10.4513 9.56467 9.79133 9.33333 9.33333 9.33333V8.66667C9.33333 8.31304 9.19286 7.97391 8.94281 7.72386C8.69276 7.47381 8.35362 7.33333 8 7.33333H5.33333V5.33333C5.68695 5.33333 6.02609 5.19286 6.27614 4.94281C6.52619 4.69276 6.66667 4.35362 6.66667 4V3.33333H7.33333C7.68695 3.33333 8.02609 3.19286 8.27614 2.94281C8.52619 2.69276 8.66667 2.35362 8.66667 2V1.726C10.6187 2.51867 12 4.43333 12 6.66667C11.9997 7.84311 11.608 8.98602 10.8867 9.91533Z"
+                          fill="#475569"
+                        />
+                      </svg>
+                      <span>{app.countries.join(", ")}</span>
+                    </div>
+                  ) : null}
                 </div>
                 {app.countries && app.countries.length > 0 && (
                   <div className="flex items-start gap-2 mt-3">
@@ -455,19 +630,25 @@ const AppDetails: React.FC = () => {
                 <div className="flex items-start justify-start gap-2 mt-3 flex-wrap">
                   <Badge
                     variant="outline"
-                    className="flex items-center space-x-1 text-sm px-3 py-1"
+                    className="flex items-center space-x-1 text-sm px-3 py-1 font-bold text-[#464C4F]"
                   >
                     {getPlatformIcon(app.platform)}
                     <span>{app.platform}</span>
                   </Badge>
-                  <Badge variant="outline" className="text-sm px-3 py-1">
+                  <Badge
+                    variant="outline"
+                    className="text-sm px-3 py-1 font-bold text-[#464C4F]"
+                  >
                     {app.category?.name ?? "-"}
                   </Badge>
-                  <Badge variant="outline" className="text-sm px-3 py-1">
+                  <Badge
+                    variant="outline"
+                    className="text-sm px-3 py-1 font-bold text-[#464C4F]"
+                  >
                     {app.subcategory?.name ?? "-"}
                   </Badge>
                   {app.featured && (
-                    <Badge className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-sm px-3 py-1">
+                    <Badge className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-sm px-3 py-1 font-bold ">
                       <Star className="h-3 w-3 mr-1" />
                       Featured
                     </Badge>
@@ -619,53 +800,50 @@ const AppDetails: React.FC = () => {
             </div>
             {/* Screens Grid/List/Horizontal */}
             {screenViewMode === "list" ? (
-              <div className="space-y-8">
-                {Object.entries(groupedScreensFilter).map(
-                  ([category, screens]) => (
-                    <div key={category} className="space-y-4">
-                      <h3 className="text-xl font-semibold text-slate-800 flex items-center space-x-2">
-                        <span>{category}</span>
-                        <Badge variant="outline" className="text-sm">
-                          {screens.length} screen
-                          {screens.length !== 1 ? "s" : ""}
-                        </Badge>
-                      </h3>
-                      <ScrollArea className="w-full whitespace-nowrap rounded-lg">
-                        <div className="flex w-max space-x-4 p-4">
-                          {screens.map((screen) => (
-                            <div
-                              key={screen.id}
-                              className="group cursor-pointer w-64 flex-shrink-0"
-                              onClick={() => setSelectedScreen(screen)}
-                            >
-                              <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100">
-                                <div className="aspect-[9/16] overflow-hidden relative">
-                                  <img
-                                    src={screen.image}
-                                    alt={screen.name}
-                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                  />
-                                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                    <div className="absolute bottom-4 left-4 right-4">
-                                      <p className="text-white text-sm line-clamp-3">
-                                        {screen.description}
-                                      </p>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <h4 className="font-[Inter] mt-1 font-medium text-[12px] leading-[100%] tracking-[0%] align-middle text-[#565D61]">
-                                {screen.modul} - {screen?.category?.name} -{" "}
-                                {screen.name}
-                              </h4>
-                            </div>
-                          ))}
-                        </div>
-                        <ScrollBar orientation="horizontal" />
-                      </ScrollArea>
+              <div className="flex gap-8 flex-col items-start  w-full">
+                {Object.entries(groupedScreensFilter).map(([key, screens]) => (
+                  <div
+                    className="flex gap-4 flex-col items-start w-full"
+                    key={key}
+                  >
+                    <div className="h-8 py-2 px-4 flex items-center justify-center font-[Inter] font-bold text-[16px] leading-[16px] tracking-[0%] text-[#020817] rounded-full border border-solid border-[#E2E8F0]">
+                      {key}
                     </div>
-                  )
-                )}
+                    <div className="flex items-start max-w-full pr-5 overflow-x-auto gap-7 pb-1 !styled-scrollbar-black">
+                      {screens.map((screen, i) => (
+                        <div
+                          key={i}
+                          className="w-full flex flex-col items-start gap-1 hover:cursor-pointer"
+                          onClick={() => setSelectedScreen(screen)}
+                        >
+                          <div className="min-w-[272px] max-w-[272px] h-[603px] rounded-xl overflow-hidden border-[1px] border-solid border-[rgba(0,0,0,0.1)]">
+                            <ImageWithFallback
+                              src={
+                                screen?.image ??
+                                "https://source.unsplash.com/400x300?game"
+                              }
+                              fallbackSrc="https://placehold.co/400"
+                              alt={screen.name}
+                              className="w-full h-[623px] object-cover -mt-[20px]"
+                            />
+                          </div>
+                          <h4
+                            className="font-[Inter] font-medium text-[12px] leading-[100%] tracking-[0%] align-middle text-[#565D61]"
+                            style={{
+                              display: "-webkit-box",
+                              WebkitLineClamp: 2,
+                              WebkitBoxOrient: "vertical",
+                              overflow: "hidden",
+                            }}
+                          >
+                            {screen.modul} - {screen?.category?.name} -{" "}
+                            {screen.name}
+                          </h4>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
               </div>
             ) : (
               <div className="flex gap-8 flex-col items-start  w-full">
@@ -677,22 +855,25 @@ const AppDetails: React.FC = () => {
                     <div className="h-8 py-2 px-4 flex items-center justify-center font-[Inter] font-bold text-[16px] leading-[16px] tracking-[0%] text-[#020817] rounded-full border border-solid border-[#E2E8F0]">
                       {key}
                     </div>
-                    <div className="flex items-start max-w-full pr-5 overflow-x-auto gap-7">
+                    {/* <div className="flex items-start max-w-full pr-5 overflow-x-auto gap-7 pb-1 !styled-scrollbar-black"> */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-7">
                       {screens.map((screen, i) => (
                         <div
                           key={i}
-                          className="w-full flex flex-col items-start gap-1 hover:cursor-pointer"
+                          className="w-[272px] flex flex-col items-start gap-1 hover:cursor-pointer"
                           onClick={() => setSelectedScreen(screen)}
                         >
-                          <ImageWithFallback
-                            src={
-                              screen?.image ??
-                              "https://source.unsplash.com/400x300?game"
-                            }
-                            fallbackSrc="https://placehold.co/400"
-                            alt={screen.name}
-                            className="min-w-[272px] max-w-[272px]  h-[603px] object-cover rounded-[8px]"
-                          />
+                          <div className="w-[272px] h-[603px] rounded-xl overflow-hidden border-[1px] border-solid border-[rgba(0,0,0,0.1)]">
+                            <ImageWithFallback
+                              src={
+                                screen?.image ??
+                                "https://source.unsplash.com/400x300?game"
+                              }
+                              fallbackSrc="https://placehold.co/400"
+                              alt={screen.name}
+                              className="w-full h-[623px] object-fill -mt-[20px]"
+                            />
+                          </div>
                           <h4
                             className="font-[Inter] font-medium text-[12px] leading-[100%] tracking-[0%] align-middle text-[#565D61]"
                             style={{
