@@ -34,7 +34,15 @@ import { FORMAT_INPUT_IMAGE_FILE } from "@/constant/app";
 import { useToast } from "@/hooks/use-toast";
 import { UploadImageType } from "@/types";
 import { adapterListAppBEToFE } from "@/utils/adapterBEToFE";
-import { Edit3, ExternalLink, Plus, Save, Star, Trash2 } from "lucide-react";
+import {
+  Component,
+  Edit3,
+  ExternalLink,
+  Plus,
+  Save,
+  Star,
+  Trash2,
+} from "lucide-react";
 import React, {
   useCallback,
   useEffect,
@@ -415,6 +423,10 @@ export const AdminAppManager: React.FC = () => {
 
   const handleViewApp = (app: App) => {
     navigate(`/admin/app/${app.id}`);
+  };
+
+  const handleViewComponent = (app: App) => {
+    navigate(`/admin/component/${app.id}`);
   };
 
   const filteredApps = apps.filter(
@@ -810,6 +822,16 @@ export const AdminAppManager: React.FC = () => {
                         <TableCell>{app.downloads}</TableCell>
                         <TableCell>
                           <div className="flex items-center space-x-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleViewComponent(app);
+                              }}
+                            >
+                              <Component className="h-3 w-3" />
+                            </Button>
                             <Button
                               variant="outline"
                               size="sm"

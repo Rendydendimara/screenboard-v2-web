@@ -103,7 +103,7 @@ export const AdminCategoryScreenshotManager = () => {
     } finally {
       setIsLoadingDelete(false);
     }
-  }, [, editingCategory]);
+  }, [editingCategory]);
 
   const getListDataCategory = async () => {
     try {

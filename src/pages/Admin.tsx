@@ -1,5 +1,6 @@
 import AdminAuthAPI from "@/api/admin/auth/api";
 import { AdminAppManager } from "@/components/AdminAppManager";
+import { AdminComponentManager } from "@/components/AdminComponentManager";
 import { AdminModuleManager } from "@/components/AdminModuleManager";
 import { AdminScreenshotManager } from "@/components/AdminScreenshotManager";
 import { AdminStats } from "@/components/AdminStats";
@@ -10,7 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useTypedSelector } from "@/hooks/use-typed-selector";
 import { logout } from "@/provider/slices/authSlice";
 import { RootState } from "@/provider/store";
-import { BarChart3, Image, Plus, Shield, Users } from "lucide-react";
+import { BarChart3, Component, Image, Plus, Shield, Users } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -162,7 +163,6 @@ export default function Admin() {
           <TabsContent value="screenshots">
             <AdminScreenshotManager />
           </TabsContent>
-
           <TabsContent value="users">
             <Card>
               <CardHeader>

@@ -5,6 +5,7 @@ type ImageWithFallbackProps = {
   fallbackSrc: string;
   alt: string;
   className?: string;
+  onClick?: (e: any) => void;
 };
 
 const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
@@ -12,6 +13,7 @@ const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
   fallbackSrc,
   alt,
   className,
+  onClick,
 }) => {
   const [imgSrc, setImgSrc] = useState(src);
 
@@ -21,6 +23,7 @@ const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
       alt={alt}
       className={className}
       onError={() => setImgSrc(fallbackSrc)}
+      onClick={onClick}
     />
   );
 };

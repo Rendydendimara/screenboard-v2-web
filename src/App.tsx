@@ -1,5 +1,6 @@
 import Admin from "@/pages/Admin";
 import AdminAppDetails from "@/pages/AdminAppDetails";
+import AdminComponentDetails from "@/pages/AdminComponentDetails";
 import AppDetails from "@/pages/AppDetails";
 import Index from "@/pages/Index";
 import NotFound from "@/pages/NotFound";
@@ -55,6 +56,7 @@ const App = () => {
       <Route path="/login-admin" element={<LoginAdmin />} />
       <Route path="/admin" element={<Admin />} />
       <Route path="/admin/app/:id" element={<AdminAppDetails />} />
+      <Route path="/admin/component/:appId" element={<AdminComponentDetails />} />
 
       <Route path="*" element={<NotFound />} />
     </Routes>

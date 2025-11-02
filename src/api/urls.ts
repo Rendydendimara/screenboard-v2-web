@@ -57,6 +57,14 @@ const URL_API = {
         DELETE: "/api/v1/admin/screen-category/delete",
       },
     },
+    COMPONENT: {
+      V1: {
+        CREATE: "/api/v1/admin/component/create",
+        UPDATE: "/api/v1/admin/component/update",
+        GET_LIST: "/api/v1/admin/component/get-list",
+        DELETE: "/api/v1/admin/component/delete",
+      },
+    },
   },
   USER: {
     APP: {
