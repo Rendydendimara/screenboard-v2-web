@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { CheckCircle, Loader2, Calendar, DollarSign, Package, AlertCircle } from 'lucide-react';
 import UserSubscriptionAPI from '@/api/user/subscription/api';
 import { TVerifySessionResponse } from '@/api/user/subscription/type';
@@ -49,20 +49,51 @@ export default function SubscriptionSuccess() {
 
   if (loading) {
     return (
-      <div className="container mx-auto py-12 px-4 flex items-center justify-center min-h-screen">
+      <>
+        {/* Simple Header */}
+        <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
+          <div className="container flex items-center justify-between h-16 lg:h-20 px-4 md:px-6 lg:px-0">
+            <Link to="/" className="flex items-center space-x-2">
+              <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
+                <span className="text-white font-bold text-sm lg:text-base">S</span>
+              </div>
+            </Link>
+            <Link to="/">
+              <Button variant="ghost" size="sm">Back to Home</Button>
+            </Link>
+          </div>
+        </header>
+
+        <div className="container mx-auto py-12 px-4 flex items-center justify-center min-h-screen pt-24 lg:pt-28">
         <Card className="max-w-md w-full">
           <CardContent className="flex flex-col items-center justify-center py-12">
             <Loader2 className="h-12 w-12 animate-spin text-blue-600 mb-4" />
             <p className="text-gray-600">Verifying your payment...</p>
           </CardContent>
         </Card>
-      </div>
+        </div>
+      </>
     );
   }
 
   if (error || !sessionData) {
     return (
-      <div className="container mx-auto py-12 px-4 flex items-center justify-center min-h-screen">
+      <>
+        {/* Simple Header */}
+        <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
+          <div className="container flex items-center justify-between h-16 lg:h-20 px-4 md:px-6 lg:px-0">
+            <Link to="/" className="flex items-center space-x-2">
+              <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
+                <span className="text-white font-bold text-sm lg:text-base">S</span>
+              </div>
+            </Link>
+            <Link to="/">
+              <Button variant="ghost" size="sm">Back to Home</Button>
+            </Link>
+          </div>
+        </header>
+
+        <div className="container mx-auto py-12 px-4 flex items-center justify-center min-h-screen pt-24 lg:pt-28">
         <Card className="max-w-md w-full">
           <CardHeader className="text-center">
             <div className="mx-auto mb-4 h-16 w-16 rounded-full bg-red-100 flex items-center justify-center">
@@ -86,7 +117,8 @@ export default function SubscriptionSuccess() {
             </Button>
           </CardFooter>
         </Card>
-      </div>
+        </div>
+      </>
     );
   }
 
@@ -94,7 +126,22 @@ export default function SubscriptionSuccess() {
   const isPaymentSuccessful = session.paymentStatus === 'paid';
 
   return (
-    <div className="container mx-auto py-12 px-4 flex items-center justify-center min-h-screen">
+    <>
+      {/* Simple Header */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
+        <div className="container flex items-center justify-between h-16 lg:h-20 px-4 md:px-6 lg:px-0">
+          <Link to="/" className="flex items-center space-x-2">
+            <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
+              <span className="text-white font-bold text-sm lg:text-base">S</span>
+            </div>
+          </Link>
+          <Link to="/">
+            <Button variant="ghost" size="sm">Back to Home</Button>
+          </Link>
+        </div>
+      </header>
+
+      <div className="container mx-auto py-12 px-4 flex items-center justify-center min-h-screen pt-24 lg:pt-28">
       <Card className="max-w-2xl w-full">
         <CardHeader className="text-center">
           <div className="mx-auto mb-4 h-16 w-16 rounded-full bg-green-100 flex items-center justify-center">
@@ -206,6 +253,7 @@ export default function SubscriptionSuccess() {
           </Button>
         </CardFooter>
       </Card>
-    </div>
+      </div>
+    </>
   );
 }
