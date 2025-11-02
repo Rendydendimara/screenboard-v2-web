@@ -4,6 +4,7 @@ import { AdminComponentManager } from "@/components/AdminComponentManager";
 import { AdminModuleManager } from "@/components/AdminModuleManager";
 import { AdminScreenshotManager } from "@/components/AdminScreenshotManager";
 import { AdminStats } from "@/components/AdminStats";
+import { AdminPlansManager } from "@/components/AdminPlansManager";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -11,7 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useTypedSelector } from "@/hooks/use-typed-selector";
 import { logout } from "@/provider/slices/authSlice";
 import { RootState } from "@/provider/store";
-import { BarChart3, Component, Image, Plus, Shield, Users } from "lucide-react";
+import { BarChart3, Component, Image, Plus, Shield, Users, Package } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -122,7 +123,7 @@ export default function Admin() {
           onValueChange={handleChangeTab}
           className="space-y-6"
         >
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="stats" className="flex items-center space-x-2">
               <BarChart3 className="h-4 w-4" />
               <span>Dashboard</span>
@@ -134,13 +135,17 @@ export default function Admin() {
             <TabsTrigger value="modul" className="flex items-center space-x-2">
               <Image className="h-4 w-4" />
               <span>Modul</span>
-            </TabsTrigger>{" "}
+            </TabsTrigger>
             <TabsTrigger
               value="screenshots"
               className="flex items-center space-x-2"
             >
               <Image className="h-4 w-4" />
               <span>Screenshots</span>
+            </TabsTrigger>
+            <TabsTrigger value="plans" className="flex items-center space-x-2">
+              <Package className="h-4 w-4" />
+              <span>Plans</span>
             </TabsTrigger>
             <TabsTrigger value="users" className="flex items-center space-x-2">
               <Users className="h-4 w-4" />
@@ -163,6 +168,11 @@ export default function Admin() {
           <TabsContent value="screenshots">
             <AdminScreenshotManager />
           </TabsContent>
+
+          <TabsContent value="plans">
+            <AdminPlansManager />
+          </TabsContent>
+
           <TabsContent value="users">
             <Card>
               <CardHeader>

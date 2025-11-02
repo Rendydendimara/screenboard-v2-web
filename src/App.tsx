@@ -4,6 +4,7 @@ import AdminComponentDetails from "@/pages/AdminComponentDetails";
 import AppDetails from "@/pages/AppDetails";
 import Index from "@/pages/Index";
 import NotFound from "@/pages/NotFound";
+import Profile from "@/pages/Profile";
 import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import AdminAuthAPI from "./api/admin/auth/api";
@@ -12,6 +13,9 @@ import { useAppDispatch } from "./hooks/use-typed-selector";
 import { setCredentials } from "./provider/slices/authSlice";
 import { LoginAdmin } from "./pages/LoginAdmin";
 import FavoritesPage from "./pages/Favorites";
+import Subscription from "./pages/Subscription";
+import SubscriptionSuccess from "./pages/SubscriptionSuccess";
+import SubscriptionCancel from "./pages/SubscriptionCancel";
 
 const App = () => {
   const [loading, setLoading] = useState(true);
@@ -53,10 +57,17 @@ const App = () => {
       <Route path="/" element={<Index />} />
       <Route path="/app/:id" element={<AppDetails />} />
       <Route path="/favorites" element={<FavoritesPage />} />
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/subscription" element={<Subscription />} />
+      <Route path="/subscription/success" element={<SubscriptionSuccess />} />
+      <Route path="/subscription/cancel" element={<SubscriptionCancel />} />
       <Route path="/login-admin" element={<LoginAdmin />} />
       <Route path="/admin" element={<Admin />} />
       <Route path="/admin/app/:id" element={<AdminAppDetails />} />
-      <Route path="/admin/component/:appId" element={<AdminComponentDetails />} />
+      <Route
+        path="/admin/component/:appId"
+        element={<AdminComponentDetails />}
+      />
 
       <Route path="*" element={<NotFound />} />
     </Routes>

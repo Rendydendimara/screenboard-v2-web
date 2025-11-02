@@ -65,6 +65,15 @@ const URL_API = {
         DELETE: "/api/v1/admin/component/delete",
       },
     },
+    PLANS: {
+      V1: {
+        CREATE: "/api/v1/admin/plans/create",
+        UPDATE: "/api/v1/admin/plans/update",
+        GET_LIST: "/api/v1/admin/plans/get-list",
+        DELETE: "/api/v1/admin/plans/delete",
+        DETAIL: "/api/v1/admin/plans/detail",
+      },
+    },
   },
   USER: {
     APP: {
@@ -108,6 +117,19 @@ const URL_API = {
       V1: {
         LIKE: "/api/v1/user/app-like/like",
         DISLIKE: "/api/v1/user/app-like/dislike",
+      },
+    },
+    SUBSCRIPTION: {
+      V1: {
+        GET_PLANS: "/api/v1/user/subscription/plans",
+        CREATE_CHECKOUT: "/api/v1/user/subscription/checkout",
+        GET_CURRENT: "/api/v1/user/subscription/current",
+        CANCEL: "/api/v1/user/subscription/cancel",
+        REACTIVATE: "/api/v1/user/subscription/reactivate",
+        GET_PAYMENT_HISTORY: "/api/v1/user/subscription/payment-history",
+        CREATE_BILLING_PORTAL: "/api/v1/user/subscription/billing-portal",
+        CHECK_STATUS: "/api/v1/user/subscription/status",
+        VERIFY_SESSION: "/api/v1/user/subscription/verify-session",
       },
     },
   },
