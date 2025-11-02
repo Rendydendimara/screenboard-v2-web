@@ -3,6 +3,7 @@ import UserAppAPI from "@/api/user/app/api";
 import AppLikeAPI from "@/api/user/appLike/api";
 import UserAuthAPI from "@/api/user/auth/api";
 import CategoryAPI from "@/api/user/category/api";
+import ScreenAPI from "@/api/user/screen/api";
 import { TCategoryRes } from "@/api/user/category/type";
 import { AuthModal } from "@/components/AuthModal";
 import { CompareModal } from "@/components/CompareModal";
@@ -30,12 +31,14 @@ import {
   ArrowLeft,
   Building,
   Calendar,
+  Download,
   ExternalLink,
   GitCompare,
   Globe,
   Grid3X3,
   Heart,
   List,
+  Loader2,
   Monitor,
   Share2,
   Smartphone,
@@ -70,6 +73,7 @@ const AppDetails: React.FC = () => {
   const [isOpenAuth, setIsOpenAuth] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [scrolledCategories, setScrolledCategories] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   const getPlatformIcon = (platform: string) => {
     switch (platform) {
@@ -275,6 +279,40 @@ const AppDetails: React.FC = () => {
     handleAddToCompare(app);
     setShowCompare(true);
   }, [compareApps, app]);
+
+  const handleDownloadScreens = async (categoryId?: string) => {
+    try {
+      setIsDownloading(true);
+
+      const filter: { app?: string; category?: string } = { app: id };
+
+      // If category is selected and not "All", filter by category
+      if (categoryId && selectedScreenCategory !== "All") {
+        filter.category = categoryId;
+      }
+
+      await ScreenAPI.download(filter);
+
+      const categoryName = app?.screens.find(
+        (s) => s.category?._id === categoryId
+      )?.category?.name;
+
+      toast({
+        title: "Download Started",
+        description: categoryName
+          ? `Downloading screens from ${categoryName} category...`
+          : `Downloading all screens from ${app?.name}...`,
+      });
+    } catch (error: any) {
+      toast({
+        title: "Download Failed",
+        description: error.message || "Failed to download screens",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   useEffect(() => {
     getAppDetail();
@@ -520,34 +558,59 @@ const AppDetails: React.FC = () => {
                   </div>
                 </div>
               </div>
-              <div className="flex items-center bg-white rounded-lg p-1 gap-2">
+              <div className="flex items-center gap-2">
+                <div className="flex items-center bg-white rounded-lg p-1 gap-2">
+                  <Button
+                    variant={screenViewMode === "grid" ? "default" : "ghost"}
+                    size="sm"
+                    onClick={() => setScreenViewMode("grid")}
+                    className={clsx(
+                      "h-9 p-3 rounded-[6px]",
+                      screenViewMode === "grid"
+                        ? "bg-[#0F172A]"
+                        : "border border-solid border-[#E2E8F0]"
+                    )}
+                  >
+                    <Grid3X3 className="h-3 w-3" />
+                    Grid
+                  </Button>
+                  <Button
+                    variant={screenViewMode === "list" ? "default" : "ghost"}
+                    size="sm"
+                    onClick={() => setScreenViewMode("list")}
+                    className={clsx(
+                      "h-9 p-3 rounded-[6px]",
+                      screenViewMode === "list"
+                        ? "bg-[#0F172A]"
+                        : "border border-solid border-[#E2E8F0]"
+                    )}
+                  >
+                    <List className="h-3 w-3" />
+                    List
+                  </Button>
+                </div>
+                {/* Download Button */}
                 <Button
-                  variant={screenViewMode === "grid" ? "default" : "ghost"}
+                  variant="outline"
                   size="sm"
-                  onClick={() => setScreenViewMode("grid")}
-                  className={clsx(
-                    "h-9 p-3 rounded-[6px]",
-                    screenViewMode === "grid"
-                      ? "bg-[#0F172A]"
-                      : "border border-solid border-[#E2E8F0]"
-                  )}
+                  onClick={() => {
+                    const categoryId =
+                      selectedScreenCategory !== "All"
+                        ? app?.screens.find(
+                            (s) => s.category?.name === selectedScreenCategory
+                          )?.category?._id
+                        : undefined;
+                    handleDownloadScreens(categoryId);
+                  }}
+                  disabled={isDownloading}
+                  className="h-9 px-3"
                 >
-                  <Grid3X3 className="h-3 w-3" />
-                  Grid
-                </Button>
-                <Button
-                  variant={screenViewMode === "list" ? "default" : "ghost"}
-                  size="sm"
-                  onClick={() => setScreenViewMode("list")}
-                  className={clsx(
-                    "h-9 p-3 rounded-[6px]",
-                    screenViewMode === "list"
-                      ? "bg-[#0F172A]"
-                      : "border border-solid border-[#E2E8F0]"
+                  {isDownloading ? (
+                    <Loader2 className="h-3 w-3 mr-2 animate-spin" />
+                  ) : (
+                    <Download className="h-3 w-3 mr-2" />
                   )}
-                >
-                  <List className="h-3 w-3" />
-                  List
+                  {isDownloading ? "Downloading..." : "Download"}
                 </Button>
               </div>
             </div>
@@ -708,6 +771,20 @@ const AppDetails: React.FC = () => {
                 Share
               </Button>
               <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handleDownloadScreens()}
+                disabled={isDownloading}
+                className="h-10 rounded-[6px] py-[1px] px-[13px] font-normal"
+              >
+                {isDownloading ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <Download className="h-4 w-4" />
+                )}
+                {isDownloading ? "Downloading..." : "Download All"}
+              </Button>
+              <Button
                 size="sm"
                 className="h-10 rounded-[6px] py-[1px] px-[13px] font-normal"
               >
@@ -767,34 +844,59 @@ const AppDetails: React.FC = () => {
                   </div>
                 </div>
               </div>
-              <div className="flex items-center bg-white rounded-lg p-1 gap-2">
+              <div className="flex items-center gap-2">
+                <div className="flex items-center bg-white rounded-lg p-1 gap-2">
+                  <Button
+                    variant={screenViewMode === "grid" ? "default" : "ghost"}
+                    size="sm"
+                    onClick={() => setScreenViewMode("grid")}
+                    className={clsx(
+                      "h-9 p-3 rounded-[6px]",
+                      screenViewMode === "grid"
+                        ? "bg-[#0F172A]"
+                        : "border border-solid border-[#E2E8F0]"
+                    )}
+                  >
+                    <Grid3X3 className="h-3 w-3" />
+                    Grid
+                  </Button>
+                  <Button
+                    variant={screenViewMode === "list" ? "default" : "ghost"}
+                    size="sm"
+                    onClick={() => setScreenViewMode("list")}
+                    className={clsx(
+                      "h-9 p-3 rounded-[6px]",
+                      screenViewMode === "list"
+                        ? "bg-[#0F172A]"
+                        : "border border-solid border-[#E2E8F0]"
+                    )}
+                  >
+                    <List className="h-3 w-3" />
+                    List
+                  </Button>
+                </div>
+                {/* Download Button */}
                 <Button
-                  variant={screenViewMode === "grid" ? "default" : "ghost"}
+                  variant="outline"
                   size="sm"
-                  onClick={() => setScreenViewMode("grid")}
-                  className={clsx(
-                    "h-9 p-3 rounded-[6px]",
-                    screenViewMode === "grid"
-                      ? "bg-[#0F172A]"
-                      : "border border-solid border-[#E2E8F0]"
-                  )}
+                  onClick={() => {
+                    const categoryId =
+                      selectedScreenCategory !== "All"
+                        ? app?.screens.find(
+                            (s) => s.category?.name === selectedScreenCategory
+                          )?.category?._id
+                        : undefined;
+                    handleDownloadScreens(categoryId);
+                  }}
+                  disabled={isDownloading}
+                  className="h-9 px-3"
                 >
-                  <Grid3X3 className="h-3 w-3" />
-                  Grid
-                </Button>
-                <Button
-                  variant={screenViewMode === "list" ? "default" : "ghost"}
-                  size="sm"
-                  onClick={() => setScreenViewMode("list")}
-                  className={clsx(
-                    "h-9 p-3 rounded-[6px]",
-                    screenViewMode === "list"
-                      ? "bg-[#0F172A]"
-                      : "border border-solid border-[#E2E8F0]"
+                  {isDownloading ? (
+                    <Loader2 className="h-3 w-3 mr-2 animate-spin" />
+                  ) : (
+                    <Download className="h-3 w-3 mr-2" />
                   )}
-                >
-                  <List className="h-3 w-3" />
-                  List
+                  {isDownloading ? "Downloading..." : "Download"}
                 </Button>
               </div>
             </div>

@@ -86,6 +86,7 @@ const URL_API = {
     SCREEN: {
       V1: {
         GET_LIST: "/api/v1/user/screen/get-list",
+        DOWNLOAD: "/api/v1/user/screen/download",
       },
     },
     CATEGORY: {

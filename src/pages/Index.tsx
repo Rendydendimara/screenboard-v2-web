@@ -3,6 +3,7 @@ import UserAppAPI from "@/api/user/app/api";
 import AppLikeAPI from "@/api/user/appLike/api";
 import UserAuthAPI from "@/api/user/auth/api";
 import CategoryAPI from "@/api/user/category/api";
+import ScreenAPI from "@/api/user/screen/api";
 import { TCategoryRes } from "@/api/user/category/type";
 import { AppCard } from "@/components/AppCard";
 import { AuthModal } from "@/components/AuthModal";
@@ -37,7 +38,7 @@ import {
 import { RootState } from "@/provider/store";
 import { adapterListAppBEToFEPublic } from "@/utils/adapterBEToFE";
 import clsx from "clsx";
-import { GitCompare, Grid, Heart, List, Search, X } from "lucide-react";
+import { Download, GitCompare, Grid, Heart, List, Loader2, Search, X } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -99,6 +100,7 @@ const Index = () => {
 
   const [isOpenAuth, setIsOpenAuth] = useState(false);
   const [isLoadingGet, setIsLoadingGet] = useState(true);
+  const [isDownloading, setIsDownloading] = useState(false);
   const user = useTypedSelector((state: RootState) => state.auth.user);
   const compareApps = useTypedSelector(
     (state: RootState) => state.compare.compareApps
@@ -272,6 +274,35 @@ const Index = () => {
     if (user) return;
     setIsOpenAuth(true);
   }, [user]);
+
+  const handleDownloadScreens = async () => {
+    try {
+      setIsDownloading(true);
+
+      // Download by category if selected, otherwise prompt user
+      if (selectedCategory) {
+        await ScreenAPI.download({ category: selectedCategory._id });
+        toast({
+          title: "Download Started",
+          description: `Downloading screens from ${selectedCategory.name} category...`,
+        });
+      } else {
+        toast({
+          title: "Select a Category",
+          description: "Please select a category first to download screens.",
+          variant: "destructive",
+        });
+      }
+    } catch (error: any) {
+      toast({
+        title: "Download Failed",
+        description: error.message || "Failed to download screens",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   useEffect(() => {
     getListDataCategory();
@@ -546,6 +577,25 @@ const Index = () => {
                         <span className="sm:hidden lg:inline">List</span>
                       </Button>
                     </div>
+                    {/* Download Button */}
+                    {selectedCategory && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleDownloadScreens}
+                        disabled={isDownloading}
+                        className="flex-1 sm:flex-none"
+                      >
+                        {isDownloading ? (
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        ) : (
+                          <Download className="h-4 w-4 mr-2 sm:mr-0 lg:mr-2" />
+                        )}
+                        <span className="sm:hidden lg:inline">
+                          {isDownloading ? "Downloading..." : "Download"}
+                        </span>
+                      </Button>
+                    )}
                   </div>
                 </div>
               </div>
@@ -605,6 +655,25 @@ const Index = () => {
                     <span className="sm:hidden lg:inline">List</span>
                   </Button>
                 </div>
+                {/* Download Button */}
+                {selectedCategory && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleDownloadScreens}
+                    disabled={isDownloading}
+                    className="flex-1 sm:flex-none"
+                  >
+                    {isDownloading ? (
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    ) : (
+                      <Download className="h-4 w-4 mr-2 sm:mr-0 lg:mr-2" />
+                    )}
+                    <span className="sm:hidden lg:inline">
+                      {isDownloading ? "Downloading..." : "Download"}
+                    </span>
+                  </Button>
+                )}
               </div>
             </div>
 
