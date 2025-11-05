@@ -29,7 +29,7 @@ import {
 import { RootState } from "@/provider/store";
 import { adapterListAppBEToFEPublic } from "@/utils/adapterBEToFE";
 import { GitCompare, Heart, Search } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import clsx from "clsx";
 
@@ -262,6 +262,13 @@ const FavoritesPage = () => {
     setIsOpenAuth(true);
   }, [user]);
 
+  const getListCategoryFiltered = useMemo(() => {
+    const categoriesApp = listApp.map((app) => app.category._id);
+    return categories.filter((cat) => {
+      return categoriesApp.includes(cat._id);
+    });
+  }, [categories, listApp]);
+
   useEffect(() => {
     getListDataCategory();
   }, []);
@@ -274,8 +281,8 @@ const FavoritesPage = () => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 80);
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
@@ -340,11 +347,7 @@ const FavoritesPage = () => {
                   )}
                   {user && (
                     <Link to="/subscription">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="relative"
-                      >
+                      <Button variant="ghost" size="sm" className="relative">
                         <svg
                           width="16"
                           height="16"
@@ -524,7 +527,7 @@ const FavoritesPage = () => {
           onRemoveApp={handleRemoveFromCompare}
           onAddApp={handleAddToCompare}
           availableApps={listApp}
-          categories={categories}
+          categories={getListCategoryFiltered}
         />
 
         <AuthModal

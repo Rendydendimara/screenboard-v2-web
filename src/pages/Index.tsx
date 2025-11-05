@@ -38,7 +38,17 @@ import {
 import { RootState } from "@/provider/store";
 import { adapterListAppBEToFEPublic } from "@/utils/adapterBEToFE";
 import clsx from "clsx";
-import { Download, GitCompare, Grid, Heart, List, Loader2, Search, X } from "lucide-react";
+import {
+  Download,
+  GitCompare,
+  Grid,
+  Heart,
+  List,
+  Loader2,
+  Search,
+  X,
+  Zap,
+} from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -304,6 +314,13 @@ const Index = () => {
     }
   };
 
+  const getListCategoryFiltered = useMemo(() => {
+    const categoriesApp = listApp.map((app) => app.category._id);
+    return categories.filter((cat) => {
+      return categoriesApp.includes(cat._id);
+    });
+  }, [categories, listApp]);
+
   useEffect(() => {
     getListDataCategory();
   }, []);
@@ -407,11 +424,7 @@ const Index = () => {
                   )}
                   {user && (
                     <Link to="/subscription">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="relative"
-                      >
+                      <Button variant="ghost" size="sm" className="relative">
                         <svg
                           width="16"
                           height="16"
@@ -539,7 +552,7 @@ const Index = () => {
               >
                 <div className="container w-full flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    {categories.map((cat, i) => (
+                    {getListCategoryFiltered.map((cat, i) => (
                       <div
                         onClick={() => handleChangeCategory(cat._id)}
                         className={clsx(
@@ -578,7 +591,7 @@ const Index = () => {
                       </Button>
                     </div>
                     {/* Download Button */}
-                    {selectedCategory && (
+                    {/* {selectedCategory && (
                       <Button
                         variant="outline"
                         size="sm"
@@ -595,7 +608,7 @@ const Index = () => {
                           {isDownloading ? "Downloading..." : "Download"}
                         </span>
                       </Button>
-                    )}
+                    )} */}
                   </div>
                 </div>
               </div>
@@ -610,7 +623,7 @@ const Index = () => {
         {/* Main Content */}
         <main className="container px-4 py-6 md:px-0 md:py-8 lg:py-12">
           {/* Search and Filters - Mobile Responsive */}
-          <div className="mb-8 lg:mb-12">
+          <div className="mb-6">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 lg:gap-6">
               {/* Search Bar - Desktop */}
               <div
@@ -656,7 +669,7 @@ const Index = () => {
                   </Button>
                 </div>
                 {/* Download Button */}
-                {selectedCategory && (
+                {/* {selectedCategory && (
                   <Button
                     variant="outline"
                     size="sm"
@@ -673,7 +686,7 @@ const Index = () => {
                       {isDownloading ? "Downloading..." : "Download"}
                     </span>
                   </Button>
-                )}
+                )} */}
               </div>
             </div>
 
@@ -720,15 +733,26 @@ const Index = () => {
           </div>
 
           {/* Category Filter */}
-          <div className="flex items-center gap-4 mb-4">
-            {categories.map((cat, i) => (
+          <div className="flex items-center gap-3 mb-4">
+            <div
+              onClick={() => setSelectedCategory(null)}
+              className={clsx(
+                "hover:cursor-pointer gap-[10px] px-3 py-1 rounded-[12px] border border-solid border-[#E2E8F0] font-[Inter] text-body-4 leading-[20px] tracking-[-0.2%] align-middle",
+                !selectedCategory
+                  ? "bg-[#0F172A] text-white font-semibold"
+                  : " text-[#565D61] font-normal"
+              )}
+            >
+              All
+            </div>
+            {getListCategoryFiltered.map((cat, i) => (
               <div
                 onClick={() => handleChangeCategory(cat._id)}
                 className={clsx(
-                  "hover:cursor-pointer gap-[10px] px-[16px] py-[8px] rounded-[12px] border border-solid border-[rgba(167,170,172,1)] font-[Inter] font-semibold text-[14px] leading-[20px] tracking-[-0.2%] align-middle",
+                  "hover:cursor-pointer gap-[10px] px-3 py-1 rounded-[12px] border border-solid border-[#E2E8F0] font-[Inter] text-body-4 leading-[20px] tracking-[-0.2%] align-middle",
                   cat._id === selectedCategory?._id
-                    ? "bg-[#0F172A] text-white"
-                    : " text-[#565D61]"
+                    ? "bg-[#0F172A] text-white font-semibold"
+                    : " text-[#565D61] font-normal"
                 )}
                 key={i}
               >
@@ -783,51 +807,25 @@ const Index = () => {
                   )}
                 >
                   <div className="flex flex-col w-full gap-[25px] absolute bottom-16">
-                    <div className="flex flex-col gap-3 items-center">
-                      <h5 className="font-['Inter'] font-black text-[32px] md:text-[80px] leading-[125%] tracking-[0%] text-center bg-gradient-to-r from-slate-900 via-blue-800 to-purple-800 bg-clip-text text-transparent">
-                        Join and get more inspiration from real product
-                      </h5>
-                      <p className="font-[Inter] font-semibold text:[16px] md:text-[20px] leading-[155%] tracking-[0%] align-middle">
-                        We believe real design give more sense to your design
-                        process
-                      </p>
-                      <Button
-                        variant={viewMode === "grid" ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => setIsOpenAuth(true)}
-                        className="w-[163px] gap-2 h-[48px] bg-[linear-gradient(90deg,_#2563EB_0%,_#9333EA_100%)] [box-shadow:0px_10px_15px_-3px_rgba(0,_0,_0,_0.1),_0px_4px_6px_-4px_rgba(0,_0,_0,_0.1)] rounded-[6px] font-[Inter] font-bold text-[17.6px] leading-[28px] tracking-[0%] text-center align-middle"
-                      >
-                        <div className="w-6 h-4">
-                          <svg
-                            width="25"
-                            height="16"
-                            viewBox="0 0 25 16"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <g clip-path="url(#clip0_13_1021)">
-                              <path
-                                d="M3.16674 9.33328C3.04059 9.33371 2.9169 9.29833 2.81005 9.23126C2.70319 9.1642 2.61757 9.06818 2.56311 8.95438C2.50865 8.84059 2.4876 8.71367 2.50241 8.58838C2.51721 8.4631 2.56726 8.34459 2.64674 8.24661L9.24674 1.44661C9.29625 1.38947 9.36372 1.35085 9.43806 1.3371C9.51241 1.32335 9.58923 1.33529 9.6559 1.37095C9.72257 1.40661 9.77513 1.46388 9.80497 1.53335C9.8348 1.60283 9.84013 1.68038 9.82008 1.75328L8.54008 5.76661C8.50233 5.86763 8.48966 5.97629 8.50314 6.08328C8.51662 6.19028 8.55585 6.2924 8.61747 6.3809C8.67909 6.46939 8.76126 6.54162 8.85693 6.59139C8.95259 6.64115 9.05891 6.66696 9.16674 6.66661H13.8334C13.9596 6.66618 14.0833 6.70156 14.1901 6.76863C14.297 6.8357 14.3826 6.93171 14.437 7.04551C14.4915 7.15931 14.5125 7.28622 14.4977 7.41151C14.4829 7.53679 14.4329 7.65531 14.3534 7.75328L7.75341 14.5533C7.7039 14.6104 7.63644 14.649 7.56209 14.6628C7.48774 14.6765 7.41093 14.6646 7.34426 14.6289C7.27759 14.5933 7.22502 14.536 7.19519 14.4665C7.16535 14.3971 7.16002 14.3195 7.18008 14.2466L8.46008 10.2333C8.49782 10.1323 8.5105 10.0236 8.49702 9.91661C8.48354 9.80962 8.4443 9.70749 8.38268 9.619C8.32106 9.5305 8.23889 9.45827 8.14323 9.40851C8.04756 9.35874 7.94125 9.33293 7.83341 9.33328H3.16674Z"
-                                stroke="white"
-                                stroke-width="1.33333"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                              />
-                            </g>
-                            <defs>
-                              <clipPath id="clip0_13_1021">
-                                <rect
-                                  width="16"
-                                  height="16"
-                                  fill="white"
-                                  transform="translate(0.5)"
-                                />
-                              </clipPath>
-                            </defs>
-                          </svg>
+                    <div className="flex justify-center items-center w-full">
+                      <div className="flex flex-col gap-3 items-center w-full md:w-[889px]">
+                        <h5 className="font-['Inter'] font-semibold text-[32px] md:text-[64px] leading-[125%] tracking-[0%] text-center bg-gradient-to-r from-slate-900 via-blue-800 to-purple-800 bg-clip-text text-transparent">
+                          Join and get more inspiration from real product
+                        </h5>
+                        <p className="font-[Inter] font-normal text:[16px] md:text-[20px] text-[#464C4F] leading-[155%] tracking-[0%] align-middle">
+                          We believe real design give more sense to your design
+                          process
+                        </p>
+                        <div
+                          onClick={() => setIsOpenAuth(true)}
+                          className="flex justify-center mb-6 lg:mb-8 hover:!cursor-pointer z-[10]"
+                        >
+                          <Badge className="bg-gradient-to-r from-blue-500 to-purple-600 text-white border-0 px-8 py-3 text-sm font-[Inter] font-bold text-[17.6px] leading-[28px] tracking-[0%] text-center align-middle">
+                            <Zap className="h-4 w-4 mr-1" />
+                            Join to Unlock Everything
+                          </Badge>
                         </div>
-                        Sign Up
-                      </Button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -845,7 +843,7 @@ const Index = () => {
           onRemoveApp={handleRemoveFromCompare}
           onAddApp={handleAddToCompare}
           availableApps={listApp}
-          categories={categories}
+          categories={getListCategoryFiltered}
         />
 
         <AuthModal

@@ -44,9 +44,11 @@ import {
   Smartphone,
   Star,
 } from "lucide-react";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { AppPublic, ScreenPublic } from "./Index";
+import { Tooltip } from "@/components/ui/tooltip";
+import { TooltipContent, TooltipTrigger } from "@radix-ui/react-tooltip";
 
 const AppDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -314,6 +316,13 @@ const AppDetails: React.FC = () => {
     }
   };
 
+  const getListCategoryFiltered = useMemo(() => {
+    const categoriesApp = listApp.map((app) => app.category._id);
+    return categories.filter((cat) => {
+      return categoriesApp.includes(cat._id);
+    });
+  }, [categories, listApp]);
+
   useEffect(() => {
     getAppDetail();
   }, [user]);
@@ -419,11 +428,7 @@ const AppDetails: React.FC = () => {
                 )}
                 {user && (
                   <Link to="/subscription">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="relative"
-                    >
+                    <Button variant="ghost" size="sm" className="relative">
                       <svg
                         width="16"
                         height="16"
@@ -619,7 +624,7 @@ const AppDetails: React.FC = () => {
                   </Button>
                 </div>
                 {/* Download Button */}
-                <Button
+                {/* <Button
                   variant="outline"
                   size="sm"
                   onClick={() => {
@@ -640,7 +645,7 @@ const AppDetails: React.FC = () => {
                     <Download className="h-3 w-3 mr-2" />
                   )}
                   {isDownloading ? "Downloading..." : "Download"}
-                </Button>
+                </Button> */}
               </div>
             </div>
           </div>
@@ -691,34 +696,40 @@ const AppDetails: React.FC = () => {
                           fill="#475569"
                         />
                       </svg>
-                      <span>{app.countries.join(", ")}</span>
+
+                      <Tooltip delayDuration={0}>
+                        <TooltipTrigger asChild>
+                          <span
+                            className="font-['Inter'] not-italic font-normal text-[13.3px] leading-[20px] items-center text-[#64748B]  overflow-hidden 
+            text-ellipsis 
+            break-words 
+            [display:-webkit-box] 
+            [-webkit-line-clamp:1] 
+            [-webkit-box-orient:vertical]"
+                          >
+                            {`${
+                              app.countries.join(", ").length > 50
+                                ? `${app.countries
+                                    .join(", ")
+                                    .substring(0, 50)}...`
+                                : app.countries.join(", ")
+                            }`}
+                          </span>
+                        </TooltipTrigger>
+                        <TooltipContent
+                          side="bottom"
+                          align="center"
+                          hidden={app.countries.join(", ").length < 50}
+                          children={
+                            <p className="font-['Inter'] not-italic font-normal text-[13.3px] leading-[20px] items-center text-white bg-black">
+                              {app.countries.join(", ")}
+                            </p>
+                          }
+                        />
+                      </Tooltip>
                     </div>
                   ) : null}
                 </div>
-                {app.countries && app.countries.length > 0 && (
-                  <div className="flex items-start gap-2 mt-3">
-                    <Globe className="h-4 w-4 text-slate-600 mt-0.5" />
-                    <div className="flex flex-wrap gap-1.5">
-                      {app.countries.map((countryName) => {
-                        const country = COUNTRIES.find(
-                          (c) => c.name === countryName
-                        );
-                        if (!country) return null;
-                        return (
-                          <div
-                            key={countryName}
-                            className="inline-flex items-center gap-1 px-2 py-0.5 bg-white/80 backdrop-blur-sm rounded-md text-xs border border-slate-200"
-                          >
-                            <span className="text-base">{country.flag}</span>
-                            <span className="text-slate-700">
-                              {country.name}
-                            </span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
                 <div className="flex items-start justify-start gap-2 mt-3 flex-wrap">
                   <Badge
                     variant="outline"
@@ -799,7 +810,7 @@ const AppDetails: React.FC = () => {
                 <Share2 className="h-4 w-4" />
                 Share
               </Button>
-              <Button
+              {/* <Button
                 variant="outline"
                 size="sm"
                 onClick={() => handleDownloadScreens()}
@@ -812,7 +823,7 @@ const AppDetails: React.FC = () => {
                   <Download className="h-4 w-4" />
                 )}
                 {isDownloading ? "Downloading..." : "Download All"}
-              </Button>
+              </Button> */}
               <Button
                 size="sm"
                 className="h-10 rounded-[6px] py-[1px] px-[13px] font-normal"
@@ -905,7 +916,7 @@ const AppDetails: React.FC = () => {
                   </Button>
                 </div>
                 {/* Download Button */}
-                <Button
+                {/* <Button
                   variant="outline"
                   size="sm"
                   onClick={() => {
@@ -926,7 +937,7 @@ const AppDetails: React.FC = () => {
                     <Download className="h-3 w-3 mr-2" />
                   )}
                   {isDownloading ? "Downloading..." : "Download"}
-                </Button>
+                </Button> */}
               </div>
             </div>
             {/* Screens Grid/List/Horizontal */}
@@ -1048,7 +1059,7 @@ const AppDetails: React.FC = () => {
           onRemoveApp={handleRemoveFromCompare}
           onAddApp={handleAddToCompare}
           availableApps={listApp}
-          categories={categories}
+          categories={getListCategoryFiltered}
         />
       </div>
 

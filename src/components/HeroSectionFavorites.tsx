@@ -2,7 +2,7 @@ import React from "react";
 
 export const HeroSectionFavorites: React.FC = () => {
   return (
-    <section className="py-10 md:py-12 lg:py-20 container px-4 md:px-0">
+    <section className="py-10 md:py-12 lg:py-20 container px-4 md:px-0 ">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-10 left-10 w-20 h-20 bg-blue-500 rounded-full blur-xl animate-pulse"></div>
@@ -13,7 +13,7 @@ export const HeroSectionFavorites: React.FC = () => {
       <div className="w-full">
         <div className="w-full md:w-[897px] flex flex-col items-start gap-4 md:gap-8">
           {/* Main Heading */}
-          <h1 className="h-auto md:h-[152px] leading-[32px] text-[32px] md:text-[72px] font-bold bg-gradient-to-r from-slate-900 via-blue-800 to-purple-800 bg-clip-text text-transparent md:leading-[72px] !tracking-[0%] align-middle">
+          <h1 className="h-auto  leading-[32px] text-[32px] md:text-[72px] font-bold bg-gradient-to-r from-slate-900 via-blue-800 to-purple-800 bg-clip-text text-transparent md:leading-[72px] !tracking-[0%] align-middle">
             Your Favorites{" "}
           </h1>
         </div>

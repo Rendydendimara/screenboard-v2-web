@@ -61,7 +61,7 @@ const ScrollGallery = ({
               src={screen.image}
               alt={screen.name}
               className={clsx(
-                "rounded-[8px] group-hover:scale-105 transition-transform hover:cursor-pointer",
+                "rounded-[8px]", //  group-hover:scale-105 transition-transform hover:cursor-pointer
                 viewMode === "grid"
                   ? "w-[328px] h-[723px]"
                   : "w-[205px] h-[453px]"

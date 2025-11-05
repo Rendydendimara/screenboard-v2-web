@@ -9,7 +9,7 @@ export const HeroSection: React.FC = ({
   handleStartExploring: () => void;
 }) => {
   return (
-    <section className="py-10 md:py-12 lg:py-20 container px-4 md:px-0">
+    <section className="py-10 md:py-12 lg:py-20 container px-4 md:px-0 !pb-8">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-10 left-10 w-20 h-20 bg-blue-500 rounded-full blur-xl animate-pulse"></div>
@@ -21,13 +21,12 @@ export const HeroSection: React.FC = ({
         <div className="w-full md:w-[897px] flex flex-col items-start gap-4 md:gap-8">
           {/* Main Heading */}
           <h1 className="h-auto md:h-[152px] leading-[32px] text-[32px] md:text-[72px] font-bold bg-gradient-to-r from-slate-900 via-blue-800 to-purple-800 bg-clip-text text-transparent md:leading-[72px] !tracking-[0%] align-middle">
-            Simple Site That Enhance Design Journey
+            Study Real UI Patterns from Real Apps
           </h1>
           {/* Subtitle */}
           <p className="font-normal text-[20px] leading-[150%]  md:text-xl text-[#475569] font-[Inter] mg:!leading-[32px] tracking-[0%] align-middle w-full md:w-[897px]">
-            Explore thousands of carefully curated mobile applications.
-            Comparefeatures, discover UI patterns, and find inspiration for your
-            next project.
+            Analyze hundreds of design examples. Register now to unlock complete
+            app screens and learn from the best.
           </p>
           {/* Badge */}
           <div
@@ -35,8 +34,8 @@ export const HeroSection: React.FC = ({
             className="flex justify-center mb-6 lg:mb-8 hover:!cursor-pointer z-[10]"
           >
             <Badge className="bg-gradient-to-r from-blue-500 to-purple-600 text-white border-0 px-8 py-3 text-sm font-[Inter] font-bold text-[17.6px] leading-[28px] tracking-[0%] text-center align-middle">
-              <Zap className="h-5 w-5 mr-4" />
-              Start Exploring
+              <Zap className="h-4 w-4 mr-1" />
+              Join to Unlock Everything
             </Badge>
           </div>
         </div>

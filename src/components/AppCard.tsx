@@ -51,7 +51,7 @@ export const AppCard: React.FC<AppCardProps> = ({
   if (viewMode === "list") {
     return (
       <div className="group bg-white rounded-2xl border border-slate-200 hover:border-slate-300 transition-all duration-300 hover:shadow-xl  overflow-hidden">
-        <div className="flex p-4 lg:p-6">
+        <div className="flex p-4 lg:p-5">
           <div
             onClick={onDetail}
             className="flex-shrink-0 mr-4 lg:mr-6 hover:cursor-pointer"
@@ -198,7 +198,7 @@ export const AppCard: React.FC<AppCardProps> = ({
   }
 
   return (
-    <div className="w-full py-6 gap-4 flex-col flex min-h-[680px] bg-[#FFFFFF] border-[1px] border-[solid] border-[#E2E8F0] rounded-[24px]">
+    <div className="w-full py-5 gap-4 flex-col flex min-h-[680px] bg-[#FFFFFF] border-[1px] border-[solid] border-[#E2E8F0] rounded-[24px]">
       <div className="flex flex-col items-start gap-5 px-4">
         <div
           className="flex items-center gap-6 w-full hover:cursor-pointer relative"
@@ -315,7 +315,14 @@ export const AppCard: React.FC<AppCardProps> = ({
                         fill="#475569"
                       />
                     </svg>
-                    <span className="font-['Inter'] not-italic font-normal text-[13.3px] leading-[20px] flex items-center text-[#64748B]">
+                    <span
+                      className="font-['Inter'] not-italic font-normal text-[13.3px] leading-[20px] items-center text-[#64748B]  overflow-hidden 
+            text-ellipsis 
+            break-words 
+            [display:-webkit-box] 
+            [-webkit-line-clamp:1] 
+            [-webkit-box-orient:vertical]"
+                    >
                       {app.countries.join(", ")}
                     </span>
                   </div>
