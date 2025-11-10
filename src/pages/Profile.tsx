@@ -199,9 +199,10 @@ export default function Profile() {
               : 'bg-white shadow-sm'
           )}
         >
-          <div className="px-0">
-            <div className="container flex items-center justify-between h-16 lg:h-20 px-4 md:px-6 lg:px-0">
-              {/* Logo */}
+          <div className="w-full flex justify-center items-center">
+            <div className="w-full max-w-[1200px]">
+              <div className="flex items-center justify-between h-16 lg:h-20 px-4 md:px-0">
+                {/* Logo */}
               <Link to="/" className="flex items-center space-x-2">
                 <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
                   <span className="text-white font-bold text-sm lg:text-base">
@@ -364,13 +365,15 @@ export default function Profile() {
                   </div>
                 )}
               </div>
+              </div>
             </div>
           </div>
         </header>
 
         {/* Main Content */}
-        <div className="pt-24 lg:pt-28">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="w-full flex justify-center items-center">
+          <div className="w-full max-w-[1200px]">
+            <div className="pt-24 lg:pt-28 px-4 md:px-0 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column - User Info */}
           <div className="lg:col-span-1 space-y-6">
@@ -627,6 +630,7 @@ export default function Profile() {
             )}
           </div>
         </div>
+            </div>
           </div>
         </div>
 

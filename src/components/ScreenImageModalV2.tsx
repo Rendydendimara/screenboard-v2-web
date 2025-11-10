@@ -59,6 +59,8 @@ export const ScreenImageModalV2: React.FC<ScreenImageModalProps> = ({
   const { addToHistory } = useScreenHistory();
   const { toast } = useToast();
   const boxRef = useRef<HTMLDivElement | null>(null);
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+  const screenRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   const [widthContent, setWidthContent] = useState<number>(0);
 
   const currentIndex = allScreens.findIndex((s) => s.id === screen.id);
@@ -91,6 +93,32 @@ export const ScreenImageModalV2: React.FC<ScreenImageModalProps> = ({
     return () => window.removeEventListener("resize", updateWidth);
   }, [boxRef.current]);
 
+  // Auto scroll to active item
+  useEffect(() => {
+    if (!isOpen) return;
+
+    // Wait for DOM to be ready
+    const scrollToActive = () => {
+      const activeItem = screenRefs.current[screen.id];
+
+      if (activeItem) {
+        // Use scrollIntoView for more reliable scrolling
+        activeItem.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "center",
+        });
+      }
+    };
+
+    // Try with a single appropriate delay
+    const timer = setTimeout(scrollToActive, 250);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [isOpen, screen.id]);
+
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
@@ -110,11 +138,17 @@ export const ScreenImageModalV2: React.FC<ScreenImageModalProps> = ({
             </div>
           </DialogHeader>
           <div
-            className="flex w-full overflow-x-auto space-x-4"
+            ref={scrollContainerRef}
+            className="flex w-full overflow-x-auto space-x-4 scroll-smooth"
             style={{ maxWidth: `${widthContent - 50}px` }}
           >
             {allScreens.map((screenItem) => (
-              <div key={screenItem.id}>
+              <div
+                key={screenItem.id}
+                ref={(el) => {
+                  screenRefs.current[screenItem.id] = el;
+                }}
+              >
                 <Tooltip delayDuration={0}>
                   <TooltipTrigger asChild>
                     <p

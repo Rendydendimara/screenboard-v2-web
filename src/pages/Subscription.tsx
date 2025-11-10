@@ -97,9 +97,10 @@ export default function Subscription() {
               : 'bg-white shadow-sm'
           )}
         >
-          <div className="px-0">
-            <div className="container flex items-center justify-between h-16 lg:h-20 px-4 md:px-6 lg:px-0">
-              {/* Logo */}
+          <div className="w-full flex justify-center items-center">
+            <div className="w-full max-w-[1200px]">
+              <div className="flex items-center justify-between h-16 lg:h-20 px-4 md:px-0">
+                {/* Logo */}
               <Link to="/" className="flex items-center space-x-2">
                 <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
                   <span className="text-white font-bold text-sm lg:text-base">
@@ -263,14 +264,15 @@ export default function Subscription() {
                   </div>
                 )}
               </div>
+              </div>
             </div>
           </div>
         </header>
 
         {/* Main Content */}
-        <main className="pt-24 lg:pt-28">
-          <div className="container mx-auto py-8 px-4">
-            <div className="max-w-6xl mx-auto">
+        <div className="w-full flex justify-center items-center">
+          <div className="w-full max-w-[1200px]">
+            <main className="pt-24 lg:pt-28 px-4 md:px-0 py-8">
               <h1 className="text-4xl font-bold mb-8">Subscription</h1>
 
               <Tabs defaultValue={currentSubscription ? 'manage' : 'plans'} className="w-full">
@@ -291,9 +293,9 @@ export default function Subscription() {
                   <SubscriptionManager />
                 </TabsContent>
               </Tabs>
-            </div>
+            </main>
           </div>
-        </main>
+        </div>
       </div>
 
       {/* Auth Modal */}

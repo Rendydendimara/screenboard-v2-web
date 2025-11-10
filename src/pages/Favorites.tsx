@@ -302,9 +302,10 @@ const FavoritesPage = () => {
                 : "bg-transparent"
             )}
           >
-            <div className="px-0">
-              <div className="container flex items-center justify-between h-16 lg:h-20 px-4 md:px-6 lg:px-0">
-                {/* Logo */}
+            <div className="w-full flex justify-center items-center">
+              <div className="w-full max-w-[1200px]">
+                <div className="flex items-center justify-between h-16 lg:h-20 px-4 md:px-0">
+                  {/* Logo */}
                 <Link to="/" className="flex items-center space-x-2">
                   <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
                     <span className="text-white font-bold text-sm lg:text-base">
@@ -464,6 +465,7 @@ const FavoritesPage = () => {
                     </div>
                   )}
                 </div>
+                </div>
               </div>
             </div>
           </header>
@@ -474,7 +476,9 @@ const FavoritesPage = () => {
           </div>
         </section>
         {/* Main Content */}
-        <main className="container px-4 py-6 md:px-0 md:py-8 lg:py-12">
+        <div className="w-full flex justify-center items-center">
+          <div className="w-full max-w-[1200px]">
+            <main className="px-4 py-6 md:px-0 md:py-8 lg:py-12">
           {/* Apps Grid/List - Responsive */}
           {filteredApps.length === 0 ? (
             <div className="text-center py-12 lg:py-20">
@@ -516,7 +520,9 @@ const FavoritesPage = () => {
               </div>
             </div>
           )}
-        </main>
+            </main>
+          </div>
+        </div>
 
         {/* Modals */}
         <CompareModal

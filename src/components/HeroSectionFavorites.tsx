@@ -10,12 +10,16 @@ export const HeroSectionFavorites: React.FC = () => {
         <div className="absolute bottom-20 left-1/3 w-24 h-24 bg-indigo-500 rounded-full blur-xl animate-pulse delay-500"></div>
       </div>
 
-      <div className="w-full">
-        <div className="w-full md:w-[897px] flex flex-col items-start gap-4 md:gap-8">
-          {/* Main Heading */}
-          <h1 className="h-auto  leading-[32px] text-[32px] md:text-[72px] font-bold bg-gradient-to-r from-slate-900 via-blue-800 to-purple-800 bg-clip-text text-transparent md:leading-[72px] !tracking-[0%] align-middle">
-            Your Favorites{" "}
-          </h1>
+      <div className="w-full flex justify-center items-center">
+        <div className="w-full max-w-[1200px]">
+          <div className="w-full">
+            <div className="w-full md:w-[897px] flex flex-col items-start gap-4 md:gap-8">
+              {/* Main Heading */}
+              <h1 className="h-auto  leading-[32px] text-[32px] md:text-[72px] font-bold bg-gradient-to-r from-slate-900 via-blue-800 to-purple-800 bg-clip-text text-transparent md:leading-[72px] !tracking-[0%] align-middle">
+                Your Favorites
+              </h1>
+            </div>
+          </div>
         </div>
       </div>
 
