@@ -377,7 +377,6 @@ export const AdminComponentManager: React.FC<AdminComponentManagerProps> = ({
     setSelectedImageIndex((prev) => {
       const newIndex =
         prev > 0 ? prev - 1 : selectedComponentScreens.length - 1;
-      console.log("Prev clicked, new index:", newIndex);
       return newIndex;
     });
   }, [selectedComponentScreens.length]);
@@ -386,7 +385,6 @@ export const AdminComponentManager: React.FC<AdminComponentManagerProps> = ({
     setSelectedImageIndex((prev) => {
       const newIndex =
         prev < selectedComponentScreens.length - 1 ? prev + 1 : 0;
-      console.log("Next clicked, new index:", newIndex);
       return newIndex;
     });
   }, [selectedComponentScreens.length]);

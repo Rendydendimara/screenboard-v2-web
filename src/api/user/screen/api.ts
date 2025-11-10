@@ -15,9 +15,6 @@ const getAll = async (data?: { app: string }) => {
 
 const download = async (filter: { category?: string; app?: string }) => {
   try {
-    console.log("=== Frontend Download Started ===");
-    console.log("Filter:", filter);
-
     const params = new URLSearchParams();
     if (filter.category) params.append("category", filter.category);
     if (filter.app) params.append("app", filter.app);
@@ -28,28 +25,24 @@ const download = async (filter: { category?: string; app?: string }) => {
     // Get token from localStorage for authenticated downloads
     const token = localStorage.getItem("screenboard-token");
     const headers: any = {
-      'Cache-Control': 'no-cache',
-      'Pragma': 'no-cache'
+      "Cache-Control": "no-cache",
+      Pragma: "no-cache",
     };
 
     if (token) {
       headers["screenboard-token"] = token;
     }
 
-    const requestUrl = `${URL_API.USER.SCREEN.V1.DOWNLOAD}?${params.toString()}`;
-    console.log("Request URL:", requestUrl);
+    const requestUrl = `${
+      URL_API.USER.SCREEN.V1.DOWNLOAD
+    }?${params.toString()}`;
 
     const response = await axiosInstanceNoAuth.get(requestUrl, {
       headers,
-      responseType: 'blob', // Important for binary data
+      responseType: "blob", // Important for binary data
     });
 
-    console.log("Response status:", response.status);
-    console.log("Response headers:", response.headers);
-
-    const blob = new Blob([response.data], { type: 'application/zip' });
-    console.log("Blob size:", blob.size, "bytes");
-    console.log("Blob type:", blob.type);
+    const blob = new Blob([response.data], { type: "application/zip" });
 
     // Create download link
     const url = window.URL.createObjectURL(blob);
@@ -68,7 +61,6 @@ const download = async (filter: { category?: string; app?: string }) => {
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
 
-    console.log("Download completed successfully");
     return { success: true };
   } catch (error: any) {
     console.error("Download error:", error);

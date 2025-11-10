@@ -259,7 +259,7 @@ export const AppCard: React.FC<AppCardProps> = ({
             </p>
           </div>
           <div className="flex flex-row justify-between w-full items-center gap-[8px]">
-            <div className="flex items-center w-full justify-between gap-4">
+            <div className="flex items-center w-full justify-between gap-4 flex-col md:flex-row">
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-1">
                   <svg
