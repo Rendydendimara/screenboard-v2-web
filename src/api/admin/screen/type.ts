@@ -1,3 +1,5 @@
+import { BulkFileItem } from "@/components/AdminScreenshotManager";
+
 export type TScreenPost = {
   app: string;
   name: string;
@@ -31,5 +33,5 @@ export type TScreenPostBulk = {
   app: string;
   category: string;
   modul: string;
-  screens: File[];
+  screens: BulkFileItem[]; //File[];
 };

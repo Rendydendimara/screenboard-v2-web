@@ -29,7 +29,7 @@ import { TSelect, UploadImageType } from "@/types";
 import { formatFileSize, getImageUrlFromFile } from "@/utils";
 import { adapterListScreenBEToFE } from "@/utils/adapterBEToFE";
 import { processMultipleImages } from "@/utils/colorExtraction";
-import { FolderOpen, Palette, Plus, Trash2, Upload } from "lucide-react";
+import { FolderOpen, Palette, Pencil, Plus, Trash2, Upload } from "lucide-react";
 import React, {
   useCallback,
   useEffect,
@@ -62,6 +62,11 @@ export interface Screenshot {
   dominantColor?: string;
 }
 
+export interface BulkFileItem {
+  file: File;
+  name: string;
+}
+
 interface AdminScreenshotManagerProps {
   appId?: string;
   isHideCategory?: boolean;
@@ -75,12 +80,13 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
 }) => {
   const [screenshots, setScreenshots] = useState<Screenshot[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isBulkUploadOpen, setIsBulkUploadOpen] = useState(false);
   const [selectedApp, setSelectedApp] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [selectedModul, setSelectedModul] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState("");
-  const [bulkFiles, setBulkFiles] = useState<File[]>([]);
+  const [bulkFiles, setBulkFiles] = useState<BulkFileItem[]>([]);
   const [isProcessingColors, setIsProcessingColors] = useState(false);
   const [colorProcessingProgress, setColorProcessingProgress] = useState({
     current: 0,
@@ -102,6 +108,8 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
   const [editingScreen, setEditingScreen] = useState<Screenshot | null>(null);
   const [selectedModuleFilter, setSelectedModulFilter] =
     useState<TSelect | null>(null);
+  const [selectedCategoryFilter, setSelectedCategoryFilter] =
+    useState<TSelect | null>(null);
   const [categories, setCategories] = useState<TScreenCategoryRes[]>([]);
   const [activeTab, setActiveTab] = useState<"category" | "screenshots">(
     "screenshots"
@@ -116,13 +124,21 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
     module: "",
   });
 
+  const [editFormData, setEditFormData] = useState({
+    id: "",
+    name: "",
+    category: "",
+    appId: "",
+    module: "",
+  });
+
   // Filter screenshots by appId if provided
   const displayedScreenshots = appId
     ? screenshots.filter((screenshot) => String(screenshot.appId) === appId)
     : screenshots;
 
   const handleFileSelect = (imageFiles: any) => {
-    const files: any = Array.from(imageFiles || []);
+    const files: File[] = Array.from(imageFiles || []);
     if (files.length + bulkFiles.length > MAX_FILE_BULK_UPLOAD) {
       toast({
         title: "Max image limit",
@@ -132,7 +148,11 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
 
       return;
     }
-    setBulkFiles((prev) => [...prev, ...files]);
+    const newBulkFiles: BulkFileItem[] = files.map((file) => ({
+      file,
+      name: "", // file.name.replace(/\.[^/.]+$/, "") // Remove file extension
+    }));
+    setBulkFiles((prev) => [...prev, ...newBulkFiles]);
   };
 
   const processColorsForScreenshots = async (screenshotList: Screenshot[]) => {
@@ -175,6 +195,7 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
       //       ) || screenshot
       //   )
       // );
+      console.log("updatedScreenshots", updatedScreenshots);
       setScreenshots(updatedScreenshots);
       setImageColors(results);
 
@@ -206,12 +227,20 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
         });
         return;
       }
-      await ScreenAPI.bulkUpload({
+      // Extract files from bulkFiles array
+      // const files = bulkFiles.map((item) => item.file);
+      console.log({
         app: selectedApp,
         category: selectedCategory,
         modul: selectedModul,
         screens: bulkFiles,
       });
+      // await ScreenAPI.bulkUpload({
+      //   app: selectedApp,
+      //   category: selectedCategory,
+      //   modul: selectedModul,
+      //   screens: bulkFiles,
+      // });
       getListData();
       handleCloseBulkUpload();
       toast({
@@ -292,6 +321,52 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
     }
   };
 
+  const handleEdit = useCallback((screenshot: Screenshot) => {
+    setEditFormData({
+      id: screenshot.id,
+      name: screenshot.name || "",
+      category: screenshot.category || "",
+      appId: screenshot.appId || "",
+      module: screenshot.modul || "",
+    });
+    setIsEditModalOpen(true);
+  }, []);
+
+  const handleUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoadingPost(true);
+    try {
+      // TODO: Add API call here
+      // await ScreenAPI.update(editFormData.id, {
+      //   name: editFormData.name,
+      //   category: editFormData.category,
+      //   app: editFormData.appId,
+      //   modul: editFormData.module,
+      // });
+
+      console.log("Update data:", editFormData);
+
+      toast({
+        title: "Screenshot Updated",
+        description: "Screenshot has been updated successfully.",
+      });
+      setIsEditModalOpen(false);
+      getListData();
+    } catch (err: any) {
+      toast({
+        title: "Error",
+        description: err.response?.data?.message || "Failed to update screenshot",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoadingPost(false);
+    }
+  };
+
+  const handleEditFormChange = useCallback((field: string, value: string) => {
+    setEditFormData((prev) => ({ ...prev, [field]: value }));
+  }, []);
+
   const handleCloseModalDelete = useCallback(() => {
     setIsModalOpenDelete(false);
     setEditingScreen(undefined);
@@ -320,19 +395,28 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
   }, [editingScreen]);
 
   const filteredScreenshots = useMemo(() => {
+    console.log("displayedScreenshots", displayedScreenshots);
     return displayedScreenshots.filter((screenshot) => {
       const matchesSearch =
         screenshot?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        screenshot.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
         screenshot.modul.toLowerCase().includes(searchTerm.toLowerCase());
 
       const matchesModuleFilter =
         !selectedModuleFilter ||
         screenshot.modul === selectedModuleFilter.value;
 
-      return matchesSearch && matchesModuleFilter;
+      const matchesCategoryFilter =
+        !selectedCategoryFilter ||
+        screenshot.category === selectedCategoryFilter.value;
+
+      return matchesSearch && matchesModuleFilter && matchesCategoryFilter;
     });
-  }, [displayedScreenshots, selectedModuleFilter, searchTerm]);
+  }, [
+    displayedScreenshots,
+    selectedModuleFilter,
+    searchTerm,
+    selectedCategoryFilter,
+  ]);
 
   const getListData = async () => {
     try {
@@ -347,8 +431,10 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
         res = await ScreenAPI.getAll();
       }
       const data: TScreenRes[] = res.data;
+      console.log("data", data);
       const newScreenshots: Screenshot[] = adapterListScreenBEToFE(data);
       // Automatically process colors for new screenshots
+      console.log("newScreenshots", newScreenshots);
       await processColorsForScreenshots(newScreenshots);
     } catch (error: any) {
       toast({
@@ -461,6 +547,30 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
     [listModule]
   );
 
+  const handleChangeCategory = useCallback(
+    (id: string) => {
+      const temp = categories.find((d) => d._id === id);
+      if (temp) {
+        setSelectedCategoryFilter({
+          label: temp.name,
+          value: temp._id,
+        });
+      } else {
+        setSelectedCategoryFilter(null);
+      }
+    },
+    [categories]
+  );
+
+  const getCategoryOptions = useMemo(() => {
+    return categories.map((c) => {
+      return {
+        label: c.name,
+        value: c._id,
+      };
+    });
+  }, [categories]);
+
   const getListDataCategory = async () => {
     try {
       const dataRes = await ScreenCategoryAPI.getAll();
@@ -545,27 +655,46 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
             <TabsContent value="screenshots">
               <div className="mb-4 flex gap-2 items-start justify-start">
                 {/* Filters and View Controls */}
-                <div className="flex flex-col sm:flex-row gap-4 lg:gap-6">
-                  {/* Category Filter */}
-                  <div className="flex-1 sm:flex-none sm:min-w-[200px]">
-                    <Select
-                      value={selectedModuleFilter?.value}
-                      onValueChange={handleChangeModul}
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select Modul" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-white">
-                        <SelectItem value={null}>All</SelectItem>
-                        {getModuleOptions.map((modul, i) => (
-                          <SelectItem key={i} value={modul.value}>
-                            {modul.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+                {/* <div className="flex flex-col sm:flex-row gap-4 lg:gap-6"> */}
+                {/* Module Filter */}
+                <div className="flex-1 sm:flex-none sm:min-w-[200px]">
+                  <Select
+                    value={selectedModuleFilter?.value}
+                    onValueChange={handleChangeModul}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select Modul" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white">
+                      <SelectItem value={null}>All</SelectItem>
+                      {getModuleOptions.map((modul, i) => (
+                        <SelectItem key={i} value={modul.value}>
+                          {modul.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
+                {/* Category Filter */}
+                <div className="flex-1 sm:flex-none sm:min-w-[200px]">
+                  <Select
+                    value={selectedCategoryFilter?.value}
+                    onValueChange={handleChangeCategory}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select Category" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white">
+                      <SelectItem value={null}>All</SelectItem>
+                      {getCategoryOptions.map((modul, i) => (
+                        <SelectItem key={i} value={modul.value}>
+                          {modul.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                {/* </div> */}
 
                 <Input
                   placeholder="Search screenshots..."
@@ -597,7 +726,15 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
                           }}
                         />
                       )}
-                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all flex items-center justify-center">
+                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all flex items-center justify-center gap-2">
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={() => handleEdit(screenshot)}
+                          className="opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <Pencil className="h-3 w-3" />
+                        </Button>
                         <Button
                           variant="destructive"
                           size="sm"
@@ -773,6 +910,96 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
         </DialogContent>
       </Dialog>
 
+      {/* Edit Screenshot Modal */}
+      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+        <DialogContent className="overflow-y-auto max-h-[90%] max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Edit Screenshot</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleUpdate} className="space-y-4">
+            {!appId && (
+              <div>
+                <label className="block text-sm font-medium mb-2">App</label>
+                <Select
+                  value={editFormData.appId}
+                  onValueChange={(value) => handleEditFormChange("appId", value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select app" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {listApp.map((app) => (
+                      <SelectItem key={app.value} value={app.value.toString()}>
+                        {app.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+            <div>
+              <label className="block text-sm font-medium mb-2">Modul</label>
+              <Select
+                value={editFormData.module}
+                onValueChange={(value) => handleEditFormChange("module", value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select modul" />
+                </SelectTrigger>
+                <SelectContent>
+                  {listModule.map((modul) => (
+                    <SelectItem key={modul.value} value={modul.value}>
+                      {modul.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">Category</label>
+              <Select
+                value={editFormData.category}
+                onValueChange={(value) => handleEditFormChange("category", value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((category) => (
+                    <SelectItem key={category._id} value={category._id}>
+                      {category.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Screenshot Name
+              </label>
+              <Input
+                value={editFormData.name}
+                onChange={(e) => handleEditFormChange("name", e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="flex justify-end space-x-3">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsEditModalOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={isLoadingPost}>
+                {isLoadingPost ? "Updating..." : "Update Screenshot"}
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
+
       {/* Bulk Upload Modal */}
       <Dialog open={isBulkUploadOpen} onOpenChange={setIsBulkUploadOpen}>
         <DialogContent className="max-w-2xl overflow-y-auto max-h-[90%]">
@@ -875,33 +1102,60 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
                 <h4 className="font-medium mb-2">
                   Selected Files ({bulkFiles.length})
                 </h4>
-                <div className="max-h-40 overflow-y-auto space-y-2">
-                  {bulkFiles.map((file, index) => (
+                <div className="max-h-96 overflow-y-auto space-y-2">
+                  {bulkFiles.map((item, index) => (
                     <div
                       key={index}
-                      className="flex items-center justify-between p-2 bg-gray-50 rounded"
+                      className="flex flex-col gap-2 p-3 bg-gray-50 rounded"
                     >
-                      <div className="flex items-center space-x-2">
-                        <img
-                          alt={file.name}
-                          src={getImageUrlFromFile(file)}
-                          className="h-8 w-8 object-cover object-center"
-                        />
-                        <span className="text-sm">
-                          {file.name} ({formatFileSize(file.size)})
-                        </span>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2 flex-1">
+                          <img
+                            alt={item.file.name}
+                            src={getImageUrlFromFile(item.file)}
+                            className="h-10 w-10 object-cover object-center rounded"
+                          />
+                          <div className="flex-1">
+                            <div className="text-xs text-gray-500">
+                              {item.file.name} ({formatFileSize(item.file.size)}
+                              )
+                            </div>
+                          </div>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() =>
+                            setBulkFiles((prev) =>
+                              prev.filter((_, i) => i !== index)
+                            )
+                          }
+                        >
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
                       </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() =>
-                          setBulkFiles((prev) =>
-                            prev.filter((_, i) => i !== index)
-                          )
-                        }
-                      >
-                        <Trash2 className="h-3 w-3" />
-                      </Button>
+                      <div>
+                        <label className="block text-xs font-medium mb-1 text-gray-700">
+                          Screenshot Name
+                        </label>
+                        <Input
+                          value={item.name}
+                          onChange={(e) => {
+                            const newBulkFiles = [...bulkFiles];
+                            newBulkFiles[index] = {
+                              ...newBulkFiles[index],
+                              name: e.target.value,
+                            };
+                            setBulkFiles(newBulkFiles);
+                          }}
+                          placeholder={
+                            "Enter screenshot name (default name: " +
+                            item.file.name +
+                            "-{{module}}-{{category}}"
+                          }
+                          className="text-sm"
+                        />
+                      </div>
                     </div>
                   ))}
                 </div>
