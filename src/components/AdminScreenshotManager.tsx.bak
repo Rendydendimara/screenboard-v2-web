@@ -115,10 +115,6 @@ const SortableModuleItem: React.FC<{
     zIndex: isDragging ? 999 : 1,
   };
 
-  const handleDragHandleClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent click from bubbling to parent
-  };
-
   return (
     <div
       ref={setNodeRef}
@@ -133,17 +129,15 @@ const SortableModuleItem: React.FC<{
             ? 'border-blue-500 shadow-xl'
             : 'border-gray-200 hover:border-blue-300 hover:shadow-md'
         }`}
-        onClick={onClick}
       >
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3 flex-1">
+          <div className="flex items-center gap-3 flex-1" onClick={onClick}>
             <div className="font-medium">{modul.name}</div>
           </div>
           <div
             className={`cursor-grab active:cursor-grabbing p-2 rounded hover:bg-gray-100 ${
               isDragging ? 'bg-blue-500 text-white' : ''
             }`}
-            onClick={handleDragHandleClick}
             {...attributes}
             {...listeners}
           >
@@ -175,10 +169,6 @@ const SortableCategoryItem: React.FC<{
     zIndex: isDragging ? 999 : 1,
   };
 
-  const handleDragHandleClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent click from bubbling to parent
-  };
-
   return (
     <div
       ref={setNodeRef}
@@ -193,17 +183,15 @@ const SortableCategoryItem: React.FC<{
             ? 'border-blue-500 shadow-xl'
             : 'border-gray-200 hover:border-blue-300 hover:shadow-md'
         }`}
-        onClick={onClick}
       >
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3 flex-1">
+          <div className="flex items-center gap-3 flex-1" onClick={onClick}>
             <div className="font-medium">{category.name}</div>
           </div>
           <div
             className={`cursor-grab active:cursor-grabbing p-2 rounded hover:bg-gray-100 ${
               isDragging ? 'bg-blue-500 text-white' : ''
             }`}
-            onClick={handleDragHandleClick}
             {...attributes}
             {...listeners}
           >
@@ -318,8 +306,6 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
   const { toast } = useToast();
   const [listModule, setListModule] = useState<TSelect[]>([]);
   const [listApp, setListApp] = useState<TSelect[]>([]);
-  const [rawModules, setRawModules] = useState<TModulRes[]>([]);
-  const [rawApps, setRawApps] = useState<TAppRes[]>([]);
   const [image, setImage] = useState<UploadImageType>({
     oldImage: "",
     currentImage: undefined,
@@ -646,19 +632,13 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
     setReorderLevel("module");
 
     // Load modules for this app and sort by order
-    // Filter modules by app if your API supports it, otherwise use all modules
-    const modulesForApp = rawModules; // You can filter by app._id if needed
+    const modulesForApp = listModule; // You might want to filter by app if needed
     const sorted = [...modulesForApp].sort((a, b) => {
-      // Sort by order field if exists, otherwise by name
-      const orderA = (a as any).order || 0;
-      const orderB = (b as any).order || 0;
-      if (orderA === orderB) {
-        return a.name.localeCompare(b.name);
-      }
-      return orderA - orderB;
+      // Assuming modules have an order field, adjust as needed
+      return 0; // Placeholder, implement proper sorting
     });
-    setOrderedModules(sorted);
-  }, [rawModules]);
+    setOrderedModules(listModule);
+  }, [listModule]);
 
   const handleSelectModule = useCallback((modul: TModulRes) => {
     setSelectedReorderModule(modul);
@@ -958,8 +938,6 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
         };
       });
       setListModule(tempModule);
-      setRawModules(dataModul); // Store raw module data
-
       const dataApp: TAppRes[] = res[1]?.data ?? [];
       const tempApp: TSelect[] = dataApp.map((d) => {
         return {
@@ -968,7 +946,6 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
         };
       });
       setListApp(tempApp);
-      setRawApps(dataApp); // Store raw app data
     } catch (error: any) {
       toast({
         title: "Error",
@@ -1146,10 +1123,19 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
                 </>
               )}
               {isReorderMode && (
-                <Button variant="outline" onClick={handleExitReorderMode}>
-                  <X className="h-4 w-4 mr-2" />
-                  Exit Reorder Mode
-                </Button>
+                <>
+                  <Button variant="outline" onClick={handleExitReorderMode}>
+                    <X className="h-4 w-4 mr-2" />
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={handleSaveOrder}
+                    disabled={isLoadingPost || reorderedScreenshots.length === 0}
+                  >
+                    <Save className="h-4 w-4 mr-2" />
+                    {isLoadingPost ? "Saving..." : "Save Order"}
+                  </Button>
+                </>
               )}
             </div>
           </div>
@@ -1357,6 +1343,138 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
                           ) : null}
                         </DragOverlay>
                       </DndContext>
+                    </div>
+                  )}
+                </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">Module</label>
+                        <Select
+                          value={reorderFilterModule}
+                          onValueChange={setReorderFilterModule}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select module (optional)" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white">
+                            <SelectItem value="all">All</SelectItem>
+                            {listModule.map((modul) => (
+                              <SelectItem key={modul.value} value={modul.value}>
+                                {modul.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">Category</label>
+                        <Select
+                          value={reorderFilterCategory}
+                          onValueChange={setReorderFilterCategory}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select category (optional)" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white">
+                            <SelectItem value="all">All</SelectItem>
+                            {getCategoryOptions.map((category) => (
+                              <SelectItem key={category.value} value={category.value}>
+                                {category.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+
+                    <Button
+                      onClick={handleApplyReorderFilters}
+                      disabled={!reorderFilterApp}
+                    >
+                      {!reorderFilterApp ? "Select App First" : "Apply Filters"}
+                    </Button>
+                    {!reorderFilterApp && (
+                      <p className="text-xs text-red-600 mt-2">
+                        * You must select an App before applying filters
+                      </p>
+                    )}
+                  </div>
+
+                  {reorderedScreenshots.length > 0 ? (
+                    <div>
+                      <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-4">
+                        <p className="text-sm text-green-800">
+                          <strong>Ready to reorder:</strong> Showing {reorderedScreenshots.length} screenshot(s) from{" "}
+                          <strong>{listApp.find((a) => a.value === reorderFilterApp)?.label}</strong>.
+                          Drag and drop items to change their order.
+                        </p>
+                      </div>
+                      <DndContext
+                        sensors={sensors}
+                        collisionDetection={closestCenter}
+                        onDragStart={handleDragStart}
+                        onDragEnd={handleDragEnd}
+                      >
+                        <SortableContext
+                          items={reorderedScreenshots.map((s) => s.id)}
+                          strategy={rectSortingStrategy}
+                        >
+                          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                            {reorderedScreenshots.map((screenshot) => (
+                              <SortableScreenshotItem
+                                key={screenshot.id}
+                                screenshot={screenshot}
+                                onEdit={handleEdit}
+                                onDelete={handleDelete}
+                              />
+                            ))}
+                          </div>
+                        </SortableContext>
+                        <DragOverlay
+                          dropAnimation={{
+                            duration: 200,
+                            easing: 'cubic-bezier(0.18, 0.67, 0.6, 1.22)',
+                          }}
+                        >
+                          {activeId ? (
+                            <div className="w-64 cursor-grabbing">
+                              <div className="w-full h-72 rounded-lg overflow-hidden bg-gray-100 ring-4 ring-blue-500 shadow-2xl transform rotate-3">
+                                <div className="absolute top-2 left-2 z-10 bg-blue-500 rounded-full p-1.5 shadow-lg scale-110">
+                                  <GripVertical className="h-4 w-4 text-white" />
+                                </div>
+                                <img
+                                  src={reorderedScreenshots.find((s) => s.id === activeId)?.image}
+                                  alt={reorderedScreenshots.find((s) => s.id === activeId)?.name ?? ""}
+                                  className="w-full h-full object-cover pointer-events-none select-none"
+                                />
+                                <div className="absolute inset-0 bg-blue-500 bg-opacity-20" />
+                              </div>
+                              <div className="mt-2 text-xs">
+                                <div className="font-medium truncate text-blue-600">
+                                  {reorderedScreenshots.find((s) => s.id === activeId)?.name ?? ""}
+                                </div>
+                              </div>
+                            </div>
+                          ) : null}
+                        </DragOverlay>
+                      </DndContext>
+                    </div>
+                  ) : (
+                    <div className="text-center py-12">
+                      {appId ? (
+                        <div className="text-gray-500">
+                          <p className="font-medium">Loading screenshots for reordering...</p>
+                          <p className="text-sm mt-2">Please wait while we load your screenshots.</p>
+                        </div>
+                      ) : (
+                        <div className="text-gray-500">
+                          <p className="font-medium">No screenshots loaded</p>
+                          <p className="text-sm mt-2">
+                            {reorderFilterApp
+                              ? "Click 'Apply Filters' to load screenshots from the selected App."
+                              : "Please select an App first, then click 'Apply Filters'."}
+                          </p>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>

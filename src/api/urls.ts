@@ -28,6 +28,7 @@ const URL_API = {
       V1: {
         CREATE: "/api/v1/admin/screen/create",
         UPDATE: "/api/v1/admin/screen/update",
+        UPDATE_ORDER: "/api/v1/admin/screen/update-order",
         GET_LIST: "/api/v1/admin/screen/get-list",
         DELETE: "/api/v1/admin/screen/delete",
         BULK_UPLOAD: "/api/v1/admin/screen/bulk-upload",

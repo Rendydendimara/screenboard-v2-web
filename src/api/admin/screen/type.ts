@@ -35,3 +35,13 @@ export type TScreenPostBulk = {
   modul: string;
   screens: BulkFileItem[]; //File[];
 };
+
+export type TScreenUpdateOrder = {
+  id: string;
+  order: number;
+};
+
+export type TScreenUpdateOrderPayload = {
+  appId: string;
+  screens: TScreenUpdateOrder[];
+};

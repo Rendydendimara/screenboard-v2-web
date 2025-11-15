@@ -1,6 +1,6 @@
 import { axiosInstanceWithAuth } from "@/lib/axiosConfig";
 import URL_API from "../../urls";
-import { TScreenPost, TScreenPostBulk, TScreenPut } from "./type";
+import { TScreenPost, TScreenPostBulk, TScreenPut, TScreenUpdateOrderPayload } from "./type";
 
 const create = async (payload: TScreenPost) => {
   let formData = new FormData();
@@ -91,12 +91,21 @@ const bulkUpload = async (payload: TScreenPostBulk) => {
   return response.data;
 };
 
+const updateOrder = async (payload: TScreenUpdateOrderPayload) => {
+  const response = await axiosInstanceWithAuth.put(
+    URL_API.ADMIN.SCREEN.V1.UPDATE_ORDER,
+    payload
+  );
+  return response.data;
+};
+
 const ScreenAPI = {
   create,
   getAll,
   update,
   remove,
   bulkUpload,
+  updateOrder,
 };
 
 export default ScreenAPI;
