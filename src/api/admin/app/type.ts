@@ -71,6 +71,7 @@ export type TScreenResPublic = {
   updatedAt: string | null;
   createdBy: string;
   __v: number;
+  order?: number;
 };
 
 export type TAppResPublic = {

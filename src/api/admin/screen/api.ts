@@ -1,6 +1,11 @@
 import { axiosInstanceWithAuth } from "@/lib/axiosConfig";
 import URL_API from "../../urls";
-import { TScreenPost, TScreenPostBulk, TScreenPut, TScreenUpdateOrderPayload } from "./type";
+import {
+  TScreenPost,
+  TScreenPostBulk,
+  TScreenPut,
+  TScreenUpdateOrderPayload,
+} from "./type";
 
 const create = async (payload: TScreenPost) => {
   let formData = new FormData();
@@ -82,6 +87,7 @@ const bulkUpload = async (payload: TScreenPostBulk) => {
   formData.append("app", payload.app);
   formData.append("category", payload.category);
   formData.append("modul", payload.modul);
+  formData.append("filesName", JSON.stringify(payload.filesName));
 
   const response = await axiosInstanceWithAuth.post(
     URL_API.ADMIN.SCREEN.V1.BULK_UPLOAD,

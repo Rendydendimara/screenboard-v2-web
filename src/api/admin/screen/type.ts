@@ -27,13 +27,15 @@ export type TScreenRes = {
   createdBy: string | null; // Referencing User
   deletedBy: string | null; // Referencing User or null
   updatedBy: string | null; // Referencing User or null
+  order?: number;
 };
 
 export type TScreenPostBulk = {
   app: string;
   category: string;
   modul: string;
-  screens: BulkFileItem[]; //File[];
+  screens: File[];
+  filesName: string[];
 };
 
 export type TScreenUpdateOrder = {
@@ -42,6 +44,6 @@ export type TScreenUpdateOrder = {
 };
 
 export type TScreenUpdateOrderPayload = {
-  appId: string;
+  // appId: string;
   screens: TScreenUpdateOrder[];
 };

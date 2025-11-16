@@ -29,7 +29,18 @@ import { TSelect, UploadImageType } from "@/types";
 import { formatFileSize, getImageUrlFromFile } from "@/utils";
 import { adapterListScreenBEToFE } from "@/utils/adapterBEToFE";
 import { processMultipleImages } from "@/utils/colorExtraction";
-import { ArrowDownUp, FolderOpen, GripVertical, Palette, Pencil, Plus, Save, Trash2, Upload, X } from "lucide-react";
+import {
+  ArrowDownUp,
+  FolderOpen,
+  GripVertical,
+  Palette,
+  Pencil,
+  Plus,
+  Save,
+  Trash2,
+  Upload,
+  X,
+} from "lucide-react";
 import React, {
   useCallback,
   useEffect,
@@ -111,7 +122,7 @@ const SortableModuleItem: React.FC<{
 
   const style: React.CSSProperties = {
     transform: CSS.Transform.toString(transform),
-    transition: transition || 'transform 200ms ease',
+    transition: transition || "transform 200ms ease",
     zIndex: isDragging ? 999 : 1,
   };
 
@@ -124,14 +135,14 @@ const SortableModuleItem: React.FC<{
       ref={setNodeRef}
       style={style}
       className={`${
-        isDragging ? 'scale-105 opacity-90' : 'scale-100 opacity-100'
+        isDragging ? "scale-105 opacity-90" : "scale-100 opacity-100"
       } transition-all duration-200`}
     >
       <div
         className={`p-4 bg-white rounded-lg border-2 cursor-pointer transition-all ${
           isDragging
-            ? 'border-blue-500 shadow-xl'
-            : 'border-gray-200 hover:border-blue-300 hover:shadow-md'
+            ? "border-blue-500 shadow-xl"
+            : "border-gray-200 hover:border-blue-300 hover:shadow-md"
         }`}
         onClick={onClick}
       >
@@ -141,7 +152,7 @@ const SortableModuleItem: React.FC<{
           </div>
           <div
             className={`cursor-grab active:cursor-grabbing p-2 rounded hover:bg-gray-100 ${
-              isDragging ? 'bg-blue-500 text-white' : ''
+              isDragging ? "bg-blue-500 text-white" : ""
             }`}
             onClick={handleDragHandleClick}
             {...attributes}
@@ -171,7 +182,7 @@ const SortableCategoryItem: React.FC<{
 
   const style: React.CSSProperties = {
     transform: CSS.Transform.toString(transform),
-    transition: transition || 'transform 200ms ease',
+    transition: transition || "transform 200ms ease",
     zIndex: isDragging ? 999 : 1,
   };
 
@@ -184,14 +195,14 @@ const SortableCategoryItem: React.FC<{
       ref={setNodeRef}
       style={style}
       className={`${
-        isDragging ? 'scale-105 opacity-90' : 'scale-100 opacity-100'
+        isDragging ? "scale-105 opacity-90" : "scale-100 opacity-100"
       } transition-all duration-200`}
     >
       <div
         className={`p-4 bg-white rounded-lg border-2 cursor-pointer transition-all ${
           isDragging
-            ? 'border-blue-500 shadow-xl'
-            : 'border-gray-200 hover:border-blue-300 hover:shadow-md'
+            ? "border-blue-500 shadow-xl"
+            : "border-gray-200 hover:border-blue-300 hover:shadow-md"
         }`}
         onClick={onClick}
       >
@@ -201,7 +212,7 @@ const SortableCategoryItem: React.FC<{
           </div>
           <div
             className={`cursor-grab active:cursor-grabbing p-2 rounded hover:bg-gray-100 ${
-              isDragging ? 'bg-blue-500 text-white' : ''
+              isDragging ? "bg-blue-500 text-white" : ""
             }`}
             onClick={handleDragHandleClick}
             {...attributes}
@@ -232,7 +243,7 @@ const SortableScreenshotItem: React.FC<{
 
   const style: React.CSSProperties = {
     transform: CSS.Transform.toString(transform),
-    transition: transition || 'transform 200ms ease',
+    transition: transition || "transform 200ms ease",
     zIndex: isDragging ? 999 : 1,
   };
 
@@ -241,22 +252,26 @@ const SortableScreenshotItem: React.FC<{
       ref={setNodeRef}
       style={style}
       className={`shrink-0 w-full relative group cursor-move ${
-        isDragging ? 'scale-105 opacity-90' : 'scale-100 opacity-100'
+        isDragging ? "scale-105 opacity-90" : "scale-100 opacity-100"
       } transition-all duration-200`}
     >
-      <div className={`w-full h-72 rounded-lg overflow-hidden bg-gray-100 transition-all duration-200 ${
-        isDragging
-          ? 'shadow-2xl ring-2 ring-blue-400 ring-opacity-50'
-          : 'shadow-md hover:shadow-lg'
-      }`}>
+      <div
+        className={`w-full h-72 rounded-lg overflow-hidden bg-gray-100 transition-all duration-200 ${
+          isDragging
+            ? "shadow-2xl ring-2 ring-blue-400 ring-opacity-50"
+            : "shadow-md hover:shadow-lg"
+        }`}
+      >
         <div
           className={`absolute top-2 left-2 z-10 bg-white rounded-full p-1.5 shadow-lg cursor-grab active:cursor-grabbing transition-all duration-200 ${
-            isDragging ? 'bg-blue-500 text-white scale-110' : 'hover:bg-gray-50'
+            isDragging ? "bg-blue-500 text-white scale-110" : "hover:bg-gray-50"
           }`}
           {...attributes}
           {...listeners}
         >
-          <GripVertical className={`h-4 w-4 ${isDragging ? 'text-white' : 'text-gray-600'}`} />
+          <GripVertical
+            className={`h-4 w-4 ${isDragging ? "text-white" : "text-gray-600"}`}
+          />
         </div>
         <img
           src={screenshot.image}
@@ -276,9 +291,7 @@ const SortableScreenshotItem: React.FC<{
         )}
       </div>
       <div className="mt-2 text-xs">
-        <div className="font-medium truncate">
-          {screenshot?.name ?? ""}
-        </div>
+        <div className="font-medium truncate">{screenshot?.name ?? ""}</div>
         {screenshot.colors && (
           <div className="flex space-x-1 mt-1">
             {screenshot.colors.slice(0, 3).map((color, index) => (
@@ -341,21 +354,32 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
   const [isReorderMode, setIsReorderMode] = useState(false);
   const [reorderFilterApp, setReorderFilterApp] = useState<string>("");
   const [reorderFilterModule, setReorderFilterModule] = useState<string>("all");
-  const [reorderFilterCategory, setReorderFilterCategory] = useState<string>("all");
-  const [reorderedScreenshots, setReorderedScreenshots] = useState<Screenshot[]>([]);
+  const [reorderFilterCategory, setReorderFilterCategory] =
+    useState<string>("all");
+  const [reorderedScreenshots, setReorderedScreenshots] = useState<
+    Screenshot[]
+  >([]);
   const [activeId, setActiveId] = useState<string | null>(null);
 
   // Hierarchical navigation state
   type ReorderLevel = "app" | "module" | "category" | "screenshot";
   const [reorderLevel, setReorderLevel] = useState<ReorderLevel>("app");
-  const [selectedReorderApp, setSelectedReorderApp] = useState<TAppRes | null>(null);
-  const [selectedReorderModule, setSelectedReorderModule] = useState<TModulRes | null>(null);
-  const [selectedReorderCategory, setSelectedReorderCategory] = useState<TScreenCategoryRes | null>(null);
+  const [selectedReorderApp, setSelectedReorderApp] = useState<TAppRes | null>(
+    null
+  );
+  const [selectedReorderModule, setSelectedReorderModule] =
+    useState<TModulRes | null>(null);
+  const [selectedReorderCategory, setSelectedReorderCategory] =
+    useState<TScreenCategoryRes | null>(null);
 
   // Ordered lists for each level
   const [orderedModules, setOrderedModules] = useState<TModulRes[]>([]);
-  const [orderedCategories, setOrderedCategories] = useState<TScreenCategoryRes[]>([]);
-  const [orderedScreenshots, setOrderedScreenshots] = useState<Screenshot[]>([]);
+  const [orderedCategories, setOrderedCategories] = useState<
+    TScreenCategoryRes[]
+  >([]);
+  const [orderedScreenshots, setOrderedScreenshots] = useState<Screenshot[]>(
+    []
+  );
 
   const [formData, setFormData] = useState({
     name: "",
@@ -445,7 +469,6 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
       //       ) || screenshot
       //   )
       // );
-      console.log("updatedScreenshots", updatedScreenshots);
       setScreenshots(updatedScreenshots);
       setImageColors(results);
 
@@ -478,19 +501,21 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
         return;
       }
       // Extract files from bulkFiles array
-      // const files = bulkFiles.map((item) => item.file);
-      console.log({
-        app: selectedApp,
-        category: selectedCategory,
-        modul: selectedModul,
-        screens: bulkFiles,
-      });
-      // await ScreenAPI.bulkUpload({
+      const files = bulkFiles.map((item) => item.file);
+      const filesName = bulkFiles.map((item) => item.name);
+      // console.log({
       //   app: selectedApp,
       //   category: selectedCategory,
       //   modul: selectedModul,
       //   screens: bulkFiles,
       // });
+      await ScreenAPI.bulkUpload({
+        app: selectedApp,
+        category: selectedCategory,
+        modul: selectedModul,
+        screens: files,
+        filesName,
+      });
       getListData();
       handleCloseBulkUpload();
       toast({
@@ -586,15 +611,15 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
     e.preventDefault();
     setIsLoadingPost(true);
     try {
-      // TODO: Add API call here
-      // await ScreenAPI.update(editFormData.id, {
-      //   name: editFormData.name,
-      //   category: editFormData.category,
-      //   app: editFormData.appId,
-      //   modul: editFormData.module,
-      // });
-
-      console.log("Update data:", editFormData);
+      await ScreenAPI.update({
+        screenId: editFormData.id,
+        name: editFormData.name,
+        category: editFormData.category,
+        app: editFormData.appId,
+        modul: editFormData.module,
+        description: "",
+        image: undefined,
+      });
 
       toast({
         title: "Screenshot Updated",
@@ -605,7 +630,8 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
     } catch (err: any) {
       toast({
         title: "Error",
-        description: err.response?.data?.message || "Failed to update screenshot",
+        description:
+          err.response?.data?.message || "Failed to update screenshot",
         variant: "destructive",
       });
     } finally {
@@ -641,50 +667,78 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
   }, []);
 
   // Navigation handlers
-  const handleSelectApp = useCallback(async (app: TAppRes) => {
-    setSelectedReorderApp(app);
-    setReorderLevel("module");
+  const handleSelectApp = useCallback(
+    async (app: TAppRes) => {
+      setSelectedReorderApp(app);
+      setReorderLevel("module");
 
-    // Load modules for this app and sort by order
-    // Filter modules by app if your API supports it, otherwise use all modules
-    const modulesForApp = rawModules; // You can filter by app._id if needed
-    const sorted = [...modulesForApp].sort((a, b) => {
-      // Sort by order field if exists, otherwise by name
-      const orderA = (a as any).order || 0;
-      const orderB = (b as any).order || 0;
-      if (orderA === orderB) {
-        return a.name.localeCompare(b.name);
-      }
-      return orderA - orderB;
-    });
-    setOrderedModules(sorted);
-  }, [rawModules]);
+      // Filter modules that have screenshots for this app
+      const modulesWithScreenshots = rawModules.filter((modul) => {
+        return screenshots.some(
+          (screenshot) =>
+            String(screenshot.appId) === app._id &&
+            screenshot.modul === modul._id
+        );
+      });
 
-  const handleSelectModule = useCallback((modul: TModulRes) => {
-    setSelectedReorderModule(modul);
-    setReorderLevel("category");
+      const sorted = [...modulesWithScreenshots].sort((a, b) => {
+        // Sort by order field if exists, otherwise by name
+        const orderA = (a as any).order || 0;
+        const orderB = (b as any).order || 0;
+        if (orderA === orderB) {
+          return a.name.localeCompare(b.name);
+        }
+        return orderA - orderB;
+      });
+      setOrderedModules(sorted);
+    },
+    [rawModules, screenshots]
+  );
 
-    // Load categories for this module and sort by order
-    const sorted = [...categories].sort((a, b) => {
-      // Assuming categories have an order field
-      return 0; // Placeholder
-    });
-    setOrderedCategories(sorted);
-  }, [categories]);
+  const handleSelectModule = useCallback(
+    (modul: TModulRes) => {
+      setSelectedReorderModule(modul);
+      setReorderLevel("category");
 
-  const handleSelectCategory = useCallback((category: TScreenCategoryRes) => {
-    setSelectedReorderCategory(category);
-    setReorderLevel("screenshot");
+      // Filter categories that have screenshots for this module and app
+      const categoriesWithScreenshots = categories.filter((category) => {
+        return screenshots.some(
+          (screenshot) =>
+            String(screenshot.appId) === selectedReorderApp?._id &&
+            screenshot.modul === modul._id &&
+            screenshot.category === category._id
+        );
+      });
 
-    // Load screenshots for this category and sort by order
-    const filtered = screenshots.filter((s) =>
-      s.category === category._id &&
-      s.modul === selectedReorderModule?._id &&
-      String(s.appId) === selectedReorderApp?._id
-    );
-    const sorted = [...filtered].sort((a, b) => (a.order || 0) - (b.order || 0));
-    setOrderedScreenshots(sorted);
-  }, [screenshots, selectedReorderApp, selectedReorderModule]);
+      const sorted = [...categoriesWithScreenshots].sort((a, b) => {
+        // Assuming categories have an order field
+        return 0; // Placeholder
+      });
+      setOrderedCategories(sorted);
+    },
+    [categories, screenshots, selectedReorderApp]
+  );
+
+  const handleSelectCategory = useCallback(
+    (category: TScreenCategoryRes) => {
+      setSelectedReorderCategory(category);
+      setReorderLevel("screenshot");
+
+      // Load screenshots for this category and sort by order
+      const filtered = screenshots.filter(
+        (s) =>
+          s.category === category._id &&
+          s.modul === selectedReorderModule?._id &&
+          String(s.appId) === selectedReorderApp?._id
+      );
+      const sorted = [...filtered].sort(
+        (a, b) => (a.order || 0) - (b.order || 0)
+      );
+      // console.log("sorted", sorted);
+      setOrderedScreenshots(sorted);
+    },
+    [screenshots, selectedReorderApp, selectedReorderModule]
+  );
 
   const handleBackNavigation = useCallback(() => {
     if (reorderLevel === "screenshot") {
@@ -716,13 +770,19 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
     // Filter screenshots based on selected filters
     const filtered = screenshots.filter((screenshot) => {
       const matchesApp = String(screenshot.appId) === reorderFilterApp;
-      const matchesModule = reorderFilterModule === "all" || screenshot.modul === reorderFilterModule;
-      const matchesCategory = reorderFilterCategory === "all" || screenshot.category === reorderFilterCategory;
+      const matchesModule =
+        reorderFilterModule === "all" ||
+        screenshot.modul === reorderFilterModule;
+      const matchesCategory =
+        reorderFilterCategory === "all" ||
+        screenshot.category === reorderFilterCategory;
       return matchesApp && matchesModule && matchesCategory;
     });
 
     // Sort by order field (per app)
-    const sorted = [...filtered].sort((a, b) => (a.order || 0) - (b.order || 0));
+    const sorted = [...filtered].sort(
+      (a, b) => (a.order || 0) - (b.order || 0)
+    );
     setReorderedScreenshots(sorted);
 
     if (sorted.length === 0) {
@@ -732,89 +792,156 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
         variant: "destructive",
       });
     }
-  }, [screenshots, reorderFilterApp, reorderFilterModule, reorderFilterCategory, toast]);
+  }, [
+    screenshots,
+    reorderFilterApp,
+    reorderFilterModule,
+    reorderFilterCategory,
+    toast,
+  ]);
 
   const handleDragStart = useCallback((event: DragStartEvent) => {
     const { active } = event;
     setActiveId(active.id as string);
   }, []);
 
-  const handleDragEnd = useCallback((event: DragEndEvent) => {
-    const { active, over } = event;
+  const handleDragEnd = useCallback(
+    (event: DragEndEvent) => {
+      const { active, over } = event;
 
-    if (over && active.id !== over.id) {
-      if (reorderLevel === "module") {
-        setOrderedModules((items) => {
-          const oldIndex = items.findIndex((item) => item._id === active.id);
-          const newIndex = items.findIndex((item) => item._id === over.id);
-          return arrayMove(items, oldIndex, newIndex);
-        });
-      } else if (reorderLevel === "category") {
-        setOrderedCategories((items) => {
-          const oldIndex = items.findIndex((item) => item._id === active.id);
-          const newIndex = items.findIndex((item) => item._id === over.id);
-          return arrayMove(items, oldIndex, newIndex);
-        });
-      } else if (reorderLevel === "screenshot") {
-        setOrderedScreenshots((items) => {
-          const oldIndex = items.findIndex((item) => item.id === active.id);
-          const newIndex = items.findIndex((item) => item.id === over.id);
-          return arrayMove(items, oldIndex, newIndex);
-        });
+      if (over && active.id !== over.id) {
+        if (reorderLevel === "module") {
+          setOrderedModules((items) => {
+            const oldIndex = items.findIndex((item) => item._id === active.id);
+            const newIndex = items.findIndex((item) => item._id === over.id);
+            return arrayMove(items, oldIndex, newIndex);
+          });
+        } else if (reorderLevel === "category") {
+          setOrderedCategories((items) => {
+            const oldIndex = items.findIndex((item) => item._id === active.id);
+            const newIndex = items.findIndex((item) => item._id === over.id);
+            return arrayMove(items, oldIndex, newIndex);
+          });
+        } else if (reorderLevel === "screenshot") {
+          setOrderedScreenshots((items) => {
+            const oldIndex = items.findIndex((item) => item.id === active.id);
+            const newIndex = items.findIndex((item) => item.id === over.id);
+            return arrayMove(items, oldIndex, newIndex);
+          });
+        }
       }
-    }
 
-    setActiveId(null);
-  }, [reorderLevel]);
+      setActiveId(null);
+    },
+    [reorderLevel]
+  );
 
   // Save order handlers - placeholder for API integration
   const handleSaveModuleOrder = useCallback(() => {
-    console.log("Save Module Order:", {
-      appId: selectedReorderApp?._id,
-      modules: orderedModules.map((m, index) => ({
-        id: m._id,
-        order: index + 1,
-      })),
-    });
+    // console.log("Save Module Order:", {
+    //   appId: selectedReorderApp?._id,
+    //   modules: orderedModules.map((m, index) => ({
+    //     id: m._id,
+    //     order: index + 1,
+    //   })),
+    // });
 
     toast({
       title: "Module Order Ready",
-      description: "Module order data is ready. Please implement API integration.",
+      description:
+        "Module order data is ready. Please implement API integration.",
     });
   }, [selectedReorderApp, orderedModules, toast]);
 
   const handleSaveCategoryOrder = useCallback(() => {
-    console.log("Save Category Order:", {
-      appId: selectedReorderApp?._id,
-      moduleId: selectedReorderModule?._id,
-      categories: orderedCategories.map((c, index) => ({
-        id: c._id,
-        order: index + 1,
-      })),
-    });
+    // console.log("Save Category Order:", {
+    //   appId: selectedReorderApp?._id,
+    //   moduleId: selectedReorderModule?._id,
+    //   categories: orderedCategories.map((c, index) => ({
+    //     id: c._id,
+    //     order: index + 1,
+    //   })),
+    // });
 
     toast({
       title: "Category Order Ready",
-      description: "Category order data is ready. Please implement API integration.",
+      description:
+        "Category order data is ready. Please implement API integration.",
     });
   }, [selectedReorderApp, selectedReorderModule, orderedCategories, toast]);
 
-  const handleSaveScreenshotOrder = useCallback(() => {
-    console.log("Save Screenshot Order:", {
-      appId: selectedReorderApp?._id,
-      moduleId: selectedReorderModule?._id,
-      categoryId: selectedReorderCategory?._id,
-      screenshots: orderedScreenshots.map((s, index) => ({
-        id: s.id,
-        order: index + 1,
-      })),
-    });
+  const handleSaveScreenshotOrder = useCallback(async () => {
+    try {
+      setIsLoadingPost(true);
+      // if (!reorderFilterApp) {
+      //   toast({
+      //     title: "Error",
+      //     description: "App ID is required to save order.",
+      //     variant: "destructive",
+      //   });
+      //   return;
+      // }
 
-    toast({
-      title: "Screenshot Order Ready",
-      description: "Screenshot order data is ready. Please implement API integration.",
-    });
-  }, [selectedReorderApp, selectedReorderModule, selectedReorderCategory, orderedScreenshots, toast]);
+      // Update order field for each screenshot
+      const updatedOrder = orderedScreenshots.map((screenshot, index) => ({
+        id: screenshot.id,
+        order: index + 1,
+      }));
+
+      // Call API to update order with appId
+      await ScreenAPI.updateOrder({
+        // appId: reorderFilterApp,
+        screens: updatedOrder,
+      });
+
+      toast({
+        title: "Order Updated",
+        description: `Screenshot order for ${
+          listApp.find((a) => a.value === reorderFilterApp)?.label
+        } has been saved successfully.`,
+      });
+
+      // Update local state
+      setScreenshots((prev) =>
+        prev.map((screenshot) => {
+          const updated = updatedOrder.find((u) => u.id === screenshot.id);
+          return updated ? { ...screenshot, order: updated.order } : screenshot;
+        })
+      );
+
+      handleExitReorderMode();
+      getListData();
+    } catch (err: any) {
+      toast({
+        title: "Error",
+        description: err.response?.data?.message || "Failed to save order",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoadingPost(false);
+    }
+    // console.log("Save Screenshot Order:", {
+    //   appId: selectedReorderApp?._id,
+    //   moduleId: selectedReorderModule?._id,
+    //   categoryId: selectedReorderCategory?._id,
+    //   screenshots: orderedScreenshots.map((s, index) => ({
+    //     id: s.id,
+    //     order: index + 1,
+    //   })),
+    // });
+
+    // toast({
+    //   title: "Screenshot Order Ready",
+    //   description:
+    //     "Screenshot order data is ready. Please implement API integration.",
+    // });
+  }, [
+    selectedReorderApp,
+    selectedReorderModule,
+    selectedReorderCategory,
+    orderedScreenshots,
+    toast,
+  ]);
 
   const handleSaveOrder = async () => {
     setIsLoadingPost(true);
@@ -836,13 +963,15 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
 
       // Call API to update order with appId
       await ScreenAPI.updateOrder({
-        appId: reorderFilterApp,
+        // appId: reorderFilterApp,
         screens: updatedOrder,
       });
 
       toast({
         title: "Order Updated",
-        description: `Screenshot order for ${listApp.find((a) => a.value === reorderFilterApp)?.label} has been saved successfully.`,
+        description: `Screenshot order for ${
+          listApp.find((a) => a.value === reorderFilterApp)?.label
+        } has been saved successfully.`,
       });
 
       // Update local state
@@ -894,7 +1023,7 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
   }, [editingScreen]);
 
   const filteredScreenshots = useMemo(() => {
-    console.log("displayedScreenshots", displayedScreenshots);
+    // console.log("displayedScreenshots", displayedScreenshots);
     return displayedScreenshots.filter((screenshot) => {
       const matchesSearch =
         screenshot?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -930,10 +1059,10 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
         res = await ScreenAPI.getAll();
       }
       const data: TScreenRes[] = res.data;
-      console.log("data", data);
+      // console.log("data", data);
       const newScreenshots: Screenshot[] = adapterListScreenBEToFE(data);
       // Automatically process colors for new screenshots
-      console.log("newScreenshots", newScreenshots);
+      // console.log("newScreenshots", newScreenshots);
       await processColorsForScreenshots(newScreenshots);
     } catch (error: any) {
       toast({
@@ -1175,20 +1304,37 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
                   {/* Breadcrumb Navigation */}
                   {reorderLevel !== "app" && (
                     <div className="flex items-center gap-2 text-sm">
-                      <Button variant="ghost" size="sm" onClick={handleBackNavigation}>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleBackNavigation}
+                      >
                         <ArrowDownUp className="h-4 w-4 mr-2 rotate-90" />
                         Back
                       </Button>
                       <div className="flex items-center gap-2 text-gray-600">
                         {selectedReorderApp && (
-                          <><span className="font-medium">{selectedReorderApp.name}</span><span>/</span></>
+                          <>
+                            <span className="font-medium">
+                              {selectedReorderApp.name}
+                            </span>
+                            <span>/</span>
+                          </>
                         )}
                         {selectedReorderModule && reorderLevel !== "module" && (
-                          <><span className="font-medium">{selectedReorderModule.name}</span><span>/</span></>
+                          <>
+                            <span className="font-medium">
+                              {selectedReorderModule.name}
+                            </span>
+                            <span>/</span>
+                          </>
                         )}
-                        {selectedReorderCategory && reorderLevel === "screenshot" && (
-                          <span className="font-medium">{selectedReorderCategory.name}</span>
-                        )}
+                        {selectedReorderCategory &&
+                          reorderLevel === "screenshot" && (
+                            <span className="font-medium">
+                              {selectedReorderCategory.name}
+                            </span>
+                          )}
                       </div>
                     </div>
                   )}
@@ -1197,15 +1343,21 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
                   {reorderLevel === "app" && (
                     <div>
                       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-                        <h3 className="font-medium text-blue-900 mb-2">Select App to Reorder</h3>
+                        <h3 className="font-medium text-blue-900 mb-2">
+                          Select App to Reorder
+                        </h3>
                         <p className="text-sm text-blue-700">
-                          Choose an app to manage the order of its modules, categories, and screenshots.
+                          Choose an app to manage the order of its modules,
+                          categories, and screenshots.
                         </p>
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         {listApp.map((app) => {
                           // Find full app data
-                          const appData = { _id: app.value, name: app.label } as TAppRes;
+                          const appData = {
+                            _id: app.value,
+                            name: app.label,
+                          } as TAppRes;
                           return (
                             <Card
                               key={app.value}
@@ -1214,10 +1366,14 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
                             >
                               <CardContent className="p-6">
                                 <div className="flex items-center justify-between mb-2">
-                                  <h4 className="font-semibold text-lg">{app.label}</h4>
+                                  <h4 className="font-semibold text-lg">
+                                    {app.label}
+                                  </h4>
                                   <ArrowDownUp className="h-5 w-5 text-gray-400" />
                                 </div>
-                                <p className="text-sm text-gray-500">Click to manage order</p>
+                                <p className="text-sm text-gray-500">
+                                  Click to manage order
+                                </p>
                               </CardContent>
                             </Card>
                           );
@@ -1231,10 +1387,17 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
                     <div>
                       <div className="flex items-center justify-between mb-4">
                         <div>
-                          <h3 className="font-semibold text-lg">Modules in {selectedReorderApp?.name}</h3>
-                          <p className="text-sm text-gray-500">Drag to reorder, click to view categories</p>
+                          <h3 className="font-semibold text-lg">
+                            Modules in {selectedReorderApp?.name}
+                          </h3>
+                          <p className="text-sm text-gray-500">
+                            Drag to reorder, click to view categories
+                          </p>
                         </div>
-                        <Button onClick={handleSaveModuleOrder} disabled={orderedModules.length === 0}>
+                        <Button
+                          onClick={handleSaveModuleOrder}
+                          disabled={orderedModules.length === 0}
+                        >
                           <Save className="h-4 w-4 mr-2" />
                           Save Module Order
                         </Button>
@@ -1246,6 +1409,7 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
                         onDragEnd={handleDragEnd}
                       >
                         <SortableContext
+                          disabled
                           items={orderedModules.map((m) => m._id)}
                           strategy={rectSortingStrategy}
                         >
@@ -1268,10 +1432,17 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
                     <div>
                       <div className="flex items-center justify-between mb-4">
                         <div>
-                          <h3 className="font-semibold text-lg">Categories in {selectedReorderModule?.name}</h3>
-                          <p className="text-sm text-gray-500">Drag to reorder, click to view screenshots</p>
+                          <h3 className="font-semibold text-lg">
+                            Categories in {selectedReorderModule?.name}
+                          </h3>
+                          <p className="text-sm text-gray-500">
+                            Drag to reorder, click to view screenshots
+                          </p>
                         </div>
-                        <Button onClick={handleSaveCategoryOrder} disabled={orderedCategories.length === 0}>
+                        <Button
+                          onClick={handleSaveCategoryOrder}
+                          disabled={orderedCategories.length === 0}
+                        >
                           <Save className="h-4 w-4 mr-2" />
                           Save Category Order
                         </Button>
@@ -1283,6 +1454,7 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
                         onDragEnd={handleDragEnd}
                       >
                         <SortableContext
+                          disabled
                           items={orderedCategories.map((c) => c._id)}
                           strategy={rectSortingStrategy}
                         >
@@ -1305,10 +1477,17 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
                     <div>
                       <div className="flex items-center justify-between mb-4">
                         <div>
-                          <h3 className="font-semibold text-lg">Screenshots in {selectedReorderCategory?.name}</h3>
-                          <p className="text-sm text-gray-500">Drag to reorder screenshots</p>
+                          <h3 className="font-semibold text-lg">
+                            Screenshots in {selectedReorderCategory?.name}
+                          </h3>
+                          <p className="text-sm text-gray-500">
+                            Drag to reorder screenshots
+                          </p>
                         </div>
-                        <Button onClick={handleSaveScreenshotOrder} disabled={orderedScreenshots.length === 0}>
+                        <Button
+                          onClick={handleSaveScreenshotOrder}
+                          disabled={orderedScreenshots.length === 0}
+                        >
                           <Save className="h-4 w-4 mr-2" />
                           Save Screenshot Order
                         </Button>
@@ -1337,7 +1516,7 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
                         <DragOverlay
                           dropAnimation={{
                             duration: 200,
-                            easing: 'cubic-bezier(0.18, 0.67, 0.6, 1.22)',
+                            easing: "cubic-bezier(0.18, 0.67, 0.6, 1.22)",
                           }}
                         >
                           {activeId && reorderLevel === "screenshot" ? (
@@ -1347,8 +1526,16 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
                                   <GripVertical className="h-4 w-4 text-white" />
                                 </div>
                                 <img
-                                  src={orderedScreenshots.find((s) => s.id === activeId)?.image}
-                                  alt={orderedScreenshots.find((s) => s.id === activeId)?.name ?? ""}
+                                  src={
+                                    orderedScreenshots.find(
+                                      (s) => s.id === activeId
+                                    )?.image
+                                  }
+                                  alt={
+                                    orderedScreenshots.find(
+                                      (s) => s.id === activeId
+                                    )?.name ?? ""
+                                  }
                                   className="w-full h-full object-cover pointer-events-none select-none"
                                 />
                                 <div className="absolute inset-0 bg-blue-500 bg-opacity-20" />
@@ -1449,7 +1636,10 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
                               variant="destructive"
                               size="sm"
                               onClick={() =>
-                                handleDelete(screenshot.id, screenshot?.name ?? "")
+                                handleDelete(
+                                  screenshot.id,
+                                  screenshot?.name ?? ""
+                                )
                               }
                               className="opacity-0 group-hover:opacity-100 transition-opacity"
                             >
@@ -1463,13 +1653,15 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
                           </div>
                           {screenshot.colors && (
                             <div className="flex space-x-1 mt-1">
-                              {screenshot.colors.slice(0, 3).map((color, index) => (
-                                <div
-                                  key={index}
-                                  className="w-3 h-3 rounded-full border border-white"
-                                  style={{ backgroundColor: color.hex }}
-                                />
-                              ))}
+                              {screenshot.colors
+                                .slice(0, 3)
+                                .map((color, index) => (
+                                  <div
+                                    key={index}
+                                    className="w-3 h-3 rounded-full border border-white"
+                                    style={{ backgroundColor: color.hex }}
+                                  />
+                                ))}
                             </div>
                           )}
                         </div>
@@ -1634,7 +1826,9 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
                 <label className="block text-sm font-medium mb-2">App</label>
                 <Select
                   value={editFormData.appId}
-                  onValueChange={(value) => handleEditFormChange("appId", value)}
+                  onValueChange={(value) =>
+                    handleEditFormChange("appId", value)
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select app" />
@@ -1671,7 +1865,9 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
               <label className="block text-sm font-medium mb-2">Category</label>
               <Select
                 value={editFormData.category}
-                onValueChange={(value) => handleEditFormChange("category", value)}
+                onValueChange={(value) =>
+                  handleEditFormChange("category", value)
+                }
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select category" />

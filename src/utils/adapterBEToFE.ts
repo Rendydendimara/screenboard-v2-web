@@ -66,6 +66,7 @@ export const adapterListScreenBEToFE = (data: TScreenRes[]): Screenshot[] => {
       description: d.description,
       appId: d.app,
       modul: d.modul,
+      order: d.order,
     });
   });
   return result;
@@ -76,17 +77,20 @@ export const adapterListAppBEToFEPublic = (
 ): AppPublic[] => {
   const result: AppPublic[] = [];
   data.map((d) => {
-    const screens: ScreenPublic[] = d.screens.map((t) => {
-      return {
-        id: t._id,
-        name: t.name,
-        category: t.category,
-        image: getImageUrl(t.image),
-        description: t.description,
-        appName: t?.app?.name ?? "",
-        modul: t?.modul?.name ?? "",
-      };
-    });
+    const screens: ScreenPublic[] = d.screens
+      .map((t) => {
+        return {
+          id: t._id,
+          name: t.name,
+          category: t.category,
+          image: getImageUrl(t.image),
+          description: t.description,
+          appName: t?.app?.name ?? "",
+          modul: t?.modul?.name ?? "",
+          order: t.order,
+        };
+      })
+      .sort((a, b) => (a.order || 0) - (b.order || 0));
     result.push({
       id: d._id,
       name: d.name,
@@ -117,17 +121,20 @@ export const adapterListAppBEToFEPublic = (
 export const adapterSingleAppBEToFEPublic = (
   data: TAppResPublic
 ): AppPublic => {
-  const screens: ScreenPublic[] = data.screens.map((t) => {
-    return {
-      id: t._id,
-      name: t.name,
-      category: t.category,
-      image: getImageUrl(t.image),
-      description: t.description,
-      appName: t?.app?.name ?? "",
-      modul: t?.modul?.name ?? "",
-    };
-  });
+  const screens: ScreenPublic[] = data.screens
+    .map((t) => {
+      return {
+        id: t._id,
+        name: t.name,
+        category: t.category,
+        image: getImageUrl(t.image),
+        description: t.description,
+        appName: t?.app?.name ?? "",
+        modul: t?.modul?.name ?? "",
+        order: t.order,
+      };
+    })
+    .sort((a, b) => (a.order || 0) - (b.order || 0));
   const result: AppPublic = {
     id: data._id,
     name: data.name,

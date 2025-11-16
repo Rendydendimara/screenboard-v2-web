@@ -65,6 +65,7 @@ export interface ScreenPublic {
   description: string;
   appName: string;
   modul: string;
+  order?: number;
 }
 
 export interface AppPublic {
