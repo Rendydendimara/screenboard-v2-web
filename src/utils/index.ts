@@ -1,7 +1,7 @@
 export function getImageUrl(link: string) {
   if (!link) return "/assets/image/user-placeholder.png";
-  // return `${import.meta.env.VITE_API_BASE_URL}${link}`;
-  return `http://66.42.52.110:8081${link}`;
+  return `${import.meta.env.VITE_API_BASE_URL}${link}`;
+  // return `http://66.42.52.110:8081${link}`;
 }
 
 export function isValidImageSrc(src: string): boolean {
