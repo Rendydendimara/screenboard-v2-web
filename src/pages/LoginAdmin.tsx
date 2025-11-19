@@ -127,13 +127,13 @@ export const LoginAdmin = () => {
             {mode === "login" ? "Sign In" : "Create Account"}
           </Button>
 
-          <div className="text-center">
+          {/* <div className="text-center">
             <Button variant="link" onClick={toggleMode} className="text-sm">
               {mode === "login"
                 ? "Don't have an account? Sign up"
                 : "Already have an account? Sign in"}
             </Button>
-          </div>
+          </div> */}
         </form>
       </div>
     </div>

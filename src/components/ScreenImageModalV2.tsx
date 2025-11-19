@@ -127,7 +127,7 @@ export const ScreenImageModalV2: React.FC<ScreenImageModalProps> = ({
           className={clsx(
             "!p-8 !rounded-[32px]",
             allScreens.length > 2 ? "max-w-[1340px]" : "w-auto",
-            "h-[90vh] overflow-y-auto"
+            "h-[95vh] overflow-y-auto"
           )}
         >
           <DialogHeader>
@@ -191,11 +191,12 @@ export const ScreenImageModalV2: React.FC<ScreenImageModalProps> = ({
                       <img
                         src={screenItem.image}
                         alt={screenItem.name}
-                        className="w-[338px] h-[749px] object-contain transition-all duration-200 rounded-xl"
+                        className={clsx(
+                          "w-[338px] h-[749px] object-contain transition-all duration-200 rounded-lg",
+                          screenItem.id === screen.id &&
+                            "border border-blue-500"
+                        )}
                       />
-                      {screenItem.id === screen.id && (
-                        <div className="absolute inset-0 border border-blue-500 rounded-lg"></div>
-                      )}
                     </div>
                   </div>
                 </div>

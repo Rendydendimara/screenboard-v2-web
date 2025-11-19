@@ -31,6 +31,7 @@ import { adapterListScreenBEToFE } from "@/utils/adapterBEToFE";
 import { processMultipleImages } from "@/utils/colorExtraction";
 import {
   ArrowDownUp,
+  Eye,
   FolderOpen,
   GripVertical,
   Palette,
@@ -317,6 +318,10 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isBulkUploadOpen, setIsBulkUploadOpen] = useState(false);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [viewingScreenshot, setViewingScreenshot] = useState<Screenshot | null>(
+    null
+  );
   const [selectedApp, setSelectedApp] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [selectedModul, setSelectedModul] = useState<string>("");
@@ -605,6 +610,20 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
       module: screenshot.modul || "",
     });
     setIsEditModalOpen(true);
+  }, []);
+
+  const handleView = useCallback((screenshot: Screenshot) => {
+    setViewingScreenshot(screenshot);
+    setIsViewModalOpen(true);
+    // Disable body scroll
+    document.body.style.overflow = 'hidden';
+  }, []);
+
+  const handleCloseView = useCallback(() => {
+    setIsViewModalOpen(false);
+    setViewingScreenshot(null);
+    // Re-enable body scroll
+    document.body.style.overflow = 'unset';
   }, []);
 
   const handleUpdate = async (e: React.FormEvent) => {
@@ -1243,6 +1262,13 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
     getListDataCategory();
   }, []);
 
+  // Cleanup: Re-enable scroll when component unmounts
+  useEffect(() => {
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, []);
+
   return (
     <div className="space-y-6">
       <Card>
@@ -1624,6 +1650,14 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
                             />
                           )}
                           <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all flex items-center justify-center gap-2">
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              onClick={() => handleView(screenshot)}
+                              className="opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              <Eye className="h-3 w-3" />
+                            </Button>
                             <Button
                               variant="secondary"
                               size="sm"
@@ -2102,6 +2136,33 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
         isLoadingAction={isLoadingDelete}
         customerName={editingScreen?.name ?? ""}
       />
+
+      {/* View Screenshot Modal */}
+      {isViewModalOpen && viewingScreenshot && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm !m-0"
+          onClick={handleCloseView}
+        >
+          <div
+            className="relative w-full h-full flex items-center justify-center p-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={viewingScreenshot.image}
+              alt={viewingScreenshot.name ?? ""}
+              className="max-w-full max-h-full object-contain shadow-2xl"
+            />
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute top-4 right-4 text-white hover:bg-white/20 bg-black/30"
+              onClick={handleCloseView}
+            >
+              <X className="h-6 w-6" />
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
