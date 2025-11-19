@@ -81,6 +81,9 @@ export interface App {
   lastUpdated?: string;
   iconFile?: string;
   countries?: string[];
+  linkPlayStore?: string;
+  linkAppStore?: string;
+  linkWebsite?: string;
 }
 
 interface FormData {
@@ -96,6 +99,9 @@ interface FormData {
   color: string;
   company: string;
   countries: string[];
+  linkPlayStore: string;
+  linkAppStore: string;
+  linkWebsite: string;
 }
 
 interface FormDataCategory {
@@ -144,6 +150,9 @@ export const AdminAppManager: React.FC = () => {
     color: "#000000",
     company: "",
     countries: [],
+    linkPlayStore: "",
+    linkAppStore: "",
+    linkWebsite: "",
   });
   const [formDataCategory, setFormDataCategory] = useState<FormDataCategory>({
     name: "",
@@ -177,6 +186,9 @@ export const AdminAppManager: React.FC = () => {
       color: "#000000",
       company: "",
       countries: [],
+      linkPlayStore: "",
+      linkAppStore: "",
+      linkWebsite: "",
     });
     setSlideImages([]);
     setEditingApp(null);
@@ -245,6 +257,9 @@ export const AdminAppManager: React.FC = () => {
       color: app.color,
       company: app.company,
       countries: app?.countries ?? [],
+      linkPlayStore: app?.linkPlayStore ?? "",
+      linkAppStore: app?.linkAppStore ?? "",
+      linkWebsite: app?.linkWebsite ?? "",
     });
     let tempImages: UploadImageType[] = [];
     app.screenshots.forEach((img) => {
@@ -307,6 +322,9 @@ export const AdminAppManager: React.FC = () => {
             oldIcon: icon.oldImage,
             icon: icon.currentImage,
             countries: appData.countries,
+            linkPlayStore: formData.linkPlayStore,
+            linkAppStore: formData.linkAppStore,
+            linkWebsite: formData.linkWebsite,
           });
 
           toast({
@@ -336,6 +354,9 @@ export const AdminAppManager: React.FC = () => {
             company: appData.company,
             icon: icon.currentImage,
             countries: appData.countries,
+            linkPlayStore: formData.linkPlayStore,
+            linkAppStore: formData.linkAppStore,
+            linkWebsite: formData.linkWebsite,
           });
 
           toast({
@@ -1276,6 +1297,57 @@ export const AdminAppManager: React.FC = () => {
                     }
                     placeholder="Select available countries..."
                   />
+                </div>
+
+                <div className="grid grid-cols-1 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      Play Store Link (Optional)
+                    </label>
+                    <Input
+                      type="url"
+                      value={formData.linkPlayStore}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          linkPlayStore: e.target.value,
+                        }))
+                      }
+                      // placeholder="https://play.google.com/store/apps/details?id=..."
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      App Store Link (Optional)
+                    </label>
+                    <Input
+                      type="url"
+                      value={formData.linkAppStore}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          linkAppStore: e.target.value,
+                        }))
+                      }
+                      // placeholder="https://apps.apple.com/app/..."
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      Website Link (Optional)
+                    </label>
+                    <Input
+                      type="url"
+                      value={formData.linkWebsite}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          linkWebsite: e.target.value,
+                        }))
+                      }
+                      // placeholder="https://example.com"
+                    />
+                  </div>
                 </div>
 
                 <div>

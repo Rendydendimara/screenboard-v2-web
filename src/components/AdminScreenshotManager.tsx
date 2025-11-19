@@ -616,14 +616,14 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
     setViewingScreenshot(screenshot);
     setIsViewModalOpen(true);
     // Disable body scroll
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
   }, []);
 
   const handleCloseView = useCallback(() => {
     setIsViewModalOpen(false);
     setViewingScreenshot(null);
     // Re-enable body scroll
-    document.body.style.overflow = 'unset';
+    document.body.style.overflow = "unset";
   }, []);
 
   const handleUpdate = async (e: React.FormEvent) => {
@@ -664,14 +664,47 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
 
   const handleEnterReorderMode = useCallback(() => {
     setIsReorderMode(true);
-    setReorderLevel("app");
-    setSelectedReorderApp(null);
+
+    // If appId is provided, skip app selection and go directly to module level
+    if (appId) {
+      const currentApp = rawApps.find((app) => app._id === appId);
+      if (currentApp) {
+        setSelectedReorderApp(currentApp);
+        setReorderLevel("module");
+
+        // Filter modules that have screenshots for this app
+        const modulesWithScreenshots = rawModules.filter((modul) => {
+          return screenshots.some(
+            (screenshot) =>
+              String(screenshot.appId) === appId &&
+              screenshot.modul === modul._id
+          );
+        });
+
+        const sorted = [...modulesWithScreenshots].sort((a, b) => {
+          const orderA = (a as any).order || 0;
+          const orderB = (b as any).order || 0;
+          if (orderA === orderB) {
+            return a.name.localeCompare(b.name);
+          }
+          return orderA - orderB;
+        });
+        setOrderedModules(sorted);
+      } else {
+        // Fallback to app level if app not found
+        setReorderLevel("app");
+        setSelectedReorderApp(null);
+      }
+    } else {
+      setReorderLevel("app");
+      setSelectedReorderApp(null);
+    }
+
     setSelectedReorderModule(null);
     setSelectedReorderCategory(null);
-    setOrderedModules([]);
     setOrderedCategories([]);
     setOrderedScreenshots([]);
-  }, []);
+  }, [appId, rawApps, rawModules, screenshots]);
 
   const handleExitReorderMode = useCallback(() => {
     setIsReorderMode(false);
@@ -769,9 +802,13 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
       setSelectedReorderModule(null);
       setOrderedCategories([]);
     } else if (reorderLevel === "module") {
-      setReorderLevel("app");
-      setSelectedReorderApp(null);
-      setOrderedModules([]);
+      if (appId) {
+        handleExitReorderMode();
+      } else {
+        setReorderLevel("app");
+        setSelectedReorderApp(null);
+        setOrderedModules([]);
+      }
     }
   }, [reorderLevel]);
 
@@ -1265,7 +1302,7 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
   // Cleanup: Re-enable scroll when component unmounts
   useEffect(() => {
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     };
   }, []);
 

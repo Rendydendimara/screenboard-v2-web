@@ -13,6 +13,9 @@ export type TAppPost = {
   company: string;
   icon?: File;
   countries: string[];
+  linkPlayStore?: string;
+  linkAppStore?: string;
+  linkWebsite?: string;
 };
 export type TAppPut = {
   oldScreenshot: string[];
@@ -51,6 +54,9 @@ export type TAppRes = {
   updatedBy: string | null; // Referencing User or null
   iconFile?: string;
   countries?: string[];
+  linkPlayStore?: string;
+  linkAppStore?: string;
+  linkWebsite?: string;
 };
 
 export type TScreenResPublic = {
@@ -106,4 +112,7 @@ export type TAppResPublic = {
   iconFile?: string;
   isLiked: boolean;
   countries?: string[];
+  linkPlayStore?: string;
+  linkAppStore?: string;
+  linkWebsite?: string;
 };

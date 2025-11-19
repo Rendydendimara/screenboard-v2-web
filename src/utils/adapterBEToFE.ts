@@ -25,6 +25,9 @@ export const adapterListAppBEToFE = (data: TAppRes[]): App[] => {
       screens: d.screens,
       iconFile: d.iconFile,
       countries: d?.countries ?? [],
+      linkPlayStore: d.linkPlayStore,
+      linkAppStore: d.linkAppStore,
+      linkWebsite: d.linkWebsite,
     });
   });
   return result;
@@ -51,6 +54,9 @@ export const adapterSingleAppBEToFE = (data: TAppRes): App => {
       ? new Date(data.updatedAt).toLocaleDateString()
       : "",
     countries: data?.countries ?? [],
+    linkPlayStore: data.linkPlayStore,
+    linkAppStore: data.linkAppStore,
+    linkWebsite: data.linkWebsite,
   };
   return result;
 };
@@ -69,7 +75,8 @@ export const adapterListScreenBEToFE = (data: TScreenRes[]): Screenshot[] => {
       order: d.order,
     });
   });
-  return result;
+
+  return result.sort((a, b) => (a.order || 0) - (b.order || 0));
 };
 
 export const adapterListAppBEToFEPublic = (
@@ -113,6 +120,9 @@ export const adapterListAppBEToFEPublic = (
         ? new Date(d.updatedAt).toLocaleDateString()
         : "",
       countries: d?.countries ?? [],
+      linkPlayStore: d.linkPlayStore,
+      linkAppStore: d.linkAppStore,
+      linkWebsite: d.linkWebsite,
     });
   });
   return result;
@@ -157,6 +167,9 @@ export const adapterSingleAppBEToFEPublic = (
       ? new Date(data.updatedAt).toLocaleDateString()
       : new Date(data.createdAt).toLocaleDateString(),
     countries: data?.countries ?? [],
+    linkPlayStore: data.linkPlayStore,
+    linkAppStore: data.linkAppStore,
+    linkWebsite: data.linkWebsite,
   };
   return result;
 };

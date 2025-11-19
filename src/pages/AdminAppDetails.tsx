@@ -15,6 +15,7 @@ import {
   Building,
   Calendar,
   Download,
+  ExternalLink,
   Globe,
   Smartphone,
   Star,
@@ -252,6 +253,52 @@ const AdminAppDetails: React.FC = () => {
                     ))}
                   </div>
                 </div>
+
+                {(app.linkPlayStore || app.linkAppStore || app.linkWebsite) && (
+                  <>
+                    <Separator />
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-3">
+                        Links
+                      </h4>
+                      <div className="space-y-2">
+                        {app.linkPlayStore && (
+                          <a
+                            href={app.linkPlayStore}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline"
+                          >
+                            <ExternalLink className="h-4 w-4" />
+                            <span>Google Play Store</span>
+                          </a>
+                        )}
+                        {app.linkAppStore && (
+                          <a
+                            href={app.linkAppStore}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline"
+                          >
+                            <ExternalLink className="h-4 w-4" />
+                            <span>Apple App Store</span>
+                          </a>
+                        )}
+                        {app.linkWebsite && (
+                          <a
+                            href={app.linkWebsite}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 text-blue-600 hover:text-blue-800 hover:underline"
+                          >
+                            <ExternalLink className="h-4 w-4" />
+                            <span>Website</span>
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  </>
+                )}
               </CardContent>
             </Card>
           </div>

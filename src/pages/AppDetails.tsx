@@ -976,6 +976,43 @@ const AppDetails: React.FC = () => {
                     <p className="text-slate-700 mt-6 max-w-[559px] leading-relaxed text-base font-normal">
                       {app.description}
                     </p>
+                    {(app.linkPlayStore || app.linkAppStore || app.linkWebsite) && (
+                      <div className="flex flex-wrap gap-3 mt-4">
+                        {app.linkPlayStore && (
+                          <a
+                            href={app.linkPlayStore}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600"
+                          >
+                            <ExternalLink className="h-4 w-4" />
+                            <span>Play Store</span>
+                          </a>
+                        )}
+                        {app.linkAppStore && (
+                          <a
+                            href={app.linkAppStore}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600"
+                          >
+                            <ExternalLink className="h-4 w-4" />
+                            <span>App Store</span>
+                          </a>
+                        )}
+                        {app.linkWebsite && (
+                          <a
+                            href={app.linkWebsite}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600"
+                          >
+                            <ExternalLink className="h-4 w-4" />
+                            <span>Website</span>
+                          </a>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="flex flex-wrap gap-2 justify-start items-center mt-4 md:mt-0">

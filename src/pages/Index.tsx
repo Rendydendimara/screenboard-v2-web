@@ -3,8 +3,8 @@ import UserAppAPI from "@/api/user/app/api";
 import AppLikeAPI from "@/api/user/appLike/api";
 import UserAuthAPI from "@/api/user/auth/api";
 import CategoryAPI from "@/api/user/category/api";
-import ScreenAPI from "@/api/user/screen/api";
 import { TCategoryRes } from "@/api/user/category/type";
+import ScreenAPI from "@/api/user/screen/api";
 import { AppCard } from "@/components/AppCard";
 import { AuthModal } from "@/components/AuthModal";
 import { CompareModal } from "@/components/CompareModal";
@@ -20,13 +20,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useToast } from "@/hooks/use-toast";
 import { useAppDispatch, useTypedSelector } from "@/hooks/use-typed-selector";
@@ -40,12 +33,10 @@ import { RootState } from "@/provider/store";
 import { adapterListAppBEToFEPublic } from "@/utils/adapterBEToFE";
 import clsx from "clsx";
 import {
-  Download,
   GitCompare,
   Grid,
   Heart,
   List,
-  Loader2,
   Menu,
   Search,
   X,
@@ -94,6 +85,9 @@ export interface AppPublic {
   company: string;
   lastUpdated: string;
   countries?: string[];
+  linkPlayStore?: string;
+  linkAppStore?: string;
+  linkWebsite?: string;
 }
 
 const Index = () => {
