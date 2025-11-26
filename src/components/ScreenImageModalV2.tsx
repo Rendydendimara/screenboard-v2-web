@@ -179,20 +179,20 @@ export const ScreenImageModalV2: React.FC<ScreenImageModalProps> = ({
                 </Tooltip>
 
                 <div
-                  className={`group cursor-pointer w-[338px] flex-shrink-0 ${
+                  className={`h-[95%] group cursor-pointer w-[338px] flex-shrink-0 ${
                     screenItem.id === screen.id
                       ? "ring-2 ring-blue-500 rounded-lg"
                       : ""
                   }`}
                   onClick={() => onScreenChange && onScreenChange(screenItem)}
                 >
-                  <div className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-2xl transition-shadow duration-200">
-                    <div className="overflow-hidden relative">
+                  <div className="bg-white rounded-lg h-full overflow-hidden shadow-sm hover:shadow-2xl transition-shadow duration-200">
+                    <div className="overflow-hidden h-full relative">
                       <img
                         src={screenItem.image}
                         alt={screenItem.name}
                         className={clsx(
-                          "w-[338px] h-[749px] object-contain transition-all duration-200 rounded-lg",
+                          "w-[338px] h-full object-fill transition-all duration-200 rounded-lg",
                           screenItem.id === screen.id &&
                             "border border-blue-500"
                         )}

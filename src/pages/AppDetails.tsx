@@ -51,6 +51,8 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { AppPublic, ScreenPublic } from "./Index";
 import { Tooltip } from "@/components/ui/tooltip";
 import { TooltipContent, TooltipTrigger } from "@radix-ui/react-tooltip";
+import InnerImageZoom from "react-inner-image-zoom";
+import { toast as toastify } from "react-toastify";
 
 const AppDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -266,11 +268,7 @@ const AppDetails: React.FC = () => {
 
   const handleChangeCategory = useCallback((category: string) => {
     setSelectedScreenCategory(category);
-    toast({
-      title: `Change to category ${category}`,
-      description: "",
-      variant: "default",
-    });
+    toastify.info(`Change to category ${category}`);
   }, []);
 
   const handleOpenAuthModal = useCallback(() => {
@@ -353,7 +351,7 @@ const AppDetails: React.FC = () => {
 
   if (!app) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 flex items-center justify-center">
+      <div className="flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">
             App Not Found
@@ -976,7 +974,9 @@ const AppDetails: React.FC = () => {
                     <p className="text-slate-700 mt-6 max-w-[559px] leading-relaxed text-base font-normal">
                       {app.description}
                     </p>
-                    {(app.linkPlayStore || app.linkAppStore || app.linkWebsite) && (
+                    {(app.linkPlayStore ||
+                      app.linkAppStore ||
+                      app.linkWebsite) && (
                       <div className="flex flex-wrap gap-3 mt-4">
                         {app.linkPlayStore && (
                           <a
@@ -1093,7 +1093,7 @@ const AppDetails: React.FC = () => {
 
       <div className="w-full flex justify-center items-center">
         <div className="w-full max-w-[1200px]">
-          <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50">
+          <div>
             <div className=" px-4 md:px-0 py-12">
               {/* UI Screens Collection */}
               <div className="mb-8">
@@ -1221,14 +1221,31 @@ const AppDetails: React.FC = () => {
                                 onClick={() => setSelectedScreen(screen)}
                               >
                                 <div className="min-w-[272px] max-w-[272px] h-[603px] rounded-xl overflow-hidden border-[1px] border-solid border-[rgba(0,0,0,0.1)]">
-                                  <ImageWithFallback
+                                  {/* <ImageWithFallback
                                     src={
                                       screen?.image ??
                                       "https://source.unsplash.com/400x300?game"
                                     }
                                     fallbackSrc="https://placehold.co/400"
                                     alt={screen.name}
-                                    className="w-full h-[623px] object-cover -mt-[20px]"
+                                    className="w-full h-[623px] object-cover -mt-[20px] group-hover:scale-105 transition-transform duration-300"
+                                  /> */}
+
+                                  <InnerImageZoom
+                                    src={
+                                      screen?.image ??
+                                      "https://source.unsplash.com/400x300?game"
+                                    }
+                                    zoomSrc={
+                                      screen?.image ??
+                                      "https://source.unsplash.com/400x300?game"
+                                    }
+                                    width={272}
+                                    height={600}
+                                    hasSpacer={true}
+                                    zoomType="hover"
+                                    zoomPreload={true}
+                                    fullscreenOnMobile={true}
                                   />
                                 </div>
                                 <h4
@@ -1270,14 +1287,31 @@ const AppDetails: React.FC = () => {
                                 onClick={() => setSelectedScreen(screen)}
                               >
                                 <div className="w-[272px] h-[603px] rounded-xl overflow-hidden border-[1px] border-solid border-[rgba(0,0,0,0.1)]">
-                                  <ImageWithFallback
+                                  {/* <ImageWithFallback
                                     src={
                                       screen?.image ??
                                       "https://source.unsplash.com/400x300?game"
                                     }
                                     fallbackSrc="https://placehold.co/400"
                                     alt={screen.name}
-                                    className="w-full h-[623px] object-fill -mt-[20px]"
+                                    className="w-full h-[623px] object-cover -mt-[20px] hover:scale-105 transition-transform duration-300"
+                                  /> */}
+
+                                  <InnerImageZoom
+                                    src={
+                                      screen?.image ??
+                                      "https://source.unsplash.com/400x300?game"
+                                    }
+                                    zoomSrc={
+                                      screen?.image ??
+                                      "https://source.unsplash.com/400x300?game"
+                                    }
+                                    width={272}
+                                    height={600}
+                                    hasSpacer={true}
+                                    zoomType="hover"
+                                    zoomPreload={true}
+                                    fullscreenOnMobile={true}
                                   />
                                 </div>
                                 <h4

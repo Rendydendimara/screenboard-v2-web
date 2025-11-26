@@ -138,4 +138,6 @@
   scrollbar-color: #D9D9D9 transparent;
 }
 
-
+.iiz__hint {
+  display: none !important;
+}
