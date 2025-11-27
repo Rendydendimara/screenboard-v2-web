@@ -292,12 +292,12 @@ export const AppCard: React.FC<AppCardProps> = ({
                     {app.category.name}
                   </p>
                 </div>
-                <div className="flex items-center gap-1">
+                {/* <div className="flex items-center gap-1">
                   {getPlatformIcon(app.platform)}
                   <p className="font-['Inter'] not-italic font-normal text-[13.3px] leading-[20px] flex items-center text-[#64748B]">
                     {app.platform}
                   </p>
-                </div>
+                </div> */}
               </div>
 
               <div className="flex items-center gap-4">
@@ -325,7 +325,9 @@ export const AppCard: React.FC<AppCardProps> = ({
             [-webkit-line-clamp:1] 
             [-webkit-box-orient:vertical]"
                     >
-                      {app.countries.join(", ")}
+                      {app.countries.length > 1
+                        ? `${app.countries[0]} +${app.countries.length - 1}`
+                        : app.countries.join(", ")}
                     </span>
                   </div>
                 ) : null}
@@ -349,28 +351,28 @@ export const AppCard: React.FC<AppCardProps> = ({
                     >
                       <path
                         d="M12 14C13.1046 14 14 13.1046 14 12C14 10.8954 13.1046 10 12 10C10.8954 10 10 10.8954 10 12C10 13.1046 10.8954 14 12 14Z"
-                        stroke="#020817"
+                        stroke="#44546A"
                         stroke-width="1.33333"
                         stroke-linecap="round"
                         stroke-linejoin="round"
                       />
                       <path
                         d="M4 6C5.10457 6 6 5.10457 6 4C6 2.89543 5.10457 2 4 2C2.89543 2 2 2.89543 2 4C2 5.10457 2.89543 6 4 6Z"
-                        stroke="#020817"
+                        stroke="#44546A"
                         stroke-width="1.33333"
                         stroke-linecap="round"
                         stroke-linejoin="round"
                       />
                       <path
                         d="M8.66675 4H10.6667C11.0204 4 11.3595 4.14048 11.6096 4.39052C11.8596 4.64057 12.0001 4.97971 12.0001 5.33333V10"
-                        stroke="#020817"
+                        stroke="#44546A"
                         stroke-width="1.33333"
                         stroke-linecap="round"
                         stroke-linejoin="round"
                       />
                       <path
                         d="M7.33333 12H5.33333C4.97971 12 4.64057 11.8595 4.39052 11.6095C4.14048 11.3594 4 11.0203 4 10.6667V6"
-                        stroke="#020817"
+                        stroke="#44546A"
                         stroke-width="1.33333"
                         stroke-linecap="round"
                         stroke-linejoin="round"
@@ -389,7 +391,7 @@ export const AppCard: React.FC<AppCardProps> = ({
                         "h-8 w-8 p-0 hover:bg-red-50",
                         app.isLiked
                           ? "!bg-[#9333EA] !text-white"
-                          : "text-slate-400"
+                          : "text-[#44546A]"
                       )}
                     >
                       {user ? (
@@ -403,8 +405,8 @@ export const AppCard: React.FC<AppCardProps> = ({
                           xmlns="http://www.w3.org/2000/svg"
                         >
                           <path
-                            d="M5.3335 7.33333V4.66667C5.3335 3.95942 5.61445 3.28115 6.11454 2.78105C6.61464 2.28095 7.29292 2 8.00016 2C8.70741 2 9.38568 2.28095 9.88578 2.78105C10.3859 3.28115 10.6668 3.95942 10.6668 4.66667V7.33333M3.3335 8.66667C3.3335 8.31304 3.47397 7.97391 3.72402 7.72386C3.97407 7.47381 4.31321 7.33333 4.66683 7.33333H11.3335C11.6871 7.33333 12.0263 7.47381 12.2763 7.72386C12.5264 7.97391 12.6668 8.31304 12.6668 8.66667V12.6667C12.6668 13.0203 12.5264 13.3594 12.2763 13.6095C12.0263 13.8595 11.6871 14 11.3335 14H4.66683C4.31321 14 3.97407 13.8595 3.72402 13.6095C3.47397 13.3594 3.3335 13.0203 3.3335 12.6667V8.66667ZM7.3335 10.6667C7.3335 10.8435 7.40373 11.013 7.52876 11.1381C7.65378 11.2631 7.82335 11.3333 8.00016 11.3333C8.17697 11.3333 8.34654 11.2631 8.47157 11.1381C8.59659 11.013 8.66683 10.8435 8.66683 10.6667C8.66683 10.4899 8.59659 10.3203 8.47157 10.1953C8.34654 10.0702 8.17697 10 8.00016 10C7.82335 10 7.65378 10.0702 7.52876 10.1953C7.40373 10.3203 7.3335 10.4899 7.3335 10.6667Z"
-                            stroke="black"
+                            d="M12.6667 9.33333C13.66 8.36 14.6667 7.19333 14.6667 5.66667C14.6667 4.69421 14.2804 3.76158 13.5928 3.07394C12.9051 2.38631 11.9725 2 11 2C9.82671 2 9.00004 2.33333 8.00004 3.33333C7.00004 2.33333 6.17337 2 5.00004 2C4.02758 2 3.09495 2.38631 2.40732 3.07394C1.71968 3.76158 1.33337 4.69421 1.33337 5.66667C1.33337 7.2 2.33337 8.36667 3.33337 9.33333L8.00004 14L12.6667 9.33333Z"
+                            stroke="#44546A"
                             stroke-width="1.33333"
                             stroke-linecap="round"
                             stroke-linejoin="round"
