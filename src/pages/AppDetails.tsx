@@ -3,8 +3,8 @@ import UserAppAPI from "@/api/user/app/api";
 import AppLikeAPI from "@/api/user/appLike/api";
 import UserAuthAPI from "@/api/user/auth/api";
 import CategoryAPI from "@/api/user/category/api";
-import ScreenAPI from "@/api/user/screen/api";
 import { TCategoryRes } from "@/api/user/category/type";
+import ScreenAPI from "@/api/user/screen/api";
 import { AuthModal } from "@/components/AuthModal";
 import { CompareModal } from "@/components/CompareModal";
 import CModalDialogLoading from "@/components/modal-dialog-loading";
@@ -12,9 +12,9 @@ import { ScreenImageModalV2 } from "@/components/ScreenImageModalV2";
 import SEO from "@/components/SEO";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { COUNTRIES } from "@/components/ui/CountryMultiSelect";
 import ImageWithFallback from "@/components/ui/ImageWithFallback";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Tooltip } from "@/components/ui/tooltip";
 import { useToast } from "@/hooks/use-toast";
 import { useAppDispatch, useTypedSelector } from "@/hooks/use-typed-selector";
 import { logout, setCredentials } from "@/provider/slices/authSlice";
@@ -27,19 +27,18 @@ import {
   adapterListAppBEToFEPublic,
   adapterSingleAppBEToFEPublic,
 } from "@/utils/adapterBEToFE";
+import { TooltipContent, TooltipTrigger } from "@radix-ui/react-tooltip";
 import clsx from "clsx";
 import {
   ArrowLeft,
   Building,
   Calendar,
-  Download,
   ExternalLink,
   GitCompare,
   Globe,
   Grid3X3,
   Heart,
   List,
-  Loader2,
   Menu,
   Monitor,
   Share2,
@@ -47,12 +46,10 @@ import {
   Star,
 } from "lucide-react";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { AppPublic, ScreenPublic } from "./Index";
-import { Tooltip } from "@/components/ui/tooltip";
-import { TooltipContent, TooltipTrigger } from "@radix-ui/react-tooltip";
 import InnerImageZoom from "react-inner-image-zoom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast as toastify } from "react-toastify";
+import { AppPublic, ScreenPublic } from "./Index";
 
 const AppDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();

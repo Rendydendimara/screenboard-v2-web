@@ -7,9 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ImageWithFallback from "@/components/ui/ImageWithFallback";
 import { Separator } from "@/components/ui/separator";
-import { COUNTRIES } from "@/components/ui/CountryMultiSelect";
 import { useToast } from "@/hooks/use-toast";
 import { adapterSingleAppBEToFE } from "@/utils/adapterBEToFE";
+import { COUNTRIES } from "@/utils/country";
 import {
   ArrowLeft,
   Building,

@@ -1,6 +1,7 @@
 import Admin from "@/pages/Admin";
 import AdminAppDetails from "@/pages/AdminAppDetails";
 import AdminComponentDetails from "@/pages/AdminComponentDetails";
+import AdminGlobalComponentDetails from "@/pages/AdminGlobalComponentDetails";
 import AppDetails from "@/pages/AppDetails";
 import Index from "@/pages/Index";
 import NotFound from "@/pages/NotFound";
@@ -67,6 +68,10 @@ const App = () => {
       <Route
         path="/admin/component/:appId"
         element={<AdminComponentDetails />}
+      />
+      <Route
+        path="/admin/global-component/:id"
+        element={<AdminGlobalComponentDetails />}
       />
 
       <Route path="*" element={<NotFound />} />

@@ -75,6 +75,15 @@ const URL_API = {
         DETAIL: "/api/v1/admin/plans/detail",
       },
     },
+    GLOBAL_COMPONENT: {
+      V1: {
+        CREATE: "/api/v1/admin/global-component/create",
+        UPDATE: "/api/v1/admin/global-component/update",
+        GET_LIST: "/api/v1/admin/global-component/get-list",
+        DELETE: "/api/v1/admin/global-component/delete",
+        DETAIL: "/api/v1/admin/global-component/detail",
+      },
+    },
   },
   USER: {
     APP: {

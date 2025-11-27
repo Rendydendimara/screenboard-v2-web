@@ -185,7 +185,7 @@ const CInputFilePreview: React.FC<ICInputFilePreview> = ({
     <div
       className={clsx(
         "flex flex-col items-start",
-        type === "inputSVG" ? "w-full gap-2" : "w-[456px] gap-3",
+        type === "inputSVG" ? "w-full gap-2" : "w-full gap-3",
         className
       )}
     >

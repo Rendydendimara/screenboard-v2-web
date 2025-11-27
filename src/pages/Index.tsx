@@ -8,6 +8,7 @@ import ScreenAPI from "@/api/user/screen/api";
 import { AppCard } from "@/components/AppCard";
 import { AuthModal } from "@/components/AuthModal";
 import { CompareModal } from "@/components/CompareModal";
+import { CountryMultiSelect } from "@/components/ui/CountryMultiSelect";
 import { FavoritesModal } from "@/components/FavoritesModal";
 import { HeroSection } from "@/components/HeroSection";
 import SEO from "@/components/SEO";
@@ -20,6 +21,13 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useToast } from "@/hooks/use-toast";
 import { useAppDispatch, useTypedSelector } from "@/hooks/use-typed-selector";
@@ -31,6 +39,7 @@ import {
 } from "@/provider/slices/compareSlice";
 import { RootState } from "@/provider/store";
 import { adapterListAppBEToFEPublic } from "@/utils/adapterBEToFE";
+import { COUNTRIES } from "@/utils/country";
 import clsx from "clsx";
 import {
   GitCompare,
@@ -94,6 +103,7 @@ const Index = () => {
   const [listApp, setListApp] = useState<AppPublic[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<TCategoryRes>();
+  const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showFilters, setShowFilters] = useState(false);
   const [showCompare, setShowCompare] = useState(false);
@@ -122,16 +132,25 @@ const Index = () => {
   const navigate = useNavigate();
   const [categories, setCategories] = useState<TCategoryRes[]>([]);
 
-  const filteredApps = listApp.filter((app) => {
-    const matchesSearch = app.name
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory
-      ? app?.category?._id === selectedCategory?._id
-      : true;
-    return matchesSearch && matchesCategory;
-  });
-
+  const filteredApps = useMemo(() => {
+    console.log("selectedCountries", selectedCountries);
+    console.log("listApp", listApp);
+    return listApp.filter((app) => {
+      const matchesSearch = app.name
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+      const matchesCategory = selectedCategory
+        ? app?.category?._id === selectedCategory?._id
+        : true;
+      const matchesCountry =
+        selectedCountries.length === 0
+          ? true
+          : app.countries?.some((countryName) =>
+              selectedCountries.includes(countryName)
+            ) ?? false;
+      return matchesSearch && matchesCategory && matchesCountry;
+    });
+  }, [listApp, selectedCategory, selectedCountries, searchTerm]);
   const handleLike = async (appId: string, isLike: boolean) => {
     try {
       if (user) {
@@ -910,7 +929,7 @@ const Index = () => {
                 <div
                   className={clsx(
                     "mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2",
-                    !searchTerm && "hidden"
+                    !searchTerm && selectedCountries.length === 0 && "hidden"
                   )}
                 >
                   {/* <p className="text-sm text-slate-600">
@@ -932,7 +951,7 @@ const Index = () => {
                         />
                       </Badge>
                     )}
-                    {selectedCategory !== null && (
+                    {selectedCategory && (
                       <Badge
                         variant="secondary"
                         className="flex items-center space-x-1"
@@ -944,37 +963,62 @@ const Index = () => {
                         />
                       </Badge>
                     )}
+                    {selectedCountries.length > 0 && (
+                      <Badge
+                        variant="secondary"
+                        className="flex items-center space-x-1"
+                      >
+                        <span>
+                          Countries: {selectedCountries.length} selected
+                        </span>
+                        <X
+                          className="h-3 w-3 cursor-pointer"
+                          onClick={() => setSelectedCountries([])}
+                        />
+                      </Badge>
+                    )}
                   </div>
                 </div>
               </div>
 
-              {/* Category Filter */}
-              <div className="flex items-center gap-3 mb-4 flex-wrap w-full">
-                <div
-                  onClick={() => setSelectedCategory(null)}
-                  className={clsx(
-                    "hover:cursor-pointer gap-[10px] px-3 py-1 rounded-[12px] border border-solid border-[#E2E8F0] font-[Inter] text-body-4 leading-[20px] tracking-[-0.2%] align-middle",
-                    !selectedCategory
-                      ? "bg-[#0F172A] text-white font-semibold"
-                      : " text-[#565D61] font-normal"
-                  )}
-                >
-                  All
-                </div>
-                {getListCategoryFiltered.map((cat, i) => (
+              <div className="w-full flex items-center  mb-4">
+                {/* Category Filter */}
+                <div className="flex items-center gap-3flex-wrap w-full">
                   <div
-                    onClick={() => handleChangeCategory(cat._id)}
+                    onClick={() => setSelectedCategory(null)}
                     className={clsx(
                       "hover:cursor-pointer gap-[10px] px-3 py-1 rounded-[12px] border border-solid border-[#E2E8F0] font-[Inter] text-body-4 leading-[20px] tracking-[-0.2%] align-middle",
-                      cat._id === selectedCategory?._id
+                      !selectedCategory
                         ? "bg-[#0F172A] text-white font-semibold"
                         : " text-[#565D61] font-normal"
                     )}
-                    key={i}
                   >
-                    {cat.name}
+                    All
                   </div>
-                ))}
+                  {getListCategoryFiltered.map((cat, i) => (
+                    <div
+                      onClick={() => handleChangeCategory(cat._id)}
+                      className={clsx(
+                        "hover:cursor-pointer gap-[10px] px-3 py-1 rounded-[12px] border border-solid border-[#E2E8F0] font-[Inter] text-body-4 leading-[20px] tracking-[-0.2%] align-middle",
+                        cat._id === selectedCategory?._id
+                          ? "bg-[#0F172A] text-white font-semibold"
+                          : " text-[#565D61] font-normal"
+                      )}
+                      key={i}
+                    >
+                      {cat.name}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Countries Filter */}
+                <div className="flex-1 sm:flex-none sm:min-w-[200px]">
+                  <CountryMultiSelect
+                    value={selectedCountries}
+                    onChange={setSelectedCountries}
+                    placeholder="All Countries"
+                  />
+                </div>
               </div>
 
               {/* Apps Grid/List - Responsive */}
