@@ -983,7 +983,7 @@ const Index = () => {
 
               <div className="w-full flex items-center  mb-4">
                 {/* Category Filter */}
-                <div className="flex items-center gap-3flex-wrap w-full">
+                <div className="flex items-center gap-3 flex-wrap w-full">
                   <div
                     onClick={() => setSelectedCategory(null)}
                     className={clsx(
@@ -1045,7 +1045,7 @@ const Index = () => {
                   >
                     {filteredApps.map((app, i) => (
                       <AppCard
-                        key={i}
+                        key={app.id}
                         app={app}
                         viewMode={viewMode}
                         onLike={() => handleLike(app.id, app.isLiked)}

@@ -1218,17 +1218,17 @@ const AppDetails: React.FC = () => {
                                 onClick={() => setSelectedScreen(screen)}
                               >
                                 <div className="min-w-[272px] max-w-[272px] h-[603px] rounded-xl overflow-hidden border-[1px] border-solid border-[rgba(0,0,0,0.1)]">
-                                  {/* <ImageWithFallback
+                                  <ImageWithFallback
                                     src={
                                       screen?.image ??
                                       "https://source.unsplash.com/400x300?game"
                                     }
                                     fallbackSrc="https://placehold.co/400"
                                     alt={screen.name}
-                                    className="w-full h-[623px] object-cover -mt-[20px] group-hover:scale-105 transition-transform duration-300"
-                                  /> */}
+                                    className="w-full h-[623px] object-cover -mt-[20px]" // group-hover:scale-105 transition-transform duration-300
+                                  />
 
-                                  <InnerImageZoom
+                                  {/* <InnerImageZoom
                                     src={
                                       screen?.image ??
                                       "https://source.unsplash.com/400x300?game"
@@ -1243,7 +1243,7 @@ const AppDetails: React.FC = () => {
                                     zoomType="hover"
                                     zoomPreload={true}
                                     fullscreenOnMobile={true}
-                                  />
+                                  /> */}
                                 </div>
                                 <h4
                                   className="font-[Inter] font-medium text-[12px] leading-[100%] tracking-[0%] align-middle text-[#565D61]"
@@ -1284,17 +1284,17 @@ const AppDetails: React.FC = () => {
                                 onClick={() => setSelectedScreen(screen)}
                               >
                                 <div className="w-[272px] h-[603px] rounded-xl overflow-hidden border-[1px] border-solid border-[rgba(0,0,0,0.1)]">
-                                  {/* <ImageWithFallback
+                                  <ImageWithFallback
                                     src={
                                       screen?.image ??
                                       "https://source.unsplash.com/400x300?game"
                                     }
                                     fallbackSrc="https://placehold.co/400"
                                     alt={screen.name}
-                                    className="w-full h-[623px] object-cover -mt-[20px] hover:scale-105 transition-transform duration-300"
-                                  /> */}
+                                    className="w-full h-[623px] object-cover -mt-[20px]" // hover:scale-105 transition-transform duration-300
+                                  />
 
-                                  <InnerImageZoom
+                                  {/* <InnerImageZoom
                                     src={
                                       screen?.image ??
                                       "https://source.unsplash.com/400x300?game"
@@ -1309,7 +1309,7 @@ const AppDetails: React.FC = () => {
                                     zoomType="hover"
                                     zoomPreload={true}
                                     fullscreenOnMobile={true}
-                                  />
+                                  /> */}
                                 </div>
                                 <h4
                                   className="font-[Inter] font-medium text-[12px] leading-[100%] tracking-[0%] align-middle text-[#565D61]"

@@ -292,7 +292,7 @@ const SortableScreenshotItem: React.FC<{
         )}
       </div>
       <div className="mt-2 text-xs">
-        <div className="font-medium truncate">{screenshot?.name ?? ""}</div>
+        <div className="font-medium">{screenshot?.name ?? ""}</div>
         {screenshot.colors && (
           <div className="flex space-x-1 mt-1">
             {screenshot.colors.slice(0, 3).map((color, index) => (
@@ -1719,7 +1719,7 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
                           </div>
                         </div>
                         <div className="mt-2 text-xs">
-                          <div className="font-medium truncate">
+                          <div className="font-medium">
                             {screenshot?.name ?? ""}
                           </div>
                           {screenshot.colors && (

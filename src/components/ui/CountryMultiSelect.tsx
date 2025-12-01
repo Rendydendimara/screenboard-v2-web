@@ -61,7 +61,7 @@ export const CountryMultiSelect: React.FC<CountryMultiSelectProps> = ({
       onChange([]);
     } else {
       // Select all countries
-      onChange(COUNTRIES.map(c => c.name));
+      onChange(COUNTRIES.map((c) => c.name));
     }
   };
 
@@ -151,7 +151,7 @@ export const CountryMultiSelect: React.FC<CountryMultiSelectProps> = ({
                   </div>
 
                   {/* Individual Countries */}
-                  {COUNTRIES.map((country) => {
+                  {COUNTRIES.slice(43, 51).map((country) => {
                     const isSelected = selectedCountries.includes(country.name);
                     return (
                       <CommandItem
