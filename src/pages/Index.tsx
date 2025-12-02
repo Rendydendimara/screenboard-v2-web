@@ -1017,6 +1017,7 @@ const Index = () => {
                     value={selectedCountries}
                     onChange={setSelectedCountries}
                     placeholder="All Countries"
+                    enableLimit
                   />
                 </div>
               </div>

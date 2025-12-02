@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Check, X, ChevronDown } from "lucide-react";
 import { Button } from "./button";
 import { Badge } from "./badge";
@@ -19,12 +19,14 @@ interface CountryMultiSelectProps {
   value: string[];
   onChange: (countries: string[]) => void;
   placeholder?: string;
+  enableLimit?: boolean;
 }
 
 export const CountryMultiSelect: React.FC<CountryMultiSelectProps> = ({
   value = [],
   onChange,
   placeholder = "Select countries...",
+  enableLimit = false,
 }) => {
   const [open, setOpen] = useState(false);
   const listRef = React.useRef<HTMLDivElement>(null);
@@ -55,17 +57,21 @@ export const CountryMultiSelect: React.FC<CountryMultiSelectProps> = ({
     onChange([]);
   };
 
+  const getListCountries = useMemo(() => {
+    return enableLimit ? COUNTRIES.slice(43, 51) : COUNTRIES;
+  }, [enableLimit]);
+
+  const isAllSelected = selectedCountries.length === getListCountries.length;
+
   const handleSelectAll = () => {
-    if (selectedCountries.length === COUNTRIES.length) {
+    if (selectedCountries.length === getListCountries.length) {
       // If all selected, deselect all
       onChange([]);
     } else {
       // Select all countries
-      onChange(COUNTRIES.map((c) => c.name));
+      onChange(getListCountries.map((c) => c.name));
     }
   };
-
-  const isAllSelected = selectedCountries.length === COUNTRIES.length;
 
   // Prevent wheel event from bubbling to parent
   React.useEffect(() => {
@@ -151,7 +157,7 @@ export const CountryMultiSelect: React.FC<CountryMultiSelectProps> = ({
                   </div>
 
                   {/* Individual Countries */}
-                  {COUNTRIES.slice(43, 51).map((country) => {
+                  {getListCountries.map((country) => {
                     const isSelected = selectedCountries.includes(country.name);
                     return (
                       <CommandItem
