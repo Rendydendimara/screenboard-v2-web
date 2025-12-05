@@ -429,7 +429,7 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
     }
     const newBulkFiles: BulkFileItem[] = files.map((file) => ({
       file,
-      name: "", // file.name.replace(/\.[^/.]+$/, "") // Remove file extension
+      name: file.name.replace(/\.[^/.]+$/, ""), // Remove file extension
     }));
     setBulkFiles((prev) => [...prev, ...newBulkFiles]);
   };
@@ -1171,6 +1171,10 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
       ...image,
       currentImage: imageFile,
     });
+    setFormData({
+      ...formData,
+      name: imageFile.name.replace(/\.[^/.]+$/, ""), // Remove file extension,
+    });
   };
 
   const getImagePreview = useMemo(() => {
@@ -1211,7 +1215,11 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
       isHaveChange: true,
       currentImage: undefined,
     });
-  }, []);
+    setFormData({
+      ...formData,
+      name: "",
+    });
+  }, [setFormData, formData]);
 
   const handleCloseBulkUpload = useCallback(() => {
     setBulkFiles([]);
@@ -1851,7 +1859,9 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
                 onChange={(e) =>
                   setFormData((prev) => ({ ...prev, name: e.target.value }))
                 }
-                required
+                placeholder={
+                  "Enter screenshot name (default name: using original name)"
+                }
               />
             </div>
             <AdminPanelWrapperInputImage>
@@ -1959,7 +1969,9 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
               <Input
                 value={editFormData.name}
                 onChange={(e) => handleEditFormChange("name", e.target.value)}
-                required
+                placeholder={
+                  "Enter screenshot name (default name: using original name)"
+                }
               />
             </div>
 
@@ -2128,9 +2140,7 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
                             setBulkFiles(newBulkFiles);
                           }}
                           placeholder={
-                            "Enter screenshot name (default name: " +
-                            item.file.name +
-                            "-{{module}}-{{category}}"
+                            "Enter screenshot name (default name: using original name)"
                           }
                           className="text-sm"
                         />

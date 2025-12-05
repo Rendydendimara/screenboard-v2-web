@@ -66,7 +66,7 @@ export const adapterListScreenBEToFE = (data: TScreenRes[]): Screenshot[] => {
   data.map((d) => {
     result.push({
       id: d._id,
-      name: d.name,
+      name: d.originalName ?? d.name,
       category: d.category,
       image: getImageUrl(d.image),
       description: d.description,
@@ -88,7 +88,7 @@ export const adapterListAppBEToFEPublic = (
       .map((t) => {
         return {
           id: t._id,
-          name: t.name,
+          name: t.originalName ?? t.name,
           category: t.category,
           image: getImageUrl(t.image),
           description: t.description,
@@ -135,7 +135,7 @@ export const adapterSingleAppBEToFEPublic = (
     .map((t) => {
       return {
         id: t._id,
-        name: t.name,
+        name: t.originalName ?? t.name,
         category: t.category,
         image: getImageUrl(t.image),
         description: t.description,

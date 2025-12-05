@@ -76,6 +76,7 @@ export type TScreenResPublic = {
   createdAt: string;
   updatedAt: string | null;
   createdBy: string;
+  originalName?: string;
   __v: number;
   order?: number;
 };

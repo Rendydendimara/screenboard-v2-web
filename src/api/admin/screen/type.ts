@@ -22,6 +22,7 @@ export type TScreenRes = {
   description: string;
   modul: string | null;
   createdAt: Date;
+  originalName?: string;
   deletedAt: Date | null;
   updatedAt: Date | null;
   createdBy: string | null; // Referencing User

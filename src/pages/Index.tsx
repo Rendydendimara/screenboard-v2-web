@@ -6,6 +6,7 @@ import CategoryAPI from "@/api/user/category/api";
 import { TCategoryRes } from "@/api/user/category/type";
 import ScreenAPI from "@/api/user/screen/api";
 import { AppCard } from "@/components/AppCard";
+import { AppCardSkeleton } from "@/components/AppCardSkeleton";
 import { AuthModal } from "@/components/AuthModal";
 import { CompareModal } from "@/components/CompareModal";
 import { CountryMultiSelect } from "@/components/ui/CountryMultiSelect";
@@ -118,6 +119,8 @@ const Index = () => {
 
   const [isOpenAuth, setIsOpenAuth] = useState(false);
   const [isLoadingGet, setIsLoadingGet] = useState(true);
+  const [isLoadingGetApp, setIsLoadingGetApp] = useState(true);
+
   const [isDownloading, setIsDownloading] = useState(false);
   const user = useTypedSelector((state: RootState) => state.auth.user);
   const compareApps = useTypedSelector(
@@ -244,7 +247,7 @@ const Index = () => {
 
   const getListData = async () => {
     try {
-      setIsLoadingGet(true);
+      setIsLoadingGetApp(true);
       const res = await UserAppAPI.getAll();
       const dataAdpt = adapterListAppBEToFEPublic(res.data);
       setListApp([
@@ -261,7 +264,7 @@ const Index = () => {
         variant: "destructive",
       });
     } finally {
-      setIsLoadingGet(false);
+      setIsLoadingGetApp(false);
     }
   };
 
@@ -1023,7 +1026,19 @@ const Index = () => {
               </div>
 
               {/* Apps Grid/List - Responsive */}
-              {filteredApps.length === 0 ? (
+              {isLoadingGetApp ? (
+                <div
+                  className={
+                    viewMode === "grid"
+                      ? "grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6"
+                      : "space-y-4 lg:space-y-6"
+                  }
+                >
+                  {[1, 2, 3, 4, 5, 6].map((i) => (
+                    <AppCardSkeleton key={i} viewMode={viewMode} />
+                  ))}
+                </div>
+              ) : filteredApps.length === 0 ? (
                 <div className="text-center py-12 lg:py-20">
                   <div className="w-20 h-20 lg:w-24 lg:h-24 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
                     <Search className="h-10 w-10 lg:h-12 lg:w-12 text-slate-400" />

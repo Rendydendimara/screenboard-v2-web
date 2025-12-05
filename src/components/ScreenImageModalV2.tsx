@@ -156,24 +156,29 @@ export const ScreenImageModalV2: React.FC<ScreenImageModalProps> = ({
                  overflow-hidden text-ellipsis break-words 
                  [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical]"
                     >
-                      {`${screenItem.modul} - ${screenItem.category.name} - ${screenItem.name}`
+                      {screenItem.name}
+                      {/* {`${screenItem.modul} - ${screenItem.category.name} - ${screenItem.name}`
                         .length > 43
                         ? `${screenItem.modul} - ${screenItem.category.name} - ${screenItem.name}`.slice(
                             0,
                             43
                           ) + "..."
-                        : `${screenItem.modul} - ${screenItem.category.name} - ${screenItem.name}`}
+                        : `${screenItem.modul} - ${screenItem.category.name} - ${screenItem.name}`} */}
                     </p>
                   </TooltipTrigger>
                   <TooltipContent
                     side="bottom"
                     align="center"
                     hidden={
-                      `${screenItem.modul} - ${screenItem.category.name} - ${screenItem.name}`
-                        .length < 43
+                      screenItem.name.length < 43
+                      // `${screenItem.modul} - ${screenItem.category.name} - ${screenItem.name}`
+                      //   .length < 43
                     }
                     children={
-                      <p className="font-[Inter] font-medium text-[14.91px] leading-[100%] tracking-[0%] text-[#565D61]">{`${screenItem.modul} - ${screenItem.category.name} - ${screenItem.name}`}</p>
+                      <p className="font-[Inter] font-medium text-[14.91px] leading-[100%] tracking-[0%] text-[#565D61]">
+                        {screenItem.name}
+                        {/* {`${screenItem.modul} - ${screenItem.category.name} - ${screenItem.name}`} */}
+                      </p>
                     }
                   />
                 </Tooltip>

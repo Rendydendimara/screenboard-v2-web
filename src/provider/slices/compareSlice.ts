@@ -30,8 +30,8 @@ const compareSlice = createSlice({
         (app) => app.id === action.payload.id
       );
 
-      // Only add if not exists and less than 3 apps
-      if (!exists && state.compareApps.length < 3) {
+      // Only add if not exists and less than 2 apps
+      if (!exists && state.compareApps.length < 2) {
         state.compareApps.push(action.payload);
         // Save to localStorage
         localStorage.setItem("compareApps", JSON.stringify(state.compareApps));

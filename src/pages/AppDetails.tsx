@@ -1254,8 +1254,9 @@ const AppDetails: React.FC = () => {
                                     overflow: "hidden",
                                   }}
                                 >
-                                  {screen.modul} - {screen?.category?.name} -{" "}
                                   {screen.name}
+                                  {/* {screen.modul} - {screen?.category?.name} -{" "}
+                                  {screen.name} */}
                                 </h4>
                               </div>
                             ))}
@@ -1320,8 +1321,10 @@ const AppDetails: React.FC = () => {
                                     overflow: "hidden",
                                   }}
                                 >
-                                  {screen.modul} - {screen?.category?.name} -{" "}
                                   {screen.name}
+
+                                  {/* {screen.modul} - {screen?.category?.name} -{" "}
+                                  {screen.name} */}
                                 </h4>
                               </div>
                             ))}
