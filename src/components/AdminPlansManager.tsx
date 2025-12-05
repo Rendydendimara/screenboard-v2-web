@@ -32,11 +32,13 @@ import {
 import { Badge } from './ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { Switch } from './ui/switch';
+import { Skeleton } from './ui/skeleton';
 
 export const AdminPlansManager = () => {
   const [plans, setPlans] = useState<TPlan[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingFetch, setIsLoadingFetch] = useState(false);
   const [editingPlan, setEditingPlan] = useState<TPlan | null>(null);
   const [featureInput, setFeatureInput] = useState('');
   const { toast } = useToast();
@@ -60,6 +62,7 @@ export const AdminPlansManager = () => {
 
   const fetchPlans = async () => {
     try {
+      setIsLoadingFetch(true);
       const response = await AdminPlansAPI.getList();
       if (response.success) {
         setPlans(response.data);
@@ -70,6 +73,8 @@ export const AdminPlansManager = () => {
         description: error.response?.data?.message || 'Failed to fetch plans',
         variant: 'destructive',
       });
+    } finally {
+      setIsLoadingFetch(false);
     }
   };
 
@@ -221,57 +226,88 @@ export const AdminPlansManager = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {plans.map((plan) => (
-                <TableRow key={plan._id}>
-                  <TableCell className="font-medium">{plan.name}</TableCell>
-                  <TableCell>
-                    <Badge variant="outline">{plan.slug}</Badge>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center">
-                      <DollarSign className="h-4 w-4 mr-1" />
-                      {plan.price.toFixed(2)} {plan.currency.toUpperCase()}
-                    </div>
-                  </TableCell>
-                  <TableCell>{plan.interval}</TableCell>
-                  <TableCell>
-                    <Badge variant="secondary">
-                      {plan.features.length} features
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    {plan.isActive ? (
-                      <Badge className="bg-green-500">
-                        <CheckCircle className="h-3 w-3 mr-1" />
-                        Active
+              {isLoadingFetch ? (
+                Array.from({ length: 5 }).map((_, index) => (
+                  <TableRow key={index}>
+                    <TableCell>
+                      <Skeleton className="h-4 w-32" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-6 w-20 rounded-full" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-24" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-16" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-6 w-24 rounded-full" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-6 w-20 rounded-full" />
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex gap-2">
+                        <Skeleton className="h-8 w-8" />
+                        <Skeleton className="h-8 w-8" />
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                plans.map((plan) => (
+                  <TableRow key={plan._id}>
+                    <TableCell className="font-medium">{plan.name}</TableCell>
+                    <TableCell>
+                      <Badge variant="outline">{plan.slug}</Badge>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center">
+                        <DollarSign className="h-4 w-4 mr-1" />
+                        {plan.price.toFixed(2)} {plan.currency.toUpperCase()}
+                      </div>
+                    </TableCell>
+                    <TableCell>{plan.interval}</TableCell>
+                    <TableCell>
+                      <Badge variant="secondary">
+                        {plan.features.length} features
                       </Badge>
-                    ) : (
-                      <Badge variant="destructive">
-                        <XCircle className="h-3 w-3 mr-1" />
-                        Inactive
-                      </Badge>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex gap-2">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleOpenModal(plan)}
-                      >
-                        <Edit3 className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        onClick={() => handleDelete(plan)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
+                    </TableCell>
+                    <TableCell>
+                      {plan.isActive ? (
+                        <Badge className="bg-green-500">
+                          <CheckCircle className="h-3 w-3 mr-1" />
+                          Active
+                        </Badge>
+                      ) : (
+                        <Badge variant="destructive">
+                          <XCircle className="h-3 w-3 mr-1" />
+                          Inactive
+                        </Badge>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleOpenModal(plan)}
+                        >
+                          <Edit3 className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          onClick={() => handleDelete(plan)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
         </CardContent>

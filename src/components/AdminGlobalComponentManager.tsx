@@ -27,6 +27,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CInputFileDragDrop, { CInputFilePreview } from "./ui/CInputFileDragDrop";
 import ConfirmDeleteModal from "./ui/confirm-delete-modal";
+import { Skeleton } from "./ui/skeleton";
 
 export interface GlobalComponent {
   id: string;
@@ -284,11 +285,35 @@ export const AdminGlobalComponentManager: React.FC = () => {
             </TableHeader>
             <TableBody>
               {isLoadingGet ? (
-                <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8">
-                    Loading...
-                  </TableCell>
-                </TableRow>
+                Array.from({ length: 5 }).map((_, index) => (
+                  <TableRow key={index}>
+                    <TableCell>
+                      <Skeleton className="h-4 w-40" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-64" />
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex gap-1">
+                        <Skeleton className="h-5 w-16 rounded-full" />
+                        <Skeleton className="h-5 w-16 rounded-full" />
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-8" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-12" />
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end gap-2">
+                        <Skeleton className="h-8 w-8" />
+                        <Skeleton className="h-8 w-8" />
+                        <Skeleton className="h-8 w-8" />
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
               ) : filteredComponents.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center py-8">

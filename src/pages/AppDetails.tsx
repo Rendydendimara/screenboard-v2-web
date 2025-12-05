@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import ImageWithFallback from "@/components/ui/ImageWithFallback";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Tooltip } from "@/components/ui/tooltip";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import { useAppDispatch, useTypedSelector } from "@/hooks/use-typed-selector";
 import { logout, setCredentials } from "@/provider/slices/authSlice";
@@ -340,9 +341,95 @@ const AppDetails: React.FC = () => {
 
   if (isLoadingDetail) {
     return (
-      <div>
-        <CModalDialogLoading isOpen={isLoadingDetail} onClose={() => null} />
-      </div>
+      <>
+        <SEO
+          title="Loading... | Screenboard"
+          description="Discover and explore amazing mobile app designs. Get inspired by the world's best mobile apps."
+        />
+        <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+          <header className="fixed w-full top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md shadow-sm">
+            <div className="w-full flex justify-center items-center">
+              <div className="w-full max-w-[1200px]">
+                <div className="flex items-center justify-between h-16 lg:h-20 px-4 md:px-0">
+                  <Link to="/">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
+                        <span className="text-white font-bold text-sm lg:text-base">
+                          S
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          {/* App Overview Skeleton */}
+          <div className="w-full flex justify-center items-center">
+            <div className="w-full max-w-[1200px]">
+              <div className="pt-24 px-4 md:px-0 pb-[40px]">
+                <div className="flex items-center justify-between md:flex-row flex-col">
+                  <div className="flex items-start gap-6 w-full">
+                    <Skeleton className="w-20 h-20 rounded-2xl" />
+                    <div className="flex-1 space-y-4">
+                      <Skeleton className="h-9 w-64" />
+                      <div className="space-y-2">
+                        <Skeleton className="h-5 w-48" />
+                        <Skeleton className="h-5 w-56" />
+                        <Skeleton className="h-5 w-40" />
+                      </div>
+                      <div className="flex gap-2">
+                        <Skeleton className="h-7 w-20 rounded-full" />
+                        <Skeleton className="h-7 w-24 rounded-full" />
+                        <Skeleton className="h-7 w-28 rounded-full" />
+                      </div>
+                      <Skeleton className="h-20 w-full max-w-[559px]" />
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap gap-2 justify-start items-center mt-4 md:mt-0">
+                    <Skeleton className="h-10 w-24 rounded-md" />
+                    <Skeleton className="h-10 w-28 rounded-md" />
+                    <Skeleton className="h-10 w-24 rounded-md" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Screenshots Skeleton */}
+        <div className="w-full flex justify-center items-center">
+          <div className="w-full max-w-[1200px]">
+            <div className="px-4 md:px-0 py-12">
+              <div className="mb-8">
+                <div className="flex flex-col md:flex-row items-start gap-3 md:gap-0 md:items-center justify-between mb-9">
+                  <div className="flex items-center space-x-4">
+                    <Skeleton className="h-5 w-20" />
+                    <div className="flex gap-2">
+                      <Skeleton className="h-9 w-24 rounded-md" />
+                      <Skeleton className="h-9 w-28 rounded-md" />
+                      <Skeleton className="h-9 w-32 rounded-md" />
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <Skeleton className="h-9 w-20 rounded-md" />
+                    <Skeleton className="h-9 w-20 rounded-md" />
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-7">
+                  {Array.from({ length: 8 }).map((_, i) => (
+                    <div key={i} className="flex flex-col gap-2">
+                      <Skeleton className="w-[272px] h-[603px] rounded-xl" />
+                      <Skeleton className="h-3 w-32" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </>
     );
   }
 

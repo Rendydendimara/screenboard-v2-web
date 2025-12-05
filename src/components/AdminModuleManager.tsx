@@ -22,6 +22,7 @@ import { Edit3, Plus, Save, Trash2 } from "lucide-react";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ConfirmDeleteModal from "./ui/confirm-delete-modal";
+import { Skeleton } from "./ui/skeleton";
 
 interface IModul {
   _id: string;
@@ -205,42 +206,58 @@ export const AdminModuleManager: React.FC = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredApps.map((app) => (
-                  <TableRow
-                    key={app._id}
-                    className="cursor-pointer hover:bg-slate-50"
-                  >
-                    <TableCell>
-                      <div className="font-medium">{app.name}</div>
-                    </TableCell>
+                {isLoadingGet ? (
+                  Array.from({ length: 5 }).map((_, index) => (
+                    <TableRow key={index}>
+                      <TableCell>
+                        <Skeleton className="h-4 w-40" />
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center space-x-2">
+                          <Skeleton className="h-8 w-8" />
+                          <Skeleton className="h-8 w-8" />
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  filteredApps.map((app) => (
+                    <TableRow
+                      key={app._id}
+                      className="cursor-pointer hover:bg-slate-50"
+                    >
+                      <TableCell>
+                        <div className="font-medium">{app.name}</div>
+                      </TableCell>
 
-                    <TableCell>
-                      <div className="flex items-center space-x-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleEdit(app);
-                          }}
-                        >
-                          <Edit3 className="h-3 w-3" />
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDelete(app._id);
-                          }}
-                          className="text-red-600 hover:text-red-700"
-                        >
-                          <Trash2 className="h-3 w-3" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                      <TableCell>
+                        <div className="flex items-center space-x-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleEdit(app);
+                            }}
+                          >
+                            <Edit3 className="h-3 w-3" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDelete(app._id);
+                            }}
+                            className="text-red-600 hover:text-red-700"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </div>

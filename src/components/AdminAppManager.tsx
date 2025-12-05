@@ -56,6 +56,7 @@ import ConfirmDeleteModal from "./ui/confirm-delete-modal";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import ImageWithFallback from "./ui/ImageWithFallback";
 import { CountryMultiSelect } from "./ui/CountryMultiSelect";
+import { Skeleton } from "./ui/skeleton";
 
 export interface App {
   id: string;
@@ -124,7 +125,10 @@ export const AdminAppManager: React.FC = () => {
   const [slideImages, setSlideImages] = useState<UploadImageType[]>([]);
   const [indexImageSlideEdit, setIndexImageSlideEdit] = useState<number>();
   const [isLoadingPost, setIsLoadingPost] = useState(false);
-  const [isLoadingGet, setisLoadingGet] = useState(false);
+  const [isLoadingGetCategory, setisLoadingGetCategory] = useState(false);
+  const [isLoadingGetSubCategory, setisLoadingSubGetCategory] = useState(false);
+
+  const [isLoadingGetApp, setisLoadingGetApp] = useState(false);
   const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
   const [isLoadingDelete, setIsLoadingDelete] = useState(false);
   const [modalFormType, setModalFormType] = useState<
@@ -539,7 +543,7 @@ export const AdminAppManager: React.FC = () => {
 
   const getListData = async () => {
     try {
-      setisLoadingGet(true);
+      setisLoadingGetApp(true);
       const dataRes = await AppAPI.getAll();
       const data: TAppRes[] = dataRes.data;
       const dataTemp: App[] = adapterListAppBEToFE(data);
@@ -551,15 +555,15 @@ export const AdminAppManager: React.FC = () => {
         variant: "destructive",
       });
 
-      setisLoadingGet(false);
+      setisLoadingGetApp(false);
     } finally {
-      setisLoadingGet(false);
+      setisLoadingGetApp(false);
     }
   };
 
   const getListDataCategory = async () => {
     try {
-      setisLoadingGet(true);
+      setisLoadingGetCategory(true);
       const dataRes = await CategoryAPI.getAll();
       setCategories(dataRes?.data ?? []);
     } catch (error: any) {
@@ -569,14 +573,14 @@ export const AdminAppManager: React.FC = () => {
         variant: "destructive",
       });
 
-      setisLoadingGet(false);
+      setisLoadingGetCategory(false);
     } finally {
-      setisLoadingGet(false);
+      setisLoadingGetCategory(false);
     }
   };
   const getListDataSubcategory = async () => {
     try {
-      setisLoadingGet(true);
+      setisLoadingSubGetCategory(true);
       const dataRes = await SubcategoryAPI.getAll();
       setSubcategories(dataRes?.data ?? []);
     } catch (error: any) {
@@ -586,9 +590,9 @@ export const AdminAppManager: React.FC = () => {
         variant: "destructive",
       });
 
-      setisLoadingGet(false);
+      setisLoadingSubGetCategory(false);
     } finally {
-      setisLoadingGet(false);
+      setisLoadingSubGetCategory(false);
     }
   };
 
@@ -796,98 +800,137 @@ export const AdminAppManager: React.FC = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {filteredApps.map((app) => (
-                      <TableRow
-                        key={app.id}
-                        className="cursor-pointer hover:bg-slate-50"
-                        onClick={() => handleViewApp(app)}
-                      >
-                        <TableCell>
-                          <div className="flex items-center space-x-3">
-                            <ImageWithFallback
-                              src={
-                                app?.image ??
-                                "https://source.unsplash.com/400x300?game"
-                              }
-                              fallbackSrc="https://placehold.co/400"
-                              alt={app.name}
-                              className="w-10 h-10 rounded-lg object-cover"
-                            />
-                            <div>
-                              <div className="font-medium">{app.name}</div>
-                              <div className="text-sm text-gray-500">
-                                {app.company}
+                    {isLoadingGetApp ? (
+                      Array.from({ length: 5 }).map((_, index) => (
+                        <TableRow key={index}>
+                          <TableCell>
+                            <div className="flex items-center space-x-3">
+                              <Skeleton className="w-10 h-10 rounded-lg" />
+                              <div className="space-y-2">
+                                <Skeleton className="h-4 w-32" />
+                                <Skeleton className="h-3 w-24" />
                               </div>
                             </div>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div>
-                            <div className="font-medium">
-                              {app.category?.name ?? "-"}
+                          </TableCell>
+                          <TableCell>
+                            <div className="space-y-2">
+                              <Skeleton className="h-4 w-28" />
+                              <Skeleton className="h-3 w-20" />
                             </div>
-                            <div className="text-sm text-gray-500">
-                              {app.subcategory?.name ?? "-"}
+                          </TableCell>
+                          <TableCell>
+                            <Skeleton className="h-6 w-16 rounded-full" />
+                          </TableCell>
+                          <TableCell>
+                            <Skeleton className="h-4 w-12" />
+                          </TableCell>
+                          <TableCell>
+                            <Skeleton className="h-4 w-16" />
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex items-center space-x-2">
+                              <Skeleton className="h-8 w-8" />
+                              <Skeleton className="h-8 w-8" />
+                              <Skeleton className="h-8 w-8" />
+                              <Skeleton className="h-8 w-8" />
                             </div>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="outline">{app.platform}</Badge>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center space-x-1">
-                            <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                            <span>{app.rating}</span>
-                          </div>
-                        </TableCell>
-                        <TableCell>{app.downloads}</TableCell>
-                        <TableCell>
-                          <div className="flex items-center space-x-2">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleViewComponent(app);
-                              }}
-                            >
-                              <Component className="h-3 w-3" />
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleViewApp(app);
-                              }}
-                            >
-                              <ExternalLink className="h-3 w-3" />
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleEdit(app);
-                              }}
-                            >
-                              <Edit3 className="h-3 w-3" />
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleDelete(app.id, app.name);
-                              }}
-                              className="text-red-600 hover:text-red-700"
-                            >
-                              <Trash2 className="h-3 w-3" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    ) : (
+                      filteredApps.map((app) => (
+                        <TableRow
+                          key={app.id}
+                          className="cursor-pointer hover:bg-slate-50"
+                          onClick={() => handleViewApp(app)}
+                        >
+                          <TableCell>
+                            <div className="flex items-center space-x-3">
+                              <ImageWithFallback
+                                src={
+                                  app?.image ??
+                                  "https://source.unsplash.com/400x300?game"
+                                }
+                                fallbackSrc="https://placehold.co/400"
+                                alt={app.name}
+                                className="w-10 h-10 rounded-lg object-cover"
+                              />
+                              <div>
+                                <div className="font-medium">{app.name}</div>
+                                <div className="text-sm text-gray-500">
+                                  {app.company}
+                                </div>
+                              </div>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <div>
+                              <div className="font-medium">
+                                {app.category?.name ?? "-"}
+                              </div>
+                              <div className="text-sm text-gray-500">
+                                {app.subcategory?.name ?? "-"}
+                              </div>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant="outline">{app.platform}</Badge>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex items-center space-x-1">
+                              <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                              <span>{app.rating}</span>
+                            </div>
+                          </TableCell>
+                          <TableCell>{app.downloads}</TableCell>
+                          <TableCell>
+                            <div className="flex items-center space-x-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleViewComponent(app);
+                                }}
+                              >
+                                <Component className="h-3 w-3" />
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleViewApp(app);
+                                }}
+                              >
+                                <ExternalLink className="h-3 w-3" />
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleEdit(app);
+                                }}
+                              >
+                                <Edit3 className="h-3 w-3" />
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDelete(app.id, app.name);
+                                }}
+                                className="text-red-600 hover:text-red-700"
+                              >
+                                <Trash2 className="h-3 w-3" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
                   </TableBody>
                 </Table>
               </div>
@@ -923,41 +966,57 @@ export const AdminAppManager: React.FC = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {categories.map((category) => (
-                      <TableRow
-                        key={category._id}
-                        className="cursor-pointer hover:bg-slate-50"
-                      >
-                        <TableCell>
-                          <div className="font-medium">{category.name}</div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center space-x-2">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleEditCategory(category);
-                              }}
-                            >
-                              <Edit3 className="h-3 w-3" />
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleDeleteCategory(category._id);
-                              }}
-                              className="text-red-600 hover:text-red-700"
-                            >
-                              <Trash2 className="h-3 w-3" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    {isLoadingGetCategory ? (
+                      Array.from({ length: 5 }).map((_, index) => (
+                        <TableRow key={index}>
+                          <TableCell>
+                            <Skeleton className="h-4 w-40" />
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex items-center space-x-2">
+                              <Skeleton className="h-8 w-8" />
+                              <Skeleton className="h-8 w-8" />
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    ) : (
+                      categories.map((category) => (
+                        <TableRow
+                          key={category._id}
+                          className="cursor-pointer hover:bg-slate-50"
+                        >
+                          <TableCell>
+                            <div className="font-medium">{category.name}</div>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex items-center space-x-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleEditCategory(category);
+                                }}
+                              >
+                                <Edit3 className="h-3 w-3" />
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDeleteCategory(category._id);
+                                }}
+                                className="text-red-600 hover:text-red-700"
+                              >
+                                <Trash2 className="h-3 w-3" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
                   </TableBody>
                 </Table>
               </div>
@@ -995,46 +1054,65 @@ export const AdminAppManager: React.FC = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {subcategories.map((subcategory) => (
-                      <TableRow
-                        key={subcategory._id}
-                        className="cursor-pointer hover:bg-slate-50"
-                      >
-                        <TableCell>
-                          <div className="font-medium">{subcategory.name}</div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="font-medium">
-                            {subcategory.categoryId.name}
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center space-x-2">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleEditSubcategory(subcategory);
-                              }}
-                            >
-                              <Edit3 className="h-3 w-3" />
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleDeleteSubcategory(subcategory._id);
-                              }}
-                              className="text-red-600 hover:text-red-700"
-                            >
-                              <Trash2 className="h-3 w-3" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    {isLoadingGetSubCategory ? (
+                      Array.from({ length: 5 }).map((_, index) => (
+                        <TableRow key={index}>
+                          <TableCell>
+                            <Skeleton className="h-4 w-40" />
+                          </TableCell>
+                          <TableCell>
+                            <Skeleton className="h-4 w-32" />
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex items-center space-x-2">
+                              <Skeleton className="h-8 w-8" />
+                              <Skeleton className="h-8 w-8" />
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    ) : (
+                      subcategories.map((subcategory) => (
+                        <TableRow
+                          key={subcategory._id}
+                          className="cursor-pointer hover:bg-slate-50"
+                        >
+                          <TableCell>
+                            <div className="font-medium">{subcategory.name}</div>
+                          </TableCell>
+                          <TableCell>
+                            <div className="font-medium">
+                              {subcategory.categoryId.name}
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex items-center space-x-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleEditSubcategory(subcategory);
+                                }}
+                              >
+                                <Edit3 className="h-3 w-3" />
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDeleteSubcategory(subcategory._id);
+                                }}
+                                className="text-red-600 hover:text-red-700"
+                              >
+                                <Trash2 className="h-3 w-3" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
                   </TableBody>
                 </Table>
               </div>
