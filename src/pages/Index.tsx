@@ -172,7 +172,6 @@ const Index = () => {
           );
         } else {
           await AppLikeAPI.like({ appId: appId });
-
           dispatch(
             setCredentials({
               token: user.token,
@@ -183,6 +182,14 @@ const Index = () => {
             })
           );
         }
+        console.log([
+          ...listAppAny.slice(0, currentIndex),
+          {
+            ...listAppAny[currentIndex],
+            isLiked: !isLike,
+          },
+          ...listAppAny.slice(currentIndex + 1, listAppAny.length),
+        ]);
         setListApp([
           ...listAppAny.slice(0, currentIndex),
           {
@@ -347,7 +354,7 @@ const Index = () => {
 
   useEffect(() => {
     getListData();
-  }, [user]);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {

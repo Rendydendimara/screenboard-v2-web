@@ -197,7 +197,7 @@ export const ScreenImageModalV2: React.FC<ScreenImageModalProps> = ({
                         src={screenItem.image}
                         alt={screenItem.name}
                         className={clsx(
-                          "w-[338px] h-full object-fill transition-all duration-200 rounded-lg",
+                          "w-[338px] h-full object-contain transition-all duration-200 rounded-lg",
                           screenItem.id === screen.id &&
                             "border border-blue-500"
                         )}
