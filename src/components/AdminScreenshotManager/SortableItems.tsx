@@ -156,7 +156,7 @@ export const SortableScreenshotItem: React.FC<{
       } transition-all duration-200`}
     >
       <div
-        className={`w-full h-72 rounded-lg overflow-hidden bg-gray-100 transition-all duration-200 ${
+        className={`w-full h-full rounded-lg overflow-hidden bg-gray-100 transition-all duration-200 ${
           isDragging
             ? "shadow-2xl ring-2 ring-blue-400 ring-opacity-50"
             : "shadow-md hover:shadow-lg"

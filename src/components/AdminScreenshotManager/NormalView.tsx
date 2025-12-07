@@ -89,17 +89,17 @@ export const NormalView: React.FC<NormalViewProps> = ({
         />
       </div>
       {selectedModuleFilter?.value ? (
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {screenshots.map((screenshot) => (
             <div
               key={screenshot.id}
               className="shrink-0 w-full relative group cursor-pointer"
             >
-              <div className="w-full h-72 rounded-lg overflow-hidden bg-gray-100 shadow-md hover:shadow-lg transition-shadow">
+              <div className="w-full h-full rounded-lg overflow-hidden bg-gray-100 shadow-md hover:shadow-lg transition-shadow">
                 <img
                   src={screenshot.image}
                   alt={screenshot?.name ?? ""}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain"
                 />
                 {screenshot.dominantColor && (
                   <div
@@ -138,19 +138,8 @@ export const NormalView: React.FC<NormalViewProps> = ({
                   </Button>
                 </div>
               </div>
-              <div className="mt-2 text-xs">
+              <div className="mt-1 text-xs">
                 <div className="font-medium">{screenshot?.name ?? ""}</div>
-                {/* {screenshot.colors && (
-                <div className="flex space-x-1 mt-1">
-                  {screenshot.colors.slice(0, 3).map((color, index) => (
-                    <div
-                      key={index}
-                      className="w-3 h-3 rounded-full border border-white"
-                      style={{ backgroundColor: color.hex }}
-                    />
-                  ))}
-                </div>
-              )} */}
               </div>
             </div>
           ))}
@@ -178,7 +167,8 @@ export const NormalView: React.FC<NormalViewProps> = ({
               No Module Selected
             </h3>
             <p className="text-sm text-gray-500">
-              Please select a module from the dropdown above to view screenshots.
+              Please select a module from the dropdown above to view
+              screenshots.
             </p>
           </div>
         </div>

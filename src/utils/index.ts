@@ -21,3 +21,21 @@ export function formatFileSize(bytes: number): string {
   const size = parseFloat((bytes / Math.pow(k, i)).toFixed(2));
   return `${size} ${sizes[i]}`;
 }
+
+// fungsi untuk membersihkan nama file
+export function sanitize(filename: string): string {
+  if (!filename) return "";
+
+  let name = filename;
+
+  // Hapus karakter berbahaya tapi biarkan spasi
+  name = name.replace(/[^a-zA-Z0-9\s_-]/g, "");
+
+  // Rapikan spasi berlebihan (lebih dari 1 jadi 1 spasi)
+  name = name.replace(/\s+/g, " ");
+
+  // Trim spasi di awal/akhir
+  name = name.trim();
+
+  return name;
+}

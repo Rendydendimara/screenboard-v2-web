@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ScreenPublic } from "@/pages/Index";
+import { ScreenPublic } from "@/pages/Home/Index";
 import { Heart, LayoutGrid, List, Search, X } from "lucide-react";
 import React, { useState } from "react";
 

@@ -239,7 +239,14 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
                 </>
               )}
               {isReorderMode && (
-                <Button variant="outline" onClick={handleExitReorderMode}>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    handleExitReorderMode();
+                    setSelectedModulFilter(null);
+                    setSelectedCategoryFilter(null);
+                  }}
+                >
                   <X className="h-4 w-4 mr-2" />
                   Exit Reorder Mode
                 </Button>
@@ -280,7 +287,11 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
                   onSelectCategory={handleSelectCategory}
                   onSaveModuleOrder={handleSaveModuleOrder}
                   onSaveCategoryOrder={handleSaveCategoryOrder}
-                  onSaveScreenshotOrder={handleSaveScreenshotOrder}
+                  onSaveScreenshotOrder={() => {
+                    handleSaveScreenshotOrder();
+                    setSelectedModulFilter(null);
+                    setSelectedCategoryFilter(null);
+                  }}
                   onDragStart={handleDragStart}
                   onDragEnd={handleDragEnd}
                   onEdit={handleEdit}

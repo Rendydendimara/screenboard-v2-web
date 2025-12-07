@@ -1,33 +1,13 @@
-import AdminAuthAPI from "@/api/admin/auth/api";
-import UserAppAPI from "@/api/user/app/api";
-import AppLikeAPI from "@/api/user/appLike/api";
-import UserAuthAPI from "@/api/user/auth/api";
-import CategoryAPI from "@/api/user/category/api";
-import { TCategoryRes } from "@/api/user/category/type";
-import ScreenAPI from "@/api/user/screen/api";
 import { AuthModal } from "@/components/AuthModal";
 import { CompareModal } from "@/components/CompareModal";
-import CModalDialogLoading from "@/components/modal-dialog-loading";
 import { ScreenImageModalV2 } from "@/components/ScreenImageModalV2";
 import SEO from "@/components/SEO";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import ImageWithFallback from "@/components/ui/ImageWithFallback";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Tooltip } from "@/components/ui/tooltip";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useToast } from "@/hooks/use-toast";
-import { useAppDispatch, useTypedSelector } from "@/hooks/use-typed-selector";
-import { logout, setCredentials } from "@/provider/slices/authSlice";
-import {
-  addToCompare,
-  removeFromCompare,
-} from "@/provider/slices/compareSlice";
-import { RootState } from "@/provider/store";
-import {
-  adapterListAppBEToFEPublic,
-  adapterSingleAppBEToFEPublic,
-} from "@/utils/adapterBEToFE";
+import { Tooltip } from "@/components/ui/tooltip";
 import { TooltipContent, TooltipTrigger } from "@radix-ui/react-tooltip";
 import clsx from "clsx";
 import {
@@ -36,308 +16,61 @@ import {
   Calendar,
   ExternalLink,
   GitCompare,
-  Globe,
-  Grid3X3,
   Heart,
-  List,
   Menu,
-  Monitor,
   Share2,
-  Smartphone,
   Star,
 } from "lucide-react";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import InnerImageZoom from "react-inner-image-zoom";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { toast as toastify } from "react-toastify";
-import { AppPublic, ScreenPublic } from "./Index";
+import React from "react";
+import { Link } from "react-router-dom";
+import useController from "./usController";
+import FilterItem from "@/components/FilterItem";
 
-const AppDetails: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-  const user = useTypedSelector((state: RootState) => state.auth.user);
-  const { toast } = useToast();
-  const [selectedScreenCategory, setSelectedScreenCategory] =
-    useState<string>("All");
-  const [screenViewMode, setScreenViewMode] = useState<
-    "grid" | "list" | "horizontal"
-  >("grid");
-  const [selectedScreen, setSelectedScreen] = useState<ScreenPublic | null>(
-    null
-  );
-  const [app, setApp] = useState<AppPublic | null>(null);
-  const [isLoadingDetail, setIsLoadingDetail] = useState(true);
-  const [showCompare, setShowCompare] = useState(false);
-  const compareApps = useTypedSelector(
-    (state: RootState) => state.compare.compareApps
-  );
-  const [listApp, setListApp] = useState<AppPublic[]>([]);
-  const [categories, setCategories] = useState<TCategoryRes[]>([]);
-  const [isOpenAuth, setIsOpenAuth] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const [scrolledCategories, setScrolledCategories] = useState(false);
-  const [isDownloading, setIsDownloading] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const getPlatformIcon = (platform: string) => {
-    switch (platform) {
-      case "iOS":
-        return <Smartphone className="h-4 w-4" />;
-      case "Android":
-        return <Monitor className="h-4 w-4" />;
-      case "Both":
-        return <Globe className="h-4 w-4" />;
-      default:
-        return <Globe className="h-4 w-4" />;
-    }
-  };
-
-  const screenCategories = [
-    "All",
-    ...new Set(app?.screens.map((screen) => screen?.category?.name)),
-  ];
-
-  const filteredScreens =
-    selectedScreenCategory === "All"
-      ? app?.screens
-      : app?.screens.filter(
-          (screen) => screen?.category?.name === selectedScreenCategory
-        );
-
-  const groupedScreens = app?.screens.reduce((acc, screen) => {
-    if (!acc[screen?.category?.name]) {
-      acc[screen?.category?.name] = [];
-    }
-    acc[screen?.category?.name].push(screen);
-    return acc;
-  }, {} as Record<string, ScreenPublic[]>);
-
-  const toggleLike = async () => {
-    try {
-      if (user) {
-        if (app.isLiked) {
-          await AppLikeAPI.dislike({ appId: app.id });
-          setApp({
-            ...app,
-            isLiked: !app.isLiked,
-          });
-          dispatch(
-            setCredentials({
-              token: user.token,
-              user: {
-                ...user,
-                appLikes: user.appLikes.filter((d) => d !== app.id),
-              },
-            })
-          );
-        } else {
-          await AppLikeAPI.like({ appId: app.id });
-          setApp({
-            ...app,
-            isLiked: !app.isLiked,
-          });
-          dispatch(
-            setCredentials({
-              token: user.token,
-              user: {
-                ...user,
-                appLikes: [...user.appLikes, app.id],
-              },
-            })
-          );
-        }
-        toast({
-          title: app?.isLiked ? "Removed from favorites" : "Added to favorites",
-          description: `${app?.name} has been ${
-            app?.isLiked ? "removed from" : "added to"
-          } your favorites.`,
-        });
-      } else {
-        setIsOpenAuth(true);
-      }
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.response.data.message || error.message,
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleScreenChange = (newScreen: ScreenPublic) => {
-    setSelectedScreen(newScreen);
-  };
-
-  const getAppDetail = async () => {
-    setIsLoadingDetail(true);
-    try {
-      const res = await UserAppAPI.getDetail(id);
-      const data = adapterSingleAppBEToFEPublic(res.data);
-      setApp(data);
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message || error.response.data.message,
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoadingDetail(false);
-    }
-  };
-
-  const handleLogout = async () => {
-    try {
-      let res;
-      if (user.userType === "administrator") {
-        res = await AdminAuthAPI.logout();
-      } else {
-        res = await UserAuthAPI.logout();
-      }
-      if (res.success) {
-        dispatch(logout());
-        window.location.reload();
-      }
-    } catch (err: any) {
-      toast({
-        title: "Error",
-        description: err.message,
-      });
-    }
-  };
-
-  const handleAddToCompare = (app: AppPublic) => {
-    dispatch(addToCompare(app));
-  };
-
-  const handleRemoveFromCompare = (appId: string) => {
-    dispatch(removeFromCompare(appId));
-  };
-
-  // 🔹 Group by kategori agar bisa ditampilkan per section
-  const groupedScreensFilter = filteredScreens?.reduce((acc, screen) => {
-    const categoryName = screen.category?.name || "Uncategorized";
-    if (!acc[categoryName]) acc[categoryName] = [];
-    acc[categoryName].push(screen);
-    return acc;
-  }, {} as Record<string, any[]>);
-
-  useEffect(() => {
-    getListData();
-    getListDataCategory();
-  }, []);
-
-  const getListData = async () => {
-    try {
-      const res = await UserAppAPI.getAll();
-      const dataAdpt = adapterListAppBEToFEPublic(res.data);
-      setListApp([
-        ...dataAdpt,
-        ...dataAdpt,
-        ...dataAdpt,
-        ...dataAdpt,
-        ...dataAdpt,
-      ]);
-    } catch (err: any) {
-      toast({
-        title: "Error",
-        description: err.response.data.message,
-        variant: "destructive",
-      });
-    }
-  };
-
-  const getListDataCategory = async () => {
-    try {
-      const dataRes = await CategoryAPI.getAll();
-      setCategories(dataRes?.data ?? []);
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message || error.response.data.message,
-        variant: "destructive",
-      });
-    }
-  };
-
-  const onCloseOpenAuth = useCallback(() => {
-    setIsOpenAuth(false);
-  }, []);
-
-  const handleChangeCategory = useCallback((category: string) => {
-    setSelectedScreenCategory(category);
-    toastify.info(`Change to category ${category}`);
-  }, []);
-
-  const handleOpenAuthModal = useCallback(() => {
-    if (user) return;
-    setIsOpenAuth(true);
-  }, [user]);
-
-  const handleAddCompare = useCallback(() => {
-    const ids = compareApps.map((d) => d.id);
-    if (ids.includes(app.id)) return;
-    handleAddToCompare(app);
-    setShowCompare(true);
-  }, [compareApps, app]);
-
-  const handleDownloadScreens = async (categoryId?: string) => {
-    try {
-      setIsDownloading(true);
-
-      const filter: { app?: string; category?: string } = { app: id };
-
-      // If category is selected and not "All", filter by category
-      if (categoryId && selectedScreenCategory !== "All") {
-        filter.category = categoryId;
-      }
-
-      await ScreenAPI.download(filter);
-
-      const categoryName = app?.screens.find(
-        (s) => s.category?._id === categoryId
-      )?.category?.name;
-
-      toast({
-        title: "Download Started",
-        description: categoryName
-          ? `Downloading screens from ${categoryName} category...`
-          : `Downloading all screens from ${app?.name}...`,
-      });
-    } catch (error: any) {
-      toast({
-        title: "Download Failed",
-        description: error.message || "Failed to download screens",
-        variant: "destructive",
-      });
-    } finally {
-      setIsDownloading(false);
-    }
-  };
-
-  const getListCategoryFiltered = useMemo(() => {
-    const categoriesApp = listApp.map((app) => app.category._id);
-    return categories.filter((cat) => {
-      return categoriesApp.includes(cat._id);
-    });
-  }, [categories, listApp]);
-
-  useEffect(() => {
-    getAppDetail();
-  }, [user]);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const isMobile = window.innerWidth <= 200;
-
-      setScrolled(isMobile ? window.scrollY > 20 : window.scrollY > 20);
-      setScrolledCategories(
-        isMobile ? window.scrollY > 400 : window.scrollY > 300
-      );
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+const useView: React.FC = () => {
+  const {
+    app,
+    isLoadingDetail,
+    selectedScreenCategory,
+    screenViewMode,
+    selectedScreen,
+    showCompare,
+    compareApps,
+    listApp,
+    categories,
+    isOpenAuth,
+    scrolled,
+    scrolledCategories,
+    isDownloading,
+    mobileMenuOpen,
+    user,
+    screenCategories,
+    filteredScreens,
+    groupedScreens,
+    groupedScreensFilter,
+    getListCategoryFiltered,
+    setSelectedScreenCategory,
+    setScreenViewMode,
+    setSelectedScreen,
+    setShowCompare,
+    setIsOpenAuth,
+    setMobileMenuOpen,
+    getPlatformIcon,
+    toggleLike,
+    handleScreenChange,
+    handleLogout,
+    handleAddToCompare,
+    handleRemoveFromCompare,
+    onCloseOpenAuth,
+    handleChangeCategory,
+    handleOpenAuthModal,
+    handleAddCompare,
+    handleDownloadScreens,
+    navigate,
+    filterCategories,
+    containerMainRef,
+    scrolledFilterMenu,
+    handleChangeFilterCategories,
+  } = useController();
 
   if (isLoadingDetail) {
     return (
@@ -826,119 +559,6 @@ const AppDetails: React.FC = () => {
                     </Sheet>
                   </div>
                 </div>
-                <div
-                  className={clsx(
-                    " px-4 md:px-0 transition-all duration-300 ease-in-out overflow-hidden",
-                    scrolledCategories
-                      ? "max-h-[500px] opacity-100 translate-y-0"
-                      : "max-h-0 opacity-0 -translate-y-4 pointer-events-none"
-                  )}
-                >
-                  {/* Scr Filters */}
-                  <div className="flex flex-col md:flex-row items-start gap-3 md:gap-0 md:items-center justify-between mb-9">
-                    <div className="flex items-center space-x-4">
-                      <div className="flex flex-col md:flex-row items-start gap-2 md:gap-0 md:items-center md:space-x-2">
-                        <span className="text-sm font-medium text-slate-700">
-                          Category:
-                        </span>
-                        <div className="flex flex-wrap gap-2">
-                          {screenCategories.map((category) => (
-                            <Button
-                              key={category}
-                              variant={
-                                selectedScreenCategory === category
-                                  ? "default"
-                                  : "outline"
-                              }
-                              size="sm"
-                              onClick={() => handleChangeCategory(category)}
-                              className={clsx(
-                                "h-[38px] text-xs font-normal py-2 px-3 rounded-[6px]",
-                                selectedScreenCategory === category
-                                  ? "!bg-[#0F172A]"
-                                  : "bg-transparent"
-                              )}
-                            >
-                              {category}
-                              <Badge
-                                variant="secondary"
-                                className={clsx(
-                                  "text-[10px] font-bold",
-                                  selectedScreenCategory === category
-                                    ? "!bg-[#9333EA] text-white"
-                                    : "!bg-[#F1F5F9] text-[#0F172A]"
-                                )}
-                              >
-                                {category === "All"
-                                  ? app?.screens.length
-                                  : groupedScreens[category]?.length || 0}
-                              </Badge>
-                            </Button>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="flex items-center bg-white rounded-lg p-1 gap-2">
-                        <Button
-                          variant={
-                            screenViewMode === "grid" ? "default" : "ghost"
-                          }
-                          size="sm"
-                          onClick={() => setScreenViewMode("grid")}
-                          className={clsx(
-                            "h-9 p-3 rounded-[6px]",
-                            screenViewMode === "grid"
-                              ? "bg-[#0F172A]"
-                              : "border border-solid border-[#E2E8F0]"
-                          )}
-                        >
-                          <Grid3X3 className="h-3 w-3" />
-                          Grid
-                        </Button>
-                        <Button
-                          variant={
-                            screenViewMode === "list" ? "default" : "ghost"
-                          }
-                          size="sm"
-                          onClick={() => setScreenViewMode("list")}
-                          className={clsx(
-                            "h-9 p-3 rounded-[6px]",
-                            screenViewMode === "list"
-                              ? "bg-[#0F172A]"
-                              : "border border-solid border-[#E2E8F0]"
-                          )}
-                        >
-                          <List className="h-3 w-3" />
-                          List
-                        </Button>
-                      </div>
-                      {/* Download Button */}
-                      {/* <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    const categoryId =
-                      selectedScreenCategory !== "All"
-                        ? app?.screens.find(
-                            (s) => s.category?.name === selectedScreenCategory
-                          )?.category?._id
-                        : undefined;
-                    handleDownloadScreens(categoryId);
-                  }}
-                  disabled={isDownloading}
-                  className="h-9 px-3"
-                >
-                  {isDownloading ? (
-                    <Loader2 className="h-3 w-3 mr-2 animate-spin" />
-                  ) : (
-                    <Download className="h-3 w-3 mr-2" />
-                  )}
-                  {isDownloading ? "Downloading..." : "Download"}
-                </Button> */}
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -949,7 +569,7 @@ const AppDetails: React.FC = () => {
           <div className="w-full max-w-[1200px]">
             <div className="pt-24 px-4 md:px-0 pb-[40px]">
               <div className="flex items-center justify-between md:flex-row flex-col">
-                <div className="flex items-start gap-6 w-full">
+                <div className="flex items-start gap-6">
                   <div className="relative">
                     <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-2xl">
                       <ImageWithFallback
@@ -1147,27 +767,6 @@ const AppDetails: React.FC = () => {
                     <Share2 className="h-4 w-4" />
                     Share
                   </Button>
-                  {/* <Button
-                variant="outline"
-                size="sm"
-                onClick={() => handleDownloadScreens()}
-                disabled={isDownloading}
-                className="h-10 rounded-[6px] py-[1px] px-[13px] font-normal"
-              >
-                {isDownloading ? (
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                ) : (
-                  <Download className="h-4 w-4" />
-                )}
-                {isDownloading ? "Downloading..." : "Download All"}
-              </Button> */}
-                  {/* <Button
-                size="sm"
-                className="h-10 rounded-[6px] py-[1px] px-[13px] font-normal"
-              >
-                <ExternalLink className="h-4 w-4" />
-                View App
-              </Button> */}
                 </div>
               </div>
             </div>
@@ -1179,248 +778,144 @@ const AppDetails: React.FC = () => {
         <div className="w-full max-w-[1200px]">
           <div>
             <div className=" px-4 md:px-0 py-12">
-              {/* UI Screens Collection */}
               <div className="mb-8">
-                {/* Scr Filters */}
-                <div className="flex flex-col md:flex-row items-start gap-3 md:gap-0 md:items-center justify-between mb-9">
-                  <div className="flex items-center space-x-4">
-                    <div className="flex flex-col md:flex-row items-start gap-2 md:gap-0 md:items-center md:space-x-2">
-                      <span className="text-sm font-medium text-slate-700">
-                        Category:
-                      </span>
-                      <div className="flex flex-wrap gap-2">
-                        {screenCategories.map((category) => (
-                          <Button
-                            key={category}
-                            variant={
-                              selectedScreenCategory === category
-                                ? "default"
-                                : "outline"
-                            }
-                            size="sm"
-                            onClick={() => handleChangeCategory(category)}
-                            className={clsx(
-                              "h-[38px] text-xs font-normal py-2 px-3 rounded-[6px]",
-                              selectedScreenCategory === category
-                                ? "!bg-[#0F172A]"
-                                : "bg-transparent"
-                            )}
-                          >
-                            {category}
-                            <Badge
-                              variant="secondary"
-                              className={clsx(
-                                "text-[10px] font-bold",
-                                selectedScreenCategory === category
-                                  ? "!bg-[#9333EA] text-white"
-                                  : "!bg-[#F1F5F9] text-[#0F172A]"
-                              )}
-                            >
-                              {category === "All"
-                                ? app?.screens.length
-                                : groupedScreens[category]?.length || 0}
-                            </Badge>
-                          </Button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="flex items-center bg-white rounded-lg p-1 gap-2">
-                      <Button
-                        variant={
-                          screenViewMode === "grid" ? "default" : "ghost"
-                        }
-                        size="sm"
-                        onClick={() => setScreenViewMode("grid")}
-                        className={clsx(
-                          "h-9 p-3 rounded-[6px]",
-                          screenViewMode === "grid"
-                            ? "bg-[#0F172A]"
-                            : "border border-solid border-[#E2E8F0]"
-                        )}
-                      >
-                        <Grid3X3 className="h-3 w-3" />
-                        Grid
-                      </Button>
-                      <Button
-                        variant={
-                          screenViewMode === "list" ? "default" : "ghost"
-                        }
-                        size="sm"
-                        onClick={() => setScreenViewMode("list")}
-                        className={clsx(
-                          "h-9 p-3 rounded-[6px]",
-                          screenViewMode === "list"
-                            ? "bg-[#0F172A]"
-                            : "border border-solid border-[#E2E8F0]"
-                        )}
-                      >
-                        <List className="h-3 w-3" />
-                        List
-                      </Button>
-                    </div>
-                    {/* Download Button */}
-                    {/* <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    const categoryId =
-                      selectedScreenCategory !== "All"
-                        ? app?.screens.find(
-                            (s) => s.category?.name === selectedScreenCategory
-                          )?.category?._id
-                        : undefined;
-                    handleDownloadScreens(categoryId);
-                  }}
-                  disabled={isDownloading}
-                  className="h-9 px-3"
+                {/*  Filters */}
+                <div
+                  ref={containerMainRef}
+                  className="flex items-start gap-5 flex-col md:flex-row w-full"
                 >
-                  {isDownloading ? (
-                    <Loader2 className="h-3 w-3 mr-2 animate-spin" />
-                  ) : (
-                    <Download className="h-3 w-3 mr-2" />
-                  )}
-                  {isDownloading ? "Downloading..." : "Download"}
-                </Button> */}
+                  {/* Static Filters - visible when not scrolled */}
+                  <div
+                    className={clsx(
+                      "min-w-[130px] max-w-[130px] transition-all duration-300 ease-in-out",
+                      scrolledFilterMenu
+                        ? "opacity-0 pointer-events-none"
+                        : "opacity-100"
+                    )}
+                  >
+                    <FilterItem
+                      handleChange={handleChangeFilterCategories}
+                      menuFilter={filterCategories}
+                      iconType="rounded"
+                    />
+                  </div>
+                  {/* Fixed Filters - visible when scrolled */}
+                  <div
+                    className={clsx(
+                      "min-w-[130px] max-w-[130px] fixed max-h-[90vh] overflow-y-auto top-24 z-50 pb-8 transition-all duration-300 ease-in-out",
+                      scrolledFilterMenu
+                        ? "opacity-100 translate-y-0"
+                        : "opacity-0 -translate-y-4 pointer-events-none"
+                    )}
+                  >
+                    <FilterItem
+                      handleChange={handleChangeFilterCategories}
+                      menuFilter={filterCategories}
+                      iconType="rounded"
+                    />
+                  </div>
+                  {/* Screens Grid/List/Horizontal */}
+                  <div className="w-full flex justify-end">
+                    <div className="w-full max-w-[990px] flex items-start gap-5 min-h-screen">
+                      {screenViewMode === "list" ? (
+                        <div className="flex gap-8 flex-col items-start  w-full">
+                          {Object.entries(groupedScreensFilter).map(
+                            ([key, screens]) => (
+                              <div
+                                className="flex gap-4 flex-col items-start w-full"
+                                key={key}
+                              >
+                                <div className="h-8 py-2 px-4 flex items-center justify-center font-[Inter] font-bold text-[16px] leading-[16px] tracking-[0%] text-[#020817] rounded-full border border-solid border-[#E2E8F0]">
+                                  {key}
+                                </div>
+                                <div className="flex items-start max-w-full pr-5 overflow-x-auto gap-7 pb-1 !styled-scrollbar-black">
+                                  {screens.map((screen, i) => (
+                                    <div
+                                      key={i}
+                                      className="w-full flex flex-col items-start gap-1 hover:cursor-pointer"
+                                      onClick={() => setSelectedScreen(screen)}
+                                    >
+                                      <div className="min-w-[272px] max-w-[272px] h-[603px] rounded-xl overflow-hidden border-[1px] border-solid border-[rgba(0,0,0,0.1)]">
+                                        <ImageWithFallback
+                                          src={
+                                            screen?.image ??
+                                            "https://source.unsplash.com/400x300?game"
+                                          }
+                                          fallbackSrc="https://placehold.co/400"
+                                          alt={screen.name}
+                                          className="w-full h-[623px] object-cover -mt-[20px]"
+                                        />
+                                      </div>
+                                      <h4
+                                        className="font-[Inter] font-medium text-[12px] leading-[100%] tracking-[0%] align-middle text-[#565D61]"
+                                        style={{
+                                          display: "-webkit-box",
+                                          WebkitLineClamp: 2,
+                                          WebkitBoxOrient: "vertical",
+                                          overflow: "hidden",
+                                        }}
+                                      >
+                                        {screen.name}
+                                      </h4>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            )
+                          )}
+                        </div>
+                      ) : (
+                        <div className="flex gap-8 flex-col items-start  w-full">
+                          {Object.entries(groupedScreensFilter).map(
+                            ([key, screens]) => (
+                              <div
+                                className="flex gap-4 flex-col items-start w-full"
+                                key={key}
+                              >
+                                <div className="h-8 py-2 px-4 flex items-center justify-center font-[Inter] font-bold text-[16px] leading-[16px] tracking-[0%] text-[#020817] rounded-full border border-solid border-[#E2E8F0]">
+                                  {key}
+                                </div>
+                                {/* <div className="flex items-start max-w-full pr-5 overflow-x-auto gap-7 pb-1 !styled-scrollbar-black"> */}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-7">
+                                  {screens.map((screen, i) => (
+                                    <div
+                                      key={i}
+                                      className="w-[272px] flex flex-col items-start gap-1 hover:cursor-pointer"
+                                      onClick={() => setSelectedScreen(screen)}
+                                    >
+                                      <div className="w-[272px] h-[603px] rounded-xl overflow-hidden border-[1px] border-solid border-[rgba(0,0,0,0.1)]">
+                                        <ImageWithFallback
+                                          src={
+                                            screen?.image ??
+                                            "https://source.unsplash.com/400x300?game"
+                                          }
+                                          fallbackSrc="https://placehold.co/400"
+                                          alt={screen.name}
+                                          className="w-full h-[623px] object-cover -mt-[20px]"
+                                        />
+                                      </div>
+                                      <h4
+                                        className="font-[Inter] font-medium text-[12px] leading-[100%] tracking-[0%] align-middle text-[#565D61]"
+                                        style={{
+                                          display: "-webkit-box",
+                                          WebkitLineClamp: 2,
+                                          WebkitBoxOrient: "vertical",
+                                          overflow: "hidden",
+                                        }}
+                                      >
+                                        {screen.name}
+                                      </h4>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            )
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
-                {/* Screens Grid/List/Horizontal */}
-                {screenViewMode === "list" ? (
-                  <div className="flex gap-8 flex-col items-start  w-full">
-                    {Object.entries(groupedScreensFilter).map(
-                      ([key, screens]) => (
-                        <div
-                          className="flex gap-4 flex-col items-start w-full"
-                          key={key}
-                        >
-                          <div className="h-8 py-2 px-4 flex items-center justify-center font-[Inter] font-bold text-[16px] leading-[16px] tracking-[0%] text-[#020817] rounded-full border border-solid border-[#E2E8F0]">
-                            {key}
-                          </div>
-                          <div className="flex items-start max-w-full pr-5 overflow-x-auto gap-7 pb-1 !styled-scrollbar-black">
-                            {screens.map((screen, i) => (
-                              <div
-                                key={i}
-                                className="w-full flex flex-col items-start gap-1 hover:cursor-pointer"
-                                onClick={() => setSelectedScreen(screen)}
-                              >
-                                <div className="min-w-[272px] max-w-[272px] h-[603px] rounded-xl overflow-hidden border-[1px] border-solid border-[rgba(0,0,0,0.1)]">
-                                  <ImageWithFallback
-                                    src={
-                                      screen?.image ??
-                                      "https://source.unsplash.com/400x300?game"
-                                    }
-                                    fallbackSrc="https://placehold.co/400"
-                                    alt={screen.name}
-                                    className="w-full h-[623px] object-cover -mt-[20px]" // group-hover:scale-105 transition-transform duration-300
-                                  />
-
-                                  {/* <InnerImageZoom
-                                    src={
-                                      screen?.image ??
-                                      "https://source.unsplash.com/400x300?game"
-                                    }
-                                    zoomSrc={
-                                      screen?.image ??
-                                      "https://source.unsplash.com/400x300?game"
-                                    }
-                                    width={272}
-                                    height={600}
-                                    hasSpacer={true}
-                                    zoomType="hover"
-                                    zoomPreload={true}
-                                    fullscreenOnMobile={true}
-                                  /> */}
-                                </div>
-                                <h4
-                                  className="font-[Inter] font-medium text-[12px] leading-[100%] tracking-[0%] align-middle text-[#565D61]"
-                                  style={{
-                                    display: "-webkit-box",
-                                    WebkitLineClamp: 2,
-                                    WebkitBoxOrient: "vertical",
-                                    overflow: "hidden",
-                                  }}
-                                >
-                                  {screen.name}
-                                  {/* {screen.modul} - {screen?.category?.name} -{" "}
-                                  {screen.name} */}
-                                </h4>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )
-                    )}
-                  </div>
-                ) : (
-                  <div className="flex gap-8 flex-col items-start  w-full">
-                    {Object.entries(groupedScreensFilter).map(
-                      ([key, screens]) => (
-                        <div
-                          className="flex gap-4 flex-col items-start w-full"
-                          key={key}
-                        >
-                          <div className="h-8 py-2 px-4 flex items-center justify-center font-[Inter] font-bold text-[16px] leading-[16px] tracking-[0%] text-[#020817] rounded-full border border-solid border-[#E2E8F0]">
-                            {key}
-                          </div>
-                          {/* <div className="flex items-start max-w-full pr-5 overflow-x-auto gap-7 pb-1 !styled-scrollbar-black"> */}
-                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-7">
-                            {screens.map((screen, i) => (
-                              <div
-                                key={i}
-                                className="w-[272px] flex flex-col items-start gap-1 hover:cursor-pointer"
-                                onClick={() => setSelectedScreen(screen)}
-                              >
-                                <div className="w-[272px] h-[603px] rounded-xl overflow-hidden border-[1px] border-solid border-[rgba(0,0,0,0.1)]">
-                                  <ImageWithFallback
-                                    src={
-                                      screen?.image ??
-                                      "https://source.unsplash.com/400x300?game"
-                                    }
-                                    fallbackSrc="https://placehold.co/400"
-                                    alt={screen.name}
-                                    className="w-full h-[623px] object-cover -mt-[20px]" // hover:scale-105 transition-transform duration-300
-                                  />
-
-                                  {/* <InnerImageZoom
-                                    src={
-                                      screen?.image ??
-                                      "https://source.unsplash.com/400x300?game"
-                                    }
-                                    zoomSrc={
-                                      screen?.image ??
-                                      "https://source.unsplash.com/400x300?game"
-                                    }
-                                    width={272}
-                                    height={600}
-                                    hasSpacer={true}
-                                    zoomType="hover"
-                                    zoomPreload={true}
-                                    fullscreenOnMobile={true}
-                                  /> */}
-                                </div>
-                                <h4
-                                  className="font-[Inter] font-medium text-[12px] leading-[100%] tracking-[0%] align-middle text-[#565D61]"
-                                  style={{
-                                    display: "-webkit-box",
-                                    WebkitLineClamp: 2,
-                                    WebkitBoxOrient: "vertical",
-                                    overflow: "hidden",
-                                  }}
-                                >
-                                  {screen.name}
-
-                                  {/* {screen.modul} - {screen?.category?.name} -{" "}
-                                  {screen.name} */}
-                                </h4>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )
-                    )}
-                  </div>
-                )}
               </div>
             </div>
 
@@ -1459,4 +954,4 @@ const AppDetails: React.FC = () => {
   );
 };
 
-export default AppDetails;
+export default useView;

@@ -56,7 +56,6 @@ export const useScreenshotData = (appId: string | undefined, toast: any) => {
           }
           return screenshot;
         });
-        console.log("updatedScreenshots", updatedScreenshots);
         setScreenshots(updatedScreenshots);
       } catch (error) {
         console.error("Color processing failed:", error);

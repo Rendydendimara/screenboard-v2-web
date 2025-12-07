@@ -1,4 +1,4 @@
-import { AppPublic } from "@/pages/Index";
+import { AppPublic } from "@/pages/Home/Index";
 import { TSelect } from "@/types";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import ReactDOM from "react-dom";

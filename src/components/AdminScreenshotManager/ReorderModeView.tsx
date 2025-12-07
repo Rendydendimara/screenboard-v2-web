@@ -99,12 +99,16 @@ export const ReorderModeView: React.FC<ReorderModeViewProps> = ({
             )}
             {selectedReorderModule && reorderLevel !== "module" && (
               <>
-                <span className="font-medium">{selectedReorderModule.name}</span>
+                <span className="font-medium">
+                  {selectedReorderModule.name}
+                </span>
                 <span>/</span>
               </>
             )}
             {selectedReorderCategory && reorderLevel === "screenshot" && (
-              <span className="font-medium">{selectedReorderCategory.name}</span>
+              <span className="font-medium">
+                {selectedReorderCategory.name}
+              </span>
             )}
           </div>
         </div>
@@ -139,7 +143,9 @@ export const ReorderModeView: React.FC<ReorderModeViewProps> = ({
                       <h4 className="font-semibold text-lg">{app.label}</h4>
                       <ArrowDownUp className="h-5 w-5 text-gray-400" />
                     </div>
-                    <p className="text-sm text-gray-500">Click to manage order</p>
+                    <p className="text-sm text-gray-500">
+                      Click to manage order
+                    </p>
                   </CardContent>
                 </Card>
               );
@@ -160,13 +166,13 @@ export const ReorderModeView: React.FC<ReorderModeViewProps> = ({
                 Drag to reorder, click to view categories
               </p>
             </div>
-            <Button
+            {/* <Button
               onClick={onSaveModuleOrder}
               disabled={orderedModules.length === 0}
             >
               <Save className="h-4 w-4 mr-2" />
               Save Module Order
-            </Button>
+            </Button> */}
           </div>
           <DndContext
             sensors={sensors}
@@ -205,13 +211,13 @@ export const ReorderModeView: React.FC<ReorderModeViewProps> = ({
                 Drag to reorder, click to view screenshots
               </p>
             </div>
-            <Button
+            {/* <Button
               onClick={onSaveCategoryOrder}
               disabled={orderedCategories.length === 0}
             >
               <Save className="h-4 w-4 mr-2" />
               Save Category Order
-            </Button>
+            </Button> */}
           </div>
           <DndContext
             sensors={sensors}
@@ -246,7 +252,9 @@ export const ReorderModeView: React.FC<ReorderModeViewProps> = ({
               <h3 className="font-semibold text-lg">
                 Screenshots in {selectedReorderCategory?.name}
               </h3>
-              <p className="text-sm text-gray-500">Drag to reorder screenshots</p>
+              <p className="text-sm text-gray-500">
+                Drag to reorder screenshots
+              </p>
             </div>
             <Button
               onClick={onSaveScreenshotOrder}
@@ -285,7 +293,7 @@ export const ReorderModeView: React.FC<ReorderModeViewProps> = ({
             >
               {activeId && reorderLevel === "screenshot" ? (
                 <div className="w-64 cursor-grabbing">
-                  <div className="w-full h-72 rounded-lg overflow-hidden bg-gray-100 ring-4 ring-blue-500 shadow-2xl transform rotate-3">
+                  <div className="w-full h-full rounded-lg overflow-hidden bg-gray-100 ring-4 ring-blue-500 shadow-2xl transform rotate-3">
                     <div className="absolute top-2 left-2 z-10 bg-blue-500 rounded-full p-1.5 shadow-lg scale-110">
                       <GripVertical className="h-4 w-4 text-white" />
                     </div>
@@ -294,8 +302,8 @@ export const ReorderModeView: React.FC<ReorderModeViewProps> = ({
                         orderedScreenshots.find((s) => s.id === activeId)?.image
                       }
                       alt={
-                        orderedScreenshots.find((s) => s.id === activeId)?.name ??
-                        ""
+                        orderedScreenshots.find((s) => s.id === activeId)
+                          ?.name ?? ""
                       }
                       className="w-full h-full object-cover pointer-events-none select-none"
                     />

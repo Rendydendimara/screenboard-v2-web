@@ -1,15 +1,7 @@
-import AdminAuthAPI from "@/api/admin/auth/api";
-import UserAppAPI from "@/api/user/app/api";
-import AppLikeAPI from "@/api/user/appLike/api";
-import UserAuthAPI from "@/api/user/auth/api";
-import CategoryAPI from "@/api/user/category/api";
-import { TCategoryRes } from "@/api/user/category/type";
-import ScreenAPI from "@/api/user/screen/api";
 import { AppCard } from "@/components/AppCard";
 import { AppCardSkeleton } from "@/components/AppCardSkeleton";
 import { AuthModal } from "@/components/AuthModal";
 import { CompareModal } from "@/components/CompareModal";
-import { CountryMultiSelect } from "@/components/ui/CountryMultiSelect";
 import { FavoritesModal } from "@/components/FavoritesModal";
 import { HeroSection } from "@/components/HeroSection";
 import SEO from "@/components/SEO";
@@ -22,354 +14,70 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { useToast } from "@/hooks/use-toast";
-import { useAppDispatch, useTypedSelector } from "@/hooks/use-typed-selector";
-import { useFavorites } from "@/hooks/useFavorites";
-import { logout, setCredentials } from "@/provider/slices/authSlice";
-import {
-  addToCompare,
-  removeFromCompare,
-} from "@/provider/slices/compareSlice";
-import { RootState } from "@/provider/store";
-import { adapterListAppBEToFEPublic } from "@/utils/adapterBEToFE";
-import { COUNTRIES } from "@/utils/country";
 import clsx from "clsx";
-import {
-  GitCompare,
-  Grid,
-  Heart,
-  List,
-  Menu,
-  Search,
-  X,
-  Zap,
-} from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-
-export interface ScreenPublic {
-  id: string;
-  name: string;
-  category?: {
-    name: string;
-    _id: string;
-  };
-  image: string;
-  description: string;
-  appName: string;
-  modul: string;
-  order?: number;
-}
-
-export interface AppPublic {
-  id: string;
-  name: string;
-  category: {
-    _id: string;
-    name: string;
-  };
-  subcategory: {
-    _id: string;
-    name: string;
-  };
-  platform: "iOS" | "Android" | "Both";
-  image: string;
-  screenshots: string[];
-  screens: ScreenPublic[];
-  description: string;
-  downloads: string;
-  rating: number;
-  tags: string[];
-  color: string;
-  isLiked: boolean;
-  featured: boolean;
-  trending: boolean;
-  company: string;
-  lastUpdated: string;
-  countries?: string[];
-  linkPlayStore?: string;
-  linkAppStore?: string;
-  linkWebsite?: string;
-}
+import { GitCompare, Grid, Heart, List, Menu, Search, Zap } from "lucide-react";
+import { Link } from "react-router-dom";
+import Filters from "./components/Filters";
+import useController from "./useController";
 
 const Index = () => {
-  const [listApp, setListApp] = useState<AppPublic[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<TCategoryRes>();
-  const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [showFilters, setShowFilters] = useState(false);
-  const [showCompare, setShowCompare] = useState(false);
-  const [selectedScreen, setSelectedScreen] = useState<ScreenPublic | null>(
-    null
-  );
-  const [showFavorites, setShowFavorites] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const [scrolledSearch, setScrolledSearch] = useState(false);
-  const [scrolledCategories, setScrolledCategories] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const [isOpenAuth, setIsOpenAuth] = useState(false);
-  const [isLoadingGet, setIsLoadingGet] = useState(true);
-  const [isLoadingGetApp, setIsLoadingGetApp] = useState(true);
-
-  const [isDownloading, setIsDownloading] = useState(false);
-  const user = useTypedSelector((state: RootState) => state.auth.user);
-  const compareApps = useTypedSelector(
-    (state: RootState) => state.compare.compareApps
-  );
-  const dispatch = useAppDispatch();
-  const { favorites: favoriteScreens, toggleFavorite } = useFavorites();
-  const { toast } = useToast();
-  const onCloseOpenAuth = useCallback(() => {
-    setIsOpenAuth(false);
-  }, []);
-  const navigate = useNavigate();
-  const [categories, setCategories] = useState<TCategoryRes[]>([]);
-
-  const filteredApps = useMemo(() => {
-    console.log("selectedCountries", selectedCountries);
-    console.log("listApp", listApp);
-    return listApp.filter((app) => {
-      const matchesSearch = app.name
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase());
-      const matchesCategory = selectedCategory
-        ? app?.category?._id === selectedCategory?._id
-        : true;
-      const matchesCountry =
-        selectedCountries.length === 0
-          ? true
-          : app.countries?.some((countryName) =>
-              selectedCountries.includes(countryName)
-            ) ?? false;
-      return matchesSearch && matchesCategory && matchesCountry;
-    });
-  }, [listApp, selectedCategory, selectedCountries, searchTerm]);
-  const handleLike = async (appId: string, isLike: boolean) => {
-    try {
-      if (user) {
-        const currentIndex = listApp.findIndex((s) => s.id === appId);
-        const listAppAny: any = listApp;
-        if (isLike) {
-          await AppLikeAPI.dislike({ appId: appId });
-          dispatch(
-            setCredentials({
-              token: user.token,
-              user: {
-                ...user,
-                appLikes: user.appLikes.filter((d) => d !== appId),
-              },
-            })
-          );
-        } else {
-          await AppLikeAPI.like({ appId: appId });
-          dispatch(
-            setCredentials({
-              token: user.token,
-              user: {
-                ...user,
-                appLikes: [...user.appLikes, appId],
-              },
-            })
-          );
-        }
-        console.log([
-          ...listAppAny.slice(0, currentIndex),
-          {
-            ...listAppAny[currentIndex],
-            isLiked: !isLike,
-          },
-          ...listAppAny.slice(currentIndex + 1, listAppAny.length),
-        ]);
-        setListApp([
-          ...listAppAny.slice(0, currentIndex),
-          {
-            ...listAppAny[currentIndex],
-            isLiked: !isLike,
-          },
-          ...listAppAny.slice(currentIndex + 1, listAppAny.length),
-        ]);
-        toast({
-          title: listAppAny[currentIndex]?.isLiked
-            ? "Removed from favorites"
-            : "Added to favorites",
-          description: `${listAppAny[currentIndex]?.name} has been ${
-            listAppAny[currentIndex]?.isLiked ? "removed from" : "added to"
-          } your favorites.`,
-        });
-      } else {
-        setIsOpenAuth(true);
-      }
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.response.data.message || error.message,
-        variant: "destructive",
-      });
-    }
-  };
-
-  const [selectedApp, setSelectedApp] = useState<AppPublic | null>(null);
-
-  const handleAddToCompare = (app: AppPublic) => {
-    dispatch(addToCompare(app));
-  };
-
-  const handleRemoveFromCompare = (appId: string) => {
-    dispatch(removeFromCompare(appId));
-  };
-
-  const handleLogout = async () => {
-    try {
-      let res;
-      if (user.userType === "administrator") {
-        res = await AdminAuthAPI.logout();
-      } else {
-        res = await UserAuthAPI.logout();
-      }
-      if (res.success) {
-        dispatch(logout());
-        window.location.reload();
-      }
-    } catch (err: any) {
-      toast({
-        title: "Error",
-        description: err.message,
-      });
-    }
-  };
-
-  const gotoDetail = useCallback((id: string) => {
-    navigate(`/app/${id}`);
-  }, []);
-
-  const getListData = async () => {
-    try {
-      setIsLoadingGetApp(true);
-      const res = await UserAppAPI.getAll();
-      const dataAdpt = adapterListAppBEToFEPublic(res.data);
-      setListApp([
-        ...dataAdpt,
-        // ...dataAdpt,
-        // ...dataAdpt,
-        // ...dataAdpt,
-        // ...dataAdpt,
-      ]);
-    } catch (err: any) {
-      toast({
-        title: "Error",
-        description: err.response.data.message,
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoadingGetApp(false);
-    }
-  };
-
-  const getListDataCategory = async () => {
-    try {
-      setIsLoadingGet(true);
-      const dataRes = await CategoryAPI.getAll();
-      setCategories(dataRes?.data ?? []);
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message || error.response.data.message,
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoadingGet(false);
-    }
-  };
-
-  const handleChangeCategory = useCallback(
-    (id: string) => {
-      if (id === selectedCategory?._id) {
-        setSelectedCategory(null);
-      } else {
-        if (id !== "All") {
-          const temp = categories.find((d) => d._id === id);
-          setSelectedCategory(temp);
-        } else {
-          setSelectedCategory(null);
-        }
-      }
-    },
-    [categories, selectedCategory]
-  );
-
-  const handleOpenAuthModal = useCallback(() => {
-    if (user) return;
-    setIsOpenAuth(true);
-  }, [user]);
-
-  const handleDownloadScreens = async () => {
-    try {
-      setIsDownloading(true);
-
-      // Download by category if selected, otherwise prompt user
-      if (selectedCategory) {
-        await ScreenAPI.download({ category: selectedCategory._id });
-        toast({
-          title: "Download Started",
-          description: `Downloading screens from ${selectedCategory.name} category...`,
-        });
-      } else {
-        toast({
-          title: "Select a Category",
-          description: "Please select a category first to download screens.",
-          variant: "destructive",
-        });
-      }
-    } catch (error: any) {
-      toast({
-        title: "Download Failed",
-        description: error.message || "Failed to download screens",
-        variant: "destructive",
-      });
-    } finally {
-      setIsDownloading(false);
-    }
-  };
-
-  const getListCategoryFiltered = useMemo(() => {
-    const categoriesApp = listApp.map((app) => app.category._id);
-    return categories.filter((cat) => {
-      return categoriesApp.includes(cat._id);
-    });
-  }, [categories, listApp]);
-
-  useEffect(() => {
-    getListDataCategory();
-  }, []);
-
-  useEffect(() => {
-    getListData();
-  }, []);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const isMobile = window.innerWidth <= 375;
-
-      setScrolled(isMobile ? window.scrollY > 80 : window.scrollY > 80);
-      setScrolledSearch(isMobile ? window.scrollY > 400 : window.scrollY > 680);
-      setScrolledCategories(
-        isMobile ? window.scrollY > 500 : window.scrollY > 680
-      );
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
+  const {
+    listApp,
+    searchTerm,
+    setSearchTerm,
+    selectedCategory,
+    selectedCountries,
+    setSelectedCountries,
+    viewMode,
+    setViewMode,
+    showFilters,
+    setShowFilters,
+    showCompare,
+    setShowCompare,
+    selectedScreen,
+    setSelectedScreen,
+    showFavorites,
+    setShowFavorites,
+    scrolled,
+    scrolledSearch,
+    scrolledCategories,
+    mobileMenuOpen,
+    setMobileMenuOpen,
+    isOpenAuth,
+    setIsOpenAuth,
+    isLoadingGetCategory,
+    isLoadingGetApp,
+    isDownloading,
+    selectedApp,
+    setSelectedApp,
+    categories,
+    user,
+    compareApps,
+    favoriteScreens,
+    toggleFavorite,
+    onCloseOpenAuth,
+    filteredApps,
+    getListCategoryFiltered,
+    handleLike,
+    handleAddToCompare,
+    handleRemoveFromCompare,
+    handleLogout,
+    gotoDetail,
+    handleChangeCategory,
+    handleOpenAuthModal,
+    handleDownloadScreens,
+    filterCategories,
+    filterSubCategories,
+    filterSortBy,
+    filterMarket,
+    handleChangeFilterSortBy,
+    handleChangeFilterCategories,
+    handleChangeFilterSubCategories,
+    handleChangeFilterMarket,
+    containerMainRef,
+    scrolledFilterMenu,
+  } = useController();
   return (
     <>
       <SEO
@@ -388,7 +96,7 @@ const Index = () => {
           >
             <div className="px-0">
               <div className="w-full flex justify-center items-center">
-                <div className="w-full max-w-[1200px]">
+                <div className="w-full max-w-[1140px]">
                   <div className="flex w-full items-center justify-between h-16 lg:h-20 px-4 md:px-6 lg:px-0">
                     {/* Logo */}
                     <div className="flex items-center space-x-2">
@@ -772,89 +480,6 @@ const Index = () => {
                   </div>
                 </div>
               </div>
-
-              {scrolledCategories && (
-                <div className="w-full border-t-[1px] border-b-[1px] border-solid border-[#E0E1E1]" />
-              )}
-              {/* border-t-[1px] border-b-[1px] border-solid border-[#E0E1E1] */}
-              <div className="w-full flex justify-center items-center">
-                <div className="w-full max-w-[1200px]">
-                  <div
-                    className={clsx(
-                      "w-full transition-all duration-300 ease-in-out overflow-hidden px-4 md:px-0",
-                      scrolledCategories
-                        ? "max-h-[300px] py-4 opacity-100 translate-y-0"
-                        : "max-h-0 py-0 opacity-0 -translate-y-4 pointer-events-none"
-                    )}
-                  >
-                    <div className="w-full flex items-start md:items-center flex-col md:flex-row gap-4 md:gap-0  justify-between">
-                      <div className="flex items-center gap-4 w-full flex-wrap">
-                        {getListCategoryFiltered.map((cat, i) => (
-                          <div
-                            onClick={() => handleChangeCategory(cat._id)}
-                            className={clsx(
-                              "hover:cursor-pointer gap-[10px] px-[16px] py-[8px] rounded-[12px] border border-solid border-[rgba(167,170,172,1)] font-[Inter] font-semibold text-[14px] leading-[20px] tracking-[-0.2%] align-middle",
-                              cat._id === selectedCategory?._id
-                                ? "bg-[#0F172A] text-white"
-                                : " text-[#565D61]"
-                            )}
-                            key={i}
-                          >
-                            {cat.name}
-                          </div>
-                        ))}
-                      </div>
-                      {/* Filters and View Controls */}
-                      <div className="flex flex-row md:flex-col sm:flex-row gap-4 lg:gap-6">
-                        {/* View Mode Toggle */}
-                        <div className="flex items-center space-x-2">
-                          <Button
-                            variant={
-                              viewMode === "grid" ? "default" : "outline"
-                            }
-                            size="sm"
-                            onClick={() => setViewMode("grid")}
-                            className="flex-1 sm:flex-none"
-                          >
-                            <Grid className="h-4 w-4 mr-2 sm:mr-0 lg:mr-2" />
-                            <span className="sm:hidden lg:inline">Grid</span>
-                          </Button>
-                          <Button
-                            variant={
-                              viewMode === "list" ? "default" : "outline"
-                            }
-                            size="sm"
-                            onClick={() => setViewMode("list")}
-                            className="flex-1 sm:flex-none"
-                          >
-                            <List className="h-4 w-4 mr-2 sm:mr-0 lg:mr-2" />
-                            <span className="sm:hidden lg:inline">List</span>
-                          </Button>
-                        </div>
-                        {/* Download Button */}
-                        {/* {selectedCategory && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleDownloadScreens}
-                        disabled={isDownloading}
-                        className="flex-1 sm:flex-none"
-                      >
-                        {isDownloading ? (
-                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                        ) : (
-                          <Download className="h-4 w-4 mr-2 sm:mr-0 lg:mr-2" />
-                        )}
-                        <span className="sm:hidden lg:inline">
-                          {isDownloading ? "Downloading..." : "Download"}
-                        </span>
-                      </Button>
-                    )} */}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </header>
 
@@ -865,9 +490,8 @@ const Index = () => {
         </section>
         {/* Main Content */}
         <div className="w-full flex justify-center items-center">
-          <div className="w-full max-w-[1200px]">
-            <main className="px-4 py-6 md:px-0 md:py-8 lg:py-12">
-              {/* Search and Filters - Mobile Responsive */}
+          <div className="w-full max-w-[1140px]">
+            <main className="px-4 py-6 md:px-0 md:py-8 lg:py-12 w-full">
               <div className="mb-6">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 lg:gap-6">
                   {/* Search Bar - Desktop */}
@@ -934,187 +558,148 @@ const Index = () => {
                 )} */}
                   </div>
                 </div>
+              </div>
 
-                {/* Results Count */}
+              <div
+                ref={containerMainRef}
+                className="flex items-start gap-5 flex-col md:flex-row w-full"
+              >
+                {/* Static Filters - visible when not scrolled */}
                 <div
                   className={clsx(
-                    "mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2",
-                    !searchTerm && selectedCountries.length === 0 && "hidden"
+                    "min-w-[130px] max-w-[130px] transition-all duration-300 ease-in-out",
+                    scrolledFilterMenu
+                      ? "opacity-0 pointer-events-none"
+                      : "opacity-100"
                   )}
                 >
-                  {/* <p className="text-sm text-slate-600">
-                Showing {filteredApps.length} of {listApp.length} apps
-                {selectedCategory !== null && ` in ${selectedCategory?.name}`}
-              </p> */}
-
-                  {/* Active Filters */}
-                  <div className="flex flex-wrap gap-2">
-                    {searchTerm && (
-                      <Badge
-                        variant="secondary"
-                        className="flex items-center space-x-1"
-                      >
-                        <span>Search: {searchTerm}</span>
-                        <X
-                          className="h-3 w-3 cursor-pointer"
-                          onClick={() => setSearchTerm("")}
-                        />
-                      </Badge>
-                    )}
-                    {selectedCategory && (
-                      <Badge
-                        variant="secondary"
-                        className="flex items-center space-x-1"
-                      >
-                        <span>Category: {selectedCategory?.name}</span>
-                        <X
-                          className="h-3 w-3 cursor-pointer"
-                          onClick={() => setSelectedCategory(null)}
-                        />
-                      </Badge>
-                    )}
-                    {selectedCountries.length > 0 && (
-                      <Badge
-                        variant="secondary"
-                        className="flex items-center space-x-1"
-                      >
-                        <span>
-                          Countries: {selectedCountries.length} selected
-                        </span>
-                        <X
-                          className="h-3 w-3 cursor-pointer"
-                          onClick={() => setSelectedCountries([])}
-                        />
-                      </Badge>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              <div className="w-full flex items-center  mb-4">
-                {/* Category Filter */}
-                <div className="flex items-center gap-3 flex-wrap w-full">
-                  <div
-                    onClick={() => setSelectedCategory(null)}
-                    className={clsx(
-                      "hover:cursor-pointer gap-[10px] px-3 py-1 rounded-[12px] border border-solid border-[#E2E8F0] font-[Inter] text-body-4 leading-[20px] tracking-[-0.2%] align-middle",
-                      !selectedCategory
-                        ? "bg-[#0F172A] text-white font-semibold"
-                        : " text-[#565D61] font-normal"
-                    )}
-                  >
-                    All
-                  </div>
-                  {getListCategoryFiltered.map((cat, i) => (
-                    <div
-                      onClick={() => handleChangeCategory(cat._id)}
-                      className={clsx(
-                        "hover:cursor-pointer gap-[10px] px-3 py-1 rounded-[12px] border border-solid border-[#E2E8F0] font-[Inter] text-body-4 leading-[20px] tracking-[-0.2%] align-middle",
-                        cat._id === selectedCategory?._id
-                          ? "bg-[#0F172A] text-white font-semibold"
-                          : " text-[#565D61] font-normal"
-                      )}
-                      key={i}
-                    >
-                      {cat.name}
-                    </div>
-                  ))}
-                </div>
-
-                {/* Countries Filter */}
-                <div className="flex-1 sm:flex-none sm:min-w-[200px]">
-                  <CountryMultiSelect
-                    value={selectedCountries}
-                    onChange={setSelectedCountries}
-                    placeholder="All Countries"
-                    enableLimit
+                  <Filters
+                    filterCategories={filterCategories}
+                    filterSubCategories={filterSubCategories}
+                    filterSortBy={filterSortBy}
+                    filterMarket={filterMarket}
+                    handleChangeFilterSortBy={handleChangeFilterSortBy}
+                    handleChangeFilterCategories={handleChangeFilterCategories}
+                    handleChangeFilterSubCategories={
+                      handleChangeFilterSubCategories
+                    }
+                    handleChangeFilterMarket={handleChangeFilterMarket}
                   />
                 </div>
-              </div>
 
-              {/* Apps Grid/List - Responsive */}
-              {isLoadingGetApp ? (
+                {/* Fixed Filters - visible when scrolled */}
                 <div
-                  className={
-                    viewMode === "grid"
-                      ? "grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6"
-                      : "space-y-4 lg:space-y-6"
-                  }
+                  className={clsx(
+                    "min-w-[130px] max-w-[130px] fixed max-h-[90vh] overflow-y-auto top-24 z-50 pb-8 transition-all duration-300 ease-in-out",
+                    scrolledFilterMenu
+                      ? "opacity-100 translate-y-0"
+                      : "opacity-0 -translate-y-4 pointer-events-none"
+                  )}
                 >
-                  {[1, 2, 3, 4, 5, 6].map((i) => (
-                    <AppCardSkeleton key={i} viewMode={viewMode} />
-                  ))}
-                </div>
-              ) : filteredApps.length === 0 ? (
-                <div className="text-center py-12 lg:py-20">
-                  <div className="w-20 h-20 lg:w-24 lg:h-24 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Search className="h-10 w-10 lg:h-12 lg:w-12 text-slate-400" />
-                  </div>
-                  <h3 className="text-xl lg:text-2xl font-semibold text-slate-600 mb-2">
-                    No apps found
-                  </h3>
-                  <p className="text-slate-500">
-                    Try adjusting your search or filters
-                  </p>
-                </div>
-              ) : (
-                <div className="relative">
-                  <div
-                    className={
-                      viewMode === "grid"
-                        ? "grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6"
-                        : "space-y-4 lg:space-y-6"
+                  <Filters
+                    filterCategories={filterCategories}
+                    filterSubCategories={filterSubCategories}
+                    filterSortBy={filterSortBy}
+                    filterMarket={filterMarket}
+                    handleChangeFilterSortBy={handleChangeFilterSortBy}
+                    handleChangeFilterCategories={handleChangeFilterCategories}
+                    handleChangeFilterSubCategories={
+                      handleChangeFilterSubCategories
                     }
-                  >
-                    {filteredApps.map((app, i) => (
-                      <AppCard
-                        key={app.id}
-                        app={app}
-                        viewMode={viewMode}
-                        onLike={() => handleLike(app.id, app.isLiked)}
-                        onClick={() => setSelectedApp(app)}
-                        onDetail={() => gotoDetail(app.id)}
-                        onAddToCompare={() => handleAddToCompare(app)}
-                        isInCompare={compareApps.some(
-                          (compareApp) => compareApp.id === app.id
+                    handleChangeFilterMarket={handleChangeFilterMarket}
+                  />
+                </div>
+                <div className="w-full flex justify-end">
+                  <div className="w-full max-w-[990px] flex items-start gap-5 min-h-screen">
+                    {/* Apps Grid/List */}
+                    {isLoadingGetApp ? (
+                      <div
+                        className={clsx(
+                          "w-full",
+                          viewMode === "grid"
+                            ? "grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6"
+                            : "space-y-4 lg:space-y-6"
                         )}
-                        setSelectedScreen={setSelectedScreen}
-                      />
-                    ))}
-                  </div>
-                  {!user && (
-                    <div
-                      className={clsx(
-                        "absolute h-[872px] bottom-0 w-full bg-[linear-gradient(180deg,_rgba(255,_255,_255,_0)_4.01%,_#FFFFFF_62.21%)]",
-                        filteredApps.length < 3 && "top-0"
-                      )}
-                    >
-                      <div className="flex flex-col w-full gap-[25px] absolute bottom-16">
-                        <div className="flex justify-center items-center w-full">
-                          <div className="flex flex-col gap-3 items-center w-full md:w-[889px]">
-                            <h5 className="font-['Inter'] font-semibold text-[32px] md:text-[64px] leading-[125%] tracking-[0%] text-center bg-gradient-to-r from-slate-900 via-blue-800 to-purple-800 bg-clip-text text-transparent">
-                              Join and get more inspiration from real product
-                            </h5>
-                            <p className="font-[Inter] font-normal text:[16px] md:text-[20px] text-[#464C4F] leading-[155%] tracking-[0%] align-middle">
-                              We believe real design give more sense to your
-                              design process
-                            </p>
-                            <div
-                              onClick={() => setIsOpenAuth(true)}
-                              className="flex justify-center mb-6 lg:mb-8 hover:!cursor-pointer z-[10]"
-                            >
-                              <Badge className="bg-gradient-to-r from-blue-500 to-purple-600 text-white border-0 px-8 py-3 text-sm font-[Inter] font-bold text-[17.6px] leading-[28px] tracking-[0%] text-center align-middle">
-                                <Zap className="h-4 w-4 mr-1" />
-                                Join to Unlock Everything
-                              </Badge>
+                      >
+                        {[1, 2, 3, 4, 5, 6].map((i) => (
+                          <AppCardSkeleton key={i} viewMode={viewMode} />
+                        ))}
+                      </div>
+                    ) : filteredApps.length === 0 ? (
+                      <div className="text-center w-full py-12 lg:py-20 min-h-[600px] flex flex-col items-center justify-center">
+                        <div className="w-20 h-20 lg:w-24 lg:h-24 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                          <Search className="h-10 w-10 lg:h-12 lg:w-12 text-slate-400" />
+                        </div>
+                        <h3 className="text-xl lg:text-2xl font-semibold text-slate-600 mb-2">
+                          No apps found
+                        </h3>
+                        <p className="text-slate-500">
+                          Try adjusting your search or filters
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="relative w-full">
+                        <div
+                          className={clsx(
+                            "w-full",
+                            viewMode === "grid"
+                              ? "grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6"
+                              : "space-y-4 lg:space-y-6"
+                          )}
+                        >
+                          {filteredApps.map((app, i) => (
+                            <AppCard
+                              key={app.id}
+                              app={app}
+                              viewMode={viewMode}
+                              onLike={() => handleLike(app.id, app.isLiked)}
+                              onClick={() => setSelectedApp(app)}
+                              onDetail={() => gotoDetail(app.id)}
+                              onAddToCompare={() => handleAddToCompare(app)}
+                              isInCompare={compareApps.some(
+                                (compareApp) => compareApp.id === app.id
+                              )}
+                              setSelectedScreen={setSelectedScreen}
+                            />
+                          ))}
+                        </div>
+                        {!user && filteredApps.length > 9 ? (
+                          <div
+                            className={clsx(
+                              "absolute h-[872px] bottom-0 w-full bg-[linear-gradient(180deg,_rgba(255,_255,_255,_0)_4.01%,_#FFFFFF_62.21%)]"
+                              // filteredApps.length < 3 && "top-0"
+                            )}
+                          >
+                            <div className="flex flex-col w-full gap-[25px] absolute bottom-16">
+                              <div className="flex justify-center items-center w-full">
+                                <div className="flex flex-col gap-3 items-center w-full md:w-[889px]">
+                                  <h5 className="font-['Inter'] font-semibold text-[32px] md:text-[64px] leading-[125%] tracking-[0%] text-center bg-gradient-to-r from-slate-900 via-blue-800 to-purple-800 bg-clip-text text-transparent">
+                                    Join and get more inspiration from real
+                                    product
+                                  </h5>
+                                  <p className="font-[Inter] font-normal text:[16px] md:text-[20px] text-[#464C4F] leading-[155%] tracking-[0%] align-middle">
+                                    We believe real design give more sense to
+                                    your design process
+                                  </p>
+                                  <div
+                                    onClick={() => setIsOpenAuth(true)}
+                                    className="flex justify-center mb-6 lg:mb-8 hover:!cursor-pointer z-[10]"
+                                  >
+                                    <Badge className="bg-gradient-to-r from-blue-500 to-purple-600 text-white border-0 px-8 py-3 text-sm font-[Inter] font-bold text-[17.6px] leading-[28px] tracking-[0%] text-center align-middle">
+                                      <Zap className="h-4 w-4 mr-1" />
+                                      Join to Unlock Everything
+                                    </Badge>
+                                  </div>
+                                </div>
+                              </div>
                             </div>
                           </div>
-                        </div>
+                        ) : null}
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
-              )}
+              </div>
             </main>
           </div>
         </div>

@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useTypedSelector } from "@/hooks/use-typed-selector";
-import { AppPublic, ScreenPublic } from "@/pages/Index";
+import { AppPublic, ScreenPublic } from "@/pages/Home/Index";
 import { RootState } from "@/provider/store";
 import clsx from "clsx";
 import {
@@ -198,23 +198,23 @@ export const AppCard: React.FC<AppCardProps> = ({
   }
 
   return (
-    <div className="w-full py-5 gap-4 flex-col flex min-h-[680px] bg-[#FFFFFF] border-[1px] border-[solid] border-[#E2E8F0] rounded-[24px]">
-      <div className="flex flex-col items-start gap-5 px-4">
+    <div className="w-full py-3 gap-4 flex-col flex bg-[#FFFFFF] border-[1px] border-[solid] border-[#E2E8F0] rounded-[20px]">
+      <div className="flex flex-col items-start gap-3 px-3">
         <div
-          className="flex items-center gap-6 w-full hover:cursor-pointer relative"
+          className="flex items-center gap-3 w-full hover:cursor-pointer relative"
           onClick={onDetail}
         >
           <ImageWithFallback
             src={app?.image ?? "https://source.unsplash.com/400x300?game"}
             fallbackSrc="https://placehold.co/400"
             alt={app.name}
-            className="w-[114px] h-[72px] rounded-[8px] object-cover group-hover:scale-105 transition-transform"
+            className="w-[51px] h-[48px] rounded-[8px] object-cover group-hover:scale-105 transition-transform"
           />
-          <div className="flex flex-col items-start gap-1">
-            <h5 className="font-['Inter'] not-italic font-bold text-[19.5px] leading-[28px] items-center text-[#0F172A]">
+          <div className="flex flex-col items-start">
+            <h5 className="font-['Inter'] not-italic font-bold text-[20px] leading-[28px] items-center text-[#0F172A]">
               {app.name}
             </h5>
-            <h6 className="font-['Inter'] not-italic font-normal text-[13.2px] leading-[20px] flex items-center text-[#475569]">
+            <h6 className="font-['Inter'] not-italic font-normal text-[12px] leading-[20px] flex items-center text-[#475569]">
               {app.company}
             </h6>
           </div>
@@ -245,64 +245,42 @@ export const AppCard: React.FC<AppCardProps> = ({
           )}
         </div>
         <div className="flex flex-col w-full items-start gap-2">
-          <div className="flex items-center h-[67px]">
-            <p
-              className="font-['Inter'] not-italic font-normal text-[14px] leading-[20px] text-[#334155] 
-            overflow-hidden 
-            text-ellipsis 
-            break-words 
-            [display:-webkit-box] 
-            [-webkit-line-clamp:2] 
-            [-webkit-box-orient:vertical]"
-            >
-              {app.description}
-            </p>
-          </div>
           <div className="flex flex-row justify-between w-full items-center gap-[8px]">
-            <div className="flex items-center w-full justify-between gap-4 flex-col md:flex-row">
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-1">
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M5.66675 6.33335C6.03494 6.33335 6.33341 6.03488 6.33341 5.66669C6.33341 5.2985 6.03494 5.00002 5.66675 5.00002C5.29856 5.00002 5.00008 5.2985 5.00008 5.66669C5.00008 6.03488 5.29856 6.33335 5.66675 6.33335Z"
-                      fill="black"
-                    />
-                    <path
-                      d="M5.66675 6.33335C6.03494 6.33335 6.33341 6.03488 6.33341 5.66669C6.33341 5.2985 6.03494 5.00002 5.66675 5.00002C5.29856 5.00002 5.00008 5.2985 5.00008 5.66669C5.00008 6.03488 5.29856 6.33335 5.66675 6.33335Z"
-                      stroke="black"
-                      stroke-width="1.33333"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                    <path
-                      d="M2.66675 4.66669V7.23935C2.66675 7.59735 2.80875 7.94069 3.06208 8.19402L8.47275 13.6047C8.59811 13.7301 8.74694 13.8295 8.91075 13.8974C9.07455 13.9652 9.25011 14.0002 9.42741 14.0002C9.60472 14.0002 9.78028 13.9652 9.94409 13.8974C10.1079 13.8295 10.2567 13.7301 10.3821 13.6047L13.6047 10.382C13.7301 10.2567 13.8296 10.1078 13.8974 9.94402C13.9653 9.78022 14.0002 9.60466 14.0002 9.42735C14.0002 9.25005 13.9653 9.07449 13.8974 8.91068C13.8296 8.74688 13.7301 8.59805 13.6047 8.47269L8.19341 3.06202C7.94037 2.80902 7.59724 2.66683 7.23941 2.66669H4.66675C4.13632 2.66669 3.62761 2.8774 3.25253 3.25247C2.87746 3.62755 2.66675 4.13625 2.66675 4.66669Z"
-                      stroke="black"
-                      stroke-width="1.33333"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                  <p className="font-['Inter'] not-italic font-normal text-[13.3px] leading-[20px] flex items-center text-[#64748B]">
-                    {app.category.name}
-                  </p>
-                </div>
-                {/* <div className="flex items-center gap-1">
-                  {getPlatformIcon(app.platform)}
-                  <p className="font-['Inter'] not-italic font-normal text-[13.3px] leading-[20px] flex items-center text-[#64748B]">
-                    {app.platform}
-                  </p>
-                </div> */}
+            <div className="flex items-center w-full gap-3 flex-col md:flex-row">
+              <div className="flex items-center gap-1">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M5.66675 6.33335C6.03494 6.33335 6.33341 6.03488 6.33341 5.66669C6.33341 5.2985 6.03494 5.00002 5.66675 5.00002C5.29856 5.00002 5.00008 5.2985 5.00008 5.66669C5.00008 6.03488 5.29856 6.33335 5.66675 6.33335Z"
+                    fill="black"
+                  />
+                  <path
+                    d="M5.66675 6.33335C6.03494 6.33335 6.33341 6.03488 6.33341 5.66669C6.33341 5.2985 6.03494 5.00002 5.66675 5.00002C5.29856 5.00002 5.00008 5.2985 5.00008 5.66669C5.00008 6.03488 5.29856 6.33335 5.66675 6.33335Z"
+                    stroke="black"
+                    stroke-width="1.33333"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M2.66675 4.66669V7.23935C2.66675 7.59735 2.80875 7.94069 3.06208 8.19402L8.47275 13.6047C8.59811 13.7301 8.74694 13.8295 8.91075 13.8974C9.07455 13.9652 9.25011 14.0002 9.42741 14.0002C9.60472 14.0002 9.78028 13.9652 9.94409 13.8974C10.1079 13.8295 10.2567 13.7301 10.3821 13.6047L13.6047 10.382C13.7301 10.2567 13.8296 10.1078 13.8974 9.94402C13.9653 9.78022 14.0002 9.60466 14.0002 9.42735C14.0002 9.25005 13.9653 9.07449 13.8974 8.91068C13.8296 8.74688 13.7301 8.59805 13.6047 8.47269L8.19341 3.06202C7.94037 2.80902 7.59724 2.66683 7.23941 2.66669H4.66675C4.13632 2.66669 3.62761 2.8774 3.25253 3.25247C2.87746 3.62755 2.66675 4.13625 2.66675 4.66669Z"
+                    stroke="black"
+                    stroke-width="1.33333"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+                <p className="font-['Inter'] not-italic font-normal text-[13.3px] leading-[20px] flex items-center text-[#64748B]">
+                  {app.category.name}
+                </p>
               </div>
-
-              <div className="flex items-center gap-4">
+              <div>
                 {app.countries && app.countries.length > 0 ? (
-                  <div className="flex items-center space-x-1">
+                  <div className="flex items-center gap-1">
                     <div className="w-[14px] h-[14px]">
                       <svg
                         width="14"
@@ -331,17 +309,71 @@ export const AppCard: React.FC<AppCardProps> = ({
                     </span>
                   </div>
                 ) : null}
-                <div className="flex items-center gap-4">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleCompareClick}
-                    className={`h-8 w-8 p-0 bg-white/90 backdrop-blur-sm ${
-                      isInCompare
-                        ? "bg-blue-100 text-blue-600"
-                        : "hover:bg-white"
-                    }`}
-                  >
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleCompareClick}
+                className={clsx(
+                  "h-4 w-4 p-0 bg-white/90 backdrop-blur-sm",
+                  isInCompare ? "bg-blue-100 text-blue-600" : "hover:bg-white"
+                )}
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12 14C13.1046 14 14 13.1046 14 12C14 10.8954 13.1046 10 12 10C10.8954 10 10 10.8954 10 12C10 13.1046 10.8954 14 12 14Z"
+                    stroke="#44546A"
+                    stroke-width="1.33333"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M4 6C5.10457 6 6 5.10457 6 4C6 2.89543 5.10457 2 4 2C2.89543 2 2 2.89543 2 4C2 5.10457 2.89543 6 4 6Z"
+                    stroke="#44546A"
+                    stroke-width="1.33333"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M8.66675 4H10.6667C11.0204 4 11.3595 4.14048 11.6096 4.39052C11.8596 4.64057 12.0001 4.97971 12.0001 5.33333V10"
+                    stroke="#44546A"
+                    stroke-width="1.33333"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M7.33333 12H5.33333C4.97971 12 4.64057 11.8595 4.39052 11.6095C4.14048 11.3594 4 11.0203 4 10.6667V6"
+                    stroke="#44546A"
+                    stroke-width="1.33333"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </Button>
+              {type !== "favorite" && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onLike();
+                  }}
+                  className={clsx(
+                    "h-4 w-4 p-0 hover:bg-red-50 text-[#44546A]",
+                    app.isLiked && "bg-red-100"
+                  )}
+                >
+                  {user ? (
+                    <Heart className={"h-4 w-4"} />
+                  ) : (
                     <svg
                       width="16"
                       height="16"
@@ -350,90 +382,28 @@ export const AppCard: React.FC<AppCardProps> = ({
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
-                        d="M12 14C13.1046 14 14 13.1046 14 12C14 10.8954 13.1046 10 12 10C10.8954 10 10 10.8954 10 12C10 13.1046 10.8954 14 12 14Z"
-                        stroke="#44546A"
-                        stroke-width="1.33333"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                      <path
-                        d="M4 6C5.10457 6 6 5.10457 6 4C6 2.89543 5.10457 2 4 2C2.89543 2 2 2.89543 2 4C2 5.10457 2.89543 6 4 6Z"
-                        stroke="#44546A"
-                        stroke-width="1.33333"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                      <path
-                        d="M8.66675 4H10.6667C11.0204 4 11.3595 4.14048 11.6096 4.39052C11.8596 4.64057 12.0001 4.97971 12.0001 5.33333V10"
-                        stroke="#44546A"
-                        stroke-width="1.33333"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                      <path
-                        d="M7.33333 12H5.33333C4.97971 12 4.64057 11.8595 4.39052 11.6095C4.14048 11.3594 4 11.0203 4 10.6667V6"
+                        d="M12.6667 9.33333C13.66 8.36 14.6667 7.19333 14.6667 5.66667C14.6667 4.69421 14.2804 3.76158 13.5928 3.07394C12.9051 2.38631 11.9725 2 11 2C9.82671 2 9.00004 2.33333 8.00004 3.33333C7.00004 2.33333 6.17337 2 5.00004 2C4.02758 2 3.09495 2.38631 2.40732 3.07394C1.71968 3.76158 1.33337 4.69421 1.33337 5.66667C1.33337 7.2 2.33337 8.36667 3.33337 9.33333L8.00004 14L12.6667 9.33333Z"
                         stroke="#44546A"
                         stroke-width="1.33333"
                         stroke-linecap="round"
                         stroke-linejoin="round"
                       />
                     </svg>
-                  </Button>
-                  {type !== "favorite" && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onLike();
-                      }}
-                      className={clsx(
-                        "h-8 w-8 p-0 hover:bg-red-50",
-                        app.isLiked
-                          ? "!bg-[#9333EA] !text-white"
-                          : "text-[#44546A]"
-                      )}
-                    >
-                      {user ? (
-                        <Heart className={"h-4 w-4"} />
-                      ) : (
-                        <svg
-                          width="16"
-                          height="16"
-                          viewBox="0 0 16 16"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M12.6667 9.33333C13.66 8.36 14.6667 7.19333 14.6667 5.66667C14.6667 4.69421 14.2804 3.76158 13.5928 3.07394C12.9051 2.38631 11.9725 2 11 2C9.82671 2 9.00004 2.33333 8.00004 3.33333C7.00004 2.33333 6.17337 2 5.00004 2C4.02758 2 3.09495 2.38631 2.40732 3.07394C1.71968 3.76158 1.33337 4.69421 1.33337 5.66667C1.33337 7.2 2.33337 8.36667 3.33337 9.33333L8.00004 14L12.6667 9.33333Z"
-                            stroke="#44546A"
-                            stroke-width="1.33333"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          />
-                        </svg>
-                      )}
-                    </Button>
                   )}
-                </div>
-              </div>
+                </Button>
+              )}
             </div>
           </div>
         </div>
       </div>
-      <div className="pl-4 flex items-start gap-[10px] overflow-x-auto">
+      <div className="pl-3 flex items-start gap-[10px] overflow-x-auto pr-3">
         {app.screens.slice(0, 4).map((screen) => (
-          // <div
-          //   key={screen.id}
-          //   className="aspect-[9/16] rounded-lg overflow-hidden relative"
-          // >
           <img
-            onClick={() => setSelectedScreen(screen)}
+            onClick={onDetail}
             src={screen.image}
             alt={screen.name}
             className="w-[190px] h-[417px] rounded-[8px] object-cover group-hover:scale-105 transition-transform duration-500 hover:cursor-pointer"
           />
-          // </div>
         ))}
       </div>
     </div>

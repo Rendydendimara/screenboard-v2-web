@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AppPublic } from "@/pages/Index";
+import { AppPublic } from "@/pages/Home/Index";
 
 interface CompareState {
   compareApps: AppPublic[];

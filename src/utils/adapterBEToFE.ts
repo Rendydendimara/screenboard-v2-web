@@ -2,7 +2,7 @@ import { TAppRes, TAppResPublic } from "@/api/admin/app/type";
 import { TScreenRes } from "@/api/admin/screen/type";
 import { App } from "@/components/AdminAppManager";
 import { Screenshot } from "@/components/AdminScreenshotManager";
-import { AppPublic, ScreenPublic } from "@/pages/Index";
+import { AppPublic, ScreenPublic } from "@/pages/Home/useController";
 import { getImageUrl } from ".";
 
 export const adapterListAppBEToFE = (data: TAppRes[]): App[] => {
@@ -123,6 +123,7 @@ export const adapterListAppBEToFEPublic = (
       linkPlayStore: d.linkPlayStore,
       linkAppStore: d.linkAppStore,
       linkWebsite: d.linkWebsite,
+      createdAt: d.createdAt,
     });
   });
   return result;
@@ -170,6 +171,7 @@ export const adapterSingleAppBEToFEPublic = (
     linkPlayStore: data.linkPlayStore,
     linkAppStore: data.linkAppStore,
     linkWebsite: data.linkWebsite,
+    createdAt: data.createdAt,
   };
   return result;
 };

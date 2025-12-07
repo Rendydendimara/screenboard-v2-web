@@ -1,4 +1,4 @@
-import { ScreenPublic } from "@/pages/Index";
+import { ScreenPublic } from "@/pages/Home/Index";
 import clsx from "clsx";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Badge } from "./ui/badge";
