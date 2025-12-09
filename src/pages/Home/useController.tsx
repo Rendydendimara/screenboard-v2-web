@@ -10,6 +10,7 @@ import SubcategoryAPI from "@/api/user/subcategory/api";
 import { useToast } from "@/hooks/use-toast";
 import { useAppDispatch, useTypedSelector } from "@/hooks/use-typed-selector";
 import { useFavorites } from "@/hooks/useFavorites";
+import { useDebounce } from "@/hooks/useDebounce";
 import { logout, setCredentials } from "@/provider/slices/authSlice";
 import {
   addToCompare,
@@ -96,6 +97,8 @@ const MENU_FILTER_MARKET: TMenuFilter = {
   items: [], // Empty because the data result from calculate
   value: "", // Default
 };
+const ITEMS_PER_PAGE = 20; // Jumlah item yang di-load per batch
+
 const useController = () => {
   const [listApp, setListApp] = useState<AppPublic[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -116,6 +119,8 @@ const useController = () => {
   const [isLoadingGetCategory, setIsLoadingGetCategory] = useState(true);
   const [isLoadingGetApp, setIsLoadingGetApp] = useState(true);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [displayedItemsCount, setDisplayedItemsCount] =
+    useState(ITEMS_PER_PAGE);
   const user = useTypedSelector((state: RootState) => state.auth.user);
   const compareApps = useTypedSelector(
     (state: RootState) => state.compare.compareApps
@@ -142,11 +147,15 @@ const useController = () => {
   const containerMainRef = useRef<HTMLDivElement>(null);
   const [scrolledFilterMenu, setScrolledFilterMenu] = useState(false);
 
-  const filteredApps = useMemo(() => {
+  // Debounce search term untuk performa lebih baik
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
+
+  // Filtered apps (semua data yang match filter)
+  const allFilteredApps = useMemo(() => {
     const result = listApp.filter((app) => {
       const matchesSearch = app.name
         .toLowerCase()
-        .includes(searchTerm.toLowerCase());
+        .includes(debouncedSearchTerm.toLowerCase());
       const matchesCategory = filterCategories.value
         ? app?.category?._id === filterCategories.value
         : true;
@@ -175,9 +184,36 @@ const useController = () => {
     filterSortBy,
     filterSubCategories,
     filterMarket,
-    searchTerm,
+    debouncedSearchTerm,
     selectedCountries,
   ]);
+
+  // Apps yang ditampilkan (dengan pagination untuk infinite scroll)
+  const filteredApps = useMemo(() => {
+    return allFilteredApps.slice(0, displayedItemsCount);
+  }, [allFilteredApps, displayedItemsCount]);
+
+  // Reset displayed items ketika filter berubah
+  useEffect(() => {
+    setDisplayedItemsCount(ITEMS_PER_PAGE);
+  }, [
+    debouncedSearchTerm,
+    filterCategories.value,
+    filterSubCategories.value,
+    filterMarket.value,
+    filterSortBy.value,
+  ]);
+
+  // Function untuk load more items
+  const loadMoreItems = useCallback(() => {
+    if (displayedItemsCount < allFilteredApps.length) {
+      setDisplayedItemsCount((prev) =>
+        Math.min(prev + ITEMS_PER_PAGE, allFilteredApps.length)
+      );
+    }
+  }, [displayedItemsCount, allFilteredApps.length]);
+
+  const hasMoreItems = displayedItemsCount < allFilteredApps.length;
 
   const handleLike = async (appId: string, isLike: boolean) => {
     try {
@@ -536,6 +572,9 @@ const useController = () => {
     toggleFavorite,
     onCloseOpenAuth,
     filteredApps,
+    allFilteredApps,
+    loadMoreItems,
+    hasMoreItems,
     getListCategoryFiltered,
     handleLike,
     handleAddToCompare,

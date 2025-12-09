@@ -19,6 +19,7 @@ import clsx from "clsx";
 import { GitCompare, Grid, Heart, List, Menu, Search, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 import Filters from "./components/Filters";
+import { InfiniteScrollList } from "./components/InfiniteScrollList";
 import useController from "./useController";
 
 const Index = () => {
@@ -58,6 +59,9 @@ const Index = () => {
     toggleFavorite,
     onCloseOpenAuth,
     filteredApps,
+    allFilteredApps,
+    loadMoreItems,
+    hasMoreItems,
     getListCategoryFiltered,
     handleLike,
     handleAddToCompare,
@@ -567,7 +571,7 @@ const Index = () => {
                 {/* Static Filters - visible when not scrolled */}
                 <div
                   className={clsx(
-                    "min-w-[130px] max-w-[130px] transition-all duration-300 ease-in-out",
+                    "min-w-[130px] max-w-[130px] max-h-[2000px] overflow-y-hidden transition-all duration-300 ease-in-out",
                     scrolledFilterMenu
                       ? "opacity-0 pointer-events-none"
                       : "opacity-100"
@@ -590,7 +594,7 @@ const Index = () => {
                 {/* Fixed Filters - visible when scrolled */}
                 <div
                   className={clsx(
-                    "min-w-[130px] max-w-[130px] fixed max-h-[90vh] overflow-y-auto top-24 z-50 pb-8 transition-all duration-300 ease-in-out",
+                    "min-w-[130px] max-w-[130px] fixed h-[90vh] overflow-y-auto top-24 z-50 pb-8 transition-all duration-300 ease-in-out",
                     scrolledFilterMenu
                       ? "opacity-100 translate-y-0"
                       : "opacity-0 -translate-y-4 pointer-events-none"
@@ -610,7 +614,7 @@ const Index = () => {
                   />
                 </div>
                 <div className="w-full flex justify-end">
-                  <div className="w-full max-w-[990px] flex items-start gap-5 min-h-screen">
+                  <div className="w-full max-w-[990px] flex items-start gap-5">
                     {/* Apps Grid/List */}
                     {isLoadingGetApp ? (
                       <div
@@ -638,54 +642,38 @@ const Index = () => {
                         </p>
                       </div>
                     ) : (
-                      <div className="relative w-full">
-                        <div
-                          className={clsx(
-                            "w-full",
-                            viewMode === "grid"
-                              ? "grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6"
-                              : "space-y-4 lg:space-y-6"
-                          )}
-                        >
-                          {filteredApps.map((app, i) => (
-                            <AppCard
-                              key={app.id}
-                              app={app}
-                              viewMode={viewMode}
-                              onLike={() => handleLike(app.id, app.isLiked)}
-                              onClick={() => setSelectedApp(app)}
-                              onDetail={() => gotoDetail(app.id)}
-                              onAddToCompare={() => handleAddToCompare(app)}
-                              isInCompare={compareApps.some(
-                                (compareApp) => compareApp.id === app.id
-                              )}
-                              setSelectedScreen={setSelectedScreen}
-                            />
-                          ))}
-                        </div>
-                        {!user && filteredApps.length > 9 ? (
-                          <div
-                            className={clsx(
-                              "absolute h-[872px] bottom-0 w-full bg-[linear-gradient(180deg,_rgba(255,_255,_255,_0)_4.01%,_#FFFFFF_62.21%)]"
-                              // filteredApps.length < 3 && "top-0"
-                            )}
-                          >
-                            <div className="flex flex-col w-full gap-[25px] absolute bottom-16">
+                      <div className="w-full">
+                        <InfiniteScrollList
+                          apps={filteredApps}
+                          viewMode={viewMode}
+                          onLike={handleLike}
+                          onAppClick={setSelectedApp}
+                          onDetail={gotoDetail}
+                          onAddToCompare={handleAddToCompare}
+                          compareApps={compareApps}
+                          setSelectedScreen={setSelectedScreen}
+                          hasMoreItems={hasMoreItems}
+                          loadMoreItems={loadMoreItems}
+                          isLoading={isLoadingGetApp}
+                        />
+                        {!user && allFilteredApps.length > 9 && (
+                          <div className="w-full -mt-64 pt-32 pb-8 bg-gradient-to-t from-white via-white/90 to-transparent">
+                            <div className="flex flex-col w-full gap-6">
                               <div className="flex justify-center items-center w-full">
-                                <div className="flex flex-col gap-3 items-center w-full md:w-[889px]">
-                                  <h5 className="font-['Inter'] font-semibold text-[32px] md:text-[64px] leading-[125%] tracking-[0%] text-center bg-gradient-to-r from-slate-900 via-blue-800 to-purple-800 bg-clip-text text-transparent">
+                                <div className="flex flex-col gap-3 items-center w-full md:w-[889px] px-4">
+                                  <h5 className="font-['Inter'] font-semibold text-[32px] md:text-[64px] leading-[125%] text-center bg-gradient-to-r from-slate-900 via-blue-800 to-purple-800 bg-clip-text text-transparent">
                                     Join and get more inspiration from real
                                     product
                                   </h5>
-                                  <p className="font-[Inter] font-normal text:[16px] md:text-[20px] text-[#464C4F] leading-[155%] tracking-[0%] align-middle">
+                                  <p className="font-[Inter] font-normal text-[16px] md:text-[20px] text-[#464C4F] leading-[155%] text-center">
                                     We believe real design give more sense to
                                     your design process
                                   </p>
                                   <div
                                     onClick={() => setIsOpenAuth(true)}
-                                    className="flex justify-center mb-6 lg:mb-8 hover:!cursor-pointer z-[10]"
+                                    className="flex justify-center hover:cursor-pointer"
                                   >
-                                    <Badge className="bg-gradient-to-r from-blue-500 to-purple-600 text-white border-0 px-8 py-3 text-sm font-[Inter] font-bold text-[17.6px] leading-[28px] tracking-[0%] text-center align-middle">
+                                    <Badge className="bg-gradient-to-r from-blue-500 to-purple-600 text-white border-0 px-8 py-3 text-sm font-[Inter] font-bold text-[17.6px] leading-[28px] text-center">
                                       <Zap className="h-4 w-4 mr-1" />
                                       Join to Unlock Everything
                                     </Badge>
@@ -694,7 +682,7 @@ const Index = () => {
                               </div>
                             </div>
                           </div>
-                        ) : null}
+                        )}
                       </div>
                     )}
                   </div>
