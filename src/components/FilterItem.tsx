@@ -15,6 +15,14 @@ const FilterItem: React.FC<IProps> = ({
   iconType,
   handleChange,
 }) => {
+  // Check if a value is selected
+  const isSelected = (value: string) => {
+    if (Array.isArray(menuFilter.value)) {
+      return menuFilter.value.includes(value);
+    }
+    return value === menuFilter.value;
+  };
+
   return (
     <div className="w-full flex flex-col gap-3">
       <p className="text-body-4 font-semibold text-black">{menuFilter.label}</p>
@@ -24,7 +32,7 @@ const FilterItem: React.FC<IProps> = ({
           onClick={() => handleChange(filter.value)}
           key={i}
         >
-          {filter.value === menuFilter.value ? (
+          {isSelected(filter.value) ? (
             iconType === "square" ? (
               <SquareCheckboxActive />
             ) : (

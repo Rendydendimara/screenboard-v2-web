@@ -27,7 +27,8 @@ import { TItemMenuFilter, TMenuFilter } from "@/types/filter";
 const MENU_FILTER_CATEGORIES: TMenuFilter = {
   label: "Categories",
   items: [], // Empty because the data come from API
-  value: "", // Default
+  value: [], // Default - multiple selection
+  multiSelect: true,
 };
 
 const useController = () => {
@@ -177,7 +178,7 @@ const useController = () => {
       setFilterCategories({
         ...filterCategories,
         items: itemsFilterCategory,
-        value: "",
+        value: [],
       });
       setApp(data);
     } catch (error: any) {
@@ -221,9 +222,17 @@ const useController = () => {
 
   // Group by kategori agar bisa ditampilkan per section
   const groupedScreensFilter = useMemo(() => {
-    const screensFiltered = filterCategories.value
-      ? app?.screens?.filter((s) => s.category?._id === filterCategories.value)
-      : app?.screens;
+    const categoryValues = Array.isArray(filterCategories.value)
+      ? filterCategories.value
+      : [];
+
+    const screensFiltered =
+      categoryValues.length === 0
+        ? app?.screens
+        : app?.screens?.filter((s) =>
+            categoryValues.includes(s.category?._id)
+          );
+
     return screensFiltered?.reduce((acc, screen) => {
       const categoryName = screen.category?.name || "Uncategorized";
       if (!acc[categoryName]) acc[categoryName] = [];
@@ -325,7 +334,15 @@ const useController = () => {
 
   const handleChangeFilterCategories = useCallback(
     (value: string) => {
-      const newValue = value === filterCategories.value ? "" : value;
+      const currentValues = Array.isArray(filterCategories.value)
+        ? filterCategories.value
+        : [];
+
+      // Toggle the value in the array
+      const newValue = currentValues.includes(value)
+        ? currentValues.filter((v) => v !== value)
+        : [...currentValues, value];
+
       const newFilterCategories: TMenuFilter = {
         ...filterCategories,
         value: newValue,

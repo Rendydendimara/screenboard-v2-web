@@ -80,22 +80,26 @@ const MENU_FILTER_SORT_BY: TMenuFilter = {
       value: "oldest",
     },
   ],
-  value: "", // Default
+  value: "", // Default - single selection
+  multiSelect: false,
 };
 const MENU_FILTER_CATEGORIES: TMenuFilter = {
   label: "Categories",
   items: [], // Empty because the data come from API
-  value: "", // Default
+  value: [], // Default - multiple selection
+  multiSelect: true,
 };
 const MENU_FILTER_SUB_CATEGORIES: TMenuFilter = {
   label: "Sub Categories",
   items: [], // Empty because the data come from API
-  value: "", // Default
+  value: [], // Default - multiple selection
+  multiSelect: true,
 };
 const MENU_FILTER_MARKET: TMenuFilter = {
   label: "Market",
   items: [], // Empty because the data result from calculate
-  value: "", // Default
+  value: [], // Default - multiple selection
+  multiSelect: true,
 };
 const ITEMS_PER_PAGE = 20; // Jumlah item yang di-load per batch
 
@@ -156,17 +160,35 @@ const useController = () => {
       const matchesSearch = app.name
         .toLowerCase()
         .includes(debouncedSearchTerm.toLowerCase());
-      const matchesCategory = filterCategories.value
-        ? app?.category?._id === filterCategories.value
-        : true;
-      const matchesSubCategory = filterSubCategories.value
-        ? app?.subcategory?._id === filterSubCategories.value
-        : true;
-      const matchesCountry = filterMarket.value
-        ? app?.countries?.some(
-            (countryName) => countryName === filterMarket.value
-          )
-        : true;
+
+      // Handle multiple category selection
+      const categoryValues = Array.isArray(filterCategories.value)
+        ? filterCategories.value
+        : [];
+      const matchesCategory =
+        categoryValues.length === 0
+          ? true
+          : categoryValues.includes(app?.category?._id);
+
+      // Handle multiple subcategory selection
+      const subCategoryValues = Array.isArray(filterSubCategories.value)
+        ? filterSubCategories.value
+        : [];
+      const matchesSubCategory =
+        subCategoryValues.length === 0
+          ? true
+          : subCategoryValues.includes(app?.subcategory?._id);
+
+      // Handle multiple market/country selection
+      const marketValues = Array.isArray(filterMarket.value)
+        ? filterMarket.value
+        : [];
+      const matchesCountry =
+        marketValues.length === 0
+          ? true
+          : app?.countries?.some((countryName) =>
+              marketValues.includes(countryName)
+            );
 
       return (
         matchesSearch && matchesCategory && matchesCountry && matchesSubCategory
@@ -326,7 +348,7 @@ const useController = () => {
       setFilterMarket({
         ...filterMarket,
         items: itemsFilterMarket,
-        value: "",
+        value: [],
       });
     } catch (err: any) {
       toast({
@@ -367,12 +389,12 @@ const useController = () => {
       setFilterCategories({
         ...filterCategories,
         items: itemsFilterCategory,
-        value: "",
+        value: [],
       });
       setFilterSubCategories({
         ...filterSubCategories,
         items: itemsFilterSubCategory,
-        value: "",
+        value: [],
       });
     } catch (error: any) {
       toast({
@@ -455,55 +477,84 @@ const useController = () => {
 
   const handleChangeFilterCategories = useCallback(
     (value: string) => {
-      const newValue = value === filterCategories.value ? "" : value;
+      const currentValues = Array.isArray(filterCategories.value)
+        ? filterCategories.value
+        : [];
+
+      // Toggle the value in the array
+      const newValue = currentValues.includes(value)
+        ? currentValues.filter((v) => v !== value)
+        : [...currentValues, value];
+
       const newFilterCategories: TMenuFilter = {
         ...filterCategories,
         value: newValue,
       };
+
+      // Update subcategories based on selected categories
       const newItemsFilterSubCategory: TItemMenuFilter[] = subCategories
-        .filter((d) => (newValue === "" ? true : d.categoryId._id === value))
+        .filter((d) =>
+          newValue.length === 0
+            ? true
+            : newValue.includes(d.categoryId._id)
+        )
         .map((d) => {
           return {
             label: d.name,
             value: d._id,
           };
         });
+
       setFilterCategories(newFilterCategories);
 
-      // Handle filter sub categories options
-      // const listValueItemsSubCategories = newItemsFilterSubCategory.map(
-      //   (d) => d.value
-      // );
+      // Update subcategories filter
+      const currentSubValues = Array.isArray(filterSubCategories.value)
+        ? filterSubCategories.value
+        : [];
+      const validSubValues = currentSubValues.filter((subValue) =>
+        newItemsFilterSubCategory.some((item) => item.value === subValue)
+      );
+
       setFilterSubCategories({
         ...filterSubCategories,
         items: newItemsFilterSubCategory,
-        value: "",
-        // listValueItemsSubCategories.includes(filterSubCategories.value)
-        //   ? filterSubCategories.value
-        //   : "",
+        value: validSubValues,
       });
-      // Lanjut filter market options
     },
-    [filterCategories, filterSubCategories, filterMarket, subCategories]
+    [filterCategories, filterSubCategories, subCategories]
   );
 
   const handleChangeFilterSubCategories = useCallback(
     (value: string) => {
-      const newValue = value === filterSubCategories.value ? "" : value;
+      const currentValues = Array.isArray(filterSubCategories.value)
+        ? filterSubCategories.value
+        : [];
+
+      // Toggle the value in the array
+      const newValue = currentValues.includes(value)
+        ? currentValues.filter((v) => v !== value)
+        : [...currentValues, value];
+
       const newFilterSubCategories: TMenuFilter = {
         ...filterSubCategories,
         value: newValue,
       };
       setFilterSubCategories(newFilterSubCategories);
-
-      // Lanjut filter market options
     },
-    [filterCategories, filterSubCategories, filterMarket, subCategories]
+    [filterSubCategories]
   );
 
   const handleChangeFilterMarket = useCallback(
     (value: string) => {
-      const newValue = value === filterMarket.value ? "" : value;
+      const currentValues = Array.isArray(filterMarket.value)
+        ? filterMarket.value
+        : [];
+
+      // Toggle the value in the array
+      const newValue = currentValues.includes(value)
+        ? currentValues.filter((v) => v !== value)
+        : [...currentValues, value];
+
       const newFilterMarket: TMenuFilter = {
         ...filterMarket,
         value: newValue,
