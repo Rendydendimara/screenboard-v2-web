@@ -11,7 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import clsx from "clsx";
 import { GitCompare, Heart, Menu, Search } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 interface HeaderProps {
   showSearch?: boolean;
@@ -44,7 +44,8 @@ export const Header = ({
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
-
+  const location = useLocation();
+  console.log("location", location.pathname);
   useEffect(() => {
     const handleScroll = () => {
       setLocalScrolled(window.scrollY > 80);
@@ -103,16 +104,18 @@ export const Header = ({
     >
       <div className="px-0">
         <div className="w-full flex justify-center items-center">
-          <div className="w-full max-w-[1140px]">
+          <div className="w-full max-w-[1200px]">
             <div className="flex w-full items-center justify-between h-16 lg:h-20 px-4 md:px-6 lg:px-0">
               {/* Logo */}
-              <Link to="/" className="flex items-center space-x-2">
-                <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
-                  <span className="text-white font-bold text-sm lg:text-base">
-                    S
-                  </span>
-                </div>
-              </Link>
+              <div className="w-[222px]">
+                <Link to="/" className="flex items-center space-x-2">
+                  <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
+                    <span className="text-white font-bold text-sm lg:text-base">
+                      S
+                    </span>
+                  </div>
+                </Link>
+              </div>
 
               {/* Search Bar - Responsive (only show if showSearch is true) */}
               {showSearch && (
@@ -121,7 +124,7 @@ export const Header = ({
                     "flex-1 max-w-md mx-4 lg:mx-8 transition-all duration-300 ease-in-out overflow-hidden",
                     scrolledSearch
                       ? "max-w-md opacity-100 translate-x-0"
-                      : "max-w-0 opacity-0 -translate-x-4 pointer-events-none"
+                      : "max-w-0 opacity-0 -translate-x-4 hidden pointer-events-none"
                   )}
                 >
                   <div className="relative">
@@ -136,15 +139,55 @@ export const Header = ({
                 </div>
               )}
 
-              {/* Action Buttons - Desktop */}
-              <div className="hidden md:flex items-center gap-[10px]">
-                {user && (
-                  <Link to="/favorites">
+              {!scrolledSearch && (
+                <div className="flex items-center gap-3 ">
+                  <Link to="/">
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="relative"
+                      className={clsx(
+                        "font-[Inter] font-normal text-[14px] leading-[20px] tracking-[0%] text-center align-middle",
+                        location.pathname === "/" ||
+                          location.pathname.includes("app")
+                          ? "font-bold"
+                          : ""
+                      )}
                     >
+                      Apps
+                    </Button>
+                  </Link>
+                  <Link to="/component">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className={clsx(
+                        "font-[Inter] font-normal text-[14px] leading-[20px] tracking-[0%] text-center align-middle",
+                        location.pathname === "/component" && "font-bold"
+                      )}
+                    >
+                      Component
+                    </Button>
+                  </Link>
+                  <Link to="#">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className={clsx(
+                        "font-[Inter] font-normal text-[14px] leading-[20px] tracking-[0%] text-center align-middle",
+                        location.pathname === "/website" && "font-bold"
+                      )}
+                    >
+                      Website (Coming Soon)
+                    </Button>
+                  </Link>
+                </div>
+              )}
+
+              {/* Action Buttons - Desktop */}
+              <div className="hidden md:flex items-center gap-[10px]">
+                {/* {user && (
+                  <Link to="/favorites">
+                    <Button variant="ghost" size="sm" className="relative">
                       <svg
                         width="16"
                         height="16"
@@ -165,14 +208,10 @@ export const Header = ({
                       </span>
                     </Button>
                   </Link>
-                )}
-                {user && (
+                )} */}
+                {/* {user && (
                   <Link to="/subscription">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="relative"
-                    >
+                    <Button variant="ghost" size="sm" className="relative">
                       <svg
                         width="16"
                         height="16"
@@ -193,7 +232,7 @@ export const Header = ({
                       </span>
                     </Button>
                   </Link>
-                )}
+                )} */}
                 <Button
                   variant="ghost"
                   size="sm"
@@ -320,7 +359,7 @@ export const Header = ({
                           </p>
                         </div>
 
-                        <Link
+                        {/* <Link
                           to="/favorites"
                           onClick={() => setMobileMenuOpen(false)}
                         >
@@ -331,9 +370,9 @@ export const Header = ({
                             <Heart className="h-5 w-5" />
                             Favorites ({user.appLikes.length})
                           </Button>
-                        </Link>
+                        </Link> */}
 
-                        <Link
+                        {/* <Link
                           to="/subscription"
                           onClick={() => setMobileMenuOpen(false)}
                         >
@@ -358,7 +397,7 @@ export const Header = ({
                             </svg>
                             Subscription
                           </Button>
-                        </Link>
+                        </Link> */}
 
                         <Button
                           variant="ghost"

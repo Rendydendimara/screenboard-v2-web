@@ -1,12 +1,18 @@
-import React from "react";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles, Zap, Heart, Star } from "lucide-react";
+import { Zap } from "lucide-react";
+import React from "react";
 
-export const HeroSection: React.FC = ({
-  handleStartExploring,
-}: {
-  handleStartExploring: () => void;
+interface IProps {
+  onClickBtn: () => void;
+  mainHeading: string;
+  subtitle: string;
+  labelBtn: string;
+}
+export const HeroSection: React.FC<IProps> = ({
+  onClickBtn,
+  mainHeading,
+  subtitle,
+  labelBtn,
 }) => {
   return (
     <section className="py-10 md:py-12 lg:py-20 container px-4 md:px-0 !pb-8">
@@ -23,21 +29,20 @@ export const HeroSection: React.FC = ({
             <div className="w-full md:w-[897px] flex flex-col items-start gap-4 md:gap-8">
               {/* Main Heading */}
               <h1 className="h-auto md:h-[152px] leading-[32px] text-[32px] md:text-[72px] font-bold bg-gradient-to-r from-slate-900 via-blue-800 to-purple-800 bg-clip-text text-transparent md:leading-[72px] !tracking-[0%] align-middle">
-                Study Real UI Patterns from Real Apps
+                {mainHeading}
               </h1>
               {/* Subtitle */}
               <p className="font-normal text-[20px] leading-[150%]  md:text-xl text-[#475569] font-[Inter] mg:!leading-[32px] tracking-[0%] align-middle w-full md:w-[897px]">
-                Analyze hundreds of design examples. Register now to unlock
-                complete app screens and learn from the best.
+                {subtitle}
               </p>
               {/* Badge */}
               <div
-                onClick={handleStartExploring}
+                onClick={onClickBtn}
                 className="flex justify-center mb-6 lg:mb-8 hover:!cursor-pointer z-[10]"
               >
                 <Badge className="bg-gradient-to-r from-blue-500 to-purple-600 text-white border-0 px-8 py-3 text-sm font-[Inter] font-bold text-[17.6px] leading-[28px] tracking-[0%] text-center align-middle">
                   <Zap className="h-4 w-4 mr-1" />
-                  Join to Unlock Everything
+                  {labelBtn}
                 </Badge>
               </div>
             </div>

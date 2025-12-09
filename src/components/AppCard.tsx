@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useTypedSelector } from "@/hooks/use-typed-selector";
-import { AppPublic, ScreenPublic } from "@/pages/Home/Index";
+import { AppPublic, ScreenPublic } from "@/pages/Home/useController";
 import { RootState } from "@/provider/store";
 import clsx from "clsx";
 import {
