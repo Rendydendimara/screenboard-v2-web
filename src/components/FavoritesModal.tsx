@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ScreenPublic } from "@/pages/Home/Index";
+import { ScreenPublic } from "@/pages/Home/useController";
 import { Heart, LayoutGrid, List, Search, X } from "lucide-react";
 import React, { useState } from "react";
 
@@ -118,9 +118,9 @@ export const FavoritesModal: React.FC<FavoritesModalProps> = ({
                     <SelectValue placeholder="Select category" />
                   </SelectTrigger>
                   <SelectContent className="bg-white">
-                    {categories.map((category) => (
-                      <SelectItem key={category} value={category}>
-                        {category}
+                    {categories.map((category, i) => (
+                      <SelectItem key={i} value={category as any}>
+                        {category as any}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -228,7 +228,7 @@ export const FavoritesModal: React.FC<FavoritesModalProps> = ({
                             </Button>
                           </div>
                           <Badge variant="outline" className="text-xs">
-                            {screen.category}
+                            {screen.category?.name}
                           </Badge>
                         </div>
                       </div>
@@ -268,7 +268,7 @@ export const FavoritesModal: React.FC<FavoritesModalProps> = ({
                           </div>
                           <div className="flex items-center space-x-2">
                             <Badge variant="outline" className="text-xs">
-                              {screen.category}
+                              {screen.category?.name}
                             </Badge>
                           </div>
                           <p className="text-sm text-slate-600 mt-2 line-clamp-2">

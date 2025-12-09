@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { AppPublic } from "@/pages/Home/Index";
+import { AppPublic } from "@/pages/Home/useController";
 import clsx from "clsx";
 import { Globe, Monitor, Search, Smartphone } from "lucide-react";
 import React, { useEffect, useState } from "react";
