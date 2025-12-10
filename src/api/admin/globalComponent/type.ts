@@ -4,6 +4,7 @@ export type TGlobalComponentPost = {
   link: string;
   tags: string[];
   screenshots: File[];
+  category: string;
 };
 
 export type TGlobalComponentPut = {
@@ -18,6 +19,10 @@ export type TGlobalComponentRes = {
   link: string;
   tags: string[];
   screenshots: string[];
+  category?: {
+    _id: string;
+    name: string;
+  };
   createdAt: Date;
   deletedAt: Date | null;
   updatedAt: Date | null;

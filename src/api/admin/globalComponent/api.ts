@@ -15,6 +15,7 @@ const create = async (payload: TGlobalComponentPost) => {
   });
 
   formData.append("name", payload.name);
+  formData.append("category", payload.category);
   formData.append("description", payload.description);
   formData.append("link", payload.link);
   formData.append("tags", JSON.stringify(payload.tags));
@@ -55,6 +56,7 @@ const update = async (payload: TGlobalComponentPut) => {
 
   formData.append("globalComponentId", payload.globalComponentId);
   formData.append("name", payload.name);
+  formData.append("category", payload.category);
   formData.append("description", payload.description);
   formData.append("link", payload.link);
   formData.append("tags", JSON.stringify(payload.tags));

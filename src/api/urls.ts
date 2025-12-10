@@ -84,6 +84,14 @@ const URL_API = {
         DETAIL: "/api/v1/admin/global-component/detail",
       },
     },
+    CATEGORY_GLOBAL_COMPONENT: {
+      V1: {
+        CREATE: "/api/v1/admin/category-global-component/create",
+        UPDATE: "/api/v1/admin/category-global-component/update",
+        GET_LIST: "/api/v1/admin/category-global-component/get-list",
+        DELETE: "/api/v1/admin/category-global-component/delete",
+      },
+    },
   },
   USER: {
     APP: {
