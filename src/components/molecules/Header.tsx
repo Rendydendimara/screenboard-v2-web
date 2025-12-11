@@ -162,7 +162,10 @@ export const Header = ({
                       size="sm"
                       className={clsx(
                         "font-[Inter] font-normal text-[14px] leading-[20px] tracking-[0%] text-center align-middle",
-                        location.pathname === "/component" && "font-bold"
+                        location.pathname === "/component" ||
+                          location.pathname.includes("component")
+                          ? "font-bold"
+                          : ""
                       )}
                     >
                       Component

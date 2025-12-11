@@ -11,7 +11,7 @@ const ComponentCard = ({ component, onDetail }: IProps) => {
     <>
       <div className="flex flex-col gap-6">
         <h2 className="font-[Inter] font-bold text-[24px] leading-[150%] tracking-[0%] align-middle text-[#020817]">
-          Dashboard
+          {component.name ?? "-"}
         </h2>
         <div className="grid grid-cols-1 items-start sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {component.screenshots.slice(0, 10).map((img, i) => (

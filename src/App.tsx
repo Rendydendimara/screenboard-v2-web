@@ -18,6 +18,7 @@ import Subscription from "./pages/Subscription";
 import SubscriptionSuccess from "./pages/SubscriptionSuccess";
 import SubscriptionCancel from "./pages/SubscriptionCancel";
 import Component from "@/pages/Component/useView";
+import ComponentDetail from "@/pages/ComponentDetail/useView";
 
 const App = () => {
   const [loading, setLoading] = useState(true);
@@ -63,6 +64,7 @@ const App = () => {
       <Route path="/subscription" element={<Subscription />} />
       <Route path="/subscription/success" element={<SubscriptionSuccess />} />
       <Route path="/component" element={<Component />} />
+      <Route path="/component/:id" element={<ComponentDetail />} />
       <Route path="/login-admin" element={<LoginAdmin />} />
       <Route path="/admin" element={<Admin />} />
       <Route path="/admin/app/:id" element={<AdminAppDetails />} />
