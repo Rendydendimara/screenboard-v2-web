@@ -1,31 +1,19 @@
-import { AppCard } from "@/components/AppCard";
-import { AppPublic, ScreenPublic } from "../useController";
-import { useEffect, useRef, useCallback, memo } from "react";
+import { TGlobalComponentRes } from "@/api/user/globalComponent/type";
 import clsx from "clsx";
+import { memo, useCallback, useEffect, useRef } from "react";
+import ComponentCard from "./ComponentCard";
 
 interface InfiniteScrollListProps {
-  apps: AppPublic[];
-  viewMode: "grid" | "list";
-  onLike: (appId: string, isLiked: boolean) => void;
-  onAppClick: (app: AppPublic) => void;
+  components: TGlobalComponentRes[];
   onDetail: (appId: string) => void;
-  onAddToCompare: (app: AppPublic) => void;
-  compareApps: AppPublic[];
-  setSelectedScreen: (screen: ScreenPublic | null) => void;
   hasMoreItems: boolean;
   loadMoreItems: () => void;
   isLoading?: boolean;
 }
 
 const InfiniteScrollListComponent = ({
-  apps,
-  viewMode,
-  onLike,
-  onAppClick,
+  components,
   onDetail,
-  onAddToCompare,
-  compareApps,
-  setSelectedScreen,
   hasMoreItems,
   loadMoreItems,
   isLoading = false,
@@ -64,27 +52,12 @@ const InfiniteScrollListComponent = ({
 
   return (
     <>
-      <div
-        className={clsx(
-          "w-full",
-          viewMode === "grid"
-            ? "grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6"
-            : "space-y-4 lg:space-y-6"
-        )}
-      >
-        {apps.map((app) => (
-          <AppCard
-            key={app.id}
-            app={app}
-            viewMode={viewMode}
-            onLike={() => onLike(app.id, app.isLiked)}
-            onClick={() => onAppClick(app)}
-            onDetail={() => onDetail(app.id)}
-            onAddToCompare={() => onAddToCompare(app)}
-            isInCompare={compareApps.some(
-              (compareApp) => compareApp.id === app.id
-            )}
-            setSelectedScreen={setSelectedScreen}
+      <div className={clsx("w-full space-y-10")}>
+        {components.map((component) => (
+          <ComponentCard
+            key={component._id}
+            component={component}
+            onDetail={onDetail}
           />
         ))}
       </div>

@@ -4,7 +4,10 @@ import {
   TCategoryGlobalComponentRes,
 } from "@/api/admin/categoryGlobalComponent/type";
 import GlobalComponentAPI from "@/api/admin/globalComponent/api";
-import { TGlobalComponentRes } from "@/api/admin/globalComponent/type";
+import {
+  IScreenshot,
+  TGlobalComponentRes,
+} from "@/api/admin/globalComponent/type";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -49,7 +52,7 @@ export interface GlobalComponent {
   description: string;
   link: string;
   tags: string[];
-  screenshots: string[];
+  screenshots: IScreenshot[];
   category?: {
     _id: string;
     name: string;
@@ -182,8 +185,8 @@ export const AdminGlobalComponentManager: React.FC = () => {
     });
 
     const existingImages: UploadImageType[] = component.screenshots.map(
-      (url) => ({
-        oldImage: url,
+      (screenshot) => ({
+        oldImage: screenshot.filePath,
         currentImage: undefined,
         isHaveChange: false,
       })
@@ -249,6 +252,10 @@ export const AdminGlobalComponentManager: React.FC = () => {
           .filter((img) => !img.isHaveChange && img.oldImage)
           .map((img) => img.oldImage);
 
+        const oldScreenshotsFix = editingComponent.screenshots.filter((s) =>
+          oldScreenshots.includes(s.filePath)
+        );
+
         await GlobalComponentAPI.update({
           globalComponentId: editingComponent.id,
           name: formData.name,
@@ -256,7 +263,7 @@ export const AdminGlobalComponentManager: React.FC = () => {
           link: formData.link,
           tags,
           screenshots: newScreenshots,
-          oldScreenshots,
+          oldScreenshots: oldScreenshotsFix,
           category: formData.category,
         });
 

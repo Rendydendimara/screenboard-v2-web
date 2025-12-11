@@ -151,6 +151,12 @@ const URL_API = {
         VERIFY_SESSION: "/api/v1/user/subscription/verify-session",
       },
     },
+    GLOBAL_COMPONENT: {
+      V1: {
+        GET_LIST: "/api/v1/user/global-component/get-list",
+        DETAIL: "/api/v1/user/global-component/detail",
+      },
+    },
   },
 };
 

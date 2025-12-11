@@ -1,5 +1,8 @@
 import GlobalComponentAPI from "@/api/admin/globalComponent/api";
-import { TGlobalComponentRes } from "@/api/admin/globalComponent/type";
+import {
+  IScreenshot,
+  TGlobalComponentRes,
+} from "@/api/admin/globalComponent/type";
 import CModalDialogLoading from "@/components/modal-dialog-loading";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -22,9 +25,10 @@ interface GlobalComponent {
   description: string;
   link: string;
   tags: string[];
-  screenshots: string[];
+  screenshots: IScreenshot[];
   createdAt: string;
   updatedAt: string | null;
+  category: string;
 }
 
 const AdminGlobalComponentDetails: React.FC = () => {
@@ -52,6 +56,7 @@ const AdminGlobalComponentDetails: React.FC = () => {
         updatedAt: data.updatedAt
           ? new Date(data.updatedAt).toLocaleDateString()
           : null,
+        category: data?.category?.name,
       });
     } catch (error: any) {
       toast({
@@ -175,6 +180,13 @@ const AdminGlobalComponentDetails: React.FC = () => {
               <Separator />
 
               <div>
+                <h4 className="font-semibold text-gray-900 mb-2">Category</h4>
+                <p className="text-gray-700">{component.category}</p>
+              </div>
+
+              <Separator />
+
+              <div>
                 <h4 className="font-semibold text-gray-900 mb-3">Link</h4>
                 <a
                   href={component.link}
@@ -216,10 +228,12 @@ const AdminGlobalComponentDetails: React.FC = () => {
                     <div
                       key={index}
                       className="relative group cursor-pointer rounded-lg overflow-hidden border border-gray-200 hover:border-blue-500 transition-colors"
-                      onClick={() => setSelectedImage(getImageUrl(screenshot))}
+                      onClick={() =>
+                        setSelectedImage(getImageUrl(screenshot.filePath))
+                      }
                     >
                       <img
-                        src={getImageUrl(screenshot)}
+                        src={getImageUrl(screenshot.filePath)}
                         alt={`Screenshot ${index + 1}`}
                         className="w-full h-64 object-cover"
                       />

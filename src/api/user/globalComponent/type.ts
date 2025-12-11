@@ -17,7 +17,7 @@ export type TGlobalComponentRes = {
   description: string;
   link: string;
   tags: string[];
-  screenshots: string[];
+  screenshots: IScreenshot[];
   createdAt: Date;
   deletedAt: Date | null;
   updatedAt: Date | null;
@@ -29,3 +29,9 @@ export type TGlobalComponentRes = {
     name: string;
   };
 };
+
+export interface IScreenshot {
+  fileName: string;
+  filePath: string;
+  _id: string;
+}

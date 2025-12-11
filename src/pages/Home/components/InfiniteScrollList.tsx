@@ -91,7 +91,10 @@ const InfiniteScrollListComponent = ({
 
       {/* Intersection Observer Target - Only show if has more items */}
       {hasMoreItems && (
-        <div ref={observerTarget} className="w-full h-10 flex items-center justify-center mt-4">
+        <div
+          ref={observerTarget}
+          className="w-full h-10 flex items-center justify-center mt-4"
+        >
           <div className="text-sm text-slate-500">Loading more...</div>
         </div>
       )}

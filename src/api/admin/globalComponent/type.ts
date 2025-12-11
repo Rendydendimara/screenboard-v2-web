@@ -9,7 +9,7 @@ export type TGlobalComponentPost = {
 
 export type TGlobalComponentPut = {
   globalComponentId: string;
-  oldScreenshots: string[];
+  oldScreenshots: IScreenshot[];
 } & TGlobalComponentPost;
 
 export type TGlobalComponentRes = {
@@ -18,7 +18,7 @@ export type TGlobalComponentRes = {
   description: string;
   link: string;
   tags: string[];
-  screenshots: string[];
+  screenshots: IScreenshot[];
   category?: {
     _id: string;
     name: string;
@@ -30,3 +30,8 @@ export type TGlobalComponentRes = {
   deletedBy: string | null;
   updatedBy: string | null;
 };
+
+export interface IScreenshot {
+  fileName: string;
+  filePath: string;
+}
