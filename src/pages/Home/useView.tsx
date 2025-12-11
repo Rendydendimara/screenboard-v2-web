@@ -191,7 +191,7 @@ const Index = () => {
                 {/* Static Filters - visible when not scrolled */}
                 <div
                   className={clsx(
-                    "min-w-[130px] max-w-[130px] max-h-[2000px] overflow-y-hidden transition-all duration-300 ease-in-out",
+                    "min-w-[130px] max-w-[130px] max-h-[2000px] overflow-y-hidden transition-all ease-in-out",
                     scrolledFilterMenu
                       ? "opacity-0 pointer-events-none"
                       : "opacity-100"
@@ -214,7 +214,7 @@ const Index = () => {
                 {/* Fixed Filters - visible when scrolled */}
                 <div
                   className={clsx(
-                    "min-w-[130px] max-w-[130px] fixed h-[90vh] overflow-y-auto top-24 z-50 pb-8 transition-all duration-300 ease-in-out",
+                    "min-w-[130px] max-w-[130px] fixed h-[90vh] overflow-y-auto top-24 z-50 pb-8 transition-all ease-in-out",
                     scrolledFilterMenu
                       ? "opacity-100 translate-y-0"
                       : "opacity-0 -translate-y-4 pointer-events-none"
@@ -277,7 +277,7 @@ const Index = () => {
                           isLoading={isLoadingGetApp}
                         />
                         {!user && allFilteredApps.length > 9 && (
-                          <div className="w-full -mt-64 pt-32 pb-8 bg-gradient-to-t from-white via-white/90 to-transparent">
+                          <div className="-mt-64 pt-32 pb-8 bg-[linear-gradient(180deg,_rgba(255,_255,_255,_0)_4.01%,_#FFFFFF_62.21%)] absolute w-[990px]">
                             <div className="flex flex-col w-full gap-6">
                               <div className="flex justify-center items-center w-full">
                                 <div className="flex flex-col gap-3 items-center w-full md:w-[889px] px-4">

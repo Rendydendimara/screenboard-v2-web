@@ -151,33 +151,17 @@ export const ScreenImageModalV2: React.FC<ScreenImageModalProps> = ({
               >
                 <Tooltip delayDuration={0}>
                   <TooltipTrigger asChild>
-                    <p
-                      className="mb-1 font-[Inter] font-medium text-[14.91px] leading-[100%] tracking-[0%] text-[#565D61]
-                 overflow-hidden text-ellipsis break-words 
-                 [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical]"
-                    >
+                    <p className="mb-1 font-[Inter] font-medium text-[14.91px] leading-[100%] tracking-[0%] text-[#565D61] break-all line-clamp-1 text-ellipsis">
                       {screenItem.name}
-                      {/* {`${screenItem.modul} - ${screenItem.category.name} - ${screenItem.name}`
-                        .length > 43
-                        ? `${screenItem.modul} - ${screenItem.category.name} - ${screenItem.name}`.slice(
-                            0,
-                            43
-                          ) + "..."
-                        : `${screenItem.modul} - ${screenItem.category.name} - ${screenItem.name}`} */}
                     </p>
                   </TooltipTrigger>
                   <TooltipContent
                     side="bottom"
                     align="center"
-                    hidden={
-                      screenItem.name.length < 43
-                      // `${screenItem.modul} - ${screenItem.category.name} - ${screenItem.name}`
-                      //   .length < 43
-                    }
+                    hidden={screenItem.name.length < 43}
                     children={
                       <p className="font-[Inter] font-medium text-[14.91px] leading-[100%] tracking-[0%] text-[#565D61]">
                         {screenItem.name}
-                        {/* {`${screenItem.modul} - ${screenItem.category.name} - ${screenItem.name}`} */}
                       </p>
                     }
                   />
@@ -197,7 +181,7 @@ export const ScreenImageModalV2: React.FC<ScreenImageModalProps> = ({
                         src={screenItem.image}
                         alt={screenItem.name}
                         className={clsx(
-                          "w-[338px] h-full object-contain transition-all duration-200 rounded-lg",
+                          "w-auto h-[100%] transition-all duration-200 rounded-lg",
                           screenItem.id === screen.id &&
                             "border border-blue-500"
                         )}

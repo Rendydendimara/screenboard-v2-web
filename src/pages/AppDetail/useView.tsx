@@ -421,7 +421,7 @@ const useView: React.FC = () => {
                   {/* Static Filters - visible when not scrolled */}
                   <div
                     className={clsx(
-                      "min-w-[130px] max-w-[130px] transition-all duration-300 ease-in-out",
+                      "min-w-[130px] max-w-[130px] transition-all ease-in-out",
                       scrolledFilterMenu
                         ? "opacity-0 pointer-events-none"
                         : "opacity-100"
@@ -436,7 +436,7 @@ const useView: React.FC = () => {
                   {/* Fixed Filters - visible when scrolled */}
                   <div
                     className={clsx(
-                      "min-w-[130px] max-w-[130px] fixed max-h-[90vh] overflow-y-auto top-24 z-50 pb-8 transition-all duration-300 ease-in-out",
+                      "min-w-[130px] max-w-[130px] fixed max-h-[90vh] overflow-y-auto top-24 z-50 pb-8 transition-all ease-in-out",
                       scrolledFilterMenu
                         ? "opacity-100 translate-y-0"
                         : "opacity-0 -translate-y-4 pointer-events-none"

@@ -163,7 +163,7 @@ const useController = () => {
 
       // Handle multiple category selection
       const categoryValues = Array.isArray(filterCategories.value)
-        ? filterCategories.value
+        ? filterCategories.value.filter((v) => v !== "All")
         : [];
       const matchesCategory =
         categoryValues.length === 0
@@ -172,7 +172,7 @@ const useController = () => {
 
       // Handle multiple subcategory selection
       const subCategoryValues = Array.isArray(filterSubCategories.value)
-        ? filterSubCategories.value
+        ? filterSubCategories.value.filter((v) => v !== "All")
         : [];
       const matchesSubCategory =
         subCategoryValues.length === 0
@@ -181,7 +181,7 @@ const useController = () => {
 
       // Handle multiple market/country selection
       const marketValues = Array.isArray(filterMarket.value)
-        ? filterMarket.value
+        ? filterMarket.value.filter((v) => v !== "All")
         : [];
       const matchesCountry =
         marketValues.length === 0
@@ -338,7 +338,12 @@ const useController = () => {
       ];
       setListApp(dataAdpt);
 
-      const itemsFilterMarket: TItemMenuFilter[] = [];
+      const itemsFilterMarket: TItemMenuFilter[] = [
+        {
+          label: "All",
+          value: "All",
+        },
+      ];
       listCountries.map((d) => {
         itemsFilterMarket.push({
           label: d,
@@ -370,8 +375,18 @@ const useController = () => {
       ]);
       const dataCategory: TCategoryRes[] = res[0]?.data ?? [];
       const dataSubCategory: TSubcategoryRes[] = res[1]?.data ?? [];
-      const itemsFilterCategory: TItemMenuFilter[] = [];
-      const itemsFilterSubCategory: TItemMenuFilter[] = [];
+      const itemsFilterCategory: TItemMenuFilter[] = [
+        {
+          label: "All",
+          value: "All",
+        },
+      ];
+      const itemsFilterSubCategory: TItemMenuFilter[] = [
+        {
+          label: "All",
+          value: "All",
+        },
+      ];
       dataCategory.map((d) => {
         itemsFilterCategory.push({
           label: d.name,
@@ -492,18 +507,25 @@ const useController = () => {
       };
 
       // Update subcategories based on selected categories
-      const newItemsFilterSubCategory: TItemMenuFilter[] = subCategories
-        .filter((d) =>
-          newValue.length === 0
-            ? true
-            : newValue.includes(d.categoryId._id)
-        )
-        .map((d) => {
-          return {
-            label: d.name,
-            value: d._id,
-          };
-        });
+      const categoryValuesFiltered = newValue.filter((v) => v !== "All");
+      const newItemsFilterSubCategory: TItemMenuFilter[] = [
+        {
+          label: "All",
+          value: "All",
+        },
+        ...subCategories
+          .filter((d) =>
+            categoryValuesFiltered.length === 0
+              ? true
+              : categoryValuesFiltered.includes(d.categoryId._id)
+          )
+          .map((d) => {
+            return {
+              label: d.name,
+              value: d._id,
+            };
+          }),
+      ];
 
       setFilterCategories(newFilterCategories);
 
