@@ -19,6 +19,13 @@ import SubscriptionSuccess from "./pages/SubscriptionSuccess";
 import SubscriptionCancel from "./pages/SubscriptionCancel";
 import Component from "@/pages/Component/useView";
 import ComponentDetail from "@/pages/ComponentDetail/useView";
+import AdminDashboard from "@/pages/AdminDashboard";
+import AdminApps from "@/pages/AdminApps";
+import AdminModules from "@/pages/AdminModules";
+import AdminScreenshots from "@/pages/AdminScreenshots";
+import AdminPlans from "@/pages/AdminPlans";
+import AdminGlobalComponents from "@/pages/AdminGlobalComponents";
+import AdminUsers from "@/pages/AdminUsers";
 
 const App = () => {
   const [loading, setLoading] = useState(true);
@@ -67,6 +74,13 @@ const App = () => {
       <Route path="/component/:id" element={<ComponentDetail />} />
       <Route path="/login-admin" element={<LoginAdmin />} />
       <Route path="/admin" element={<Admin />} />
+      <Route path="/admin/dashboard" element={<AdminDashboard />} />
+      <Route path="/admin/apps" element={<AdminApps />} />
+      <Route path="/admin/modules" element={<AdminModules />} />
+      <Route path="/admin/screenshots" element={<AdminScreenshots />} />
+      <Route path="/admin/plans" element={<AdminPlans />} />
+      <Route path="/admin/global-components" element={<AdminGlobalComponents />} />
+      <Route path="/admin/users" element={<AdminUsers />} />
       <Route path="/admin/app/:id" element={<AdminAppDetails />} />
       <Route
         path="/admin/component/:appId"

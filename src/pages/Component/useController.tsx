@@ -113,7 +113,6 @@ const useController = () => {
   };
 
   const gotoDetail = useCallback((id: string) => {
-    console.log("id", id);
     navigate(`/component/${id}`);
   }, []);
 

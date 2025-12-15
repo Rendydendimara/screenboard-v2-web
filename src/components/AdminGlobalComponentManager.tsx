@@ -144,7 +144,6 @@ export const AdminGlobalComponentManager: React.FC = () => {
             : undefined,
         })
       );
-      console.log("adaptedData", adaptedData);
       setGlobalComponents(adaptedData);
     } catch (error: any) {
       toast({

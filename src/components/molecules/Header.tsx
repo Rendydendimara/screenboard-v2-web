@@ -45,7 +45,6 @@ export const Header = ({
   const navigate = useNavigate();
   const { toast } = useToast();
   const location = useLocation();
-  console.log("location", location.pathname);
   useEffect(() => {
     const handleScroll = () => {
       setLocalScrolled(window.scrollY > 80);
