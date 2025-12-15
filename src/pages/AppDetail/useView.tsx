@@ -469,7 +469,7 @@ const useView: React.FC = () => {
                                       className="w-full flex flex-col items-start gap-1 hover:cursor-pointer"
                                       onClick={() => setSelectedScreen(screen)}
                                     >
-                                      <div className="min-w-[272px] max-w-[272px] h-[603px] rounded-xl overflow-hidden border-[1px] border-solid border-[rgba(0,0,0,0.1)]">
+                                      <div className="min-w-[272px] max-w-[272px] h-[623px] flex justify-center items-center rounded-xl overflow-hidden border-[1px] border-solid border-[rgba(0,0,0,0.1)]">
                                         <ImageWithFallback
                                           src={
                                             screen?.image ??
@@ -477,7 +477,7 @@ const useView: React.FC = () => {
                                           }
                                           fallbackSrc="https://placehold.co/400"
                                           alt={screen.name}
-                                          className="w-full h-[623px] object-cover -mt-[20px]"
+                                          className="w-auto object-contain h-[100%]"
                                         />
                                       </div>
                                       <h4
@@ -517,7 +517,7 @@ const useView: React.FC = () => {
                                       className="w-[272px] flex flex-col items-start gap-1 hover:cursor-pointer"
                                       onClick={() => setSelectedScreen(screen)}
                                     >
-                                      <div className="w-[272px] h-[603px] rounded-xl overflow-hidden border-[1px] border-solid border-[rgba(0,0,0,0.1)]">
+                                      <div className="w-[272px] h-[623px] flex justify-center items-center rounded-xl overflow-hidden border-[1px] border-solid border-[rgba(0,0,0,0.1)]">
                                         <ImageWithFallback
                                           src={
                                             screen?.image ??
@@ -525,7 +525,7 @@ const useView: React.FC = () => {
                                           }
                                           fallbackSrc="https://placehold.co/400"
                                           alt={screen.name}
-                                          className="w-full h-[623px] object-cover -mt-[20px]"
+                                          className="w-auto object-contain h-[100%]"
                                         />
                                       </div>
                                       <h4

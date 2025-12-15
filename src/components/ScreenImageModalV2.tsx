@@ -176,7 +176,7 @@ export const ScreenImageModalV2: React.FC<ScreenImageModalProps> = ({
                   onClick={() => onScreenChange && onScreenChange(screenItem)}
                 >
                   <div className="bg-white rounded-lg h-full overflow-hidden shadow-sm hover:shadow-2xl transition-shadow duration-200">
-                    <div className="overflow-hidden h-full relative">
+                    <div className="overflow-hidden h-full relative flex justify-center items-center">
                       <img
                         src={screenItem.image}
                         alt={screenItem.name}

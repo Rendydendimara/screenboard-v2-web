@@ -172,11 +172,11 @@ const useView: React.FC = () => {
                       }`}
                       onClick={() => handleImageClick(img._id)}
                     >
-                      <div className="w-full h-[160px] rounded-xl overflow-hidden bg-slate-100 hover:opacity-80 transition-opacity">
+                      <div className="w-full h-[209px] rounded-xl overflow-hidden bg-slate-100 hover:opacity-80 transition-opacity">
                         <img
                           src={getImageUrl(img.filePath)}
                           alt={img.fileName}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-contain"
                         />
                       </div>
                       <p className="font-[Inter] font-medium text-[12px] leading-[100%] text-[#565D61] px-2">

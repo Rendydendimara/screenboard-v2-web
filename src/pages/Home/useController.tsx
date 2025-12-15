@@ -86,19 +86,19 @@ const MENU_FILTER_SORT_BY: TMenuFilter = {
 const MENU_FILTER_CATEGORIES: TMenuFilter = {
   label: "Categories",
   items: [], // Empty because the data come from API
-  value: [], // Default - multiple selection
+  value: ["All"], // Default - multiple selection
   multiSelect: true,
 };
 const MENU_FILTER_SUB_CATEGORIES: TMenuFilter = {
   label: "Sub Categories",
   items: [], // Empty because the data come from API
-  value: [], // Default - multiple selection
+  value: ["All"], // Default - multiple selection
   multiSelect: true,
 };
 const MENU_FILTER_MARKET: TMenuFilter = {
   label: "Market",
   items: [], // Empty because the data result from calculate
-  value: [], // Default - multiple selection
+  value: ["All"], // Default - multiple selection
   multiSelect: true,
 };
 const ITEMS_PER_PAGE = 20; // Jumlah item yang di-load per batch
@@ -183,10 +183,14 @@ const useController = () => {
       const marketValues = Array.isArray(filterMarket.value)
         ? filterMarket.value.filter((v) => v !== "All")
         : [];
+      const hasAllOption = Array.isArray(filterMarket.value)
+        ? filterMarket.value.includes("All")
+        : false;
       const matchesCountry =
         marketValues.length === 0
           ? true
-          : app?.countries?.some((countryName) =>
+          : (app?.countries?.length === 0 && hasAllOption) ||
+            app?.countries?.some((countryName) =>
               marketValues.includes(countryName)
             );
 
@@ -353,7 +357,7 @@ const useController = () => {
       setFilterMarket({
         ...filterMarket,
         items: itemsFilterMarket,
-        value: [],
+        value: ["All"],
       });
     } catch (err: any) {
       toast({
@@ -404,12 +408,12 @@ const useController = () => {
       setFilterCategories({
         ...filterCategories,
         items: itemsFilterCategory,
-        value: [],
+        value: ["All"],
       });
       setFilterSubCategories({
         ...filterSubCategories,
         items: itemsFilterSubCategory,
-        value: [],
+        value: ["All"],
       });
     } catch (error: any) {
       toast({
@@ -496,10 +500,21 @@ const useController = () => {
         ? filterCategories.value
         : [];
 
-      // Toggle the value in the array
-      const newValue = currentValues.includes(value)
-        ? currentValues.filter((v) => v !== value)
-        : [...currentValues, value];
+      let newValue: string[];
+
+      if (value === "All") {
+        // Jika memilih "All", set hanya "All" atau toggle off jika sudah ada
+        newValue = currentValues.includes("All") ? [] : ["All"];
+      } else {
+        // Jika memilih selain "All"
+        if (currentValues.includes(value)) {
+          // Jika value sudah ada, hapus value tersebut
+          newValue = currentValues.filter((v) => v !== value);
+        } else {
+          // Jika value belum ada, tambahkan dan hapus "All" jika ada
+          newValue = [...currentValues.filter((v) => v !== "All"), value];
+        }
+      }
 
       const newFilterCategories: TMenuFilter = {
         ...filterCategories,
@@ -552,10 +567,21 @@ const useController = () => {
         ? filterSubCategories.value
         : [];
 
-      // Toggle the value in the array
-      const newValue = currentValues.includes(value)
-        ? currentValues.filter((v) => v !== value)
-        : [...currentValues, value];
+      let newValue: string[];
+
+      if (value === "All") {
+        // Jika memilih "All", set hanya "All" atau toggle off jika sudah ada
+        newValue = currentValues.includes("All") ? [] : ["All"];
+      } else {
+        // Jika memilih selain "All"
+        if (currentValues.includes(value)) {
+          // Jika value sudah ada, hapus value tersebut
+          newValue = currentValues.filter((v) => v !== value);
+        } else {
+          // Jika value belum ada, tambahkan dan hapus "All" jika ada
+          newValue = [...currentValues.filter((v) => v !== "All"), value];
+        }
+      }
 
       const newFilterSubCategories: TMenuFilter = {
         ...filterSubCategories,
@@ -572,10 +598,21 @@ const useController = () => {
         ? filterMarket.value
         : [];
 
-      // Toggle the value in the array
-      const newValue = currentValues.includes(value)
-        ? currentValues.filter((v) => v !== value)
-        : [...currentValues, value];
+      let newValue: string[];
+
+      if (value === "All") {
+        // Jika memilih "All", set hanya "All" atau toggle off jika sudah ada
+        newValue = currentValues.includes("All") ? [] : ["All"];
+      } else {
+        // Jika memilih selain "All"
+        if (currentValues.includes(value)) {
+          // Jika value sudah ada, hapus value tersebut
+          newValue = currentValues.filter((v) => v !== value);
+        } else {
+          // Jika value belum ada, tambahkan dan hapus "All" jika ada
+          newValue = [...currentValues.filter((v) => v !== "All"), value];
+        }
+      }
 
       const newFilterMarket: TMenuFilter = {
         ...filterMarket,

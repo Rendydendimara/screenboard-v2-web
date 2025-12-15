@@ -1,4 +1,4 @@
-import { ScreenPublic } from "@/pages/Home/Index";
+import { ScreenPublic } from "@/pages/Home/useController";
 import clsx from "clsx";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Badge } from "./ui/badge";
@@ -61,10 +61,10 @@ const ScrollGallery = ({
               src={screen.image}
               alt={screen.name}
               className={clsx(
-                "rounded-[8px]", //  group-hover:scale-105 transition-transform hover:cursor-pointer
-                viewMode === "grid"
-                  ? "w-[328px] h-[723px]"
-                  : "w-[205px] h-[453px]"
+                "rounded-[8px] w-full h-auto" //  group-hover:scale-105 transition-transform hover:cursor-pointer
+                // viewMode === "grid"
+                //   ? "w-[328px] h-[723px]"
+                //   : "w-[205px] h-[453px]"
               )}
               onClick={() => handleClickImage(i)}
             />

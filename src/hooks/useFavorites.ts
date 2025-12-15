@@ -1,4 +1,4 @@
-import { ScreenPublic } from "@/pages/Home/Index";
+import { ScreenPublic } from "@/pages/Home/useController";
 import { useState, useEffect } from "react";
 
 export const useFavorites = () => {

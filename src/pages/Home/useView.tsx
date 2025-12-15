@@ -21,6 +21,7 @@ import { InfiniteScrollList } from "./components/InfiniteScrollList";
 import useController from "./useController";
 import { Header } from "@/components/molecules";
 import { Input } from "@/components/ui/input";
+import { useEffect, useRef } from "react";
 
 const Index = () => {
   const {
@@ -82,6 +83,24 @@ const Index = () => {
     containerMainRef,
     scrolledFilterMenu,
   } = useController();
+
+  const appsContainerRef = useRef<HTMLDivElement>(null);
+
+  // Scroll to top when filters change
+  useEffect(() => {
+    if (appsContainerRef.current) {
+      appsContainerRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  }, [
+    filterCategories.value,
+    filterSubCategories.value,
+    filterSortBy.value,
+    filterMarket.value,
+  ]);
+
   return (
     <>
       <SEO
@@ -234,7 +253,10 @@ const Index = () => {
                   />
                 </div>
                 <div className="w-full flex justify-end">
-                  <div className="w-full max-w-[990px] flex items-start gap-5">
+                  <div
+                    ref={appsContainerRef}
+                    className="w-full max-w-[990px] flex items-start gap-5"
+                  >
                     {/* Apps Grid/List */}
                     {isLoadingGetApp ? (
                       <div
