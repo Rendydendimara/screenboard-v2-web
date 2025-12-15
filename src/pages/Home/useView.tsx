@@ -82,6 +82,7 @@ const Index = () => {
     handleChangeFilterMarket,
     containerMainRef,
     scrolledFilterMenu,
+    getListData,
   } = useController();
 
   const appsContainerRef = useRef<HTMLDivElement>(null);
@@ -350,6 +351,7 @@ const Index = () => {
           initialMode="login"
           isOpen={isOpenAuth}
           onClose={onCloseOpenAuth}
+          callbackSuccessLogin={() => getListData()}
         />
 
         <FavoritesModal

@@ -704,6 +704,7 @@ const useController = () => {
     handleChangeFilterMarket,
     containerMainRef,
     scrolledFilterMenu,
+    getListData,
   };
 };
 

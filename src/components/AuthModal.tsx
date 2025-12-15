@@ -33,6 +33,7 @@ interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
   initialMode?: "login" | "register";
+  callbackSuccessLogin?: () => void;
 }
 
 const provider = new GoogleAuthProvider();
@@ -41,6 +42,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   isOpen,
   onClose,
   initialMode = "login",
+  callbackSuccessLogin,
 }) => {
   const [mode, setMode] = useState<"login" | "register">(initialMode);
   const dispatch = useAppDispatch();
@@ -88,6 +90,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           );
           onClose();
           formik.resetForm();
+          callbackSuccessLogin?.();
         } else {
           await UserAuthAPI.register({
             email: values.email,
@@ -126,7 +129,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     const errors = await formik.validateForm();
 
     if (Object.keys(errors).length === 0) {
-      formik.handleSubmit(e);
+      formik.handleSubmit(e as any);
     }
   };
 

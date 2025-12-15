@@ -175,11 +175,29 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
   };
 
   const getCategoryOptions = useMemo(() => {
-    return categories.map((c) => ({
-      label: c.name,
-      value: c._id,
-    }));
-  }, [categories]);
+    // Jika belum pilih modul, list category masih kosong
+    if (!selectedModuleFilter) {
+      return [];
+    }
+
+    // Filter screenshots berdasarkan modul yang dipilih
+    const screenshotsWithSelectedModule = displayedScreenshots.filter(
+      (screenshot) => screenshot.modul === selectedModuleFilter.value
+    );
+
+    // Ambil unique category IDs yang digunakan di screenshot dengan modul tersebut
+    const usedCategoryIds = new Set(
+      screenshotsWithSelectedModule.map((s) => s.category)
+    );
+
+    // Filter categories yang digunakan
+    return categories
+      .filter((c) => usedCategoryIds.has(c._id))
+      .map((c) => ({
+        label: c.name,
+        value: c._id,
+      }));
+  }, [categories, selectedModuleFilter, displayedScreenshots]);
 
   const getModuleOptions = useMemo(() => {
     if (filterOnlyShowIfHasModul) {
@@ -214,6 +232,11 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
       document.body.style.overflow = "unset";
     };
   }, []);
+
+  // Reset category filter when module filter changes
+  useEffect(() => {
+    setSelectedCategoryFilter(null);
+  }, [selectedModuleFilter]);
 
   return (
     <div className="space-y-6">
