@@ -27,7 +27,7 @@ const Index = () => {
   const {
     listApp,
     searchTerm,
-    setSearchTerm,
+    handleChangeSearch,
     selectedCategory,
     selectedCountries,
     setSelectedCountries,
@@ -83,25 +83,10 @@ const Index = () => {
     containerMainRef,
     scrolledFilterMenu,
     getListData,
+    appsContainerRef,
+    getOptionsCategoryItemFiltered,
+    callbackAuth,
   } = useController();
-
-  const appsContainerRef = useRef<HTMLDivElement>(null);
-
-  // Scroll to top when filters change
-  useEffect(() => {
-    if (appsContainerRef.current) {
-      appsContainerRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }
-  }, [
-    filterCategories.value,
-    filterSubCategories.value,
-    filterSortBy.value,
-    filterMarket.value,
-  ]);
-
   return (
     <>
       <SEO
@@ -114,12 +99,13 @@ const Index = () => {
           <Header
             showSearch={true}
             searchTerm={searchTerm}
-            onSearchChange={setSearchTerm}
+            onSearchChange={handleChangeSearch}
             scrolled={scrolled}
             scrolledSearch={scrolledSearch}
             onOpenAuthModal={() => setIsOpenAuth(true)}
             onShowCompare={() => setShowCompare(true)}
             transparentBg={true}
+            callbackLogout={callbackAuth}
           />
 
           {/* Hero Section */}
@@ -133,7 +119,10 @@ const Index = () => {
           </div>
         </section>
         {/* Main Content */}
-        <div className="w-full flex justify-center items-center">
+        <div
+          ref={appsContainerRef}
+          className="w-full flex justify-center items-center"
+        >
           <div className="w-full max-w-[1140px]">
             <main className="px-4 py-6 md:px-0 md:py-8 lg:py-12 w-full">
               <div className="mb-6">
@@ -152,7 +141,7 @@ const Index = () => {
                       <Input
                         placeholder="Search apps..."
                         value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
+                        onChange={(e) => handleChangeSearch(e.target.value)}
                         className="pl-10 w-full rounded-[6px]"
                       />
                     </div>
@@ -218,6 +207,9 @@ const Index = () => {
                   )}
                 >
                   <Filters
+                    getOptionsCategoryItemFiltered={
+                      getOptionsCategoryItemFiltered
+                    }
                     filterCategories={filterCategories}
                     filterSubCategories={filterSubCategories}
                     filterSortBy={filterSortBy}
@@ -241,6 +233,9 @@ const Index = () => {
                   )}
                 >
                   <Filters
+                    getOptionsCategoryItemFiltered={
+                      getOptionsCategoryItemFiltered
+                    }
                     filterCategories={filterCategories}
                     filterSubCategories={filterSubCategories}
                     filterSortBy={filterSortBy}
@@ -254,10 +249,7 @@ const Index = () => {
                   />
                 </div>
                 <div className="w-full flex justify-end">
-                  <div
-                    ref={appsContainerRef}
-                    className="w-full max-w-[990px] flex items-start gap-5"
-                  >
+                  <div className="w-full max-w-[990px] flex items-start gap-5">
                     {/* Apps Grid/List */}
                     {isLoadingGetApp ? (
                       <div
@@ -351,7 +343,7 @@ const Index = () => {
           initialMode="login"
           isOpen={isOpenAuth}
           onClose={onCloseOpenAuth}
-          callbackSuccessLogin={() => getListData()}
+          callbackSuccessLogin={callbackAuth}
         />
 
         <FavoritesModal

@@ -430,7 +430,7 @@ const useView: React.FC = () => {
                     <FilterItem
                       handleChange={handleChangeFilterCategories}
                       menuFilter={filterCategories}
-                      iconType="rounded"
+                      iconType="square"
                     />
                   </div>
                   {/* Fixed Filters - visible when scrolled */}
@@ -445,7 +445,7 @@ const useView: React.FC = () => {
                     <FilterItem
                       handleChange={handleChangeFilterCategories}
                       menuFilter={filterCategories}
-                      iconType="rounded"
+                      iconType="square"
                     />
                   </div>
                   {/* Screens Grid/List/Horizontal */}

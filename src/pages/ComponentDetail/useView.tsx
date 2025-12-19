@@ -161,7 +161,7 @@ const useView: React.FC = () => {
 
               {/* Thumbnail Grid */}
               <div className="flex-1">
-                <div className="flex flex-col gap-5 items-start">
+                <div className="flex flex-col gap-5 items-start max-h-[60vh] pl-1 overflow-auto">
                   {component.screenshots.slice(0, 10).map((img) => (
                     <div
                       key={img._id}

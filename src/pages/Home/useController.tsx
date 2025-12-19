@@ -79,8 +79,16 @@ const MENU_FILTER_SORT_BY: TMenuFilter = {
       label: "Oldest",
       value: "oldest",
     },
+    {
+      label: "A-Z",
+      value: "a-z",
+    },
+    {
+      label: "Z-A",
+      value: "z-a",
+    },
   ],
-  value: "", // Default - single selection
+  value: "newest", // Default - single selection
   multiSelect: false,
 };
 const MENU_FILTER_CATEGORIES: TMenuFilter = {
@@ -150,7 +158,7 @@ const useController = () => {
     useState<TMenuFilter>(MENU_FILTER_MARKET);
   const containerMainRef = useRef<HTMLDivElement>(null);
   const [scrolledFilterMenu, setScrolledFilterMenu] = useState(false);
-
+  const appsContainerRef = useRef<HTMLDivElement>(null);
   // Debounce search term untuk performa lebih baik
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
@@ -199,11 +207,21 @@ const useController = () => {
       );
     });
 
-    return filterSortBy.value
-      ? filterSortBy.value === "newest"
-        ? sortByDate(result, "desc")
-        : sortByDate(result, "asc")
-      : result;
+    // Apply sorting
+    if (!filterSortBy.value) return result;
+
+    switch (filterSortBy.value) {
+      case "newest":
+        return sortByDate(result, "desc");
+      case "oldest":
+        return sortByDate(result, "asc");
+      case "a-z":
+        return sortByName(result, "asc");
+      case "z-a":
+        return sortByName(result, "desc");
+      default:
+        return result;
+    }
   }, [
     listApp,
     filterCategories,
@@ -218,17 +236,6 @@ const useController = () => {
   const filteredApps = useMemo(() => {
     return allFilteredApps.slice(0, displayedItemsCount);
   }, [allFilteredApps, displayedItemsCount]);
-
-  // Reset displayed items ketika filter berubah
-  useEffect(() => {
-    setDisplayedItemsCount(ITEMS_PER_PAGE);
-  }, [
-    debouncedSearchTerm,
-    filterCategories.value,
-    filterSubCategories.value,
-    filterMarket.value,
-    filterSortBy.value,
-  ]);
 
   // Function untuk load more items
   const loadMoreItems = useCallback(() => {
@@ -354,9 +361,18 @@ const useController = () => {
           value: d,
         });
       });
+
+      // itemsFilterMarket
+      const itemsFilterMarketFix = Array.from(
+        new Set(itemsFilterMarket.map((item) => item.value))
+      ).map((value) => ({
+        label: value,
+        value: value,
+      }));
+
       setFilterMarket({
         ...filterMarket,
-        items: itemsFilterMarket,
+        items: itemsFilterMarketFix,
         value: ["All"],
       });
     } catch (err: any) {
@@ -490,6 +506,7 @@ const useController = () => {
         value: value === filterSortBy.value ? "" : value,
       };
       setFilterSortBy(newFilter);
+      handleScrollTop();
     },
     [filterSortBy]
   );
@@ -557,6 +574,7 @@ const useController = () => {
         items: newItemsFilterSubCategory,
         value: validSubValues,
       });
+      handleScrollTop();
     },
     [filterCategories, filterSubCategories, subCategories]
   );
@@ -588,6 +606,7 @@ const useController = () => {
         value: newValue,
       };
       setFilterSubCategories(newFilterSubCategories);
+      handleScrollTop();
     },
     [filterSubCategories]
   );
@@ -619,9 +638,55 @@ const useController = () => {
         value: newValue,
       };
       setFilterMarket(newFilterMarket);
+      handleScrollTop();
     },
     [filterMarket]
   );
+
+  const handleScrollTop = useCallback(() => {
+    appsContainerRef.current.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  }, [appsContainerRef]);
+
+  const handleChangeSearch = useCallback((value: string) => {
+    setSearchTerm(value);
+    handleScrollTop();
+  }, []);
+
+  const getOptionsCategoryItemFiltered: TItemMenuFilter[] = useMemo(() => {
+    if (listApp.length === 0) return [];
+    if (filterCategories.items.length === 0) return [];
+
+    // Ambil semua category._id yang digunakan di listApp
+    const usedCategoryIds = new Set(listApp.map((app) => app.category._id));
+
+    // Filter filterCategories.items, keep "All" dan category yang digunakan
+    return filterCategories.items.filter(
+      (item) => item.value === "All" || usedCategoryIds.has(item.value)
+    );
+  }, [listApp, filterCategories.items]);
+
+  const callbackAuth = useCallback(() => {
+    setFilterSortBy({
+      ...filterSortBy,
+      value: "newest",
+    });
+    setFilterCategories({
+      ...filterCategories,
+      value: ["All"],
+    });
+    setFilterSubCategories({
+      ...filterSubCategories,
+      value: ["All"],
+    });
+    setFilterMarket({
+      ...filterMarket,
+      value: ["All"],
+    });
+    getListData();
+  }, [filterSortBy, filterCategories, filterSubCategories, filterMarket]);
 
   useEffect(() => {
     getListDataCategory();
@@ -646,10 +711,21 @@ const useController = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Reset displayed items ketika filter berubah
+  useEffect(() => {
+    setDisplayedItemsCount(ITEMS_PER_PAGE);
+  }, [
+    debouncedSearchTerm,
+    filterCategories.value,
+    filterSubCategories.value,
+    filterMarket.value,
+    filterSortBy.value,
+  ]);
+
   return {
     listApp,
     searchTerm,
-    setSearchTerm,
+    handleChangeSearch,
     selectedCategory,
     selectedCountries,
     setSelectedCountries,
@@ -705,6 +781,9 @@ const useController = () => {
     containerMainRef,
     scrolledFilterMenu,
     getListData,
+    appsContainerRef,
+    getOptionsCategoryItemFiltered,
+    callbackAuth,
   };
 };
 
@@ -720,5 +799,19 @@ const sortByDate = <T extends { createdAt: string }>(
     order === "desc"
       ? b.createdAt.localeCompare(a.createdAt)
       : a.createdAt.localeCompare(b.createdAt)
+  );
+};
+
+// Sort by name alphabetically
+// ASC (A-Z): A, B, C
+// DESC (Z-A): Z, Y, X
+const sortByName = <T extends { name: string }>(
+  data: T[],
+  order: "asc" | "desc" = "asc"
+): T[] => {
+  return data.sort((a, b) =>
+    order === "asc"
+      ? a.name.localeCompare(b.name)
+      : b.name.localeCompare(a.name)
   );
 };

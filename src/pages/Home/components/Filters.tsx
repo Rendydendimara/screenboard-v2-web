@@ -1,5 +1,5 @@
 import FilterItem from "@/components/FilterItem";
-import { TMenuFilter } from "@/types/filter";
+import { TItemMenuFilter, TMenuFilter } from "@/types/filter";
 
 interface IProps {
   filterSortBy: TMenuFilter;
@@ -10,6 +10,7 @@ interface IProps {
   handleChangeFilterCategories: (value: string) => void;
   handleChangeFilterSubCategories: (value: string) => void;
   handleChangeFilterMarket: (value: string) => void;
+  getOptionsCategoryItemFiltered: TItemMenuFilter[];
 }
 
 const Filters: React.FC<IProps> = ({
@@ -21,6 +22,7 @@ const Filters: React.FC<IProps> = ({
   handleChangeFilterSortBy,
   handleChangeFilterSubCategories,
   handleChangeFilterMarket,
+  getOptionsCategoryItemFiltered,
 }) => {
   return (
     <div className="w-full flex flex-col items-start gap-8">
@@ -33,12 +35,15 @@ const Filters: React.FC<IProps> = ({
         handleChange={handleChangeFilterCategories}
         menuFilter={filterCategories}
         iconType="square"
+        options={getOptionsCategoryItemFiltered}
       />
-      <FilterItem
-        menuFilter={filterSubCategories}
-        handleChange={handleChangeFilterSubCategories}
-        iconType="square"
-      />
+      {!filterCategories.value.includes("All") && (
+        <FilterItem
+          menuFilter={filterSubCategories}
+          handleChange={handleChangeFilterSubCategories}
+          iconType="square"
+        />
+      )}
       <FilterItem
         handleChange={handleChangeFilterMarket}
         menuFilter={filterMarket}

@@ -22,6 +22,7 @@ interface HeaderProps {
   onOpenAuthModal?: () => void;
   onShowCompare?: () => void;
   transparentBg?: boolean;
+  callbackLogout?: () => void;
 }
 
 export const Header = ({
@@ -33,6 +34,7 @@ export const Header = ({
   onOpenAuthModal,
   onShowCompare,
   transparentBg = false,
+  callbackLogout,
 }: HeaderProps) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [localScrolled, setLocalScrolled] = useState(false);
@@ -64,6 +66,7 @@ export const Header = ({
       if (res.success) {
         dispatch(logout());
         navigate("/");
+        callbackLogout?.();
       }
     } catch (err: any) {
       toast({
