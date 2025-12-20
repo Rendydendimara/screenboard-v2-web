@@ -13,15 +13,22 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import clsx from "clsx";
-import { Grid, Heart, List, Search, Zap } from "lucide-react";
+import { Grid, Heart, List, Search, Zap, Filter, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import Filters from "./components/Filters";
 import { InfiniteScrollList } from "./components/InfiniteScrollList";
 import useController from "./useController";
 import { Header } from "@/components/molecules";
 import { Input } from "@/components/ui/input";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useMemo } from "react";
 import ImageWithFallback from "@/components/ui/ImageWithFallback";
 
 const Index = () => {
@@ -88,6 +95,24 @@ const Index = () => {
     getOptionsCategoryItemFiltered,
     callbackAuth,
   } = useController();
+
+  // Count active filters
+  const activeFiltersCount = useMemo(() => {
+    let count = 0;
+    if (filterCategories.value && !filterCategories.value.includes("All"))
+      count++;
+    if (filterSubCategories.value && !filterSubCategories.value.includes("All"))
+      count++;
+    if (filterSortBy.value && filterSortBy.value !== "Recent") count++;
+    if (filterMarket.value && !filterMarket.value.includes("All")) count++;
+    return count;
+  }, [
+    filterCategories.value,
+    filterSubCategories.value,
+    filterSortBy.value,
+    filterMarket.value,
+  ]);
+
   return (
     <>
       <SEO
@@ -149,28 +174,110 @@ const Index = () => {
                   </div>
 
                   {/* Filters and View Controls */}
-                  <div className="flex flex-row md:flex-col sm:flex-row gap-4 lg:gap-6">
-                    {/* View Mode Toggle */}
-                    <div className="flex items-center space-x-2">
-                      <Button
-                        variant={viewMode === "grid" ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => setViewMode("grid")}
-                        className="flex-1 sm:flex-none"
-                      >
-                        <Grid className="h-4 w-4 mr-2 sm:mr-0 lg:mr-2" />
-                        <span className="sm:hidden lg:inline">Grid</span>
-                      </Button>
-                      <Button
-                        variant={viewMode === "list" ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => setViewMode("list")}
-                        className="flex-1 sm:flex-none"
-                      >
-                        <List className="h-4 w-4 mr-2 sm:mr-0 lg:mr-2" />
-                        <span className="sm:hidden lg:inline">List</span>
-                      </Button>
+                  <div
+                    className={clsx(
+                      "bg-[white] w-full left-[0] transition-all duration-300 ease-in-out",
+                      scrolledSearch && "fixed py-1 pl-[16px] z-[10000]",
+                      showFilters ? "top-0 h-fit" : "top-[63px]"
+                    )}
+                  >
+                    <div className="flex flex-row md:flex-col sm:flex-row gap-4 lg:gap-6">
+                      {/* View Mode Toggle */}
+                      <div className="flex items-center space-x-2">
+                        <Button
+                          variant={viewMode === "grid" ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => setViewMode("grid")}
+                          className="flex-1 sm:flex-none"
+                        >
+                          <Grid className="h-4 w-4 mr-2 sm:mr-0 lg:mr-2" />
+                          <span className="sm:hidden lg:inline">Grid</span>
+                        </Button>
+                        <Button
+                          variant={viewMode === "list" ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => setViewMode("list")}
+                          className="flex-1 sm:flex-none"
+                        >
+                          <List className="h-4 w-4 mr-2 sm:mr-0 lg:mr-2" />
+                          <span className="sm:hidden lg:inline">List</span>
+                        </Button>
+
+                        {/* Mobile Filter Button */}
+
+                        <Sheet open={showFilters} onOpenChange={setShowFilters}>
+                          <SheetTrigger asChild>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="md:hidden relative flex-1 sm:flex-none"
+                            >
+                              <Filter className="h-4 w-4 mr-2" />
+                              <span>Filters</span>
+                              {activeFiltersCount > 0 && (
+                                <Badge
+                                  variant="destructive"
+                                  className="ml-2 h-5 w-5 p-0 flex items-center justify-center rounded-full text-xs"
+                                >
+                                  {activeFiltersCount}
+                                </Badge>
+                              )}
+                            </Button>
+                          </SheetTrigger>
+                          <SheetContent side="bottom" className="h-[85vh] p-0">
+                            <div className="flex flex-col h-full">
+                              <SheetHeader className="px-6 py-4 border-b sticky top-0 bg-white z-10">
+                                <div className="flex items-center justify-between">
+                                  <SheetTitle className="text-lg font-semibold">
+                                    Filters
+                                    {activeFiltersCount > 0 && (
+                                      <Badge
+                                        variant="secondary"
+                                        className="ml-2"
+                                      >
+                                        {activeFiltersCount} active
+                                      </Badge>
+                                    )}
+                                  </SheetTitle>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => setShowFilters(false)}
+                                    className="h-8 w-8 p-0"
+                                  >
+                                    <X className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              </SheetHeader>
+                              <div className="flex-1 overflow-y-auto px-6 py-6">
+                                <Filters
+                                  getOptionsCategoryItemFiltered={
+                                    getOptionsCategoryItemFiltered
+                                  }
+                                  filterCategories={filterCategories}
+                                  filterSubCategories={filterSubCategories}
+                                  filterSortBy={filterSortBy}
+                                  filterMarket={filterMarket}
+                                  handleChangeFilterSortBy={
+                                    handleChangeFilterSortBy
+                                  }
+                                  handleChangeFilterCategories={
+                                    handleChangeFilterCategories
+                                  }
+                                  handleChangeFilterSubCategories={
+                                    handleChangeFilterSubCategories
+                                  }
+                                  handleChangeFilterMarket={
+                                    handleChangeFilterMarket
+                                  }
+                                />
+                              </div>
+                            </div>
+                          </SheetContent>
+                        </Sheet>
+                      </div>
                     </div>
+
                     {/* Download Button */}
                     {/* {selectedCategory && (
                   <Button

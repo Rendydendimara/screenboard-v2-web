@@ -8,6 +8,13 @@ import ImageWithFallback from "@/components/ui/ImageWithFallback";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip } from "@/components/ui/tooltip";
 import { TooltipContent, TooltipTrigger } from "@radix-ui/react-tooltip";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import clsx from "clsx";
 import {
   ArrowLeft,
@@ -18,8 +25,10 @@ import {
   Heart,
   Share2,
   Star,
+  Filter,
+  X,
 } from "lucide-react";
-import React from "react";
+import React, { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import useController from "./usController";
 import FilterItem from "@/components/FilterItem";
@@ -70,6 +79,15 @@ const useView: React.FC = () => {
     scrolledFilterMenu,
     handleChangeFilterCategories,
   } = useController();
+
+  const [showFilters, setShowFilters] = useState(false);
+
+  // Count active filters
+  const activeFiltersCount = useMemo(() => {
+    let count = 0;
+    if (filterCategories.value && !filterCategories.value.includes("All")) count++;
+    return count;
+  }, [filterCategories.value]);
 
   if (isLoadingDetail) {
     return (
@@ -406,6 +424,61 @@ const useView: React.FC = () => {
           <div>
             <div className=" px-4 md:px-0 py-12">
               <div className="mb-8">
+                {/* Mobile Filter Button */}
+                <div className="md:hidden mb-4">
+                  <Sheet open={showFilters} onOpenChange={setShowFilters}>
+                    <SheetTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-full"
+                      >
+                        <Filter className="h-4 w-4 mr-2" />
+                        <span>Filters</span>
+                        {activeFiltersCount > 0 && (
+                          <Badge
+                            variant="destructive"
+                            className="ml-2 h-5 w-5 p-0 flex items-center justify-center rounded-full text-xs"
+                          >
+                            {activeFiltersCount}
+                          </Badge>
+                        )}
+                      </Button>
+                    </SheetTrigger>
+                    <SheetContent side="bottom" className="h-[85vh] p-0">
+                      <div className="flex flex-col h-full">
+                        <SheetHeader className="px-6 py-4 border-b sticky top-0 bg-white z-10">
+                          <div className="flex items-center justify-between">
+                            <SheetTitle className="text-lg font-semibold">
+                              Filters
+                              {activeFiltersCount > 0 && (
+                                <Badge variant="secondary" className="ml-2">
+                                  {activeFiltersCount} active
+                                </Badge>
+                              )}
+                            </SheetTitle>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setShowFilters(false)}
+                              className="h-8 w-8 p-0"
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </SheetHeader>
+                        <div className="flex-1 overflow-y-auto px-6 py-6">
+                          <FilterItem
+                            handleChange={handleChangeFilterCategories}
+                            menuFilter={filterCategories}
+                            iconType="square"
+                          />
+                        </div>
+                      </div>
+                    </SheetContent>
+                  </Sheet>
+                </div>
+
                 {/*  Filters */}
                 <div
                   ref={containerMainRef}
