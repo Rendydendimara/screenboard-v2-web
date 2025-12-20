@@ -34,6 +34,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import { Header } from "@/components/molecules";
+import ImageWithFallback from "@/components/ui/ImageWithFallback";
 
 export interface ScreenPublic {
   id: string;
@@ -461,9 +462,11 @@ const FavoritesPage = () => {
               </DialogHeader>
               <div className="space-y-4">
                 <div className="aspect-[9/16] rounded-lg overflow-hidden bg-slate-100">
-                  <img
+                  <ImageWithFallback
                     src={selectedScreen.image}
+                    fallbackSrc={selectedScreen.image}
                     alt={selectedScreen.name}
+                    containerClassName="w-full h-full"
                     className="w-full h-full object-cover"
                   />
                 </div>

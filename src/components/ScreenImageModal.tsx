@@ -16,6 +16,7 @@ import { useScreenHistory } from "@/hooks/useScreenHistory";
 import { Annotation } from "@/types/annotations";
 import { ChevronLeft, ChevronRight, Download } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
+import ImageWithFallback from "./ui/ImageWithFallback";
 
 interface Screen {
   id: string;
@@ -251,9 +252,11 @@ export const ScreenImageModal: React.FC<ScreenImageModalProps> = ({
             <div className="flex justify-center">
               <div className="max-w-md relative">
                 <div className="bg-gray-100 rounded-lg overflow-hidden shadow-lg relative">
-                  <img
+                  <ImageWithFallback
+                    fallbackSrc={screen.image}
                     src={screen.image}
                     alt={screen.name}
+                    containerClassName="w-full h-full"
                     className="w-full h-full object-contain"
                   />
                   <AnnotationOverlay
@@ -308,9 +311,11 @@ export const ScreenImageModal: React.FC<ScreenImageModalProps> = ({
                       >
                         <div className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-200">
                           <div className="aspect-[9/16] overflow-hidden relative">
-                            <img
+                            <ImageWithFallback
                               src={screenItem.image}
+                              fallbackSrc={screenItem.image}
                               alt={screenItem.name}
+                              containerClassName="w-full h-full"
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                             />
                             {screenItem.id === screen.id && (

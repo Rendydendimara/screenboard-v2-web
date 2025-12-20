@@ -21,6 +21,7 @@ import { TScreenCategoryRes } from "@/api/admin/screenCategory/type";
 import { FORMAT_INPUT_IMAGE_FILE } from "@/constant/app";
 import { formatFileSize, getImageUrlFromFile } from "@/utils";
 import { BulkFileItem } from "./types";
+import ImageWithFallback from "../ui/ImageWithFallback";
 
 interface BulkUploadModalProps {
   isOpen: boolean;
@@ -110,10 +111,7 @@ export const BulkUploadModal: React.FC<BulkUploadModalProps> = ({
               <label className="block text-sm font-medium mb-2">
                 Select Category
               </label>
-              <Select
-                value={selectedCategory}
-                onValueChange={onCategoryChange}
-              >
+              <Select value={selectedCategory} onValueChange={onCategoryChange}>
                 <SelectTrigger>
                   <SelectValue placeholder="Choose category" />
                 </SelectTrigger>
@@ -168,9 +166,11 @@ export const BulkUploadModal: React.FC<BulkUploadModalProps> = ({
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2 flex-1">
-                        <img
+                        <ImageWithFallback
                           alt={item.file.name}
                           src={getImageUrlFromFile(item.file)}
+                          fallbackSrc={getImageUrlFromFile(item.file)}
+                          containerClassName="h-10 w-10"
                           className="h-10 w-10 object-cover object-center rounded"
                         />
                         <div className="flex-1">

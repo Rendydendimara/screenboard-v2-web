@@ -5,6 +5,7 @@ import { GripVertical } from "lucide-react";
 import { TModulRes } from "@/api/admin/modul/type";
 import { TScreenCategoryRes } from "@/api/admin/screenCategory/type";
 import { Screenshot } from "./types";
+import ImageWithFallback from "../ui/ImageWithFallback";
 
 // Sortable Module Item
 export const SortableModuleItem: React.FC<{
@@ -173,9 +174,11 @@ export const SortableScreenshotItem: React.FC<{
             className={`h-4 w-4 ${isDragging ? "text-white" : "text-gray-600"}`}
           />
         </div>
-        <img
+        <ImageWithFallback
           src={screenshot.image}
+          fallbackSrc={screenshot.image}
           alt={screenshot?.name ?? ""}
+          containerClassName="w-full h-full"
           className="w-full h-full object-cover pointer-events-none select-none"
         />
         {screenshot.dominantColor && (

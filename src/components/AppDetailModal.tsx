@@ -135,6 +135,7 @@ export const AppDetailModal: React.FC<AppDetailModalProps> = ({
                     }
                     fallbackSrc="https://placehold.co/400"
                     alt={app.name}
+                    containerClassName="w-full h-full"
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -342,9 +343,11 @@ export const AppDetailModal: React.FC<AppDetailModalProps> = ({
               >
                 <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100">
                   <div className="aspect-[9/16] overflow-hidden relative">
-                    <img
+                    <ImageWithFallback
                       src={screen.image}
+                      fallbackSrc={screen.image}
                       alt={screen.name}
+                      containerClassName="w-full h-full"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">

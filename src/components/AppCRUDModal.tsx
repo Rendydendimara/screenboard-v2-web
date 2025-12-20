@@ -333,6 +333,7 @@ export const AppCRUDModal: React.FC<AppCRUDModalProps> = ({
                       }
                       fallbackSrc="https://placehold.co/400"
                       alt={app.name}
+                      containerClassName="w-12 h-12"
                       className="w-12 h-12 rounded-lg object-cover"
                     />
                     <div>

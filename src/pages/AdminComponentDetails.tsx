@@ -8,12 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import ImageWithFallback from "@/components/ui/ImageWithFallback";
 import { useToast } from "@/hooks/use-toast";
 import { adapterSingleAppBEToFE } from "@/utils/adapterBEToFE";
-import {
-  ArrowLeft,
-  Building,
-  Calendar,
-  Smartphone,
-} from "lucide-react";
+import { ArrowLeft, Building, Calendar, Smartphone } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -87,6 +82,7 @@ const AdminComponentDetails: React.FC = () => {
                     }
                     fallbackSrc="https://placehold.co/400"
                     alt={app.name}
+                    containerClassName="w-full h-full"
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -133,9 +129,7 @@ const AdminComponentDetails: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <Card>
             <CardContent className="p-6 text-center">
-              <div className="font-bold text-2xl text-gray-900">
-                {app.name}
-              </div>
+              <div className="font-bold text-2xl text-gray-900">{app.name}</div>
               <div className="text-sm text-gray-600">App Name</div>
             </CardContent>
           </Card>

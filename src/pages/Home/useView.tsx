@@ -22,6 +22,7 @@ import useController from "./useController";
 import { Header } from "@/components/molecules";
 import { Input } from "@/components/ui/input";
 import { useEffect, useRef } from "react";
+import ImageWithFallback from "@/components/ui/ImageWithFallback";
 
 const Index = () => {
   const {
@@ -368,9 +369,11 @@ const Index = () => {
               </DialogHeader>
               <div className="space-y-4">
                 <div className="aspect-[9/16] rounded-lg overflow-hidden bg-slate-100">
-                  <img
+                  <ImageWithFallback
                     src={selectedScreen.image}
+                    fallbackSrc={selectedScreen.image}
                     alt={selectedScreen.name}
+                    containerClassName="w-full h-full"
                     className="w-full h-full object-cover"
                   />
                 </div>

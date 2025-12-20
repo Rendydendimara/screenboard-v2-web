@@ -18,6 +18,7 @@ import clsx from "clsx";
 import { ChevronLeft, ChevronRight, Download } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
+import ImageWithFallback from "./ui/ImageWithFallback";
 
 interface Screen {
   id: string;
@@ -178,9 +179,11 @@ export const ScreenImageModalV2: React.FC<ScreenImageModalProps> = ({
                 >
                   <div className="bg-white rounded-lg w-[338px]  h-full overflow-hidden shadow-sm hover:shadow-2xl transition-shadow duration-200">
                     <div className="overflow-hidden flex-1 h-full w-full relative flex justify-center items-center">
-                      <img
+                      <ImageWithFallback
+                        fallbackSrc={screenItem.image}
                         src={screenItem.image}
                         alt={screenItem.name}
+                        containerClassName="h-[100%] fill-available"
                         className={clsx(
                           "fill-available h-[100%] transition-all duration-200 rounded-lg",
                           screenItem.id === screen.id &&

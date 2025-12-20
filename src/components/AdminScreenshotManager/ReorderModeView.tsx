@@ -28,6 +28,7 @@ import {
   SortableScreenshotItem,
 } from "./SortableItems";
 import { ReorderLevel, Screenshot } from "./types";
+import ImageWithFallback from "../ui/ImageWithFallback";
 
 interface ReorderModeViewProps {
   reorderLevel: ReorderLevel;
@@ -297,14 +298,18 @@ export const ReorderModeView: React.FC<ReorderModeViewProps> = ({
                     <div className="absolute top-2 left-2 z-10 bg-blue-500 rounded-full p-1.5 shadow-lg scale-110">
                       <GripVertical className="h-4 w-4 text-white" />
                     </div>
-                    <img
+                    <ImageWithFallback
                       src={
+                        orderedScreenshots.find((s) => s.id === activeId)?.image
+                      }
+                      fallbackSrc={
                         orderedScreenshots.find((s) => s.id === activeId)?.image
                       }
                       alt={
                         orderedScreenshots.find((s) => s.id === activeId)
                           ?.name ?? ""
                       }
+                      containerClassName="w-full h-full"
                       className="w-full h-full object-cover pointer-events-none select-none"
                     />
                     <div className="absolute inset-0 bg-blue-500 bg-opacity-20" />

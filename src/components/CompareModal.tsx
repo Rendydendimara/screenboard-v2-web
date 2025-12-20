@@ -294,6 +294,7 @@ export const CompareModal: React.FC<CompareModalProps> = ({
                                     }
                                     fallbackSrc="https://placehold.co/400"
                                     alt={app.name}
+                                    containerClassName="w-10 h-10 lg:w-12 lg:h-12"
                                     className="w-10 h-10 lg:w-12 lg:h-12 rounded-[8px] object-cover flex-shrink-0"
                                   />
                                   <div className="flex flex-col gap-4 items-start">
@@ -328,9 +329,10 @@ export const CompareModal: React.FC<CompareModalProps> = ({
                                   </svg>
                                 </Button>
                               </div>
-                              <div className="flex items-start gap-2 px-3 overflow-x-auto max-w-[264px]">
+                              <div className="flex items-start gap-2 px-3 overflow-x-auto w-full max-w-[264px]">
                                 {app.screens.map((screenshot, i) => (
                                   <ImageWithFallback
+                                    containerClassName="!w-[74px] !min-w-[74px] !h-[163px]"
                                     src={
                                       screenshot.image ??
                                       "https://source.unsplash.com/400x300?game"
@@ -338,7 +340,7 @@ export const CompareModal: React.FC<CompareModalProps> = ({
                                     key={i}
                                     fallbackSrc="https://placehold.co/400"
                                     alt={screenshot.name}
-                                    className="w-[74px] h-[163px] rounded-[8px] object-cover flex-shrink-0"
+                                    className="!w-[74px] !min-w-[74px] !h-[163px] rounded-[8px] object-cover flex-shrink-0"
                                   />
                                 ))}
                               </div>
@@ -431,6 +433,7 @@ export const CompareModal: React.FC<CompareModalProps> = ({
                               }
                               fallbackSrc="https://placehold.co/400"
                               alt={app.name}
+                              containerClassName="w-10 h-10 lg:w-12 lg:h-12"
                               className="w-10 h-10 lg:w-12 lg:h-12 rounded-[8px] object-contain flex-shrink-0"
                             />
                             <div className="flex flex-col gap-4 items-start">
@@ -475,6 +478,7 @@ export const CompareModal: React.FC<CompareModalProps> = ({
                               key={i}
                               fallbackSrc="https://placehold.co/400"
                               alt={screenshot.name}
+                              containerClassName="w-[74px] h-[163px]"
                               className="w-[74px] h-[163px] rounded-[8px] object-cover flex-shrink-0"
                             />
                           ))}

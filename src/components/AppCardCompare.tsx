@@ -145,6 +145,7 @@ export const AppCardCompare: React.FC<AppCardProps> = ({
                     }
                     fallbackSrc="https://placehold.co/400"
                     alt={app.name}
+                    containerClassName="w-10 h-10 lg:w-12 lg:h-12"
                     className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl object-contain flex-shrink-0"
                   />
                   <div className="flex flex-col items-end">
@@ -218,6 +219,7 @@ export const AppCardCompare: React.FC<AppCardProps> = ({
                     }
                     fallbackSrc="https://placehold.co/400"
                     alt={app.name}
+                    containerClassName="w-10 h-10 lg:w-12 lg:h-12"
                     className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl object-contain flex-shrink-0"
                   />
                   <div className="flex flex-col items-end">
@@ -311,10 +313,11 @@ export const AppCardCompare: React.FC<AppCardProps> = ({
 
             {/* Image */}
             <div className="text-center max-w-4xl px-4">
-              <img
+              <ImageWithFallback
                 src={getListImageDetail[indexInitialImageOpen].src}
-                // alt={getListImageDetail[indexInitialImageOpen].title}
+                fallbackSrc={getListImageDetail[indexInitialImageOpen].src}
                 className="max-h-[90vh] mx-auto rounded-lg"
+                containerClassName="max-h-[90vh]"
               />
               {/* <h3 className="mt-4 text-xl font-semibold text-white">
                     {getListImageDetail[indexInitialImageOpen].title}

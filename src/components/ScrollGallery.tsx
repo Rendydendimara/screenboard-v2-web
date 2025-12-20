@@ -2,6 +2,7 @@ import { ScreenPublic } from "@/pages/Home/useController";
 import clsx from "clsx";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Badge } from "./ui/badge";
+import ImageWithFallback from "./ui/ImageWithFallback";
 
 type Props = {
   screens: ScreenPublic[];
@@ -57,11 +58,14 @@ const ScrollGallery = ({
               viewMode === "grid" ? "w-full h-full" : "w-[205px] h-[453px]"
             )}
           >
-            <img
+            <ImageWithFallback
               src={screen.image}
+              fallbackSrc={screen.image}
               alt={screen.name}
+              containerClassName="w-full h-auto"
               className={clsx(
-                "rounded-[8px] w-full h-auto" //  group-hover:scale-105 transition-transform hover:cursor-pointer
+                "rounded-[8px] w-full h-auto"
+                //  group-hover:scale-105 transition-transform hover:cursor-pointer
                 // viewMode === "grid"
                 //   ? "w-[328px] h-[723px]"
                 //   : "w-[205px] h-[453px]"
@@ -132,9 +136,11 @@ const ScrollGalleryList = ({ screens, handleClickImage }: Props) => {
             key={screen.id}
             className="aspect-[9/16] bg-slate-100 rounded overflow-hidden"
           >
-            <img
+            <ImageWithFallback
               src={screen.image}
+              fallbackSrc={screen.image}
               alt={screen.name}
+              containerClassName="w-full h-full"
               className="w-full h-full object-cover hover:cursor-pointer"
               onClick={() => handleClickImage(i)}
             />

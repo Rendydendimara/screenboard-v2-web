@@ -8,6 +8,7 @@ import { getImageUrl } from "@/utils";
 import { ArrowLeft, Monitor } from "lucide-react";
 import React from "react";
 import useController from "./useController";
+import ImageWithFallback from "@/components/ui/ImageWithFallback";
 
 const useView: React.FC = () => {
   const {
@@ -150,9 +151,11 @@ const useView: React.FC = () => {
               <div className="flex-shrink-0">
                 {selectedImageData && (
                   <div className="relative w-[652px] h-[404px] rounded-[20px] overflow-hidden bg-black flex items-center justify-center group">
-                    <img
+                    <ImageWithFallback
                       src={getImageUrl(selectedImageData.filePath)}
+                      fallbackSrc={getImageUrl(selectedImageData.filePath)}
                       alt={selectedImageData.fileName}
+                      containerClassName="w-full h-full"
                       className="w-full h-full object-contain"
                     />
                   </div>
@@ -173,9 +176,11 @@ const useView: React.FC = () => {
                       onClick={() => handleImageClick(img._id)}
                     >
                       <div className="w-full h-[209px] rounded-xl overflow-hidden bg-slate-100 hover:opacity-80 transition-opacity">
-                        <img
+                        <ImageWithFallback
                           src={getImageUrl(img.filePath)}
+                          fallbackSrc={getImageUrl(img.filePath)}
                           alt={img.fileName}
+                          containerClassName="w-full h-full"
                           className="w-full h-full object-contain"
                         />
                       </div>

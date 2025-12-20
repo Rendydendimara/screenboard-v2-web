@@ -513,6 +513,7 @@ export const AdminComponentManager: React.FC<AdminComponentManagerProps> = ({
                               src={getImageUrl(screen)}
                               fallbackSrc="https://placehold.co/100"
                               alt={`Screen ${idx + 1}`}
+                              containerClassName="w-10 h-10"
                               className="w-10 h-10 rounded object-cover hover:opacity-80 transition-opacity"
                               // onClick={(e) => {
                               //   e.stopPropagation();
@@ -717,6 +718,7 @@ export const AdminComponentManager: React.FC<AdminComponentManagerProps> = ({
                   )}
                   fallbackSrc="https://placehold.co/800"
                   alt={`Screen ${selectedImageIndex + 1}`}
+                  containerClassName="max-h-[500px] max-w-full"
                   className="max-h-[500px] max-w-full object-contain rounded"
                 />
               )}
@@ -762,6 +764,7 @@ export const AdminComponentManager: React.FC<AdminComponentManagerProps> = ({
                     src={getImageUrl(screen)}
                     fallbackSrc="https://placehold.co/100"
                     alt={`Thumbnail ${idx + 1}`}
+                    containerClassName="w-16 h-16"
                     className="w-16 h-16 object-cover rounded"
                   />
                   {idx === selectedImageIndex && (

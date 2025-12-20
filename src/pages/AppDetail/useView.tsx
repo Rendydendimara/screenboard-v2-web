@@ -213,6 +213,7 @@ const useView: React.FC = () => {
                         }
                         fallbackSrc="https://placehold.co/400"
                         alt={app.name}
+                        containerClassName="w-full h-full"
                         className="w-full h-full object-cover shadow-2xl"
                       />
                     </div>
@@ -393,14 +394,6 @@ const useView: React.FC = () => {
                     <GitCompare className="h-4 w-4" />
                     Compare
                   </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="h-10 rounded-[6px] py-[1px] px-[13px] font-normal"
-                  >
-                    <Share2 className="h-4 w-4" />
-                    Share
-                  </Button>
                 </div>
               </div>
             </div>
@@ -477,6 +470,7 @@ const useView: React.FC = () => {
                                           }
                                           fallbackSrc="https://placehold.co/400"
                                           alt={screen.name}
+                                          containerClassName="w-auto h-[100%]"
                                           className="w-auto object-contain h-[100%]"
                                         />
                                       </div>
@@ -525,6 +519,7 @@ const useView: React.FC = () => {
                                           }
                                           fallbackSrc="https://placehold.co/400"
                                           alt={screen.name}
+                                          containerClassName="w-auto h-[100%]"
                                           className="w-auto object-contain h-[100%]"
                                         />
                                       </div>

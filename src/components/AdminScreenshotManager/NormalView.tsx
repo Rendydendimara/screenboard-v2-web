@@ -11,6 +11,7 @@ import {
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import { TSelect } from "@/types";
 import { Screenshot } from "./types";
+import ImageWithFallback from "../ui/ImageWithFallback";
 
 interface NormalViewProps {
   screenshots: Screenshot[];
@@ -96,9 +97,11 @@ export const NormalView: React.FC<NormalViewProps> = ({
               className="shrink-0 w-full relative group cursor-pointer"
             >
               <div className="w-full h-full rounded-lg overflow-hidden bg-gray-100 shadow-md hover:shadow-lg transition-shadow">
-                <img
+                <ImageWithFallback
                   src={screenshot.image}
+                  fallbackSrc={screenshot.image}
                   alt={screenshot?.name ?? ""}
+                  containerClassName="w-full h-full"
                   className="w-full h-full object-contain"
                 />
                 {screenshot.dominantColor && (

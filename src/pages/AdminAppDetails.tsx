@@ -103,6 +103,7 @@ const AdminAppDetails: React.FC = () => {
                     }
                     fallbackSrc="https://placehold.co/400"
                     alt={app.name}
+                    containerClassName="w-full h-full"
                     className="w-full h-full object-cover"
                   />
                 </div>

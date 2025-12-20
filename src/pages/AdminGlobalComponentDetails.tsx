@@ -7,6 +7,7 @@ import CModalDialogLoading from "@/components/modal-dialog-loading";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import ImageWithFallback from "@/components/ui/ImageWithFallback";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { getImageUrl } from "@/utils";
@@ -232,9 +233,11 @@ const AdminGlobalComponentDetails: React.FC = () => {
                         setSelectedImage(getImageUrl(screenshot.filePath))
                       }
                     >
-                      <img
+                      <ImageWithFallback
                         src={getImageUrl(screenshot.filePath)}
+                        fallbackSrc={getImageUrl(screenshot.filePath)}
                         alt={`Screenshot ${index + 1}`}
+                        containerClassName="w-full h-64"
                         className="w-full h-64 object-cover"
                       />
                       <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-opacity flex items-center justify-center">
@@ -261,9 +264,11 @@ const AdminGlobalComponentDetails: React.FC = () => {
           >
             &times;
           </button>
-          <img
+          <ImageWithFallback
             src={selectedImage}
+            fallbackSrc={selectedImage}
             alt="Full size screenshot"
+            containerClassName="max-w-[90%] max-h-[90%]"
             className="max-w-[90%] max-h-[90%] object-contain"
             onClick={(e) => e.stopPropagation()}
           />

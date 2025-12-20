@@ -2,6 +2,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { Screenshot } from "./types";
+import ImageWithFallback from "../ui/ImageWithFallback";
 
 interface ViewScreenshotModalProps {
   isOpen: boolean;
@@ -25,9 +26,11 @@ export const ViewScreenshotModal: React.FC<ViewScreenshotModalProps> = ({
         className="relative w-full h-full flex items-center justify-center p-4"
         onClick={(e) => e.stopPropagation()}
       >
-        <img
+        <ImageWithFallback
           src={screenshot.image}
+          fallbackSrc={screenshot.image}
           alt={screenshot.name ?? ""}
+          containerClassName="max-w-full max-h-full"
           className="max-w-full max-h-full object-contain shadow-2xl"
         />
         <Button

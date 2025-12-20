@@ -17,6 +17,7 @@ import {
 import { ScreenPublic } from "@/pages/Home/useController";
 import { Heart, LayoutGrid, List, Search, X } from "lucide-react";
 import React, { useState } from "react";
+import ImageWithFallback from "./ui/ImageWithFallback";
 
 interface FavoritesModalProps {
   isOpen: boolean;
@@ -198,9 +199,11 @@ export const FavoritesModal: React.FC<FavoritesModalProps> = ({
                           className="aspect-[9/16] bg-slate-100 overflow-hidden relative"
                           onClick={() => onScreenClick(screen)}
                         >
-                          <img
+                          <ImageWithFallback
                             src={screen.image}
+                            fallbackSrc={screen.image}
                             alt={screen.name}
+                            containerClassName="w-full h-full"
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                           />
                           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
@@ -238,9 +241,11 @@ export const FavoritesModal: React.FC<FavoritesModalProps> = ({
                           className="w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 cursor-pointer"
                           onClick={() => onScreenClick(screen)}
                         >
-                          <img
+                          <ImageWithFallback
                             src={screen.image}
+                            fallbackSrc={screen.image}
                             alt={screen.name}
+                            containerClassName="w-full h-full"
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                           />
                         </div>

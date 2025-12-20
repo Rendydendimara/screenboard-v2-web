@@ -1,4 +1,5 @@
 import { TGlobalComponentRes } from "@/api/user/globalComponent/type";
+import ImageWithFallback from "@/components/ui/ImageWithFallback";
 import { getImageUrl } from "@/utils";
 
 interface IProps {
@@ -17,10 +18,12 @@ const ComponentCard = ({ component, onDetail }: IProps) => {
           {component.screenshots.slice(0, 10).map((img, i) => (
             <div key={i} className="flex flex-col gap-5">
               <div className="w-full overflow-hidden">
-                <img
+                <ImageWithFallback
                   onClick={() => onDetail(`${component._id}?imgid=${img._id}`)}
                   src={getImageUrl(img.filePath)}
+                  fallbackSrc={getImageUrl(img.filePath)}
                   alt="Figma Configuration Screen"
+                  containerClassName="w-[231px] h-[143px]"
                   className="w-[231px] h-[143px] rounded-[11px] object-cover hover:cursor-pointer"
                 />
               </div>
