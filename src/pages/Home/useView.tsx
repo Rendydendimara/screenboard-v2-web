@@ -124,7 +124,7 @@ const Index = () => {
           ref={appsContainerRef}
           className="w-full flex justify-center items-center"
         >
-          <div className="w-full max-w-[1140px]">
+          <div className="w-full lg:max-w-[920px] xl:max-w-[1140px]">
             <main className="px-4 py-6 md:px-0 md:py-8 lg:py-12 w-full">
               <div className="mb-6">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 lg:gap-6">
@@ -198,10 +198,10 @@ const Index = () => {
                 ref={containerMainRef}
                 className="flex items-start gap-5 flex-col md:flex-row w-full"
               >
-                {/* Static Filters - visible when not scrolled */}
+                {/* Static Filters - visible when not scrolled - Hidden on mobile */}
                 <div
                   className={clsx(
-                    "min-w-[130px] max-w-[130px] max-h-[2000px] overflow-y-hidden transition-all ease-in-out",
+                    "hidden md:block min-w-[130px] max-w-[130px] max-h-[2000px] overflow-y-hidden transition-all ease-in-out",
                     scrolledFilterMenu
                       ? "opacity-0 pointer-events-none"
                       : "opacity-100"
@@ -224,10 +224,10 @@ const Index = () => {
                   />
                 </div>
 
-                {/* Fixed Filters - visible when scrolled */}
+                {/* Fixed Filters - visible when scrolled - Hidden on mobile */}
                 <div
                   className={clsx(
-                    "min-w-[130px] max-w-[130px] fixed h-[90vh] overflow-y-auto top-24 z-50 pb-8 transition-all ease-in-out",
+                    "hidden md:block min-w-[130px] max-w-[130px] fixed h-[90vh] overflow-y-auto top-24 z-50 pb-8 transition-all ease-in-out",
                     scrolledFilterMenu
                       ? "opacity-100 translate-y-0"
                       : "opacity-0 -translate-y-4 pointer-events-none"
@@ -293,7 +293,7 @@ const Index = () => {
                           isLoading={isLoadingGetApp}
                         />
                         {!user && allFilteredApps.length > 9 && (
-                          <div className="-mt-64 pt-32 pb-8 bg-[linear-gradient(180deg,_rgba(255,_255,_255,_0)_4.01%,_#FFFFFF_62.21%)] absolute w-[990px]">
+                          <div className="-mt-64 pt-32 pb-8 bg-[linear-gradient(180deg,_rgba(255,_255,_255,_0)_4.01%,_#FFFFFF_62.21%)] absolute w-full max-w-[990px]">
                             <div className="flex flex-col w-full gap-6">
                               <div className="flex justify-center items-center w-full">
                                 <div className="flex flex-col gap-3 items-center w-full md:w-[889px] px-4">

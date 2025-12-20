@@ -61,7 +61,7 @@ export const AppCard: React.FC<AppCardProps> = ({
                 src={app?.image ?? "https://source.unsplash.com/400x300?game"}
                 fallbackSrc="https://placehold.co/400"
                 alt={app.name}
-                containerClassName="w-[114px] h-[72px]"
+                containerClassName="min-w-[114px] h-[72px]"
                 className="w-[114px] h-[72px] rounded-[8px] object-cover group-hover:scale-105 transition-transform"
               />
               {app.featured && (
@@ -104,7 +104,7 @@ export const AppCard: React.FC<AppCardProps> = ({
                       src={screen.image}
                       fallbackSrc={screen.image}
                       alt={screen.name}
-                      containerClassName="w-[200px] h-[200px]"
+                      containerClassName="min-w-[200px] h-[200px]"
                       className="w-[200px] h-[200px] object-cover group-hover:scale-105 transition-transform duration-500 hover:cursor-pointer"
                     />
                     <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 to-transparent text-white p-2 text-xs">
@@ -376,7 +376,7 @@ export const AppCard: React.FC<AppCardProps> = ({
             src={screen.image}
             fallbackSrc={screen.image}
             alt={screen.name}
-            containerClassName="w-[190px] h-[417px]"
+            containerClassName="min-w-[190px] h-[417px]"
             className="w-[190px] h-[417px] rounded-[8px] object-cover group-hover:scale-105 transition-transform duration-500 hover:cursor-pointer"
           />
         ))}

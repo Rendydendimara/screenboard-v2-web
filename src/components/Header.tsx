@@ -55,7 +55,7 @@ export const Header: React.FC<HeaderProps> = ({
       )}
     >
       <div className="w-full flex justify-center items-center">
-        <div className="w-full max-w-[1200px]">
+        <div className="w-full md:max-w-[700px] lg:max-w-[1200px]">
           <div className="flex items-center justify-between h-16 lg:h-20 px-4 md:px-0">
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-2">

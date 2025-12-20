@@ -81,7 +81,7 @@ const useView: React.FC = () => {
         <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
           <header className="fixed w-full top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md shadow-sm">
             <div className="w-full flex justify-center items-center">
-              <div className="w-full max-w-[1200px]">
+              <div className="w-full md:max-w-[700px] lg:max-w-[1200px]">
                 <div className="flex items-center justify-between h-16 lg:h-20 px-4 md:px-0">
                   <Link to="/">
                     <div className="flex items-center space-x-2">
@@ -99,7 +99,7 @@ const useView: React.FC = () => {
 
           {/* App Overview Skeleton */}
           <div className="w-full flex justify-center items-center">
-            <div className="w-full max-w-[1200px]">
+            <div className="w-full md:max-w-[700px] lg:max-w-[1200px]">
               <div className="pt-24 px-4 md:px-0 pb-[40px]">
                 <div className="flex items-center justify-between md:flex-row flex-col">
                   <div className="flex items-start gap-6 w-full">
@@ -132,7 +132,7 @@ const useView: React.FC = () => {
 
         {/* Screenshots Skeleton */}
         <div className="w-full flex justify-center items-center">
-          <div className="w-full max-w-[1200px]">
+          <div className="w-full md:max-w-[700px] lg:max-w-[1200px]">
             <div className="px-4 md:px-0 py-12">
               <div className="mb-8">
                 <div className="flex flex-col md:flex-row items-start gap-3 md:gap-0 md:items-center justify-between mb-9">
@@ -200,10 +200,10 @@ const useView: React.FC = () => {
 
         {/* App Overview */}
         <div className="w-full flex justify-center items-center">
-          <div className="w-full max-w-[1200px]">
+          <div className="w-full md:max-w-[700px] lg:max-w-[1200px]">
             <div className="pt-24 px-4 md:px-0 pb-[40px]">
               <div className="flex items-center justify-between md:flex-row flex-col">
-                <div className="flex items-start gap-6">
+                <div className="flex items-start gap-6 flex-col md:flex-row">
                   <div className="relative">
                     <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-2xl">
                       <ImageWithFallback
@@ -402,7 +402,7 @@ const useView: React.FC = () => {
       </section>
 
       <div className="w-full flex justify-center items-center">
-        <div className="w-full max-w-[1200px]">
+        <div className="w-full md:max-w-[700px] lg:max-w-[1200px]">
           <div>
             <div className=" px-4 md:px-0 py-12">
               <div className="mb-8">
@@ -411,10 +411,10 @@ const useView: React.FC = () => {
                   ref={containerMainRef}
                   className="flex items-start gap-5 flex-col md:flex-row w-full"
                 >
-                  {/* Static Filters - visible when not scrolled */}
+                  {/* Static Filters - visible when not scrolled - Hidden on mobile */}
                   <div
                     className={clsx(
-                      "min-w-[130px] max-w-[130px] transition-all ease-in-out",
+                      "hidden md:block min-w-[130px] max-w-[130px] transition-all ease-in-out",
                       scrolledFilterMenu
                         ? "opacity-0 pointer-events-none"
                         : "opacity-100"
@@ -426,10 +426,10 @@ const useView: React.FC = () => {
                       iconType="square"
                     />
                   </div>
-                  {/* Fixed Filters - visible when scrolled */}
+                  {/* Fixed Filters - visible when scrolled - Hidden on mobile */}
                   <div
                     className={clsx(
-                      "min-w-[130px] max-w-[130px] fixed max-h-[90vh] overflow-y-auto top-24 z-50 pb-8 transition-all ease-in-out",
+                      "hidden md:block min-w-[130px] max-w-[130px] fixed max-h-[90vh] overflow-y-auto top-24 z-50 pb-8 transition-all ease-in-out",
                       scrolledFilterMenu
                         ? "opacity-100 translate-y-0"
                         : "opacity-0 -translate-y-4 pointer-events-none"
@@ -462,7 +462,7 @@ const useView: React.FC = () => {
                                       className="w-full flex flex-col items-start gap-1 hover:cursor-pointer"
                                       onClick={() => setSelectedScreen(screen)}
                                     >
-                                      <div className="min-w-[272px] max-w-[272px] h-[623px] flex justify-center items-center rounded-xl overflow-hidden border-[1px] border-solid border-[rgba(0,0,0,0.1)]">
+                                      <div className="w-full min-w-[200px] max-w-[272px] h-auto aspect-[272/623] flex justify-center items-center rounded-xl overflow-hidden border-[1px] border-solid border-[rgba(0,0,0,0.1)]">
                                         <ImageWithFallback
                                           src={
                                             screen?.image ??
@@ -504,14 +504,14 @@ const useView: React.FC = () => {
                                   {key}
                                 </div>
                                 {/* <div className="flex items-start max-w-full pr-5 overflow-x-auto gap-7 pb-1 !styled-scrollbar-black"> */}
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-7">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-7">
                                   {screens.map((screen, i) => (
                                     <div
                                       key={i}
-                                      className="w-[272px] flex flex-col items-start gap-1 hover:cursor-pointer"
+                                      className="w-full max-w-[272px] flex flex-col items-start gap-1 hover:cursor-pointer"
                                       onClick={() => setSelectedScreen(screen)}
                                     >
-                                      <div className="w-[272px] h-[623px] flex justify-center items-center rounded-xl overflow-hidden border-[1px] border-solid border-[rgba(0,0,0,0.1)]">
+                                      <div className="w-full max-w-[272px] h-auto aspect-[272/623] flex justify-center items-center rounded-xl overflow-hidden border-[1px] border-solid border-[rgba(0,0,0,0.1)]">
                                         <ImageWithFallback
                                           src={
                                             screen?.image ??

@@ -106,10 +106,10 @@ export const Header = ({
     >
       <div className="px-0">
         <div className="w-full flex justify-center items-center">
-          <div className="w-full max-w-[1200px]">
+          <div className="w-full md:max-w-[700px] lg:max-w-[1200px]">
             <div className="flex w-full items-center justify-between h-16 lg:h-20 px-4 md:px-6 lg:px-0">
               {/* Logo */}
-              <div className="w-[222px]">
+              <div className="w-fit md:w-[222px]">
                 <Link to="/" className="flex items-center space-x-2">
                   <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
                     <span className="text-white font-bold text-sm lg:text-base">
@@ -126,7 +126,8 @@ export const Header = ({
                     "flex-1 max-w-md mx-4 lg:mx-8 transition-all duration-300 ease-in-out overflow-hidden",
                     scrolledSearch
                       ? "max-w-md opacity-100 translate-x-0"
-                      : "max-w-0 opacity-0 -translate-x-4 hidden pointer-events-none"
+                      : "max-w-0 opacity-0 -translate-x-4 hidden pointer-events-none",
+                    location.pathname === "/" ? "flex" : "hidden"
                   )}
                 >
                   <div className="relative">
@@ -142,7 +143,7 @@ export const Header = ({
               )}
 
               {!scrolledSearch && (
-                <div className="flex items-center gap-3 ">
+                <div className="hidden md:flex items-center gap-3 ">
                   <Link to="/">
                     <Button
                       variant="ghost"
@@ -341,6 +342,46 @@ export const Header = ({
                 </SheetTrigger>
                 <SheetContent side="right" className="w-[300px] sm:w-[350px]">
                   <div className="flex flex-col gap-4 mt-8">
+                    {/* Navigation Links */}
+                    <div className="flex flex-col gap-2 pb-4 border-b">
+                      <Link to="/" onClick={() => setMobileMenuOpen(false)}>
+                        <Button
+                          variant="ghost"
+                          className={clsx(
+                            "w-full justify-start gap-2",
+                            (location.pathname === "/" ||
+                              location.pathname.includes("app")) &&
+                              "bg-slate-100 font-bold"
+                          )}
+                        >
+                          Apps
+                        </Button>
+                      </Link>
+                      <Link
+                        to="/component"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        <Button
+                          variant="ghost"
+                          className={clsx(
+                            "w-full justify-start gap-2",
+                            (location.pathname === "/component" ||
+                              location.pathname.includes("component")) &&
+                              "bg-slate-100 font-bold"
+                          )}
+                        >
+                          Component
+                        </Button>
+                      </Link>
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-start gap-2"
+                        disabled
+                      >
+                        Website (Coming Soon)
+                      </Button>
+                    </div>
+
                     {user ? (
                       <>
                         <div className="flex items-center gap-2 pb-4 border-b">

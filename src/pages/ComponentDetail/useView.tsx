@@ -39,7 +39,7 @@ const useView: React.FC = () => {
 
           {/* Component Overview Skeleton */}
           <div className="w-full flex justify-center items-center">
-            <div className="w-full max-w-[1200px]">
+            <div className="w-full md:max-w-[700px] lg:max-w-[1200px]">
               <div className="pt-24 px-4 md:px-0 pb-[40px]">
                 <Skeleton className="h-10 w-32 mb-6" />
                 <Skeleton className="h-12 w-96 mb-4" />
@@ -56,11 +56,11 @@ const useView: React.FC = () => {
 
         {/* Screenshots Skeleton */}
         <div className="w-full flex justify-center items-center">
-          <div className="w-full max-w-[1200px]">
+          <div className="w-full md:max-w-[700px] lg:max-w-[1200px]">
             <div className="px-4 md:px-0 py-12">
-              <div className="flex gap-6">
-                <Skeleton className="w-[590px] h-[363px] rounded-xl" />
-                <div className="flex-1 grid grid-cols-2 gap-4">
+              <div className="flex flex-col lg:flex-row gap-6">
+                <Skeleton className="w-full lg:w-[590px] h-[363px] rounded-xl" />
+                <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {Array.from({ length: 4 }).map((_, i) => (
                     <div key={i} className="flex flex-col gap-2">
                       <Skeleton className="w-full h-[160px] rounded-xl" />
@@ -112,7 +112,7 @@ const useView: React.FC = () => {
 
         {/* Component Overview */}
         <div className="w-full flex justify-center items-center">
-          <div className="w-full max-w-[1200px]">
+          <div className="w-full md:max-w-[700px] lg:max-w-[1200px]">
             <div className="pt-24 px-4 md:px-0 pb-[40px] flex justify-center items-center">
               <div className="max-w-[590px]">
                 <div className="flex justify-center items-center flex-col gap-6">
@@ -148,15 +148,13 @@ const useView: React.FC = () => {
           <div className="px-4 md:px-0 py-12">
             <div className="flex gap-6 flex-col lg:flex-row">
               {/* Main Image */}
-              <div className="flex-shrink-0">
+              <div className="flex-shrink-0 w-full lg:w-auto">
                 {selectedImageData && (
-                  <div className="relative w-[652px] h-[404px] rounded-[20px] overflow-hidden bg-black flex items-center justify-center group">
-                    <ImageWithFallback
-                      src={getImageUrl(selectedImageData.filePath)}
-                      fallbackSrc={getImageUrl(selectedImageData.filePath)}
+                  <div className="relative w-full lg:w-[652px] h-auto lg:h-[404px] aspect-video lg:aspect-auto rounded-[20px] overflow-hidden bg-black flex items-center justify-center group">
+                    <img
                       alt={selectedImageData.fileName}
-                      containerClassName="w-full h-full"
                       className="w-full h-full object-contain"
+                      src={getImageUrl(selectedImageData.filePath)}
                     />
                   </div>
                 )}
@@ -164,7 +162,7 @@ const useView: React.FC = () => {
 
               {/* Thumbnail Grid */}
               <div className="flex-1">
-                <div className="flex flex-col gap-5 items-start max-h-[60vh] pl-1 overflow-auto">
+                <div className="px-1 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-1 gap-4 lg:gap-5 lg:max-h-[60vh] lg:overflow-auto">
                   {component.screenshots.slice(0, 10).map((img) => (
                     <div
                       key={img._id}
@@ -175,7 +173,7 @@ const useView: React.FC = () => {
                       }`}
                       onClick={() => handleImageClick(img._id)}
                     >
-                      <div className="w-full h-[209px] rounded-xl overflow-hidden bg-slate-100 hover:opacity-80 transition-opacity">
+                      <div className="w-full h-auto aspect-video lg:h-[209px] lg:aspect-auto rounded-xl overflow-hidden bg-slate-100 hover:opacity-80 transition-opacity">
                         <ImageWithFallback
                           src={getImageUrl(img.filePath)}
                           fallbackSrc={getImageUrl(img.filePath)}
