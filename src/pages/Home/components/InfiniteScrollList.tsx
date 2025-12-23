@@ -61,7 +61,6 @@ const InfiniteScrollListComponent = ({
       }
     };
   }, [handleObserver]);
-
   return (
     <>
       <div

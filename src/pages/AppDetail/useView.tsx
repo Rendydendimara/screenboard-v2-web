@@ -85,7 +85,8 @@ const useView: React.FC = () => {
   // Count active filters
   const activeFiltersCount = useMemo(() => {
     let count = 0;
-    if (filterCategories.value && !filterCategories.value.includes("All")) count++;
+    if (filterCategories.value && !filterCategories.value.includes("All"))
+      count++;
     return count;
   }, [filterCategories.value]);
 
@@ -428,11 +429,7 @@ const useView: React.FC = () => {
                 <div className="md:hidden mb-4">
                   <Sheet open={showFilters} onOpenChange={setShowFilters}>
                     <SheetTrigger asChild>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="w-full"
-                      >
+                      <Button variant="outline" size="sm" className="w-full">
                         <Filter className="h-4 w-4 mr-2" />
                         <span>Filters</span>
                         {activeFiltersCount > 0 && (
@@ -535,18 +532,16 @@ const useView: React.FC = () => {
                                       className="w-full flex flex-col items-start gap-1 hover:cursor-pointer"
                                       onClick={() => setSelectedScreen(screen)}
                                     >
-                                      <div className="w-full min-w-[200px] max-w-[272px] h-auto aspect-[272/623] flex justify-center items-center rounded-xl overflow-hidden border-[1px] border-solid border-[rgba(0,0,0,0.1)]">
-                                        <ImageWithFallback
-                                          src={
-                                            screen?.image ??
-                                            "https://source.unsplash.com/400x300?game"
-                                          }
-                                          fallbackSrc="https://placehold.co/400"
-                                          alt={screen.name}
-                                          containerClassName="w-auto h-[100%]"
-                                          className="w-auto object-contain h-[100%]"
-                                        />
-                                      </div>
+                                      <ImageWithFallback
+                                        src={
+                                          screen?.image ??
+                                          "https://source.unsplash.com/400x300?game"
+                                        }
+                                        fallbackSrc="https://placehold.co/400"
+                                        alt={screen.name}
+                                        containerClassName="w-auto h-[100%]"
+                                        className="w-full min-w-[272px] h-[565px] max-w-[272px] aspect-[272/623] flex justify-center items-center rounded-xl overflow-hidden border-[1px] border-solid border-[rgba(0,0,0,0.1)]"
+                                      />
                                       <h4
                                         className="font-[Inter] font-medium text-[12px] leading-[100%] tracking-[0%] align-middle text-[#565D61]"
                                         style={{
@@ -584,18 +579,18 @@ const useView: React.FC = () => {
                                       className="w-full max-w-[272px] flex flex-col items-start gap-1 hover:cursor-pointer"
                                       onClick={() => setSelectedScreen(screen)}
                                     >
-                                      <div className="w-full max-w-[272px] h-auto aspect-[272/623] flex justify-center items-center rounded-xl overflow-hidden border-[1px] border-solid border-[rgba(0,0,0,0.1)]">
-                                        <ImageWithFallback
-                                          src={
-                                            screen?.image ??
-                                            "https://source.unsplash.com/400x300?game"
-                                          }
-                                          fallbackSrc="https://placehold.co/400"
-                                          alt={screen.name}
-                                          containerClassName="w-auto h-[100%]"
-                                          className="w-auto object-contain h-[100%]"
-                                        />
-                                      </div>
+                                      {/* <div className="w-full max-w-[272px] h-[565px] aspect-[272/623] flex justify-center items-center rounded-xl overflow-hidden border-[1px] border-solid border-[rgba(0,0,0,0.1)]"> */}
+                                      <ImageWithFallback
+                                        src={
+                                          screen?.image ??
+                                          "https://source.unsplash.com/400x300?game"
+                                        }
+                                        fallbackSrc="https://placehold.co/400"
+                                        alt={screen.name}
+                                        containerClassName="w-auto h-[100%]"
+                                        className="w-full max-w-[272px] h-[565px] aspect-[272/623] flex justify-center items-center rounded-xl overflow-hidden border-[1px] border-solid border-[rgba(0,0,0,0.1)]"
+                                      />
+                                      {/* </div> */}
                                       <h4
                                         className="font-[Inter] font-medium text-[12px] leading-[100%] tracking-[0%] align-middle text-[#565D61]"
                                         style={{

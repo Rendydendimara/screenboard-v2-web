@@ -1,18 +1,13 @@
-import { AppCard } from "@/components/AppCard";
 import { AppCardSkeleton } from "@/components/AppCardSkeleton";
 import { AuthModal } from "@/components/AuthModal";
 import { CompareModal } from "@/components/CompareModal";
 import { FavoritesModal } from "@/components/FavoritesModal";
 import { HeroSection } from "@/components/HeroSection";
+import { Header } from "@/components/molecules";
 import SEO from "@/components/SEO";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import {
   Sheet,
   SheetContent,
@@ -21,15 +16,11 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import clsx from "clsx";
-import { Grid, Heart, List, Search, Zap, Filter, X } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Filter, Grid, List, Search, X, Zap } from "lucide-react";
+import { useMemo } from "react";
 import Filters from "./components/Filters";
 import { InfiniteScrollList } from "./components/InfiniteScrollList";
 import useController from "./useController";
-import { Header } from "@/components/molecules";
-import { Input } from "@/components/ui/input";
-import { useEffect, useRef, useMemo } from "react";
-import ImageWithFallback from "@/components/ui/ImageWithFallback";
 
 const Index = () => {
   const {
@@ -152,11 +143,11 @@ const Index = () => {
           <div className="w-full lg:max-w-[920px] xl:max-w-[1140px]">
             <main className="px-4 py-6 md:px-0 md:py-8 lg:py-12 w-full">
               <div className="mb-6">
-                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 lg:gap-6">
+                <div className="flex flex-col lg:flex-row lg:items-center w-full justify-between gap-4 lg:gap-6">
                   {/* Search Bar - Desktop */}
                   <div
                     className={clsx(
-                      "flex-1 max-w-md transition-all duration-300 ease-in-out overflow-hidden",
+                      "w-[448px] transition-all duration-300 ease-in-out overflow-hidden",
                       !scrolledSearch
                         ? "max-h-[100px] opacity-100 translate-y-0"
                         : "max-h-0 opacity-0 -translate-y-4 pointer-events-none"
@@ -176,8 +167,9 @@ const Index = () => {
                   {/* Filters and View Controls */}
                   <div
                     className={clsx(
-                      "bg-[white] w-full left-[0] transition-all duration-300 ease-in-out",
-                      scrolledSearch && "fixed py-1 pl-[16px] z-[10000]",
+                      "bg-[white] md:w-fit w-full left-[0] transition-all duration-300 ease-in-out",
+                      scrolledSearch &&
+                        "fixed md:[position:initial] py-1 pl-[16px] z-[10000]",
                       showFilters ? "top-0 h-fit" : "top-[63px]"
                     )}
                   >
@@ -305,59 +297,73 @@ const Index = () => {
                 ref={containerMainRef}
                 className="flex items-start gap-5 flex-col md:flex-row w-full"
               >
-                {/* Static Filters - visible when not scrolled - Hidden on mobile */}
-                <div
-                  className={clsx(
-                    "hidden md:block min-w-[130px] max-w-[130px] max-h-[2000px] overflow-y-hidden transition-all ease-in-out",
-                    scrolledFilterMenu
-                      ? "opacity-0 pointer-events-none"
-                      : "opacity-100"
-                  )}
-                >
-                  <Filters
-                    getOptionsCategoryItemFiltered={
-                      getOptionsCategoryItemFiltered
-                    }
-                    filterCategories={filterCategories}
-                    filterSubCategories={filterSubCategories}
-                    filterSortBy={filterSortBy}
-                    filterMarket={filterMarket}
-                    handleChangeFilterSortBy={handleChangeFilterSortBy}
-                    handleChangeFilterCategories={handleChangeFilterCategories}
-                    handleChangeFilterSubCategories={
-                      handleChangeFilterSubCategories
-                    }
-                    handleChangeFilterMarket={handleChangeFilterMarket}
-                  />
-                </div>
+                {user && (
+                  <>
+                    {/* Static Filters - visible when not scrolled - Hidden on mobile */}
+                    <div
+                      className={clsx(
+                        "hidden md:block min-w-[130px] max-w-[130px] max-h-[2000px] overflow-y-hidden transition-all ease-in-out",
+                        scrolledFilterMenu
+                          ? "opacity-0 pointer-events-none"
+                          : "opacity-100"
+                      )}
+                    >
+                      <Filters
+                        getOptionsCategoryItemFiltered={
+                          getOptionsCategoryItemFiltered
+                        }
+                        filterCategories={filterCategories}
+                        filterSubCategories={filterSubCategories}
+                        filterSortBy={filterSortBy}
+                        filterMarket={filterMarket}
+                        handleChangeFilterSortBy={handleChangeFilterSortBy}
+                        handleChangeFilterCategories={
+                          handleChangeFilterCategories
+                        }
+                        handleChangeFilterSubCategories={
+                          handleChangeFilterSubCategories
+                        }
+                        handleChangeFilterMarket={handleChangeFilterMarket}
+                      />
+                    </div>
 
-                {/* Fixed Filters - visible when scrolled - Hidden on mobile */}
-                <div
-                  className={clsx(
-                    "hidden md:block min-w-[130px] max-w-[130px] fixed h-[90vh] overflow-y-auto top-24 z-50 pb-8 transition-all ease-in-out",
-                    scrolledFilterMenu
-                      ? "opacity-100 translate-y-0"
-                      : "opacity-0 -translate-y-4 pointer-events-none"
-                  )}
-                >
-                  <Filters
-                    getOptionsCategoryItemFiltered={
-                      getOptionsCategoryItemFiltered
-                    }
-                    filterCategories={filterCategories}
-                    filterSubCategories={filterSubCategories}
-                    filterSortBy={filterSortBy}
-                    filterMarket={filterMarket}
-                    handleChangeFilterSortBy={handleChangeFilterSortBy}
-                    handleChangeFilterCategories={handleChangeFilterCategories}
-                    handleChangeFilterSubCategories={
-                      handleChangeFilterSubCategories
-                    }
-                    handleChangeFilterMarket={handleChangeFilterMarket}
-                  />
-                </div>
+                    {/* Fixed Filters - visible when scrolled - Hidden on mobile */}
+                    <div
+                      className={clsx(
+                        "hidden md:block min-w-[130px] max-w-[130px] fixed h-[90vh] overflow-y-auto top-24 z-50 pb-8 transition-all ease-in-out",
+                        scrolledFilterMenu
+                          ? "opacity-100 translate-y-0"
+                          : "opacity-0 -translate-y-4 pointer-events-none"
+                      )}
+                    >
+                      <Filters
+                        getOptionsCategoryItemFiltered={
+                          getOptionsCategoryItemFiltered
+                        }
+                        filterCategories={filterCategories}
+                        filterSubCategories={filterSubCategories}
+                        filterSortBy={filterSortBy}
+                        filterMarket={filterMarket}
+                        handleChangeFilterSortBy={handleChangeFilterSortBy}
+                        handleChangeFilterCategories={
+                          handleChangeFilterCategories
+                        }
+                        handleChangeFilterSubCategories={
+                          handleChangeFilterSubCategories
+                        }
+                        handleChangeFilterMarket={handleChangeFilterMarket}
+                      />
+                    </div>
+                  </>
+                )}
+
                 <div className="w-full flex justify-end">
-                  <div className="w-full max-w-[990px] flex items-start gap-5">
+                  <div
+                    className={clsx(
+                      "w-full flex items-start gap-5",
+                      user && "max-w-[990px]"
+                    )}
+                  >
                     {/* Apps Grid/List */}
                     {isLoadingGetApp ? (
                       <div
@@ -463,62 +469,31 @@ const Index = () => {
         />
 
         {/* ScreenPublic Detail Modal */}
-        {selectedScreen && (
+        {/* {selectedScreen && (
           <Dialog
             open={!!selectedScreen}
             onOpenChange={() => setSelectedScreen(null)}
           >
-            <DialogContent className="max-w-sm sm:max-w-md lg:max-w-lg max-h-[90vh] overflow-auto">
+            <DialogContent className="w-[365px] p-2 overflow-auto">
               <DialogHeader>
                 <DialogTitle className="text-lg lg:text-xl">
                   {selectedScreen.name}
                 </DialogTitle>
               </DialogHeader>
               <div className="space-y-4">
-                <div className="aspect-[9/16] rounded-lg overflow-hidden bg-slate-100">
+                <div className="rounded-lg overflow-hidden bg-slate-100">
                   <ImageWithFallback
                     src={selectedScreen.image}
                     fallbackSrc={selectedScreen.image}
                     alt={selectedScreen.name}
-                    containerClassName="w-full h-full"
-                    className="w-full h-full object-cover"
+                    containerClassName="w-full h-[729px]"
+                    className="w-full h-full"
                   />
-                </div>
-                <div className="space-y-2">
-                  {/* <Badge variant="outline">{selectedScreen.category}</Badge> */}
-                  <p className="text-sm text-slate-600">
-                    {selectedScreen.description}
-                  </p>
-                  <p className="text-xs text-slate-500">
-                    From: {selectedScreen.appName}
-                  </p>
-                </div>
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => toggleFavorite(selectedScreen)}
-                    className="flex-1"
-                  >
-                    <Heart
-                      className={`h-4 w-4 mr-2 ${
-                        favoriteScreens.some(
-                          (fav) => fav.id === selectedScreen.id
-                        )
-                          ? "fill-red-500 text-red-500"
-                          : "text-slate-400"
-                      }`}
-                    />
-                    {favoriteScreens.some((fav) => fav.id === selectedScreen.id)
-                      ? "Remove"
-                      : "Add to"}{" "}
-                    Favorites
-                  </Button>
                 </div>
               </div>
             </DialogContent>
           </Dialog>
-        )}
+        )} */}
       </div>
     </>
   );

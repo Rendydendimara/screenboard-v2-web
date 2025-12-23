@@ -23,20 +23,20 @@ export const ViewScreenshotModal: React.FC<ViewScreenshotModalProps> = ({
       onClick={onClose}
     >
       <div
-        className="relative w-full h-full flex items-center justify-center p-4"
+        className="relative w-[400px] h-auto flex items-center justify-center p-4"
         onClick={(e) => e.stopPropagation()}
       >
         <ImageWithFallback
           src={screenshot.image}
           fallbackSrc={screenshot.image}
           alt={screenshot.name ?? ""}
-          containerClassName="max-w-full max-h-full"
+          containerClassName="max-w-full max-h-full h-[700px]"
           className="max-w-full max-h-full object-contain shadow-2xl"
         />
         <Button
           variant="ghost"
           size="icon"
-          className="absolute top-4 right-4 text-white hover:bg-white/20 bg-black/30"
+          className="absolute top-4 right-[-40px] text-white hover:bg-white/20 bg-black/30"
           onClick={onClose}
         >
           <X className="h-6 w-6" />

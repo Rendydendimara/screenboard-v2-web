@@ -93,90 +93,117 @@ export const AppCard: React.FC<AppCardProps> = ({
                 </p>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 overflow-y-auto max-w-[2000px]">
                 {app.screens.slice(0, 4).map((screen) => (
                   <div
                     onClick={() => setSelectedScreen(screen)}
                     key={screen.id}
-                    className="aspect-[9/16] rounded-lg overflow-hidden relative"
+                    className="rounded-lg relative h-[417px]"
                   >
                     <ImageWithFallback
                       src={screen.image}
                       fallbackSrc={screen.image}
                       alt={screen.name}
-                      containerClassName="min-w-[200px] h-[200px]"
-                      className="w-[200px] h-[200px] object-cover group-hover:scale-105 transition-transform duration-500 hover:cursor-pointer"
+                      containerClassName="min-w-[200px] w-[200px] h-[417px]"
+                      className="min-w-[200px] w-[200px] rounded-lg h-[417px] hover:cursor-pointer"
                     />
-                    <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 to-transparent text-white p-2 text-xs">
-                      {screen.name}
-                    </div>
                   </div>
                 ))}
               </div>
-
-              <div className="flex items-center space-x-2 lg:ml-4">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleCompareClick}
-                  className={`h-8 w-8 p-0 ${
-                    isInCompare
-                      ? "bg-blue-100 text-blue-600"
-                      : "hover:bg-slate-100"
+            </div>
+            <div className="flex items-center mb-3">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleCompareClick}
+                className={`h-8 w-8 p-0 ${
+                  isInCompare
+                    ? "bg-blue-100 text-blue-600"
+                    : "hover:bg-slate-100"
+                }`}
+              >
+                <GitCompare className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onLike();
+                }}
+                className="h-8 w-8 p-0 bg-white/90 backdrop-blur-sm hover:bg-white"
+              >
+                <Heart
+                  className={`h-4 w-4 ${
+                    app.isLiked ? "fill-red-500 text-red-500" : "text-slate-600"
                   }`}
+                />
+              </Button>
+            </div>
+            <div className="flex items-center w-full gap-3 flex-col md:flex-row">
+              <div className="flex items-center gap-1">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  <GitCompare className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onLike();
-                  }}
-                  className="h-8 w-8 p-0 bg-white/90 backdrop-blur-sm hover:bg-white"
-                >
-                  <Heart
-                    className={`h-4 w-4 ${
-                      app.isLiked
-                        ? "fill-red-500 text-red-500"
-                        : "text-slate-600"
-                    }`}
+                  <path
+                    d="M5.66675 6.33335C6.03494 6.33335 6.33341 6.03488 6.33341 5.66669C6.33341 5.2985 6.03494 5.00002 5.66675 5.00002C5.29856 5.00002 5.00008 5.2985 5.00008 5.66669C5.00008 6.03488 5.29856 6.33335 5.66675 6.33335Z"
+                    fill="black"
                   />
-                </Button>
-                <Link to={`/app/${app.id}`}>
-                  <Button
-                    size="sm"
-                    className="bg-white/90 text-slate-900 hover:bg-white shadow-lg backdrop-blur-sm"
-                  >
-                    <ExternalLink className="h-3 w-3 lg:h-4 lg:w-4 mr-1 lg:mr-2" />
-                    <span className="text-xs lg:text-sm">View</span>
-                  </Button>
-                </Link>
+                  <path
+                    d="M5.66675 6.33335C6.03494 6.33335 6.33341 6.03488 6.33341 5.66669C6.33341 5.2985 6.03494 5.00002 5.66675 5.00002C5.29856 5.00002 5.00008 5.2985 5.00008 5.66669C5.00008 6.03488 5.29856 6.33335 5.66675 6.33335Z"
+                    stroke="black"
+                    stroke-width="1.33333"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M2.66675 4.66669V7.23935C2.66675 7.59735 2.80875 7.94069 3.06208 8.19402L8.47275 13.6047C8.59811 13.7301 8.74694 13.8295 8.91075 13.8974C9.07455 13.9652 9.25011 14.0002 9.42741 14.0002C9.60472 14.0002 9.78028 13.9652 9.94409 13.8974C10.1079 13.8295 10.2567 13.7301 10.3821 13.6047L13.6047 10.382C13.7301 10.2567 13.8296 10.1078 13.8974 9.94402C13.9653 9.78022 14.0002 9.60466 14.0002 9.42735C14.0002 9.25005 13.9653 9.07449 13.8974 8.91068C13.8296 8.74688 13.7301 8.59805 13.6047 8.47269L8.19341 3.06202C7.94037 2.80902 7.59724 2.66683 7.23941 2.66669H4.66675C4.13632 2.66669 3.62761 2.8774 3.25253 3.25247C2.87746 3.62755 2.66675 4.13625 2.66675 4.66669Z"
+                    stroke="black"
+                    stroke-width="1.33333"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+                <p className="font-['Inter'] not-italic font-normal text-[13.3px] leading-[20px] flex items-center text-[#64748B]">
+                  {app.category.name}
+                </p>
               </div>
-            </div>
-
-            <div className="flex items-center space-x-4 text-sm text-slate-500 mb-3">
-              <div className="flex items-center space-x-2">
-                <Star className="h-4 w-4" />
-                <span>{app.rating}</span>
+              <div>
+                {app.countries && app.countries.length > 0 ? (
+                  <div className="flex items-center gap-1">
+                    <div className="w-[14px] h-[14px]">
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 14 14"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M6.66667 0C2.99067 0 0 2.99067 0 6.66667C0 10.3427 2.99067 13.3333 6.66667 13.3333C10.3427 13.3333 13.3333 10.3427 13.3333 6.66667C13.3333 2.99067 10.3427 0 6.66667 0ZM1.33333 6.66667C1.33333 6.06733 1.43733 5.492 1.62067 4.954L2.66667 6L4 7.33333V8.66667L5.33333 10L6 10.6667V11.954C3.374 11.624 1.33333 9.38133 1.33333 6.66667ZM10.8867 9.91533C10.4513 9.56467 9.79133 9.33333 9.33333 9.33333V8.66667C9.33333 8.31304 9.19286 7.97391 8.94281 7.72386C8.69276 7.47381 8.35362 7.33333 8 7.33333H5.33333V5.33333C5.68695 5.33333 6.02609 5.19286 6.27614 4.94281C6.52619 4.69276 6.66667 4.35362 6.66667 4V3.33333H7.33333C7.68695 3.33333 8.02609 3.19286 8.27614 2.94281C8.52619 2.69276 8.66667 2.35362 8.66667 2V1.726C10.6187 2.51867 12 4.43333 12 6.66667C11.9997 7.84311 11.608 8.98602 10.8867 9.91533Z"
+                          fill="#475569"
+                        />
+                      </svg>
+                    </div>
+                    <span
+                      className="font-['Inter'] not-italic font-normal text-[13.3px] leading-[20px] items-center text-[#64748B]  overflow-hidden 
+            text-ellipsis 
+            break-words 
+            [display:-webkit-box] 
+            [-webkit-line-clamp:1] 
+            [-webkit-box-orient:vertical]"
+                    >
+                      {app.countries.length > 1
+                        ? `${app.countries[0]} +${app.countries.length - 1}`
+                        : app.countries.join(", ")}
+                    </span>
+                  </div>
+                ) : null}
               </div>
-              <div className="flex items-center space-x-2">
-                <Download className="h-4 w-4" />
-                <span>{app.downloads}</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Smartphone className="h-4 w-4" />
-                <span>{app.platform}</span>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap gap-2">
-              {app.tags.map((tag, index) => (
-                <Badge key={index} variant="secondary" className="text-xs">
-                  {tag}
-                </Badge>
-              ))}
             </div>
           </div>
         </div>

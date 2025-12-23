@@ -12,6 +12,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import UserAppAPI from "@/api/user/app/api";
+import { adapterSingleAppBEToFEPublic } from "@/utils/adapterBEToFE";
+import { useToast } from "@/hooks/use-toast";
+import { Skeleton } from "./ui/skeleton";
 
 interface AppCardProps {
   app: AppPublic;
@@ -27,10 +31,13 @@ export const AppCardCompare: React.FC<AppCardProps> = ({
   onLightboxOpenChange,
 }) => {
   const [openDetailImage, setOpenDetailImage] = useState(false);
+  const [loadingGetDetail, setLoadingGetDetail] = useState(false);
+  const [appDetail, setAppDetail] = useState<AppPublic>();
   const [indexInitialImageOpen, setIndexInitialImageOpen] = useState(0);
   const [selectedModuleFilter, setSelectedModulFilter] =
     useState<TSelect | null>(null);
   const [listCategory, setListCategory] = useState<TSelect[]>([]);
+  const { toast } = useToast();
 
   const handleClickImage = useCallback(
     (i: number) => {
@@ -47,18 +54,18 @@ export const AppCardCompare: React.FC<AppCardProps> = ({
   }, [onLightboxOpenChange]);
 
   const getListImageDetail = useMemo(() => {
-    if (app) {
-      const listImages: string[] = app.screens.map((d) => d.image) ?? [];
+    if (appDetail) {
+      const listImages: string[] = appDetail.screens.map((d) => d.image) ?? [];
       const slides = listImages.map((src) => ({ src }));
       return slides;
     }
     return [];
-  }, [app]);
+  }, [appDetail]);
 
-  const getScreensCategory = () => {
+  const getScreensCategory = (appDetail: AppPublic) => {
     const categories = Array.from(
       new Set(
-        app?.screens
+        appDetail?.screens
           ?.map((d) => d?.category?.name)
           .filter((item): item is string => item !== null && item !== undefined)
       )
@@ -80,14 +87,14 @@ export const AppCardCompare: React.FC<AppCardProps> = ({
   );
 
   const getScreenFiltered = useMemo(() => {
-    let result = app?.screens;
+    let result = appDetail?.screens;
     if (selectedModuleFilter?.value) {
-      result = app?.screens?.filter(
+      result = appDetail?.screens?.filter(
         (d) => d?.category?.name === selectedModuleFilter?.value
       );
     }
-    return result;
-  }, [selectedModuleFilter, app.screens]);
+    return result ?? [];
+  }, [selectedModuleFilter, appDetail?.screens]);
 
   const prevSlide = () =>
     setIndexInitialImageOpen((prev) =>
@@ -99,6 +106,23 @@ export const AppCardCompare: React.FC<AppCardProps> = ({
       prev === getListImageDetail.length - 1 ? 0 : prev + 1
     );
 
+  const getDetailApp = async () => {
+    try {
+      setLoadingGetDetail(true);
+      const res = await UserAppAPI.getDetail(app.id);
+      const data = adapterSingleAppBEToFEPublic(res.data);
+      setAppDetail(data);
+      getScreensCategory(data);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || error.response.data.message,
+        variant: "destructive",
+      });
+    } finally {
+      setLoadingGetDetail(false);
+    }
+  };
   // Keyboard navigation
   useEffect(() => {
     if (!openDetailImage) return;
@@ -123,7 +147,8 @@ export const AppCardCompare: React.FC<AppCardProps> = ({
   }, [openDetailImage]);
 
   useEffect(() => {
-    getScreensCategory();
+    getDetailApp();
+    // getScreensCategory();
   }, []);
 
   return (
@@ -135,151 +160,203 @@ export const AppCardCompare: React.FC<AppCardProps> = ({
     >
       {viewMode === "grid" ? (
         <>
-          <div className="w-full flex rounded-2xl items-center gap-6 px-4 border border-solid border-[E0E1E1]">
-            <div className="w-[122px] flex flex-col gap-8">
-              <div className="flex flex-col items-end gap-[9px]">
-                <div className="flex flex-col items-end gap-4">
-                  <ImageWithFallback
-                    src={
-                      app?.image ?? "https://source.unsplash.com/400x300?game"
-                    }
-                    fallbackSrc="https://placehold.co/400"
-                    alt={app.name}
-                    containerClassName="w-10 h-10 lg:w-12 lg:h-12"
-                    className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl object-contain flex-shrink-0"
-                  />
-                  <div className="flex flex-col items-end">
-                    <h3 className="font-semibold text-base lg:text-lg text-right">
-                      {app.name}
-                    </h3>
-                    <p className="text-sm text-right">{app.company}</p>
+          {loadingGetDetail ? (
+            <div className="w-full flex rounded-2xl items-center gap-6 px-4 py-4 border border-solid border-[E0E1E1]">
+              <div className="w-[122px] flex flex-col gap-8">
+                <div className="flex flex-col items-end gap-[9px]">
+                  <div className="flex flex-col items-end gap-4">
+                    <Skeleton className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl" />
+                    <div className="flex flex-col items-end gap-2 w-full">
+                      <Skeleton className="h-5 lg:h-6 w-full" />
+                      <Skeleton className="h-4 w-3/4" />
+                    </div>
                   </div>
+                  <Skeleton className="h-4 w-16" />
                 </div>
-                <p
-                  onClick={() => onRemoveApp(app.id)}
-                  className="hover:cursor-pointer font-[Inter] font-normal text-[14px] leading-[155%] tracking-[-0.2%] align-middle underline [text-decoration-style:solid] [text-decoration-skip-ink:auto]"
-                >
-                  Remove
-                </p>
+                <Skeleton className="h-10 w-full rounded-xl" />
               </div>
-
-              <div className="flex-1 sm:flex-none sm:min-w-[122px]">
-                <Select
-                  value={selectedModuleFilter?.value}
-                  onValueChange={handleChangeModul}
-                >
-                  <SelectTrigger className="w-full rounded-xl">
-                    <SelectValue placeholder="All category" />
-                  </SelectTrigger>
-                  <SelectContent
-                    className="bg-white rounded-[12px]"
-                    classNameMenu="!m-0 !p-0"
+              <div className="w-full flex flex-col gap-2 max-h-[885px] overflow-y-auto">
+                <div className="grid grid-cols-1 gap-4 mt-4">
+                  {[1, 2, 3, 4, 5, 6].map((i) => (
+                    <Skeleton key={i} className="w-full aspect-[9/16] rounded-2xl" />
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="w-full flex rounded-2xl items-center gap-6 px-4 border border-solid border-[E0E1E1]">
+              <div className="w-[122px] flex flex-col gap-8">
+                <div className="flex flex-col items-end gap-[9px]">
+                  <div className="flex flex-col items-end gap-4">
+                    <ImageWithFallback
+                      src={
+                        appDetail?.image ??
+                        "https://source.unsplash.com/400x300?game"
+                      }
+                      fallbackSrc="https://placehold.co/400"
+                      alt={appDetail?.name}
+                      containerClassName="w-10 h-10 lg:w-12 lg:h-12"
+                      className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl object-contain flex-shrink-0"
+                    />
+                    <div className="flex flex-col items-end">
+                      <h3 className="font-semibold text-base lg:text-lg text-right">
+                        {appDetail?.name}
+                      </h3>
+                      <p className="text-sm text-right">{appDetail?.company}</p>
+                    </div>
+                  </div>
+                  <p
+                    onClick={() => onRemoveApp(appDetail?.id)}
+                    className="hover:cursor-pointer font-[Inter] font-normal text-[14px] leading-[155%] tracking-[-0.2%] align-middle underline [text-decoration-style:solid] [text-decoration-skip-ink:auto]"
                   >
-                    <SelectItem
-                      className="!items-start !py-[9px] !px-2"
-                      isRemoveCheckIndocator
-                      value="All"
+                    Remove
+                  </p>
+                </div>
+
+                <div className="flex-1 sm:flex-none sm:min-w-[122px]">
+                  <Select
+                    value={selectedModuleFilter?.value}
+                    onValueChange={handleChangeModul}
+                  >
+                    <SelectTrigger className="w-full rounded-xl">
+                      <SelectValue placeholder="All category" />
+                    </SelectTrigger>
+                    <SelectContent
+                      className="bg-white rounded-[12px]"
+                      classNameMenu="!m-0 !p-0"
                     >
-                      All category
-                    </SelectItem>
-                    {listCategory.map((category, i) => (
                       <SelectItem
-                        className="!items-start !py-[9px] !px-2 truncate"
-                        key={i}
-                        value={category.value}
+                        className="!items-start !py-[9px] !px-2"
                         isRemoveCheckIndocator
-                        withRoundedEdge
+                        value="All"
                       >
-                        {category.label}
+                        All category
                       </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                      {listCategory.map((category, i) => (
+                        <SelectItem
+                          className="!items-start !py-[9px] !px-2 truncate"
+                          key={i}
+                          value={category.value}
+                          isRemoveCheckIndocator
+                          withRoundedEdge
+                        >
+                          {category.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div className="w-full flex flex-col gap-2 max-h-[885px] overflow-y-auto">
+                <ScrollGallery
+                  screens={getScreenFiltered}
+                  handleClickImage={handleClickImage}
+                  hideInfo
+                  classNameFirstImage="mt-4"
+                />
               </div>
             </div>
-            <div className="w-full flex flex-col gap-2 max-h-[885px] overflow-y-auto">
-              <ScrollGallery
-                screens={getScreenFiltered}
-                handleClickImage={handleClickImage}
-                hideInfo
-                classNameFirstImage="mt-4"
-              />
-            </div>
-          </div>
+          )}
         </>
       ) : (
         <>
-          <div className="w-full flex rounded-2xl items-center gap-6 p-4 border border-solid border-[E0E1E1]">
-            <div className="w-[122px] flex flex-col gap-8">
-              <div className="flex flex-col items-end gap-[9px]">
-                <div className="flex flex-col items-end gap-4">
-                  <ImageWithFallback
-                    src={
-                      app?.image ?? "https://source.unsplash.com/400x300?game"
-                    }
-                    fallbackSrc="https://placehold.co/400"
-                    alt={app.name}
-                    containerClassName="w-10 h-10 lg:w-12 lg:h-12"
-                    className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl object-contain flex-shrink-0"
-                  />
-                  <div className="flex flex-col items-end">
-                    <h3 className="font-semibold text-base lg:text-lg text-right">
-                      {app.name}
-                    </h3>
-                    <p className="text-sm text-right">{app.company}</p>
+          {loadingGetDetail ? (
+            <div className="w-full flex rounded-2xl items-center gap-6 p-4 border border-solid border-[E0E1E1]">
+              <div className="w-[122px] flex flex-col gap-8">
+                <div className="flex flex-col items-end gap-[9px]">
+                  <div className="flex flex-col items-end gap-4">
+                    <Skeleton className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl" />
+                    <div className="flex flex-col items-end gap-2 w-full">
+                      <Skeleton className="h-5 lg:h-6 w-full" />
+                      <Skeleton className="h-4 w-3/4" />
+                    </div>
                   </div>
+                  <Skeleton className="h-4 w-16" />
                 </div>
-                <p
-                  onClick={() => onRemoveApp(app.id)}
-                  className="hover:cursor-pointer font-[Inter] font-normal text-[14px] leading-[155%] tracking-[-0.2%] align-middle underline [text-decoration-style:solid] [text-decoration-skip-ink:auto]"
-                >
-                  Remove
-                </p>
+                <Skeleton className="h-10 w-full rounded-xl" />
               </div>
-
-              <div className="flex-1 sm:flex-none sm:min-w-[122px]">
-                <Select
-                  value={selectedModuleFilter?.value}
-                  onValueChange={handleChangeModul}
-                >
-                  <SelectTrigger className="w-full rounded-xl">
-                    <SelectValue placeholder="All category" />
-                  </SelectTrigger>
-                  <SelectContent
-                    className="bg-white rounded-[12px]"
-                    classNameMenu="!m-0 !p-0"
+              <div className="w-full max-w-[846px] flex gap-2 h-[453px] overflow-x-auto">
+                <div className="flex gap-2">
+                  {[1, 2, 3, 4].map((i) => (
+                    <Skeleton key={i} className="h-full w-[250px] rounded-2xl flex-shrink-0" />
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="w-full flex rounded-2xl items-center gap-6 p-4 border border-solid border-[E0E1E1]">
+              <div className="w-[122px] flex flex-col gap-8">
+                <div className="flex flex-col items-end gap-[9px]">
+                  <div className="flex flex-col items-end gap-4">
+                    <ImageWithFallback
+                      src={
+                        appDetail?.image ??
+                        "https://source.unsplash.com/400x300?game"
+                      }
+                      fallbackSrc="https://placehold.co/400"
+                      alt={appDetail?.name}
+                      containerClassName="w-10 h-10 lg:w-12 lg:h-12"
+                      className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl object-contain flex-shrink-0"
+                    />
+                    <div className="flex flex-col items-end">
+                      <h3 className="font-semibold text-base lg:text-lg text-right">
+                        {appDetail?.name}
+                      </h3>
+                      <p className="text-sm text-right">{appDetail?.company}</p>
+                    </div>
+                  </div>
+                  <p
+                    onClick={() => onRemoveApp(appDetail?.id)}
+                    className="hover:cursor-pointer font-[Inter] font-normal text-[14px] leading-[155%] tracking-[-0.2%] align-middle underline [text-decoration-style:solid] [text-decoration-skip-ink:auto]"
                   >
-                    <SelectItem
-                      className="!items-start !py-[9px] !px-2"
-                      isRemoveCheckIndocator
-                      value="All"
+                    Remove
+                  </p>
+                </div>
+
+                <div className="flex-1 sm:flex-none sm:min-w-[122px]">
+                  <Select
+                    value={selectedModuleFilter?.value}
+                    onValueChange={handleChangeModul}
+                  >
+                    <SelectTrigger className="w-full rounded-xl">
+                      <SelectValue placeholder="All category" />
+                    </SelectTrigger>
+                    <SelectContent
+                      className="bg-white rounded-[12px]"
+                      classNameMenu="!m-0 !p-0"
                     >
-                      All category
-                    </SelectItem>
-                    {listCategory.map((category, i) => (
                       <SelectItem
-                        className="!items-start !py-[9px] !px-2 truncate"
-                        key={i}
-                        value={category.value}
+                        className="!items-start !py-[9px] !px-2"
                         isRemoveCheckIndocator
-                        withRoundedEdge
+                        value="All"
                       >
-                        {category.label}
+                        All category
                       </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                      {listCategory.map((category, i) => (
+                        <SelectItem
+                          className="!items-start !py-[9px] !px-2 truncate"
+                          key={i}
+                          value={category.value}
+                          isRemoveCheckIndocator
+                          withRoundedEdge
+                        >
+                          {category.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div className="w-full max-w-[846px] flex gap-2 h-[453px] overflow-x-auto">
+                <ScrollGallery
+                  viewMode={viewMode}
+                  screens={getScreenFiltered}
+                  handleClickImage={handleClickImage}
+                  hideInfo
+                />
               </div>
             </div>
-            <div className="w-full max-w-[846px] flex gap-2 h-[453px] overflow-x-auto">
-              <ScrollGallery
-                viewMode={viewMode}
-                screens={getScreenFiltered}
-                handleClickImage={handleClickImage}
-                hideInfo
-              />
-            </div>
-          </div>
+          )}
         </>
       )}
 

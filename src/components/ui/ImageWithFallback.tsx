@@ -144,7 +144,7 @@ const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
           src={imgSrc}
           alt={alt}
           className={clsx(
-            "w-full h-full object-cover transition-opacity duration-500 ease-in-out",
+            "transition-opacity duration-500 ease-in-out",
             isLoading ? "opacity-0" : "opacity-100",
             className
           )}

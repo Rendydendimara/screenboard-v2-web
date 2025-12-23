@@ -21,6 +21,9 @@ import React, { useEffect, useState } from "react";
 import "yet-another-react-lightbox/styles.css";
 import { AppCardCompare } from "./AppCardCompare";
 import ImageWithFallback from "./ui/ImageWithFallback";
+import { useToast } from "@/hooks/use-toast";
+import UserAppAPI from "@/api/user/app/api";
+import { adapterSingleAppBEToFEPublic } from "@/utils/adapterBEToFE";
 
 interface CompareModalProps {
   isOpen: boolean;
@@ -49,7 +52,6 @@ export const CompareModal: React.FC<CompareModalProps> = ({
   const [openDetailImage, setOpenDetailImage] = useState(false);
   const [indexInitialImageOpen, setIndexInitialImageOpen] = useState(0);
   const [isChildModalOpen, setIsChildModalOpen] = useState(false);
-
   const filteredAvailableApps = availableApps.filter((app) => {
     const notInCompare = !apps.find((compareApp) => compareApp.id === app.id);
     const matchesSearch = app.name
@@ -440,7 +442,7 @@ export const CompareModal: React.FC<CompareModalProps> = ({
                               <h3 className="font-semibold text-base lg:text-lg truncate">
                                 {app.name}
                               </h3>
-                              <p className="text-sm text-black font-normal truncate">
+                              <p className="text-sm text-black font-normal truncate text-ellipsis max-w-[160px]">
                                 {app.company}
                               </p>
                             </div>
@@ -478,7 +480,7 @@ export const CompareModal: React.FC<CompareModalProps> = ({
                               key={i}
                               fallbackSrc="https://placehold.co/400"
                               alt={screenshot.name}
-                              containerClassName="w-[74px] h-[163px]"
+                              containerClassName="w-[74px] min-w-[74px] h-[163px]"
                               className="w-[74px] h-[163px] rounded-[8px] object-cover flex-shrink-0"
                             />
                           ))}

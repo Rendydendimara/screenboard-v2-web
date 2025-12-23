@@ -126,8 +126,8 @@ export const Header = ({
                     "flex-1 max-w-md mx-4 lg:mx-8 transition-all duration-300 ease-in-out overflow-hidden",
                     scrolledSearch
                       ? "max-w-md opacity-100 translate-x-0"
-                      : "max-w-0 opacity-0 -translate-x-4 hidden pointer-events-none",
-                    location.pathname === "/" ? "flex" : "hidden"
+                      : "max-w-0 opacity-0 -translate-x-4 hidden pointer-events-none"
+                    // location.pathname === "/" ? "flex" : "hidden"
                   )}
                 >
                   <div className="relative">

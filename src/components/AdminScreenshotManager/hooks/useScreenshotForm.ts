@@ -207,13 +207,16 @@ export const useScreenshotForm = (
     [editFormData, toast, onDataChange]
   );
 
-  const handleDelete = useCallback((id: string, name: string, screenshots: Screenshot[]) => {
-    const screen = screenshots.find((d) => d.id === id);
-    if (screen) {
-      setEditingScreen(screen);
-      setIsModalOpenDelete(true);
-    }
-  }, []);
+  const handleDelete = useCallback(
+    (id: string, name: string, screenshots: Screenshot[]) => {
+      const screen = screenshots.find((d) => d.id === id);
+      if (screen) {
+        setEditingScreen(screen);
+        setIsModalOpenDelete(true);
+      }
+    },
+    []
+  );
 
   const handleConfirmDelete = useCallback(async () => {
     if (!editingScreen) return;
@@ -325,13 +328,19 @@ export const useScreenshotForm = (
     setEditingScreen(null);
   }, []);
 
-  const handleEditFormChange = useCallback((field: keyof EditFormData, value: string) => {
-    setEditFormData((prev) => ({ ...prev, [field]: value }));
-  }, []);
+  const handleEditFormChange = useCallback(
+    (field: keyof EditFormData, value: string) => {
+      setEditFormData((prev) => ({ ...prev, [field]: value }));
+    },
+    []
+  );
 
-  const handleFormChange = useCallback((field: keyof FormData, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  }, []);
+  const handleFormChange = useCallback(
+    (field: keyof FormData, value: string) => {
+      setFormData((prev) => ({ ...prev, [field]: value }));
+    },
+    []
+  );
 
   return {
     isModalOpen,
