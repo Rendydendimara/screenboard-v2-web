@@ -143,6 +143,7 @@ export const adapterSingleAppBEToFEPublic = (
         appName: t?.app?.name ?? "",
         modul: t?.modul?.name ?? "",
         order: t.order,
+        modulDetail: t?.modul,
       };
     })
     .sort((a, b) => (a.order || 0) - (b.order || 0));

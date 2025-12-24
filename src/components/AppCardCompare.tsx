@@ -16,6 +16,7 @@ import UserAppAPI from "@/api/user/app/api";
 import { adapterSingleAppBEToFEPublic } from "@/utils/adapterBEToFE";
 import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from "./ui/skeleton";
+import { CLabel } from "./molecules/Forms/InputText";
 
 interface AppCardProps {
   app: AppPublic;
@@ -34,9 +35,12 @@ export const AppCardCompare: React.FC<AppCardProps> = ({
   const [loadingGetDetail, setLoadingGetDetail] = useState(false);
   const [appDetail, setAppDetail] = useState<AppPublic>();
   const [indexInitialImageOpen, setIndexInitialImageOpen] = useState(0);
-  const [selectedModuleFilter, setSelectedModulFilter] =
+  const [selectedCategoryFilter, setSelectedCategoryFilter] =
     useState<TSelect | null>(null);
   const [listCategory, setListCategory] = useState<TSelect[]>([]);
+  const [listModul, setListModul] = useState<TSelect[]>([]);
+  const [selectedModulFilter, setSelectedModulFilter] =
+    useState<TSelect | null>(null);
   const { toast } = useToast();
 
   const handleClickImage = useCallback(
@@ -78,23 +82,52 @@ export const AppCardCompare: React.FC<AppCardProps> = ({
     });
     setListCategory(options);
   };
-  const handleChangeModul = useCallback(
+
+  const getScreensModul = (appDetail: AppPublic) => {
+    const modul = Array.from(
+      new Set(
+        appDetail?.screens
+          ?.map((d) => d?.modulDetail?.name)
+          .filter((item): item is string => item !== null && item !== undefined)
+      )
+    );
+    const options: TSelect[] = modul.map((d) => {
+      return {
+        label: d,
+        value: d,
+      };
+    });
+    setListModul(options);
+  };
+
+  const handleChangeCategory = useCallback(
     (id: string) => {
       const temp = listCategory.find((d) => d.value === id);
-      setSelectedModulFilter(temp);
+      setSelectedCategoryFilter(temp);
     },
     [listCategory]
   );
 
+  const handleChangeModule = useCallback(
+    (id: string) => {
+      const temp = listModul.find((d) => d.value === id);
+      setSelectedModulFilter(temp);
+    },
+    [listModul]
+  );
+
   const getScreenFiltered = useMemo(() => {
-    let result = appDetail?.screens;
-    if (selectedModuleFilter?.value) {
-      result = appDetail?.screens?.filter(
-        (d) => d?.category?.name === selectedModuleFilter?.value
+    let result = appDetail?.screens ?? [];
+    if (selectedCategoryFilter?.value) {
+      result = result?.filter(
+        (d) => d?.category?.name === selectedCategoryFilter?.value
       );
     }
+    if (selectedModulFilter?.value) {
+      result = result?.filter((d) => d?.modul === selectedModulFilter?.value);
+    }
     return result ?? [];
-  }, [selectedModuleFilter, appDetail?.screens]);
+  }, [selectedCategoryFilter, selectedModulFilter, appDetail?.screens]);
 
   const prevSlide = () =>
     setIndexInitialImageOpen((prev) =>
@@ -113,6 +146,7 @@ export const AppCardCompare: React.FC<AppCardProps> = ({
       const data = adapterSingleAppBEToFEPublic(res.data);
       setAppDetail(data);
       getScreensCategory(data);
+      getScreensModul(data);
     } catch (error: any) {
       toast({
         title: "Error",
@@ -178,7 +212,10 @@ export const AppCardCompare: React.FC<AppCardProps> = ({
               <div className="w-full flex flex-col gap-2 max-h-[885px] overflow-y-auto">
                 <div className="grid grid-cols-1 gap-4 mt-4">
                   {[1, 2, 3, 4, 5, 6].map((i) => (
-                    <Skeleton key={i} className="w-full aspect-[9/16] rounded-2xl" />
+                    <Skeleton
+                      key={i}
+                      className="w-full aspect-[9/16] rounded-2xl"
+                    />
                   ))}
                 </div>
               </div>
@@ -213,38 +250,75 @@ export const AppCardCompare: React.FC<AppCardProps> = ({
                   </p>
                 </div>
 
-                <div className="flex-1 sm:flex-none sm:min-w-[122px]">
-                  <Select
-                    value={selectedModuleFilter?.value}
-                    onValueChange={handleChangeModul}
-                  >
-                    <SelectTrigger className="w-full rounded-xl">
-                      <SelectValue placeholder="All category" />
-                    </SelectTrigger>
-                    <SelectContent
-                      className="bg-white rounded-[12px]"
-                      classNameMenu="!m-0 !p-0"
+                <div className="w-full flex flex-col items-start gap-2">
+                  <div className="flex-1 sm:flex-none sm:min-w-[122px]">
+                    <CLabel label="Category" isRequired={false} id={""} />
+                    <Select
+                      value={selectedCategoryFilter?.value}
+                      onValueChange={handleChangeCategory}
                     >
-                      <SelectItem
-                        className="!items-start !py-[9px] !px-2"
-                        isRemoveCheckIndocator
-                        value="All"
+                      <SelectTrigger className="w-full rounded-xl">
+                        <SelectValue placeholder="All category" />
+                      </SelectTrigger>
+                      <SelectContent
+                        className="bg-white rounded-[12px]"
+                        classNameMenu="!m-0 !p-0"
                       >
-                        All category
-                      </SelectItem>
-                      {listCategory.map((category, i) => (
                         <SelectItem
-                          className="!items-start !py-[9px] !px-2 truncate"
-                          key={i}
-                          value={category.value}
+                          className="!items-start !py-[9px] !px-2"
                           isRemoveCheckIndocator
-                          withRoundedEdge
+                          value="All"
                         >
-                          {category.label}
+                          All category
                         </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                        {listCategory.map((category, i) => (
+                          <SelectItem
+                            className="!items-start !py-[9px] !px-2 truncate"
+                            key={i}
+                            value={category.value}
+                            isRemoveCheckIndocator
+                            withRoundedEdge
+                          >
+                            {category.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="flex-1 sm:flex-none sm:min-w-[122px]">
+                    <CLabel label="Modul" isRequired={false} id={""} />
+                    <Select
+                      value={selectedModulFilter?.value}
+                      onValueChange={handleChangeModule}
+                    >
+                      <SelectTrigger className="w-full rounded-xl">
+                        <SelectValue placeholder="All modul" />
+                      </SelectTrigger>
+                      <SelectContent
+                        className="bg-white rounded-[12px]"
+                        classNameMenu="!m-0 !p-0"
+                      >
+                        <SelectItem
+                          className="!items-start !py-[9px] !px-2"
+                          isRemoveCheckIndocator
+                          value="All"
+                        >
+                          All modul
+                        </SelectItem>
+                        {listModul.map((modul, i) => (
+                          <SelectItem
+                            className="!items-start !py-[9px] !px-2 truncate"
+                            key={i}
+                            value={modul.value}
+                            isRemoveCheckIndocator
+                            withRoundedEdge
+                          >
+                            {modul.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
               </div>
               <div className="w-full flex flex-col gap-2 max-h-[885px] overflow-y-auto">
@@ -278,7 +352,10 @@ export const AppCardCompare: React.FC<AppCardProps> = ({
               <div className="w-full max-w-[846px] flex gap-2 h-[453px] overflow-x-auto">
                 <div className="flex gap-2">
                   {[1, 2, 3, 4].map((i) => (
-                    <Skeleton key={i} className="h-full w-[250px] rounded-2xl flex-shrink-0" />
+                    <Skeleton
+                      key={i}
+                      className="h-full w-[250px] rounded-2xl flex-shrink-0"
+                    />
                   ))}
                 </div>
               </div>
@@ -315,8 +392,8 @@ export const AppCardCompare: React.FC<AppCardProps> = ({
 
                 <div className="flex-1 sm:flex-none sm:min-w-[122px]">
                   <Select
-                    value={selectedModuleFilter?.value}
-                    onValueChange={handleChangeModul}
+                    value={selectedCategoryFilter?.value}
+                    onValueChange={handleChangeCategory}
                   >
                     <SelectTrigger className="w-full rounded-xl">
                       <SelectValue placeholder="All category" />

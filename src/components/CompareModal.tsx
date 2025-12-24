@@ -106,7 +106,7 @@ export const CompareModal: React.FC<CompareModalProps> = ({
           //   setShowCompare(true);
           // }}
           className={clsx(
-            "md:max-w-[1120px] p-6 md:p-[52px] !rounded-[32px] overflow-auto",
+            "md:max-w-[1120px] w-full p-6 md:p-[52px] !rounded-[32px] overflow-auto",
             apps.length > 0 ? "max-h-[95vh]" : "max-h-[90vh]"
           )}
         >

@@ -34,6 +34,10 @@ export interface ScreenPublic {
   description: string;
   appName: string;
   modul: string;
+  modulDetail?: {
+    name: string;
+    _id: string;
+  };
   order?: number;
 }
 
