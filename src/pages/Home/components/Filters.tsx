@@ -11,6 +11,8 @@ interface IProps {
   handleChangeFilterSubCategories: (value: string) => void;
   handleChangeFilterMarket: (value: string) => void;
   getOptionsCategoryItemFiltered: TItemMenuFilter[];
+  getOptionsSubCategoryItemFiltered: TItemMenuFilter[];
+  getOptionsMarketItemFiltered: TItemMenuFilter[];
 }
 
 const Filters: React.FC<IProps> = ({
@@ -23,6 +25,8 @@ const Filters: React.FC<IProps> = ({
   handleChangeFilterSubCategories,
   handleChangeFilterMarket,
   getOptionsCategoryItemFiltered,
+  getOptionsSubCategoryItemFiltered,
+  getOptionsMarketItemFiltered,
 }) => {
   return (
     <div className="w-full flex flex-col items-start gap-8">
@@ -37,18 +41,24 @@ const Filters: React.FC<IProps> = ({
         iconType="square"
         options={getOptionsCategoryItemFiltered}
       />
-      {!filterCategories.value.includes("All") && (
+      {!filterCategories.value.includes("All") &&
+      filterCategories.value.length > 0 &&
+      getOptionsSubCategoryItemFiltered.length > 0 ? (
         <FilterItem
           menuFilter={filterSubCategories}
           handleChange={handleChangeFilterSubCategories}
           iconType="square"
+          options={getOptionsSubCategoryItemFiltered}
+        />
+      ) : null}
+      {getOptionsMarketItemFiltered.length > 0 && (
+        <FilterItem
+          handleChange={handleChangeFilterMarket}
+          menuFilter={filterMarket}
+          iconType="square"
+          options={getOptionsMarketItemFiltered}
         />
       )}
-      <FilterItem
-        handleChange={handleChangeFilterMarket}
-        menuFilter={filterMarket}
-        iconType="square"
-      />
     </div>
   );
 };

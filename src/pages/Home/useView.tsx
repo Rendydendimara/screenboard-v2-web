@@ -85,6 +85,8 @@ const Index = () => {
     appsContainerRef,
     getOptionsCategoryItemFiltered,
     callbackAuth,
+    getOptionsSubCategoryItemFiltered,
+    getOptionsMarketItemFiltered,
   } = useController();
 
   // Count active filters
@@ -262,6 +264,12 @@ const Index = () => {
                                   handleChangeFilterMarket={
                                     handleChangeFilterMarket
                                   }
+                                  getOptionsSubCategoryItemFiltered={
+                                    getOptionsSubCategoryItemFiltered
+                                  }
+                                  getOptionsMarketItemFiltered={
+                                    getOptionsMarketItemFiltered
+                                  }
                                 />
                               </div>
                             </div>
@@ -324,13 +332,19 @@ const Index = () => {
                           handleChangeFilterSubCategories
                         }
                         handleChangeFilterMarket={handleChangeFilterMarket}
+                        getOptionsSubCategoryItemFiltered={
+                          getOptionsSubCategoryItemFiltered
+                        }
+                        getOptionsMarketItemFiltered={
+                          getOptionsMarketItemFiltered
+                        }
                       />
                     </div>
 
                     {/* Fixed Filters - visible when scrolled - Hidden on mobile */}
                     <div
                       className={clsx(
-                        "hidden md:block min-w-[130px] max-w-[130px] fixed h-[90vh] overflow-y-auto top-24 z-50 pb-8 transition-all ease-in-out",
+                        "hidden md:block min-w-[140px] max-w-[140px] fixed h-[90vh] overflow-y-auto top-24 z-50 pb-8 transition-all ease-in-out",
                         scrolledFilterMenu
                           ? "opacity-100 translate-y-0"
                           : "opacity-0 -translate-y-4 pointer-events-none"
@@ -352,6 +366,12 @@ const Index = () => {
                           handleChangeFilterSubCategories
                         }
                         handleChangeFilterMarket={handleChangeFilterMarket}
+                        getOptionsSubCategoryItemFiltered={
+                          getOptionsSubCategoryItemFiltered
+                        }
+                        getOptionsMarketItemFiltered={
+                          getOptionsMarketItemFiltered
+                        }
                       />
                     </div>
                   </>

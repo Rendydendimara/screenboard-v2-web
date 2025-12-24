@@ -21,6 +21,7 @@ import { TItemMenuFilter, TMenuFilter } from "@/types/filter";
 import { adapterListAppBEToFEPublic } from "@/utils/adapterBEToFE";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { TSelect } from "@/types";
 
 export interface ScreenPublic {
   id: string;
@@ -156,6 +157,7 @@ const useController = () => {
   );
   const [filterMarket, setFilterMarket] =
     useState<TMenuFilter>(MENU_FILTER_MARKET);
+  const [optionsFilterMarket, setOptionsFilterMarket] = useState<TSelect[]>([]);
   const containerMainRef = useRef<HTMLDivElement>(null);
   const [scrolledFilterMenu, setScrolledFilterMenu] = useState(false);
   const appsContainerRef = useRef<HTMLDivElement>(null);
@@ -339,7 +341,7 @@ const useController = () => {
     navigate(`/app/${id}`);
   }, []);
 
-  const getListData = async () => {
+  const getListData = async (callbackGetListCategory?: boolean) => {
     try {
       setIsLoadingGetApp(true);
       const res = await UserAppAPI.getAll();
@@ -348,7 +350,9 @@ const useController = () => {
         ...dataAdpt.flatMap((item) => item.countries ?? []),
       ];
       setListApp(dataAdpt);
-
+      if (callbackGetListCategory) {
+        getListDataCategory(dataAdpt);
+      }
       const itemsFilterMarket: TItemMenuFilter[] = [
         {
           label: "All",
@@ -365,16 +369,22 @@ const useController = () => {
       // itemsFilterMarket
       const itemsFilterMarketFix = Array.from(
         new Set(itemsFilterMarket.map((item) => item.value))
-      ).map((value) => ({
-        label: value,
-        value: value,
-      }));
+      ).map((value) => {
+        // const countApp = listApp.filter((app) =>
+        //   app.countries.includes(value)
+        // ).length;
+        return {
+          label: value, // !== "All" ? `${value} (${countApp})` : value,
+          value: value,
+        };
+      });
 
       setFilterMarket({
         ...filterMarket,
         items: itemsFilterMarketFix,
         value: ["All"],
       });
+      setOptionsFilterMarket(itemsFilterMarketFix);
     } catch (err: any) {
       toast({
         title: "Error",
@@ -386,7 +396,7 @@ const useController = () => {
     }
   };
 
-  const getListDataCategory = async () => {
+  const getListDataCategory = async (apps: AppPublic[]) => {
     try {
       setIsLoadingGetCategory(true);
       const res = await Promise.all([
@@ -408,14 +418,20 @@ const useController = () => {
         },
       ];
       dataCategory.map((d) => {
+        const countApp = apps.filter(
+          (app) => app.category._id === d._id
+        ).length;
         itemsFilterCategory.push({
-          label: d.name,
+          label: `${d.name} (${countApp})`,
           value: d._id,
         });
       });
       dataSubCategory.map((d) => {
+        const countApp = apps.filter(
+          (app) => app.subcategory._id === d._id
+        ).length;
         itemsFilterSubCategory.push({
-          label: d.name,
+          label: `${d.name} (${countApp})`,
           value: d._id,
         });
       });
@@ -552,9 +568,13 @@ const useController = () => {
               : categoryValuesFiltered.includes(d.categoryId._id)
           )
           .map((d) => {
+            const countApp = listApp.filter(
+              (app) => app.subcategory._id === d._id
+            ).length;
             return {
-              label: d.name,
+              label: `${d.name} (${countApp})`,
               value: d._id,
+              countApp: countApp,
             };
           }),
       ];
@@ -605,10 +625,14 @@ const useController = () => {
         ...filterSubCategories,
         value: newValue,
       };
+      setFilterMarket({
+        ...filterMarket,
+        value: ["All"],
+      });
       setFilterSubCategories(newFilterSubCategories);
       handleScrollTop();
     },
-    [filterSubCategories]
+    [filterSubCategories, filterMarket]
   );
 
   const handleChangeFilterMarket = useCallback(
@@ -668,6 +692,73 @@ const useController = () => {
     );
   }, [listApp, filterCategories.items]);
 
+  const getOptionsSubCategoryItemFiltered: TItemMenuFilter[] = useMemo(() => {
+    if (listApp.length === 0) return [];
+    if (subCategories.length === 0) return [];
+
+    const items: TItemMenuFilter[] = [];
+    subCategories.map((d) => {
+      const countApp = listApp.filter(
+        (app) =>
+          app.subcategory._id === d._id &&
+          filterCategories.value.includes(app.category._id)
+      ).length;
+      if (countApp > 0) {
+        items.push({
+          label: `${d.name} (${countApp})`,
+          value: d._id,
+        });
+      }
+    });
+    return items;
+  }, [listApp, subCategories, filterCategories.value]);
+
+  const getOptionsMarketItemFiltered: TItemMenuFilter[] = useMemo(() => {
+    if (listApp.length === 0) return [];
+    if (optionsFilterMarket.length === 0) return [];
+
+    // Filter filterMarket.items, keep "All" dan category yang digunakan
+    const allMarketListApp: string[] = [
+      ...new Set(listApp.flatMap((d) => d.countries ?? [])),
+    ];
+    // const countApp = listApp.filter((app) =>
+    //   app.countries.includes(value)
+    // ).length;
+
+    // const options = optionsFilterMarket.filter((f) => {})
+    const items: TItemMenuFilter[] = [];
+
+    optionsFilterMarket.forEach((d) => {
+      const countApp = listApp.filter((app) => {
+        let countriesFilter = app.countries?.includes(d.value);
+        let subCategoriesFilter =
+          filterSubCategories.value.includes("All") ||
+          filterSubCategories.value.length === 0
+            ? true
+            : filterSubCategories.value.includes(app.subcategory._id);
+        let categoriesFilter =
+          filterCategories.value.includes("All") ||
+          filterCategories.value.length === 0
+            ? true
+            : filterCategories.value.includes(app.category._id);
+        return countriesFilter && categoriesFilter && subCategoriesFilter;
+      });
+
+      if (countApp.length > 0) {
+        items.push({
+          label: `${d.label} (${countApp.length})`,
+          value: d.value,
+        });
+      }
+    });
+    return items;
+  }, [
+    listApp,
+    optionsFilterMarket,
+    filterCategories.value,
+    filterSubCategories.value,
+  ]);
+
   const callbackAuth = useCallback(() => {
     setFilterSortBy({
       ...filterSortBy,
@@ -689,8 +780,7 @@ const useController = () => {
   }, [filterSortBy, filterCategories, filterSubCategories, filterMarket]);
 
   useEffect(() => {
-    getListDataCategory();
-    getListData();
+    getListData(true);
   }, []);
 
   useEffect(() => {
@@ -784,6 +874,8 @@ const useController = () => {
     appsContainerRef,
     getOptionsCategoryItemFiltered,
     callbackAuth,
+    getOptionsSubCategoryItemFiltered,
+    getOptionsMarketItemFiltered,
   };
 };
 

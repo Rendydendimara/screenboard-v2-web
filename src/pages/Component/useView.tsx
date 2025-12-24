@@ -56,7 +56,8 @@ const Index = () => {
   // Count active filters
   const activeFiltersCount = useMemo(() => {
     let count = 0;
-    if (filterCategories.value && !filterCategories.value.includes("All")) count++;
+    if (filterCategories.value && !filterCategories.value.includes("All"))
+      count++;
     return count;
   }, [filterCategories.value]);
 
@@ -116,7 +117,7 @@ const Index = () => {
                 {/* Fixed Filters - visible when scrolled - Hidden on mobile */}
                 <div
                   className={clsx(
-                    "hidden md:block min-w-[130px] max-w-[130px] fixed h-[90vh] overflow-y-auto top-24 z-50 pb-8 transition-all duration-300 ease-in-out",
+                    "hidden md:block min-w-[140px] max-w-[140px] fixed h-[90vh] overflow-y-auto top-24 z-50 pb-8 transition-all duration-300 ease-in-out",
                     scrolledFilterMenu
                       ? "opacity-100 translate-y-0"
                       : "opacity-0 -translate-y-4 pointer-events-none"
@@ -178,7 +179,10 @@ const Index = () => {
                                   <SheetTitle className="text-lg font-semibold">
                                     Filters
                                     {activeFiltersCount > 0 && (
-                                      <Badge variant="secondary" className="ml-2">
+                                      <Badge
+                                        variant="secondary"
+                                        className="ml-2"
+                                      >
                                         {activeFiltersCount} active
                                       </Badge>
                                     )}
@@ -196,7 +200,9 @@ const Index = () => {
                               <div className="flex-1 overflow-y-auto px-6 py-6">
                                 <Filters
                                   filterCategories={filterCategories}
-                                  handleChangeFilterCategories={handleChangeFilterCategories}
+                                  handleChangeFilterCategories={
+                                    handleChangeFilterCategories
+                                  }
                                 />
                               </div>
                             </div>

@@ -8,4 +8,5 @@ export type TMenuFilter = {
 export type TItemMenuFilter = {
   label: string;
   value: string;
+  countApp?: number;
 };

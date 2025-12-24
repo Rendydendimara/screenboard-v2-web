@@ -40,17 +40,20 @@ const FilterItem: React.FC<IProps> = ({
           onClick={() => handleChange(filter.value)}
           key={i}
         >
-          {isSelected(filter.value) ? (
-            iconType === "square" ? (
-              <SquareCheckboxActive />
+          <div className="w-4 h-6">
+            {isSelected(filter.value) ? (
+              iconType === "square" ? (
+                <SquareCheckboxActive />
+              ) : (
+                <RoundedCheckboxActive />
+              )
+            ) : iconType === "square" ? (
+              <SquareCheckboxNonActive />
             ) : (
-              <RoundedCheckboxActive />
-            )
-          ) : iconType === "square" ? (
-            <SquareCheckboxNonActive />
-          ) : (
-            <RoundedCheckboxNonActive />
-          )}
+              <RoundedCheckboxNonActive />
+            )}
+          </div>
+
           <p className="text-body-4 font-normal text-[#565D61]">
             {filter.label}
           </p>
