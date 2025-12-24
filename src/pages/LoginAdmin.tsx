@@ -8,6 +8,8 @@ import { setCredentials } from "@/provider/slices/authSlice";
 import { Loader2 } from "lucide-react";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { trackAdminLogin } from "@/lib/analytics-examples";
+import { trackAPIError } from "@/lib/analytics-examples";
 
 export const LoginAdmin = () => {
   const [mode, setMode] = useState("login");
@@ -34,8 +36,19 @@ export const LoginAdmin = () => {
             user: data.data,
           })
         );
+
+        // Track successful admin login
+        trackAdminLogin(data.data._id, data.data.email);
+
         navigate("/admin");
       } catch (error: any) {
+        // Track login error
+        trackAPIError(
+          "/api/admin/login",
+          error.response?.status || 500,
+          error.message || error.response?.data?.message || "Login failed"
+        );
+
         toast({
           title: "Error",
           description: error.message || error.response.data.message,

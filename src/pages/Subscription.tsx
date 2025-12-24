@@ -17,6 +17,7 @@ import UserAuthAPI from "@/api/user/auth/api";
 import { AuthModal } from "@/components/AuthModal";
 import clsx from "clsx";
 import { Header } from "@/components/molecules";
+import { trackSubscriptionView } from "@/lib/analytics-examples";
 
 export default function Subscription() {
   const [currentSubscription, setCurrentSubscription] =
@@ -35,6 +36,9 @@ export default function Subscription() {
 
   useEffect(() => {
     fetchCurrentSubscription();
+
+    // Track subscription page view
+    trackSubscriptionView();
   }, []);
 
   useEffect(() => {

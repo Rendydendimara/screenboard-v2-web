@@ -26,10 +26,15 @@ import AdminScreenshots from "@/pages/AdminScreenshots";
 import AdminPlans from "@/pages/AdminPlans";
 import AdminGlobalComponents from "@/pages/AdminGlobalComponents";
 import AdminUsers from "@/pages/AdminUsers";
+import { usePageTracking } from "./hooks/use-page-tracking";
+import { identifyUser } from "./lib/analytics";
 
 const App = () => {
   const [loading, setLoading] = useState(true);
   const dispatch = useAppDispatch();
+
+  // Track page views automatically
+  usePageTracking();
 
   const checkLogin = async () => {
     try {
@@ -41,6 +46,17 @@ const App = () => {
           user: data.data,
         })
       );
+
+      // Identify user in analytics
+      if (data.data?._id) {
+        identifyUser(data.data._id, {
+          userId: data.data._id,
+          email: data.data.email,
+          name: data.data.name,
+          role: "admin",
+        });
+      }
+
       setLoading(false);
     } catch (error: any) {
       setLoading(false);

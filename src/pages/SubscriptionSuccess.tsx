@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
+import { trackSubscriptionSuccess } from '@/lib/analytics-examples';
 
 export default function SubscriptionSuccess() {
   const [searchParams] = useSearchParams();
@@ -36,6 +37,16 @@ export default function SubscriptionSuccess() {
       const response = await UserSubscriptionAPI.verifySession(sessionId);
       if (response.success) {
         setSessionData(response.data);
+
+        // Track successful subscription
+        const { session, subscription } = response.data;
+        if (session.paymentStatus === 'paid' && subscription) {
+          trackSubscriptionSuccess(
+            subscription.planId?.name || 'Unknown Plan',
+            session.amountTotal,
+            subscription.planId?.interval as 'monthly' | 'yearly'
+          );
+        }
       } else {
         setError('Failed to verify session');
       }
