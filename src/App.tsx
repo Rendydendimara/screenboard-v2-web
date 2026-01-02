@@ -82,12 +82,12 @@ const App = () => {
     <Routes>
       <Route path="/" element={<Index />} />
       <Route path="/app/:id" element={<AppDetails />} />
-      <Route path="/favorites" element={<FavoritesPage />} />
+      {/* <Route path="/favorites" element={<FavoritesPage />} /> */}
       <Route path="/profile" element={<Profile />} />
       <Route path="/subscription" element={<Subscription />} />
       <Route path="/subscription/success" element={<SubscriptionSuccess />} />
-      <Route path="/component" element={<Component />} />
-      <Route path="/component/:id" element={<ComponentDetail />} />
+      {/* <Route path="/component" element={<Component />} /> */}
+      {/* <Route path="/component/:id" element={<ComponentDetail />} /> */}
       <Route path="/login-admin" element={<LoginAdmin />} />
       <Route path="/admin" element={<Admin />} />
       <Route path="/admin/dashboard" element={<AdminDashboard />} />
@@ -95,7 +95,10 @@ const App = () => {
       <Route path="/admin/modules" element={<AdminModules />} />
       <Route path="/admin/screenshots" element={<AdminScreenshots />} />
       <Route path="/admin/plans" element={<AdminPlans />} />
-      <Route path="/admin/global-components" element={<AdminGlobalComponents />} />
+      <Route
+        path="/admin/global-components"
+        element={<AdminGlobalComponents />}
+      />
       <Route path="/admin/users" element={<AdminUsers />} />
       <Route path="/admin/app/:id" element={<AdminAppDetails />} />
       <Route

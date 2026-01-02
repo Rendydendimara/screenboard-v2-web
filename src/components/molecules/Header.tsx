@@ -159,7 +159,7 @@ export const Header = ({
                       Apps
                     </Button>
                   </Link>
-                  <Link to="/component">
+                  <Link to="#">
                     <Button
                       variant="ghost"
                       size="sm"
@@ -171,7 +171,7 @@ export const Header = ({
                           : ""
                       )}
                     >
-                      Component
+                      Component (Coming Soon)
                     </Button>
                   </Link>
                   <Link to="#">
