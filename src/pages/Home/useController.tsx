@@ -423,7 +423,7 @@ const useController = () => {
       ];
       dataCategory.map((d) => {
         const countApp = apps.filter(
-          (app) => app.category._id === d._id
+          (app) => app?.category?._id === d?._id
         ).length;
         itemsFilterCategory.push({
           label: `${d.name} (${countApp})`,
@@ -432,7 +432,7 @@ const useController = () => {
       });
       dataSubCategory.map((d) => {
         const countApp = apps.filter(
-          (app) => app.subcategory._id === d._id
+          (app) => app?.subcategory?._id === d?._id
         ).length;
         itemsFilterSubCategory.push({
           label: `${d.name} (${countApp})`,
@@ -513,7 +513,7 @@ const useController = () => {
   };
 
   const getListCategoryFiltered = useMemo(() => {
-    const categoriesApp = listApp.map((app) => app.category._id);
+    const categoriesApp = listApp.map((app) => app?.category?._id);
     return categories.filter((cat) => {
       return categoriesApp.includes(cat._id);
     });
@@ -573,7 +573,7 @@ const useController = () => {
           )
           .map((d) => {
             const countApp = listApp.filter(
-              (app) => app.subcategory._id === d._id
+              (app) => app?.subcategory?._id === d._id
             ).length;
             return {
               label: `${d.name} (${countApp})`,
@@ -688,7 +688,7 @@ const useController = () => {
     if (filterCategories.items.length === 0) return [];
 
     // Ambil semua category._id yang digunakan di listApp
-    const usedCategoryIds = new Set(listApp.map((app) => app.category._id));
+    const usedCategoryIds = new Set(listApp.map((app) => app?.category?._id));
 
     // Filter filterCategories.items, keep "All" dan category yang digunakan
     return filterCategories.items.filter(
@@ -704,8 +704,8 @@ const useController = () => {
     subCategories.map((d) => {
       const countApp = listApp.filter(
         (app) =>
-          app.subcategory._id === d._id &&
-          filterCategories.value.includes(app.category._id)
+          app?.subcategory?._id === d._id &&
+          filterCategories.value.includes(app?.category?._id)
       ).length;
       if (countApp > 0) {
         items.push({
@@ -739,12 +739,12 @@ const useController = () => {
           filterSubCategories.value.includes("All") ||
           filterSubCategories.value.length === 0
             ? true
-            : filterSubCategories.value.includes(app.subcategory._id);
+            : filterSubCategories.value.includes(app?.subcategory?._id);
         let categoriesFilter =
           filterCategories.value.includes("All") ||
           filterCategories.value.length === 0
             ? true
-            : filterCategories.value.includes(app.category._id);
+            : filterCategories.value.includes(app?.category?._id);
         return countriesFilter && categoriesFilter && subCategoriesFilter;
       });
 

@@ -229,9 +229,7 @@ const useController = () => {
     const screensFiltered =
       categoryValues.length === 0
         ? app?.screens
-        : app?.screens?.filter((s) =>
-            categoryValues.includes(s.category?._id)
-          );
+        : app?.screens?.filter((s) => categoryValues.includes(s.category?._id));
 
     return screensFiltered?.reduce((acc, screen) => {
       const categoryName = screen.category?.name || "Uncategorized";
@@ -326,7 +324,7 @@ const useController = () => {
   };
 
   const getListCategoryFiltered = useMemo(() => {
-    const categoriesApp = listApp.map((app) => app.category._id);
+    const categoriesApp = listApp.map((app) => app?.category?._id);
     return categories.filter((cat) => {
       return categoriesApp.includes(cat._id);
     });

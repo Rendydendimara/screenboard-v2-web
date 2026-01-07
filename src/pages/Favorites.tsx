@@ -267,7 +267,7 @@ const FavoritesPage = () => {
   }, [user]);
 
   const getListCategoryFiltered = useMemo(() => {
-    const categoriesApp = listApp.map((app) => app.category._id);
+    const categoriesApp = listApp.map((app) => app?.category?._id);
     return categories.filter((cat) => {
       return categoriesApp.includes(cat._id);
     });

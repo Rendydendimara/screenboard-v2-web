@@ -169,7 +169,7 @@ export const AppCard: React.FC<AppCardProps> = ({
                   />
                 </svg>
                 <p className="font-['Inter'] not-italic font-normal text-[13.3px] leading-[20px] flex items-center text-[#64748B]">
-                  {app.category.name}
+                  {app?.category?.name}
                 </p>
               </div>
               <div>
@@ -290,7 +290,7 @@ export const AppCard: React.FC<AppCardProps> = ({
                   />
                 </svg>
                 <p className="font-['Inter'] not-italic font-normal text-[13.3px] leading-[20px] flex items-center text-[#64748B]">
-                  {app.category.name}
+                  {app?.category?.name}
                 </p>
               </div>
               <div>
