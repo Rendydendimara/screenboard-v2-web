@@ -145,7 +145,7 @@ const CInputFileDragDrop: React.FC<IProps> = (props) => {
                 <p className="text-[#777777]">jpeg, jpg, png</p>
                 <p
                   className={clsx(
-                    "font-secondary italic leading-[16px] text-[#777777]",
+                    "font-primary italic leading-[16px] text-[#777777]",
                     props.type === "inForm" ? "text-[10px]" : "text-[12px]"
                   )}
                 >

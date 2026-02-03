@@ -96,7 +96,7 @@ export const Header = ({
   return (
     <header
       className={clsx(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out",
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out ",
         isScrolled
           ? "bg-white/90 backdrop-blur-md shadow-sm"
           : transparentBg

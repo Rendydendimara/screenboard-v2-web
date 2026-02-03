@@ -14,7 +14,6 @@ interface IProps {
   getOptionsSubCategoryItemFiltered: TItemMenuFilter[];
   getOptionsMarketItemFiltered: TItemMenuFilter[];
 }
-
 const Filters: React.FC<IProps> = ({
   filterCategories,
   filterMarket,
@@ -29,7 +28,7 @@ const Filters: React.FC<IProps> = ({
   getOptionsMarketItemFiltered,
 }) => {
   return (
-    <div className="w-full flex flex-col items-start gap-8">
+    <div className="w-full flex flex-col items-start gap-8 bg-[#FAFAFA] p-5 rounded-[20px]">
       <FilterItem
         handleChange={handleChangeFilterSortBy}
         menuFilter={filterSortBy}

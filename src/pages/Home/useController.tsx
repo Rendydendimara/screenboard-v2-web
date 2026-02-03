@@ -680,7 +680,7 @@ const useController = () => {
 
   const handleChangeSearch = useCallback((value: string) => {
     setSearchTerm(value);
-    handleScrollTop();
+    // handleScrollTop();
   }, []);
 
   const getOptionsCategoryItemFiltered: TItemMenuFilter[] = useMemo(() => {

@@ -114,7 +114,7 @@ const Index = () => {
       />
       <div className="min-h-screen bg-white">
         {/* Fixed Header */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+        <section className="relative overflow-hidden bg-[#E0E0E033]">
           <Header
             showSearch={true}
             searchTerm={searchTerm}
@@ -132,7 +132,7 @@ const Index = () => {
             <HeroSection
               mainHeading="Study Real UI Patterns from Real Apps"
               subtitle="Analyze hundreds of design examples. Register now to unlock complete app screens and learn from the best."
-              labelBtn="Join to Unlock Everything"
+              labelBtn="Join to Free Membership"
               onClickBtn={handleOpenAuthModal}
             />
           </div>
@@ -142,144 +142,166 @@ const Index = () => {
           ref={appsContainerRef}
           className="w-full flex justify-center items-center"
         >
-          <div className="w-full lg:max-w-[920px] xl:max-w-[1140px]">
+          <div className="w-full lg:max-w-[920px] xl:max-w-[1200px]">
             <main className="px-4 py-6 md:px-0 md:py-8 lg:py-12 w-full">
-              <div className="mb-6">
-                <div className="flex flex-col lg:flex-row lg:items-center w-full justify-between gap-4 lg:gap-6">
-                  {/* Search Bar - Desktop */}
-                  <div
-                    className={clsx(
-                      "w-[448px] transition-all duration-300 ease-in-out overflow-hidden",
-                      !scrolledSearch
-                        ? "max-h-[100px] opacity-100 translate-y-0"
-                        : "max-h-0 opacity-0 -translate-y-4 pointer-events-none"
-                    )}
-                  >
-                    <div className="relative">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
-                      <Input
-                        placeholder="Search apps..."
-                        value={searchTerm}
-                        onChange={(e) => handleChangeSearch(e.target.value)}
-                        className="pl-10 w-full rounded-[6px]"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Filters and View Controls */}
-                  <div
-                    className={clsx(
-                      "bg-[white] md:w-fit w-full left-[0] transition-all duration-300 ease-in-out",
-                      scrolledSearch &&
-                        "fixed md:[position:initial] py-1 pl-[16px] z-[10000]",
-                      showFilters ? "top-0 h-fit" : "top-[63px]"
-                    )}
-                  >
-                    <div className="flex flex-row md:flex-col sm:flex-row gap-4 lg:gap-6">
-                      {/* View Mode Toggle */}
-                      <div className="flex items-center space-x-2">
-                        <Button
-                          variant={viewMode === "grid" ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => setViewMode("grid")}
-                          className="flex-1 sm:flex-none"
-                        >
-                          <Grid className="h-4 w-4 mr-2 sm:mr-0 lg:mr-2" />
-                          <span className="sm:hidden lg:inline">Grid</span>
-                        </Button>
-                        <Button
-                          variant={viewMode === "list" ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => setViewMode("list")}
-                          className="flex-1 sm:flex-none"
-                        >
-                          <List className="h-4 w-4 mr-2 sm:mr-0 lg:mr-2" />
-                          <span className="sm:hidden lg:inline">List</span>
-                        </Button>
-
-                        {/* Mobile Filter Button */}
-
-                        <Sheet open={showFilters} onOpenChange={setShowFilters}>
-                          <SheetTrigger asChild>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="md:hidden relative flex-1 sm:flex-none"
-                            >
-                              <Filter className="h-4 w-4 mr-2" />
-                              <span>Filters</span>
-                              {activeFiltersCount > 0 && (
-                                <Badge
-                                  variant="destructive"
-                                  className="ml-2 h-5 w-5 p-0 flex items-center justify-center rounded-full text-xs"
-                                >
-                                  {activeFiltersCount}
-                                </Badge>
-                              )}
-                            </Button>
-                          </SheetTrigger>
-                          <SheetContent side="bottom" className="h-[85vh] p-0">
-                            <div className="flex flex-col h-full">
-                              <SheetHeader className="px-6 py-4 border-b sticky top-0 bg-white z-10">
-                                <div className="flex items-center justify-between">
-                                  <SheetTitle className="text-lg font-semibold">
-                                    Filters
-                                    {activeFiltersCount > 0 && (
-                                      <Badge
-                                        variant="secondary"
-                                        className="ml-2"
-                                      >
-                                        {activeFiltersCount} active
-                                      </Badge>
-                                    )}
-                                  </SheetTitle>
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => setShowFilters(false)}
-                                    className="h-8 w-8 p-0"
-                                  >
-                                    <X className="h-4 w-4" />
-                                  </Button>
-                                </div>
-                              </SheetHeader>
-                              <div className="flex-1 overflow-y-auto px-6 py-6">
-                                <Filters
-                                  getOptionsCategoryItemFiltered={
-                                    getOptionsCategoryItemFiltered
-                                  }
-                                  filterCategories={filterCategories}
-                                  filterSubCategories={filterSubCategories}
-                                  filterSortBy={filterSortBy}
-                                  filterMarket={filterMarket}
-                                  handleChangeFilterSortBy={
-                                    handleChangeFilterSortBy
-                                  }
-                                  handleChangeFilterCategories={
-                                    handleChangeFilterCategories
-                                  }
-                                  handleChangeFilterSubCategories={
-                                    handleChangeFilterSubCategories
-                                  }
-                                  handleChangeFilterMarket={
-                                    handleChangeFilterMarket
-                                  }
-                                  getOptionsSubCategoryItemFiltered={
-                                    getOptionsSubCategoryItemFiltered
-                                  }
-                                  getOptionsMarketItemFiltered={
-                                    getOptionsMarketItemFiltered
-                                  }
-                                />
-                              </div>
-                            </div>
-                          </SheetContent>
-                        </Sheet>
+              {user && (
+                <div className="mb-6">
+                  <div className="flex flex-col lg:flex-row lg:items-center w-full justify-between gap-4 lg:gap-6">
+                    {/* Search Bar - Desktop */}
+                    <div
+                      className={clsx(
+                        "w-[448px] transition-all duration-300 ease-in-out overflow-hidden h-[40px]",
+                        !scrolledSearch
+                          ? "max-h-[100px] opacity-100 translate-y-0"
+                          : "max-h-0 opacity-0 -translate-y-4 pointer-events-none"
+                      )}
+                    >
+                      <div className="relative">
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+                        <Input
+                          placeholder="Search apps..."
+                          value={searchTerm}
+                          onChange={(e) => handleChangeSearch(e.target.value)}
+                          className="
+    pl-10 
+    w-full 
+    rounded-[20px]
+    focus:ring-0 
+    focus-visible:ring-0
+    ring-0
+    ring-offset-0
+    focus-visible:ring-offset-0
+    font-third
+    text-[13px]
+  "
+                        />
                       </div>
                     </div>
 
-                    {/* Download Button */}
-                    {/* {selectedCategory && (
+                    {/* Filters and View Controls */}
+                    <div
+                      className={clsx(
+                        "bg-[white] md:w-fit w-full left-[0] transition-all duration-300 ease-in-out",
+                        scrolledSearch &&
+                          "fixed md:[position:initial] py-1 pl-[16px] z-[10000]",
+                        showFilters ? "top-0 h-fit" : "top-[63px]"
+                      )}
+                    >
+                      <div className="flex flex-row md:flex-col sm:flex-row gap-4 lg:gap-6">
+                        {/* View Mode Toggle */}
+                        <div className="flex items-center space-x-2">
+                          <Button
+                            variant={
+                              viewMode === "grid" ? "default" : "outline"
+                            }
+                            size="sm"
+                            onClick={() => setViewMode("grid")}
+                            className="flex-1 sm:flex-none"
+                          >
+                            <Grid className="h-4 w-4 mr-2 sm:mr-0 lg:mr-2" />
+                            <span className="sm:hidden lg:inline">Grid</span>
+                          </Button>
+                          <Button
+                            variant={
+                              viewMode === "list" ? "default" : "outline"
+                            }
+                            size="sm"
+                            onClick={() => setViewMode("list")}
+                            className="flex-1 sm:flex-none"
+                          >
+                            <List className="h-4 w-4 mr-2 sm:mr-0 lg:mr-2" />
+                            <span className="sm:hidden lg:inline">List</span>
+                          </Button>
+
+                          {/* Mobile Filter Button */}
+
+                          <Sheet
+                            open={showFilters}
+                            onOpenChange={setShowFilters}
+                          >
+                            <SheetTrigger asChild>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="md:hidden relative flex-1 sm:flex-none"
+                              >
+                                <Filter className="h-4 w-4 mr-2" />
+                                <span>Filters</span>
+                                {activeFiltersCount > 0 && (
+                                  <Badge
+                                    variant="destructive"
+                                    className="ml-2 h-5 w-5 p-0 flex items-center justify-center rounded-full text-xs"
+                                  >
+                                    {activeFiltersCount}
+                                  </Badge>
+                                )}
+                              </Button>
+                            </SheetTrigger>
+                            <SheetContent
+                              side="bottom"
+                              className="h-[85vh] p-0"
+                            >
+                              <div className="flex flex-col h-full">
+                                <SheetHeader className="px-6 py-4 border-b sticky top-0 bg-white z-10">
+                                  <div className="flex items-center justify-between">
+                                    <SheetTitle className="text-lg font-semibold">
+                                      Filters
+                                      {activeFiltersCount > 0 && (
+                                        <Badge
+                                          variant="secondary"
+                                          className="ml-2"
+                                        >
+                                          {activeFiltersCount} active
+                                        </Badge>
+                                      )}
+                                    </SheetTitle>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => setShowFilters(false)}
+                                      className="h-8 w-8 p-0"
+                                    >
+                                      <X className="h-4 w-4" />
+                                    </Button>
+                                  </div>
+                                </SheetHeader>
+                                <div className="flex-1 overflow-y-auto px-6 py-6">
+                                  <Filters
+                                    getOptionsCategoryItemFiltered={
+                                      getOptionsCategoryItemFiltered
+                                    }
+                                    filterCategories={filterCategories}
+                                    filterSubCategories={filterSubCategories}
+                                    filterSortBy={filterSortBy}
+                                    filterMarket={filterMarket}
+                                    handleChangeFilterSortBy={
+                                      handleChangeFilterSortBy
+                                    }
+                                    handleChangeFilterCategories={
+                                      handleChangeFilterCategories
+                                    }
+                                    handleChangeFilterSubCategories={
+                                      handleChangeFilterSubCategories
+                                    }
+                                    handleChangeFilterMarket={
+                                      handleChangeFilterMarket
+                                    }
+                                    getOptionsSubCategoryItemFiltered={
+                                      getOptionsSubCategoryItemFiltered
+                                    }
+                                    getOptionsMarketItemFiltered={
+                                      getOptionsMarketItemFiltered
+                                    }
+                                  />
+                                </div>
+                              </div>
+                            </SheetContent>
+                          </Sheet>
+                        </div>
+                      </div>
+
+                      {/* Download Button */}
+                      {/* {selectedCategory && (
                   <Button
                     variant="outline"
                     size="sm"
@@ -297,9 +319,10 @@ const Index = () => {
                     </span>
                   </Button>
                 )} */}
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
 
               <div
                 ref={containerMainRef}
@@ -310,7 +333,7 @@ const Index = () => {
                     {/* Static Filters - visible when not scrolled - Hidden on mobile */}
                     <div
                       className={clsx(
-                        "hidden md:block min-w-[130px] max-w-[130px] max-h-[2000px] overflow-y-hidden transition-all ease-in-out",
+                        "hidden md:block min-w-[200px] max-w-[200px] max-h-[2000px] overflow-y-hidden transition-all ease-in-out",
                         scrolledFilterMenu
                           ? "opacity-0 pointer-events-none"
                           : "opacity-100"
@@ -344,7 +367,7 @@ const Index = () => {
                     {/* Fixed Filters - visible when scrolled - Hidden on mobile */}
                     <div
                       className={clsx(
-                        "hidden md:block min-w-[140px] max-w-[140px] fixed h-[90vh] overflow-y-auto top-24 z-50 pb-8 transition-all ease-in-out",
+                        "hidden md:block min-w-[200px] max-w-[200px] fixed h-[90vh] overflow-y-auto top-24 z-50 pb-8 transition-all ease-in-out",
                         scrolledFilterMenu
                           ? "opacity-100 translate-y-0"
                           : "opacity-0 -translate-y-4 pointer-events-none"
@@ -426,7 +449,7 @@ const Index = () => {
                           isLoading={isLoadingGetApp}
                         />
                         {!user && allFilteredApps.length > 9 && (
-                          <div className="-mt-64 pt-32 pb-8 bg-[linear-gradient(180deg,_rgba(255,_255,_255,_0)_4.01%,_#FFFFFF_62.21%)] absolute w-full max-w-[990px]">
+                          <div className="-mt-[22rem] pt-32 pb-8 bg-[linear-gradient(180deg,_rgba(255,_255,_255,_0)_4.01%,_#FFFFFF_62.21%)] absolute w-full max-w-[1200px]">
                             <div className="flex flex-col w-full gap-6">
                               <div className="flex justify-center items-center w-full">
                                 <div className="flex flex-col gap-3 items-center w-full md:w-[889px] px-4">

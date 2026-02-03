@@ -225,7 +225,8 @@ export default {
       fontFamily: {
         sans: ["Inter", "ui-sans-serif", "system-ui"], // jadikan default
         primary: ["Inter", "sans-serif"],
-        secondary: ["Inter", "sans-serif"],
+        secondary: ["Albert Sans Variable", "sans-serif"],
+        third: ["Alegreya Sans", "sans-serif"],
       },
       fontWeight: {
         hairline: "100",

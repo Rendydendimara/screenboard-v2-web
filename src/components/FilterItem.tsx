@@ -32,8 +32,10 @@ const FilterItem: React.FC<IProps> = ({
   }, [options, menuFilter.items]);
 
   return (
-    <div className="w-full flex flex-col gap-3">
-      <p className="text-body-4 font-semibold text-black">{menuFilter.label}</p>
+    <div className="w-full flex flex-col gap-4">
+      <p className="text-body-4 font-bold text-[#323638] font-secondary">
+        {menuFilter.label}
+      </p>
       {getOptions.map((filter, i) => (
         <div
           className="flex items-center gap-2 hover:cursor-pointer"
@@ -54,7 +56,7 @@ const FilterItem: React.FC<IProps> = ({
             )}
           </div>
 
-          <p className="text-body-4 font-normal text-[#565D61]">
+          <p className="text-body-4 font-medium text-[#565D61] font-secondary">
             {filter.label}
           </p>
         </div>

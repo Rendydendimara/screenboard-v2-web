@@ -50,7 +50,7 @@ export const AppCard: React.FC<AppCardProps> = ({
 
   if (viewMode === "list") {
     return (
-      <div className="group bg-white rounded-2xl border border-slate-200 hover:border-slate-300 transition-all duration-300 hover:shadow-xl  overflow-hidden">
+      <div className="group  bg-[#F6F6F6] rounded-[20px] border border-slate-200 hover:border-slate-300 transition-all duration-300 hover:shadow-xl  overflow-hidden">
         <div className="flex p-4 lg:p-5">
           <div
             onClick={onDetail}
@@ -94,18 +94,18 @@ export const AppCard: React.FC<AppCardProps> = ({
               </div>
 
               <div className="flex items-center gap-2 overflow-y-auto max-w-[2000px]">
-                {app.screens.slice(0, 4).map((screen) => (
+                {app.screens.slice(0, 5).map((screen) => (
                   <div
                     onClick={() => setSelectedScreen(screen)}
                     key={screen.id}
-                    className="rounded-lg relative h-[417px]"
+                    className="rounded-lg relative h-[357px]"
                   >
                     <ImageWithFallback
                       src={screen.image}
                       fallbackSrc={screen.image}
                       alt={screen.name}
-                      containerClassName="min-w-[200px] w-[200px] h-[417px]"
-                      className="min-w-[200px] w-[200px] rounded-lg h-[417px] hover:cursor-pointer"
+                      containerClassName="min-w-[200px] w-[200px] h-[357px]"
+                      className="min-w-[200px] w-[200px] rounded-lg h-[357px] hover:cursor-pointer"
                     />
                   </div>
                 ))}
@@ -212,7 +212,7 @@ export const AppCard: React.FC<AppCardProps> = ({
   }
 
   return (
-    <div className="w-full py-3 gap-4 flex-col flex bg-[#FFFFFF] border-[1px] border-[solid] border-[#E2E8F0] rounded-[20px]">
+    <div className="w-full py-3 gap-4 flex-col flex bg-[#F6F6F6]  rounded-[20px]">
       <div className="flex flex-col items-start gap-3 px-3">
         <div
           className="flex items-center gap-3 w-full hover:cursor-pointer relative"
@@ -222,14 +222,14 @@ export const AppCard: React.FC<AppCardProps> = ({
             src={app?.image ?? "https://source.unsplash.com/400x300?game"}
             fallbackSrc="https://placehold.co/400"
             alt={app.name}
-            containerClassName="w-[51px] h-[48px]"
-            className="w-[51px] h-[48px] rounded-[8px] object-cover group-hover:scale-105 transition-transform"
+            containerClassName="w-[48px] h-[48px]"
+            className="w-[48px] h-[48px] rounded-[8px] object-cover group-hover:scale-105 transition-transform"
           />
           <div className="flex flex-col items-start">
-            <h5 className="font-['Inter'] not-italic font-bold text-[20px] leading-[28px] items-center text-[#0F172A]">
+            <h5 className="font-secondary not-italic font-bold text-[16px] leading-[28px] items-center text-[#191919]">
               {app.name}
             </h5>
-            <h6 className="font-['Inter'] not-italic font-normal text-[12px] leading-[20px] flex items-center text-[#475569]">
+            <h6 className="font-secondary not-italic font-normal text-[12px] leading-[20px] flex items-center text-[#475569]">
               {app.company}
             </h6>
           </div>
@@ -289,7 +289,7 @@ export const AppCard: React.FC<AppCardProps> = ({
                     stroke-linejoin="round"
                   />
                 </svg>
-                <p className="font-['Inter'] not-italic font-normal text-[13.3px] leading-[20px] flex items-center text-[#64748B]">
+                <p className="font-secondary not-italic font-normal text-[12px] leading-[125%] flex items-center text-[#44546A]">
                   {app?.category?.name}
                 </p>
               </div>
@@ -311,7 +311,7 @@ export const AppCard: React.FC<AppCardProps> = ({
                       </svg>
                     </div>
                     <span
-                      className="font-['Inter'] not-italic font-normal text-[13.3px] leading-[20px] items-center text-[#64748B]  overflow-hidden 
+                      className="font-secondary not-italic font-normal text-[12px] leading-[125%] items-center text-[#44546A]  overflow-hidden 
             text-ellipsis 
             break-words 
             [display:-webkit-box] 
@@ -327,13 +327,11 @@ export const AppCard: React.FC<AppCardProps> = ({
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
+              <button
                 onClick={handleCompareClick}
                 className={clsx(
-                  "h-4 w-4 p-0 bg-white/90 backdrop-blur-sm",
-                  isInCompare ? "bg-blue-100 text-blue-600" : "hover:bg-white"
+                  "h-4 w-4 p-0 bg-transparent"
+                  // isInCompare ? "bg-blue-100 text-blue-600" : "hover:bg-white"
                 )}
               >
                 <svg
@@ -372,16 +370,14 @@ export const AppCard: React.FC<AppCardProps> = ({
                     stroke-linejoin="round"
                   />
                 </svg>
-              </Button>
+              </button>
               {type !== "favorite" && (
-                <Button
-                  variant="ghost"
-                  size="sm"
+                <button
                   onClick={(e) => {
                     e.stopPropagation();
                     onLike();
                   }}
-                  className="h-8 w-8 p-0 bg-white/90 backdrop-blur-sm hover:bg-white"
+                  className="h-4 w-4 p-0 bg-transparent"
                 >
                   <Heart
                     className={`h-4 w-4 ${
@@ -390,22 +386,33 @@ export const AppCard: React.FC<AppCardProps> = ({
                         : "text-slate-600"
                     }`}
                   />
-                </Button>
+                </button>
               )}
             </div>
           </div>
         </div>
       </div>
       <div className="pl-3 flex items-start gap-[10px] overflow-x-auto pr-3">
-        {app.screens.slice(0, 4).map((screen) => (
-          <ImageWithFallback
-            onClick={onDetail}
-            src={screen.image}
-            fallbackSrc={screen.image}
-            alt={screen.name}
-            containerClassName="min-w-[190px] h-[417px]"
-            className="w-[190px] h-[417px] rounded-[8px] object-cover group-hover:scale-105 transition-transform duration-500 hover:cursor-pointer"
-          />
+        {app.screens.slice(0, 5).map((screen, i) => (
+          <div className="relative">
+            <ImageWithFallback
+              src={screen.image}
+              fallbackSrc={screen.image}
+              alt={screen.name}
+              containerClassName="min-w-[161px] h-[357px] rounded-[10px]"
+              className="w-[161px] h-[357px] rounded-[10px] object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+            {i + 1 === 5 && (
+              <div
+                onClick={onDetail}
+                className="absolute  hover:cursor-pointer top-0 w-[161px] h-[357px] flex justify-center items-center opacity-100 rounded-[10px] bg-[linear-gradient(180deg,_rgba(255,_255,_255,_0.3)_0%,_#FFFFFF_100%)] border-[0.5px] border-[solid] border-[#CECECE]"
+              >
+                <p className="font-secondary font-semibold text-[16px] leading-[100%] tracking-[0%] align-middle">
+                  See More
+                </p>
+              </div>
+            )}
+          </div>
         ))}
       </div>
     </div>

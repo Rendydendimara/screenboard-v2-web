@@ -97,7 +97,7 @@ const useView: React.FC = () => {
           title="Loading... | Screenboard"
           description="Discover and explore amazing mobile app designs. Get inspired by the world's best mobile apps."
         />
-        <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+        <section className="relative overflow-hidden ">
           <header className="fixed w-full top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md shadow-sm">
             <div className="w-full flex justify-center items-center">
               <div className="w-full md:max-w-[700px] lg:max-w-[1200px]">
@@ -119,7 +119,7 @@ const useView: React.FC = () => {
           {/* App Overview Skeleton */}
           <div className="w-full flex justify-center items-center">
             <div className="w-full md:max-w-[700px] lg:max-w-[1200px]">
-              <div className="pt-24 px-4 md:px-0 pb-[40px]">
+              <div className="pt-24 px-4 md:px-0">
                 <div className="flex items-center justify-between md:flex-row flex-col">
                   <div className="flex items-start gap-6 w-full">
                     <Skeleton className="w-20 h-20 rounded-2xl" />
@@ -209,7 +209,7 @@ const useView: React.FC = () => {
 
       {/* Navigation */}
 
-      <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+      <section className="relative overflow-hidden">
         <Header
           scrolled={scrolled}
           onOpenAuthModal={handleOpenAuthModal}
@@ -220,200 +220,175 @@ const useView: React.FC = () => {
         {/* App Overview */}
         <div className="w-full flex justify-center items-center">
           <div className="w-full md:max-w-[700px] lg:max-w-[1200px]">
-            <div className="pt-24 px-4 md:px-0 pb-[40px]">
-              <div className="flex items-center justify-between md:flex-row flex-col">
-                <div className="flex items-start gap-6 flex-col md:flex-row">
-                  <div className="relative">
-                    <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-2xl">
-                      <ImageWithFallback
-                        src={
-                          app?.image ??
-                          "https://source.unsplash.com/400x300?game"
-                        }
-                        fallbackSrc="https://placehold.co/400"
-                        alt={app.name}
-                        containerClassName="w-full h-full"
-                        className="w-full h-full object-cover shadow-2xl"
-                      />
+            <div className="flex w-full justify-between items-center"></div>
+            <div className="pt-24 px-4 md:px-0 w-full flex justify-between items-center">
+              {/* App Info */}
+              <div className="flex items-start gap-4 justify-between flex-col max-w-[909px]">
+                <div className="flex items-start w-full flex-col gap-2">
+                  <div className="flex items-center gap-5 flex-col md:flex-row">
+                    {/* App Image */}
+                    <div className="relative">
+                      <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-2xl">
+                        <ImageWithFallback
+                          src={
+                            app?.image ??
+                            "https://source.unsplash.com/400x300?game"
+                          }
+                          fallbackSrc="https://placehold.co/400"
+                          alt={app.name}
+                          containerClassName="w-full h-full"
+                          className="w-full h-full object-cover shadow-2xl"
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div>
-                    <h1 className="text-3xl font-bold text-slate-900 mb-2">
-                      {app.name}
-                    </h1>
-                    <div className="flex mt-2 items-start gap-4 flex-col md:flex-row justify-start text-sm text-slate-600">
-                      <div className="flex items-center space-x-1">
-                        <Building className="h-4 w-4" />
-                        <span>{app.company}</span>
-                      </div>
-                      <div className="flex items-center space-x-1">
-                        <Calendar className="h-4 w-4" />
-                        <span>
-                          Updated{" "}
-                          {new Date(app.lastUpdated).toLocaleDateString()}
-                        </span>
-                      </div>
-                      {app.countries && app.countries.length > 0 ? (
-                        <div className="flex items-center space-x-1">
-                          <div className="w-[14px] h-[14px]">
-                            <svg
-                              width="14"
-                              height="14"
-                              viewBox="0 0 14 14"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M6.66667 0C2.99067 0 0 2.99067 0 6.66667C0 10.3427 2.99067 13.3333 6.66667 13.3333C10.3427 13.3333 13.3333 10.3427 13.3333 6.66667C13.3333 2.99067 10.3427 0 6.66667 0ZM1.33333 6.66667C1.33333 6.06733 1.43733 5.492 1.62067 4.954L2.66667 6L4 7.33333V8.66667L5.33333 10L6 10.6667V11.954C3.374 11.624 1.33333 9.38133 1.33333 6.66667ZM10.8867 9.91533C10.4513 9.56467 9.79133 9.33333 9.33333 9.33333V8.66667C9.33333 8.31304 9.19286 7.97391 8.94281 7.72386C8.69276 7.47381 8.35362 7.33333 8 7.33333H5.33333V5.33333C5.68695 5.33333 6.02609 5.19286 6.27614 4.94281C6.52619 4.69276 6.66667 4.35362 6.66667 4V3.33333H7.33333C7.68695 3.33333 8.02609 3.19286 8.27614 2.94281C8.52619 2.69276 8.66667 2.35362 8.66667 2V1.726C10.6187 2.51867 12 4.43333 12 6.66667C11.9997 7.84311 11.608 8.98602 10.8867 9.91533Z"
-                                fill="#475569"
-                              />
-                            </svg>
+                    <div>
+                      <div className="flex flex-col w-full items-start gap-3">
+                        {/* App Name */}
+                        <h1 className="text-[48px] font-bold font-secondary text-[#0F172A] leading-[100%] tracking-[0%] align-middle">
+                          {app.name}
+                        </h1>
+                        {/* App Update Date, Country */}
+                        <div className="flex items-start gap-4 flex-col md:flex-row justify-start text-sm text-slate-600">
+                          <div className="flex items-center space-x-1">
+                            <Building className="h-4 w-4" />
+                            <span className="font-secondary">
+                              {app.company}
+                            </span>
                           </div>
-                          <Tooltip delayDuration={0}>
-                            <TooltipTrigger asChild>
-                              <span
-                                className="font-['Inter'] not-italic font-normal text-[13.3px] leading-[20px] items-center text-[#64748B]  overflow-hidden 
+                          <div className="flex items-center space-x-1">
+                            <Calendar className="h-4 w-4" />
+                            <span className="font-secondary">
+                              Updated{" "}
+                              {new Date(app.lastUpdated).toLocaleDateString()}
+                            </span>
+                          </div>
+                          {app.countries && app.countries.length > 0 ? (
+                            <div className="flex items-center space-x-1">
+                              <div className="w-[14px] h-[14px]">
+                                <svg
+                                  width="14"
+                                  height="14"
+                                  viewBox="0 0 14 14"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M6.66667 0C2.99067 0 0 2.99067 0 6.66667C0 10.3427 2.99067 13.3333 6.66667 13.3333C10.3427 13.3333 13.3333 10.3427 13.3333 6.66667C13.3333 2.99067 10.3427 0 6.66667 0ZM1.33333 6.66667C1.33333 6.06733 1.43733 5.492 1.62067 4.954L2.66667 6L4 7.33333V8.66667L5.33333 10L6 10.6667V11.954C3.374 11.624 1.33333 9.38133 1.33333 6.66667ZM10.8867 9.91533C10.4513 9.56467 9.79133 9.33333 9.33333 9.33333V8.66667C9.33333 8.31304 9.19286 7.97391 8.94281 7.72386C8.69276 7.47381 8.35362 7.33333 8 7.33333H5.33333V5.33333C5.68695 5.33333 6.02609 5.19286 6.27614 4.94281C6.52619 4.69276 6.66667 4.35362 6.66667 4V3.33333H7.33333C7.68695 3.33333 8.02609 3.19286 8.27614 2.94281C8.52619 2.69276 8.66667 2.35362 8.66667 2V1.726C10.6187 2.51867 12 4.43333 12 6.66667C11.9997 7.84311 11.608 8.98602 10.8867 9.91533Z"
+                                    fill="#475569"
+                                  />
+                                </svg>
+                              </div>
+                              <Tooltip delayDuration={0}>
+                                <TooltipTrigger asChild>
+                                  <span
+                                    className="font-secondary not-italic font-normal text-[13.3px] leading-[20px] items-center text-[#64748B]  overflow-hidden 
             text-ellipsis 
             break-words 
             [display:-webkit-box] 
             [-webkit-line-clamp:1] 
             [-webkit-box-orient:vertical]"
-                              >
-                                {`${
-                                  app.countries.join(", ").length > 50
-                                    ? `${app.countries
-                                        .join(", ")
-                                        .substring(0, 50)}...`
-                                    : app.countries.join(", ")
-                                }`}
-                              </span>
-                            </TooltipTrigger>
-                            <TooltipContent
-                              side="bottom"
-                              align="center"
-                              hidden={app.countries.join(", ").length < 50}
-                              children={
-                                <p className="font-['Inter'] not-italic font-normal text-[13.3px] leading-[20px] items-center text-white bg-black">
-                                  {app.countries.join(", ")}
-                                </p>
-                              }
-                            />
-                          </Tooltip>
+                                  >
+                                    {`${
+                                      app.countries.join(", ").length > 50
+                                        ? `${app.countries
+                                            .join(", ")
+                                            .substring(0, 50)}...`
+                                        : app.countries.join(", ")
+                                    }`}
+                                  </span>
+                                </TooltipTrigger>
+                                <TooltipContent
+                                  side="bottom"
+                                  align="center"
+                                  hidden={app.countries.join(", ").length < 50}
+                                  children={
+                                    <p className="font-secondary not-italic font-normal text-[13.3px] leading-[20px] items-center text-white bg-black">
+                                      {app.countries.join(", ")}
+                                    </p>
+                                  }
+                                />
+                              </Tooltip>
+                            </div>
+                          ) : null}
                         </div>
-                      ) : null}
-                    </div>
-                    <div className="flex items-start justify-start gap-2 mt-3 flex-wrap">
-                      <Badge
-                        variant="outline"
-                        className="flex items-center space-x-1 text-sm px-3 py-1 font-bold text-[#464C4F]"
-                      >
-                        {getPlatformIcon(app.platform)}
-                        <span>{app.platform}</span>
-                      </Badge>
-                      <Badge
-                        variant="outline"
-                        className="text-sm px-3 py-1 font-bold text-[#464C4F]"
-                      >
-                        {app.category?.name ?? "-"}
-                      </Badge>
-                      <Badge
-                        variant="outline"
-                        className="text-sm px-3 py-1 font-bold text-[#464C4F]"
-                      >
-                        {app.subcategory?.name ?? "-"}
-                      </Badge>
-                      {app.featured && (
-                        <Badge className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-sm px-3 py-1 font-bold ">
-                          <Star className="h-3 w-3 mr-1" />
-                          Featured
-                        </Badge>
-                      )}
-                    </div>
-                    <p className="text-slate-700 mt-6 max-w-[559px] leading-relaxed text-base font-normal">
-                      {app.description}
-                    </p>
-                    {(app.linkPlayStore ||
-                      app.linkAppStore ||
-                      app.linkWebsite) && (
-                      <div className="flex flex-wrap gap-3 mt-4">
-                        {app.linkPlayStore && (
-                          <a
-                            href={app.linkPlayStore}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600"
-                          >
-                            <ExternalLink className="h-4 w-4" />
-                            <span>Play Store</span>
-                          </a>
-                        )}
-                        {app.linkAppStore && (
-                          <a
-                            href={app.linkAppStore}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600"
-                          >
-                            <ExternalLink className="h-4 w-4" />
-                            <span>App Store</span>
-                          </a>
-                        )}
-                        {app.linkWebsite && (
-                          <a
-                            href={app.linkWebsite}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600"
-                          >
-                            <ExternalLink className="h-4 w-4" />
-                            <span>Website</span>
-                          </a>
-                        )}
                       </div>
+                    </div>
+                  </div>
+                  {/* App Feature */}
+                  <div className="flex items-start justify-start gap-2 flex-wrap">
+                    <Badge
+                      variant="outline"
+                      className="flex items-center space-x-1 text-sm px-3 py-1 font-bold text-[#464C4F] font-secondary"
+                    >
+                      {getPlatformIcon(app.platform)}
+                      <span>{app.platform}</span>
+                    </Badge>
+                    <Badge
+                      variant="outline"
+                      className="text-sm px-3 py-1 font-bold text-[#464C4F] font-secondary"
+                    >
+                      {app.category?.name ?? "-"}
+                    </Badge>
+                    <Badge
+                      variant="outline"
+                      className="text-sm px-3 py-1 font-bold text-[#464C4F] font-secondary"
+                    >
+                      {app.subcategory?.name ?? "-"}
+                    </Badge>
+                    {app.featured && (
+                      <Badge className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-sm px-3 py-1 font-bold font-secondary">
+                        <Star className="h-3 w-3 mr-1" />
+                        Featured
+                      </Badge>
                     )}
                   </div>
                 </div>
-                <div className="flex flex-wrap gap-2 justify-start items-center mt-4 md:mt-0">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={toggleLike}
-                    className={clsx(
-                      "h-10 rounded-[6px] py-[1px] px-[13px] font-normal",
-                      app.isLiked && "!bg-[#9333EA] !text-white"
-                    )}
-                  >
-                    {user ? (
-                      <Heart className="h-4 w-4" />
-                    ) : (
-                      <svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 16 16"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M5.3335 7.33333V4.66667C5.3335 3.95942 5.61445 3.28115 6.11454 2.78105C6.61464 2.28095 7.29292 2 8.00016 2C8.70741 2 9.38568 2.28095 9.88578 2.78105C10.3859 3.28115 10.6668 3.95942 10.6668 4.66667V7.33333M3.3335 8.66667C3.3335 8.31304 3.47397 7.97391 3.72402 7.72386C3.97407 7.47381 4.31321 7.33333 4.66683 7.33333H11.3335C11.6871 7.33333 12.0263 7.47381 12.2763 7.72386C12.5264 7.97391 12.6668 8.31304 12.6668 8.66667V12.6667C12.6668 13.0203 12.5264 13.3594 12.2763 13.6095C12.0263 13.8595 11.6871 14 11.3335 14H4.66683C4.31321 14 3.97407 13.8595 3.72402 13.6095C3.47397 13.3594 3.3335 13.0203 3.3335 12.6667V8.66667ZM7.3335 10.6667C7.3335 10.8435 7.40373 11.013 7.52876 11.1381C7.65378 11.2631 7.82335 11.3333 8.00016 11.3333C8.17697 11.3333 8.34654 11.2631 8.47157 11.1381C8.59659 11.013 8.66683 10.8435 8.66683 10.6667C8.66683 10.4899 8.59659 10.3203 8.47157 10.1953C8.34654 10.0702 8.17697 10 8.00016 10C7.82335 10 7.65378 10.0702 7.52876 10.1953C7.40373 10.3203 7.3335 10.4899 7.3335 10.6667Z"
-                          stroke="black"
-                          stroke-width="1.33333"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </svg>
-                    )}
-                    {app.isLiked ? "Liked" : "Like"}
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleAddCompare}
-                    className="h-10 rounded-[6px] py-[1px] px-[13px] font-normal"
-                  >
-                    <GitCompare className="h-4 w-4" />
-                    Compare
-                  </Button>
-                </div>
+                {/* Description */}
+                <p className="text-slate-700  font-secondary leading-relaxed text-base font-normal">
+                  {app.description}
+                </p>
+              </div>
+              {/* Button Like, Compare */}
+              <div className="flex flex-wrap gap-2 justify-start items-center mt-4 md:mt-0">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={toggleLike}
+                  className={clsx(
+                    "h-10 rounded-[6px] py-[1px] px-[13px] font-normal",
+                    app.isLiked && "!bg-[#9333EA] !text-white"
+                  )}
+                >
+                  {user ? (
+                    <Heart className="h-4 w-4" />
+                  ) : (
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M5.3335 7.33333V4.66667C5.3335 3.95942 5.61445 3.28115 6.11454 2.78105C6.61464 2.28095 7.29292 2 8.00016 2C8.70741 2 9.38568 2.28095 9.88578 2.78105C10.3859 3.28115 10.6668 3.95942 10.6668 4.66667V7.33333M3.3335 8.66667C3.3335 8.31304 3.47397 7.97391 3.72402 7.72386C3.97407 7.47381 4.31321 7.33333 4.66683 7.33333H11.3335C11.6871 7.33333 12.0263 7.47381 12.2763 7.72386C12.5264 7.97391 12.6668 8.31304 12.6668 8.66667V12.6667C12.6668 13.0203 12.5264 13.3594 12.2763 13.6095C12.0263 13.8595 11.6871 14 11.3335 14H4.66683C4.31321 14 3.97407 13.8595 3.72402 13.6095C3.47397 13.3594 3.3335 13.0203 3.3335 12.6667V8.66667ZM7.3335 10.6667C7.3335 10.8435 7.40373 11.013 7.52876 11.1381C7.65378 11.2631 7.82335 11.3333 8.00016 11.3333C8.17697 11.3333 8.34654 11.2631 8.47157 11.1381C8.59659 11.013 8.66683 10.8435 8.66683 10.6667C8.66683 10.4899 8.59659 10.3203 8.47157 10.1953C8.34654 10.0702 8.17697 10 8.00016 10C7.82335 10 7.65378 10.0702 7.52876 10.1953C7.40373 10.3203 7.3335 10.4899 7.3335 10.6667Z"
+                        stroke="black"
+                        stroke-width="1.33333"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  )}
+                  {app.isLiked ? "Liked" : "Like"}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleAddCompare}
+                  className="h-10 rounded-[6px] py-[1px] px-[13px] font-normal"
+                >
+                  <GitCompare className="h-4 w-4" />
+                  Compare
+                </Button>
               </div>
             </div>
           </div>
@@ -423,7 +398,7 @@ const useView: React.FC = () => {
       <div className="w-full flex justify-center items-center">
         <div className="w-full md:max-w-[700px] lg:max-w-[1200px]">
           <div>
-            <div className=" px-4 md:px-0 py-12">
+            <div className="px-4 md:px-0 pt-[45px] pb-12">
               <div className="mb-8">
                 {/* Mobile Filter Button */}
                 <div className="md:hidden mb-4">
@@ -481,55 +456,162 @@ const useView: React.FC = () => {
                   ref={containerMainRef}
                   className="flex items-start gap-5 flex-col md:flex-row w-full"
                 >
-                  {/* Static Filters - visible when not scrolled - Hidden on mobile */}
-                  <div
-                    className={clsx(
-                      "hidden md:block min-w-[130px] max-w-[130px] transition-all ease-in-out",
-                      scrolledFilterMenu
-                        ? "opacity-0 pointer-events-none"
-                        : "opacity-100"
+                  <div className="w-full flex flex-col gap-5 items-start">
+                    {/* App Link */}
+                    {(app.linkPlayStore ||
+                      app.linkAppStore ||
+                      app.linkWebsite) && (
+                      <>
+                        {/* Static Filters - visible when not scrolled - Hidden on mobile */}
+                        <div
+                          className={clsx(
+                            "hidden md:flex min-w-[200px] max-w-[200px] transition-all ease-in-out rounded-[20px] p-5 bg-[#FAFAFA] flex-col items-start gap-4",
+                            scrolledFilterMenu
+                              ? "opacity-0 pointer-events-none"
+                              : "opacity-100"
+                          )}
+                        >
+                          <p className="font-secondary font-bold text-[14px] leading-[20px] tracking-[-0.2%] align-middle text-[#323638]">
+                            Reference
+                          </p>
+                          {app.linkPlayStore && (
+                            <a
+                              href={app.linkPlayStore}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600 font-secondary"
+                            >
+                              <ExternalLink className="h-4 w-4" />
+                              <span>Play Store</span>
+                            </a>
+                          )}
+                          {app.linkAppStore && (
+                            <a
+                              href={app.linkAppStore}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600 font-secondary"
+                            >
+                              <ExternalLink className="h-4 w-4" />
+                              <span>App Store</span>
+                            </a>
+                          )}
+                          {app.linkWebsite && (
+                            <a
+                              href={app.linkWebsite}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600 font-secondary"
+                            >
+                              <ExternalLink className="h-4 w-4" />
+                              <span>Website</span>
+                            </a>
+                          )}
+                        </div>
+                        {/* Fixed Filters - visible when scrolled - Hidden on mobile */}
+                        <div
+                          className={clsx(
+                            "hidden md:flex flex-col items-start gap-4 min-w-[200px] max-w-[200px] fixed max-h-[90vh] overflow-y-auto  z-50 pb-8 transition-all ease-in-out rounded-[20px] p-5 bg-[#FAFAFA]",
+                            app.linkPlayStore ||
+                              app.linkAppStore ||
+                              app.linkWebsite
+                              ? "top-[295px]"
+                              : "top-24",
+                            scrolledFilterMenu
+                              ? "opacity-100 translate-y-0"
+                              : "opacity-0 -translate-y-4 pointer-events-none"
+                          )}
+                        >
+                          <p className="font-secondary font-bold text-[14px] leading-[20px] tracking-[-0.2%] align-middle text-[#323638]">
+                            Reference
+                          </p>
+                          {app.linkPlayStore && (
+                            <a
+                              href={app.linkPlayStore}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600 font-secondary"
+                            >
+                              <ExternalLink className="h-4 w-4" />
+                              <span>Play Store</span>
+                            </a>
+                          )}
+                          {app.linkAppStore && (
+                            <a
+                              href={app.linkAppStore}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600 font-secondary"
+                            >
+                              <ExternalLink className="h-4 w-4" />
+                              <span>App Store</span>
+                            </a>
+                          )}
+                          {app.linkWebsite && (
+                            <a
+                              href={app.linkWebsite}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600 font-secondary"
+                            >
+                              <ExternalLink className="h-4 w-4" />
+                              <span>Website</span>
+                            </a>
+                          )}
+                        </div>
+                      </>
                     )}
-                  >
-                    <FilterItem
-                      handleChange={handleChangeFilterCategories}
-                      menuFilter={filterCategories}
-                      iconType="square"
-                    />
+                    {/* Static Filters - visible when not scrolled - Hidden on mobile */}
+                    <div
+                      className={clsx(
+                        "hidden md:block min-w-[200px] max-w-[200px] transition-all ease-in-out rounded-[20px] p-5 bg-[#FAFAFA]",
+                        scrolledFilterMenu
+                          ? "opacity-0 pointer-events-none"
+                          : "opacity-100"
+                      )}
+                    >
+                      <FilterItem
+                        handleChange={handleChangeFilterCategories}
+                        menuFilter={filterCategories}
+                        iconType="square"
+                      />
+                    </div>
+                    {/* Fixed Filters - visible when scrolled - Hidden on mobile */}
+                    <div
+                      className={clsx(
+                        "hidden md:block min-w-[200px] max-w-[200px] fixed max-h-[90vh] overflow-y-auto top-[295px] z-50 pb-8 transition-all ease-in-out rounded-[20px] p-5 bg-[#FAFAFA]",
+                        scrolledFilterMenu
+                          ? "opacity-100 translate-y-0"
+                          : "opacity-0 -translate-y-4 pointer-events-none"
+                      )}
+                    >
+                      <FilterItem
+                        handleChange={handleChangeFilterCategories}
+                        menuFilter={filterCategories}
+                        iconType="square"
+                      />
+                    </div>
                   </div>
-                  {/* Fixed Filters - visible when scrolled - Hidden on mobile */}
-                  <div
-                    className={clsx(
-                      "hidden md:block min-w-[130px] max-w-[130px] fixed max-h-[90vh] overflow-y-auto top-24 z-50 pb-8 transition-all ease-in-out",
-                      scrolledFilterMenu
-                        ? "opacity-100 translate-y-0"
-                        : "opacity-0 -translate-y-4 pointer-events-none"
-                    )}
-                  >
-                    <FilterItem
-                      handleChange={handleChangeFilterCategories}
-                      menuFilter={filterCategories}
-                      iconType="square"
-                    />
-                  </div>
+
                   {/* Screens Grid/List/Horizontal */}
                   <div className="w-full flex justify-end">
                     <div className="w-full max-w-[990px] flex items-start gap-5 min-h-screen">
                       {screenViewMode === "list" ? (
-                        <div className="flex gap-8 flex-col items-start  w-full">
+                        <div className="flex gap-8 flex-col items-start  bg-[#F6F6F6] p-5 rounded-[20px] w-full">
                           {Object.entries(groupedScreensFilter).map(
                             ([key, screens]) => (
                               <div
                                 className="flex gap-4 flex-col items-start w-full"
                                 key={key}
                               >
-                                <div className="h-8 py-2 px-4 flex items-center justify-center font-[Inter] font-bold text-[16px] leading-[16px] tracking-[0%] text-[#020817] rounded-full border border-solid border-[#E2E8F0]">
+                                <div className="bg-[linear-gradient(90deg,#2563EB_0%,#9333EA_100%)] font-primary font-bold text-[16px] leading-[16px] text-center flex items-center justify-center text-white py-2 px-4 rounded-full">
                                   {key}
                                 </div>
-                                <div className="flex items-start max-w-full pr-5 overflow-x-auto gap-7 pb-1 !styled-scrollbar-black">
+                                <div className="flex items-start max-w-full pr-5 overflow-x-auto gap-4 pb-1 !styled-scrollbar-black">
                                   {screens.map((screen, i) => (
                                     <div
                                       key={i}
-                                      className="w-full flex flex-col items-start gap-1 hover:cursor-pointer"
+                                      className="w-full flex flex-col items-start gap-3 hover:cursor-pointer pb-1"
                                       onClick={() => setSelectedScreen(screen)}
                                     >
                                       <ImageWithFallback
@@ -540,19 +622,40 @@ const useView: React.FC = () => {
                                         fallbackSrc="https://placehold.co/400"
                                         alt={screen.name}
                                         containerClassName="w-auto h-[100%]"
-                                        className="w-full min-w-[272px] h-[565px] max-w-[272px] aspect-[272/623] flex justify-center items-center rounded-xl overflow-hidden border-[1px] border-solid border-[rgba(0,0,0,0.1)]"
+                                        className="w-full min-w-[240px] h-[499px] max-w-[240px] flex justify-center items-center rounded-xl overflow-hidden border-solid border border-[#0000001A]"
                                       />
-                                      <h4
-                                        className="font-[Inter] font-medium text-[12px] leading-[100%] tracking-[0%] align-middle text-[#565D61]"
-                                        style={{
-                                          display: "-webkit-box",
-                                          WebkitLineClamp: 2,
-                                          WebkitBoxOrient: "vertical",
-                                          overflow: "hidden",
-                                        }}
-                                      >
-                                        {screen.name}
-                                      </h4>
+
+                                      <Tooltip delayDuration={0}>
+                                        <TooltipTrigger asChild>
+                                          <h4
+                                            className="
+                                         text-ellipsis 
+            break-words 
+            [display:-webkit-box] 
+            [-webkit-line-clamp:1] 
+            [-webkit-box-orient:vertical
+                                        font-[Inter] font-medium text-[12px] leading-[12px] tracking-[0%] align-middle text-[#565D61] min-w-[240px] max-w-[240px]"
+                                            style={{
+                                              display: "-webkit-box",
+                                              WebkitLineClamp: 1,
+                                              WebkitBoxOrient: "vertical",
+                                              overflow: "hidden",
+                                            }}
+                                          >
+                                            {screen.name}
+                                          </h4>
+                                        </TooltipTrigger>
+                                        <TooltipContent
+                                          side="bottom"
+                                          align="center"
+                                          hidden={screen.name.length < 26}
+                                          children={
+                                            <h4 className="bg-black font-[Inter] font-medium text-[12px] leading-[100%] tracking-[0%] align-middle text-white p-1 ">
+                                              {screen.name}
+                                            </h4>
+                                          }
+                                        />
+                                      </Tooltip>
                                     </div>
                                   ))}
                                 </div>

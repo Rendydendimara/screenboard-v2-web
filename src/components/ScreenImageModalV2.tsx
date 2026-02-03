@@ -126,7 +126,7 @@ export const ScreenImageModalV2: React.FC<ScreenImageModalProps> = ({
         <DialogContent
           ref={boxRef}
           className={clsx(
-            "!p-8 !rounded-[32px]",
+            "!p-8 !rounded-[24px]",
             allScreens.length > 2 ? "max-w-[1340px]" : "w-auto",
             "h-[95vh] overflow-y-auto"
           )}
@@ -140,7 +140,7 @@ export const ScreenImageModalV2: React.FC<ScreenImageModalProps> = ({
           </DialogHeader>
           <div
             ref={scrollContainerRef}
-            className="flex w-full overflow-x-auto space-x-4 scroll-smooth"
+            className="flex w-full overflow-x-auto space-x-4 scroll-smooth px-4"
             style={{ maxWidth: `${widthContent - 50}px` }}
           >
             {allScreens.map((screenItem) => (
@@ -149,18 +149,18 @@ export const ScreenImageModalV2: React.FC<ScreenImageModalProps> = ({
                 ref={(el) => {
                   screenRefs.current[screenItem.id] = el;
                 }}
-                className="w-full"
+                className="w-full flex items-start flex-col gap-2"
               >
                 <Tooltip delayDuration={0}>
                   <TooltipTrigger asChild>
-                    <p className="mb-1 font-[Inter] font-medium text-[14.91px] leading-[100%] tracking-[0%] text-[#565D61] break-all line-clamp-1 text-ellipsis">
+                    <p className="font-[Inter] font-medium text-[14.91px] leading-[100%] tracking-[0%] text-[#565D61] break-all line-clamp-1 text-ellipsis">
                       {screenItem.name}
                     </p>
                   </TooltipTrigger>
                   <TooltipContent
                     side="bottom"
                     align="center"
-                    hidden={screenItem.name.length < 43}
+                    hidden={screenItem.name.length < 25}
                     children={
                       <p className="font-[Inter] font-medium text-[14.91px] leading-[100%] tracking-[0%] text-[#565D61]">
                         {screenItem.name}
@@ -177,7 +177,7 @@ export const ScreenImageModalV2: React.FC<ScreenImageModalProps> = ({
                   }`}
                   onClick={() => onScreenChange && onScreenChange(screenItem)}
                 >
-                  <div className="bg-white rounded-lg w-[338px]  h-full overflow-hidden shadow-sm hover:shadow-2xl transition-shadow duration-200">
+                  <div className="bg-white rounded-[10px] w-[338px]  h-full overflow-hidden shadow-sm hover:shadow-2xl transition-shadow duration-200">
                     <div className="overflow-hidden flex-1 h-full w-full relative flex justify-center items-center">
                       <ImageWithFallback
                         fallbackSrc={screenItem.image}
@@ -185,7 +185,7 @@ export const ScreenImageModalV2: React.FC<ScreenImageModalProps> = ({
                         alt={screenItem.name}
                         containerClassName="h-[100%] fill-available"
                         className={clsx(
-                          "fill-available h-[100%] transition-all duration-200 rounded-lg",
+                          "fill-available h-[100%] transition-all duration-200 rounded-[10px] border border-solid border-[#ECECEC]",
                           screenItem.id === screen.id &&
                             "border border-blue-500"
                         )}

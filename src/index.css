@@ -103,17 +103,17 @@
 
 .styled-scrollbar-black::-webkit-scrollbar {
   width:8px;
-  height: 0.4em;
+  height: 9px;
 }
 
 .styled-scrollbar-black::-webkit-scrollbar-track {
   background-color: transparent;
-  border-radius: 0.4em;
+  border-radius: 20px;
 }
 
 .styled-scrollbar-black::-webkit-scrollbar-thumb {
   background-color: #D9D9D9; /*hsl(var(--twc-Semantic_Basic_Neutral_Neutral_550));*/
-  border-radius: 0.4em;
+  border-radius: 20px;
 }
 
 /* Global Scrollbar Style (semua elemen) */
