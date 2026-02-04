@@ -594,7 +594,7 @@ const useView: React.FC = () => {
                         isValidUrl(app.linkPlayStore) ||
                           isValidUrl(app.linkAppStore) ||
                           isValidUrl(app.linkWebsite)
-                          ? "top-[295px]"
+                          ? "top-[354px]"
                           : "top-24",
                         scrolledFilterMenu
                           ? "opacity-100 translate-y-0"
@@ -650,7 +650,7 @@ const useView: React.FC = () => {
             [display:-webkit-box] 
             [-webkit-line-clamp:1] 
             [-webkit-box-orient:vertical
-                                        font-[Inter] font-medium text-[12px] leading-[12px] tracking-[0%] align-middle text-[#565D61] min-w-[240px] max-w-[240px]"
+                                        font-[Inter] font-medium text-[12px] leading-normal tracking-[0%] align-middle text-[#565D61] min-w-[240px] max-w-[240px]"
                                             style={{
                                               display: "-webkit-box",
                                               WebkitLineClamp: 1,
@@ -666,7 +666,7 @@ const useView: React.FC = () => {
                                           align="center"
                                           hidden={screen.name.length < 26}
                                           children={
-                                            <h4 className="bg-black font-[Inter] font-medium text-[12px] leading-[100%] tracking-[0%] align-middle text-white p-1 ">
+                                            <h4 className="bg-black font-[Inter] font-medium text-[12px] leading-normal tracking-[0%] align-middle text-white p-1 ">
                                               {screen.name}
                                             </h4>
                                           }
