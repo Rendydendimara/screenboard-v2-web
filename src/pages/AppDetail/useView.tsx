@@ -31,6 +31,17 @@ import {
 import React, { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import useController from "./usController";
+
+// Helper function to validate URL
+const isValidUrl = (url: string | undefined | null): boolean => {
+  if (!url || url.trim().length === 0) return false;
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+};
 import FilterItem from "@/components/FilterItem";
 import { Header } from "@/components/molecules";
 
@@ -458,9 +469,9 @@ const useView: React.FC = () => {
                 >
                   <div className="w-full flex flex-col gap-5 items-start">
                     {/* App Link */}
-                    {(app.linkPlayStore ||
-                      app.linkAppStore ||
-                      app.linkWebsite) && (
+                    {(isValidUrl(app.linkPlayStore) ||
+                      isValidUrl(app.linkAppStore) ||
+                      isValidUrl(app.linkWebsite)) && (
                       <>
                         {/* Static Filters - visible when not scrolled - Hidden on mobile */}
                         <div
@@ -474,7 +485,7 @@ const useView: React.FC = () => {
                           <p className="font-secondary font-bold text-[14px] leading-[20px] tracking-[-0.2%] align-middle text-[#323638]">
                             Reference
                           </p>
-                          {app.linkPlayStore && (
+                          {isValidUrl(app.linkPlayStore) && (
                             <a
                               href={app.linkPlayStore}
                               target="_blank"
@@ -485,7 +496,7 @@ const useView: React.FC = () => {
                               <span>Play Store</span>
                             </a>
                           )}
-                          {app.linkAppStore && (
+                          {isValidUrl(app.linkAppStore) && (
                             <a
                               href={app.linkAppStore}
                               target="_blank"
@@ -496,7 +507,7 @@ const useView: React.FC = () => {
                               <span>App Store</span>
                             </a>
                           )}
-                          {app.linkWebsite && (
+                          {isValidUrl(app.linkWebsite) && (
                             <a
                               href={app.linkWebsite}
                               target="_blank"
@@ -512,10 +523,10 @@ const useView: React.FC = () => {
                         <div
                           className={clsx(
                             "hidden md:flex flex-col items-start gap-4 min-w-[200px] max-w-[200px] fixed max-h-[90vh] overflow-y-auto  z-50 pb-8 transition-all ease-in-out rounded-[20px] p-5 bg-[#FAFAFA]",
-                            app.linkPlayStore ||
-                              app.linkAppStore ||
-                              app.linkWebsite
-                              ? "top-[295px]"
+                            isValidUrl(app.linkPlayStore) ||
+                              isValidUrl(app.linkAppStore) ||
+                              isValidUrl(app.linkWebsite)
+                              ? "top-[100px]"
                               : "top-24",
                             scrolledFilterMenu
                               ? "opacity-100 translate-y-0"
@@ -525,7 +536,7 @@ const useView: React.FC = () => {
                           <p className="font-secondary font-bold text-[14px] leading-[20px] tracking-[-0.2%] align-middle text-[#323638]">
                             Reference
                           </p>
-                          {app.linkPlayStore && (
+                          {isValidUrl(app.linkPlayStore) && (
                             <a
                               href={app.linkPlayStore}
                               target="_blank"
@@ -536,7 +547,7 @@ const useView: React.FC = () => {
                               <span>Play Store</span>
                             </a>
                           )}
-                          {app.linkAppStore && (
+                          {isValidUrl(app.linkAppStore) && (
                             <a
                               href={app.linkAppStore}
                               target="_blank"
@@ -547,7 +558,7 @@ const useView: React.FC = () => {
                               <span>App Store</span>
                             </a>
                           )}
-                          {app.linkWebsite && (
+                          {isValidUrl(app.linkWebsite) && (
                             <a
                               href={app.linkWebsite}
                               target="_blank"
@@ -579,7 +590,12 @@ const useView: React.FC = () => {
                     {/* Fixed Filters - visible when scrolled - Hidden on mobile */}
                     <div
                       className={clsx(
-                        "hidden md:block min-w-[200px] max-w-[200px] fixed max-h-[90vh] overflow-y-auto top-[295px] z-50 pb-8 transition-all ease-in-out rounded-[20px] p-5 bg-[#FAFAFA]",
+                        "hidden md:block min-w-[200px] max-w-[200px] fixed max-h-[90vh] overflow-y-auto z-50 pb-8 transition-all ease-in-out rounded-[20px] p-5 bg-[#FAFAFA]",
+                        isValidUrl(app.linkPlayStore) ||
+                          isValidUrl(app.linkAppStore) ||
+                          isValidUrl(app.linkWebsite)
+                          ? "top-[295px]"
+                          : "top-24",
                         scrolledFilterMenu
                           ? "opacity-100 translate-y-0"
                           : "opacity-0 -translate-y-4 pointer-events-none"
@@ -594,10 +610,10 @@ const useView: React.FC = () => {
                   </div>
 
                   {/* Screens Grid/List/Horizontal */}
-                  <div className="w-full flex justify-end">
-                    <div className="w-full max-w-[990px] flex items-start gap-5 min-h-screen">
+                  <div className="w-full flex justify-end absolute right-0 pb-[80px]">
+                    <div className="w-full lg:max-w-[1100px] 2xl:max-w-[1340px] flex items-start gap-5 overflow-x-auto">
                       {screenViewMode === "list" ? (
-                        <div className="flex gap-8 flex-col items-start  bg-[#F6F6F6] p-5 rounded-[20px] w-full">
+                        <div className="flex gap-8 flex-col items-start  bg-[#F6F6F6] p-5 pr-0 rounded-[20px] rounded-tr-none rounded-br-none w-full">
                           {Object.entries(groupedScreensFilter).map(
                             ([key, screens]) => (
                               <div

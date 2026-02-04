@@ -128,7 +128,7 @@ export const ScreenImageModalV2: React.FC<ScreenImageModalProps> = ({
           className={clsx(
             "!p-8 !rounded-[24px]",
             allScreens.length > 2 ? "max-w-[1340px]" : "w-auto",
-            "h-[95vh] overflow-y-auto"
+            "overflow-y-auto"
           )}
         >
           <DialogHeader>
