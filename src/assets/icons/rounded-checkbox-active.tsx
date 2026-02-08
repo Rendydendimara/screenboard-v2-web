@@ -7,8 +7,7 @@ const RoundedCheckboxActive = () => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <rect x="0.5" y="0.5" width="15" height="15" rx="7.5" fill="#A855F7" />
-      <rect x="0.5" y="0.5" width="15" height="15" rx="7.5" stroke="#6B21A8" />
+      <rect width="16" height="16" rx="8" fill="url(#paint0_linear_437_2029)" />
       <path
         d="M4.5 8L7 10.5L12 5.5"
         stroke="#F9F9F9"
@@ -16,6 +15,19 @@ const RoundedCheckboxActive = () => {
         stroke-linecap="round"
         stroke-linejoin="round"
       />
+      <defs>
+        <linearGradient
+          id="paint0_linear_437_2029"
+          x1="0"
+          y1="8"
+          x2="16"
+          y2="8"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stop-color="#2563EB" />
+          <stop offset="1" stop-color="#9333EA" />
+        </linearGradient>
+      </defs>
     </svg>
   );
 };

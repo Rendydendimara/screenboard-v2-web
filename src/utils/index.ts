@@ -38,3 +38,14 @@ export function sanitize(filename: string): string {
 
   return name;
 }
+
+// Helper function to validate URL
+export const isValidUrl = (url: string | undefined | null): boolean => {
+  if (!url || url.trim().length === 0) return false;
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+};

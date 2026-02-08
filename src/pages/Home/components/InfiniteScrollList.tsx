@@ -67,8 +67,8 @@ const InfiniteScrollListComponent = ({
         className={clsx(
           "w-full",
           viewMode === "grid"
-            ? "grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6 lg:gap-8"
-            : "space-y-4 lg:space-y-6"
+            ? "grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-8"
+            : "space-y-4 lg:space-y-8"
         )}
       >
         {apps.map((app) => (

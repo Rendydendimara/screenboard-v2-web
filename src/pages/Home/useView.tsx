@@ -449,15 +449,15 @@ const Index = () => {
                           isLoading={isLoadingGetApp}
                         />
                         {!user && allFilteredApps.length > 9 && (
-                          <div className="-mt-[22rem] pt-32 pb-8 bg-[linear-gradient(180deg,_rgba(255,_255,_255,_0)_4.01%,_#FFFFFF_62.21%)] absolute w-full max-w-[1200px]">
+                          <div className="-mt-[12rem] pt-32 pb-8 bg-[linear-gradient(180.13deg,rgba(255,255,255,0)_-24.49%,#FFFFFF_33.51%)] absolute w-full max-w-[1200px]">
                             <div className="flex flex-col w-full gap-6">
                               <div className="flex justify-center items-center w-full">
                                 <div className="flex flex-col gap-3 items-center w-full md:w-[889px] px-4">
-                                  <h5 className="font-['Inter'] font-semibold text-[32px] md:text-[64px] leading-[125%] text-center bg-gradient-to-r from-slate-900 via-blue-800 to-purple-800 bg-clip-text text-transparent">
+                                  <h5 className="font-['Inter'] font-semibold text-[32px] md:text-[64px] leading-[80px] text-center bg-gradient-to-r from-slate-900 via-blue-800 to-purple-800 bg-clip-text text-transparent">
                                     Join and get more inspiration from real
                                     product
                                   </h5>
-                                  <p className="font-[Inter] font-normal text-[16px] md:text-[20px] text-[#464C4F] leading-[155%] text-center">
+                                  <p className="font-[Inter] font-normal text-[16px] md:text-[20px] text-[#464C4F] leading-[31px] text-center">
                                     We believe real design give more sense to
                                     your design process
                                   </p>

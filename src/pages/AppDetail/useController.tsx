@@ -23,6 +23,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast as toastify } from "react-toastify";
 import { AppPublic, ScreenPublic } from "../Home/useController";
 import { TItemMenuFilter, TMenuFilter } from "@/types/filter";
+import { isValidUrl } from "@/utils";
 
 const MENU_FILTER_CATEGORIES: TMenuFilter = {
   label: "Categories",
@@ -350,6 +351,12 @@ const useController = () => {
     [filterCategories]
   );
 
+  const links = [app?.linkPlayStore, app?.linkAppStore, app?.linkWebsite];
+
+  const validLinks = links.filter((link) => isValidUrl(link));
+
+  const countLinkReferenceApp = validLinks.length;
+
   useEffect(() => {
     getAppDetail();
   }, []);
@@ -420,6 +427,7 @@ const useController = () => {
     containerMainRef,
     scrolledFilterMenu,
     handleChangeFilterCategories,
+    countLinkReferenceApp,
   };
 };
 

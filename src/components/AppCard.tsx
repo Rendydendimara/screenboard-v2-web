@@ -392,7 +392,7 @@ export const AppCard: React.FC<AppCardProps> = ({
           </div>
         </div>
       </div>
-      <div className="pl-3 flex items-start gap-[10px] overflow-x-auto pr-3">
+      <div className="pl-3 flex items-start gap-[10px] overflow-x-auto pr-3 pb-1">
         {app.screens.slice(0, 5).map((screen, i) => (
           <div className="relative">
             <ImageWithFallback

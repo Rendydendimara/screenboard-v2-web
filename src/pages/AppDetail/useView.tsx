@@ -30,20 +30,11 @@ import {
 } from "lucide-react";
 import React, { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import useController from "./usController";
+import useController from "./useController";
 
-// Helper function to validate URL
-const isValidUrl = (url: string | undefined | null): boolean => {
-  if (!url || url.trim().length === 0) return false;
-  try {
-    new URL(url);
-    return true;
-  } catch {
-    return false;
-  }
-};
 import FilterItem from "@/components/FilterItem";
 import { Header } from "@/components/molecules";
+import { isValidUrl } from "@/utils";
 
 const useView: React.FC = () => {
   const {
@@ -89,9 +80,17 @@ const useView: React.FC = () => {
     containerMainRef,
     scrolledFilterMenu,
     handleChangeFilterCategories,
+    countLinkReferenceApp,
   } = useController();
 
   const [showFilters, setShowFilters] = useState(false);
+
+  // Get only the screens from the same group as the selected screen
+  const selectedGroupScreens = useMemo(() => {
+    if (!selectedScreen || !groupedScreensFilter) return [];
+    const categoryName = selectedScreen.category?.name || "Uncategorized";
+    return groupedScreensFilter[categoryName] || [];
+  }, [selectedScreen, groupedScreensFilter]);
 
   // Count active filters
   const activeFiltersCount = useMemo(() => {
@@ -485,39 +484,53 @@ const useView: React.FC = () => {
                           <p className="font-secondary font-bold text-[14px] leading-[20px] tracking-[-0.2%] align-middle text-[#323638]">
                             Reference
                           </p>
-                          {isValidUrl(app.linkPlayStore) && (
-                            <a
-                              href={app.linkPlayStore}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600 font-secondary"
-                            >
-                              <ExternalLink className="h-4 w-4" />
-                              <span>Play Store</span>
-                            </a>
-                          )}
-                          {isValidUrl(app.linkAppStore) && (
-                            <a
-                              href={app.linkAppStore}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600 font-secondary"
-                            >
-                              <ExternalLink className="h-4 w-4" />
-                              <span>App Store</span>
-                            </a>
-                          )}
-                          {isValidUrl(app.linkWebsite) && (
-                            <a
-                              href={app.linkWebsite}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600 font-secondary"
-                            >
-                              <ExternalLink className="h-4 w-4" />
-                              <span>Website</span>
-                            </a>
-                          )}
+                          <div className="w-full flex flex-col items-start gap-3">
+                            {isValidUrl(app.linkPlayStore) && (
+                              <a
+                                href={app.linkPlayStore}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600 font-secondary bg-white"
+                              >
+                                <ExternalLink className="h-4 w-4" />
+                                <span>Play Store</span>
+                              </a>
+                            )}
+                            {isValidUrl(app.linkAppStore) && (
+                              <a
+                                href={app.linkAppStore}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600 font-secondary bg-white"
+                              >
+                                <ExternalLink className="h-4 w-4" />
+                                <span>App Store</span>
+                              </a>
+                            )}
+                            {isValidUrl(app.linkWebsite) && (
+                              <a
+                                href={app.linkWebsite}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600 font-secondary bg-white"
+                              >
+                                <svg
+                                  width="14"
+                                  height="14"
+                                  viewBox="0 0 14 14"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M6.66667 0C2.99067 0 0 2.99067 0 6.66667C0 10.3427 2.99067 13.3333 6.66667 13.3333C10.3427 13.3333 13.3333 10.3427 13.3333 6.66667C13.3333 2.99067 10.3427 0 6.66667 0ZM1.33333 6.66667C1.33333 6.06733 1.43733 5.492 1.62067 4.954L2.66667 6L4 7.33333V8.66667L5.33333 10L6 10.6667V11.954C3.374 11.624 1.33333 9.38133 1.33333 6.66667ZM10.8867 9.91533C10.4513 9.56467 9.79133 9.33333 9.33333 9.33333V8.66667C9.33333 8.31304 9.19286 7.97391 8.94281 7.72386C8.69276 7.47381 8.35362 7.33333 8 7.33333H5.33333V5.33333C5.68695 5.33333 6.02609 5.19286 6.27614 4.94281C6.52619 4.69276 6.66667 4.35362 6.66667 4V3.33333H7.33333C7.68695 3.33333 8.02609 3.19286 8.27614 2.94281C8.52619 2.69276 8.66667 2.35362 8.66667 2V1.726C10.6187 2.51867 12 4.43333 12 6.66667C11.9997 7.84311 11.608 8.98602 10.8867 9.91533Z"
+                                    fill="#475569"
+                                  />
+                                </svg>
+
+                                <span>Website</span>
+                              </a>
+                            )}
+                          </div>
                         </div>
                         {/* Fixed Filters - visible when scrolled - Hidden on mobile */}
                         <div
@@ -536,39 +549,53 @@ const useView: React.FC = () => {
                           <p className="font-secondary font-bold text-[14px] leading-[20px] tracking-[-0.2%] align-middle text-[#323638]">
                             Reference
                           </p>
-                          {isValidUrl(app.linkPlayStore) && (
-                            <a
-                              href={app.linkPlayStore}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600 font-secondary"
-                            >
-                              <ExternalLink className="h-4 w-4" />
-                              <span>Play Store</span>
-                            </a>
-                          )}
-                          {isValidUrl(app.linkAppStore) && (
-                            <a
-                              href={app.linkAppStore}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600 font-secondary"
-                            >
-                              <ExternalLink className="h-4 w-4" />
-                              <span>App Store</span>
-                            </a>
-                          )}
-                          {isValidUrl(app.linkWebsite) && (
-                            <a
-                              href={app.linkWebsite}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600 font-secondary"
-                            >
-                              <ExternalLink className="h-4 w-4" />
-                              <span>Website</span>
-                            </a>
-                          )}
+                          <div className="w-full flex flex-col items-start gap-3">
+                            {isValidUrl(app.linkPlayStore) && (
+                              <a
+                                href={app.linkPlayStore}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600 font-secondary bg-white"
+                              >
+                                <ExternalLink className="h-4 w-4" />
+                                <span>Play Store</span>
+                              </a>
+                            )}
+                            {isValidUrl(app.linkAppStore) && (
+                              <a
+                                href={app.linkAppStore}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600 font-secondary bg-white"
+                              >
+                                <ExternalLink className="h-4 w-4" />
+                                <span>App Store</span>
+                              </a>
+                            )}
+                            {isValidUrl(app.linkWebsite) && (
+                              <a
+                                href={app.linkWebsite}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600 font-secondary bg-white"
+                              >
+                                <svg
+                                  width="14"
+                                  height="14"
+                                  viewBox="0 0 14 14"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M6.66667 0C2.99067 0 0 2.99067 0 6.66667C0 10.3427 2.99067 13.3333 6.66667 13.3333C10.3427 13.3333 13.3333 10.3427 13.3333 6.66667C13.3333 2.99067 10.3427 0 6.66667 0ZM1.33333 6.66667C1.33333 6.06733 1.43733 5.492 1.62067 4.954L2.66667 6L4 7.33333V8.66667L5.33333 10L6 10.6667V11.954C3.374 11.624 1.33333 9.38133 1.33333 6.66667ZM10.8867 9.91533C10.4513 9.56467 9.79133 9.33333 9.33333 9.33333V8.66667C9.33333 8.31304 9.19286 7.97391 8.94281 7.72386C8.69276 7.47381 8.35362 7.33333 8 7.33333H5.33333V5.33333C5.68695 5.33333 6.02609 5.19286 6.27614 4.94281C6.52619 4.69276 6.66667 4.35362 6.66667 4V3.33333H7.33333C7.68695 3.33333 8.02609 3.19286 8.27614 2.94281C8.52619 2.69276 8.66667 2.35362 8.66667 2V1.726C10.6187 2.51867 12 4.43333 12 6.66667C11.9997 7.84311 11.608 8.98602 10.8867 9.91533Z"
+                                    fill="#475569"
+                                  />
+                                </svg>
+
+                                <span>Website</span>
+                              </a>
+                            )}
+                          </div>
                         </div>
                       </>
                     )}
@@ -585,6 +612,8 @@ const useView: React.FC = () => {
                         handleChange={handleChangeFilterCategories}
                         menuFilter={filterCategories}
                         iconType="square"
+                        className="gap-4"
+                        classNameContainerItem="gap-4"
                       />
                     </div>
                     {/* Fixed Filters - visible when scrolled - Hidden on mobile */}
@@ -594,7 +623,11 @@ const useView: React.FC = () => {
                         isValidUrl(app.linkPlayStore) ||
                           isValidUrl(app.linkAppStore) ||
                           isValidUrl(app.linkWebsite)
-                          ? "top-[354px]"
+                          ? countLinkReferenceApp === 1
+                            ? "top-[246px]"
+                            : countLinkReferenceApp === 2
+                            ? "top-[300px]"
+                            : "top-[354px]"
                           : "top-24",
                         scrolledFilterMenu
                           ? "opacity-100 translate-y-0"
@@ -605,6 +638,8 @@ const useView: React.FC = () => {
                         handleChange={handleChangeFilterCategories}
                         menuFilter={filterCategories}
                         iconType="square"
+                        className="gap-4"
+                        classNameContainerItem="gap-4"
                       />
                     </div>
                   </div>
@@ -623,7 +658,7 @@ const useView: React.FC = () => {
                                 <div className="bg-[linear-gradient(90deg,#2563EB_0%,#9333EA_100%)] font-primary font-bold text-[16px] leading-[16px] text-center flex items-center justify-center text-white py-2 px-4 rounded-full">
                                   {key}
                                 </div>
-                                <div className="flex items-start max-w-full pr-5 overflow-x-auto gap-4 pb-1 !styled-scrollbar-black">
+                                <div className="flex items-start max-w-full pr-5 overflow-x-auto gap-4 pb-1 styled-scrollbar-black">
                                   {screens.map((screen, i) => (
                                     <div
                                       key={i}
@@ -638,7 +673,7 @@ const useView: React.FC = () => {
                                         fallbackSrc="https://placehold.co/400"
                                         alt={screen.name}
                                         containerClassName="w-auto h-[100%]"
-                                        className="w-full min-w-[240px] h-[499px] max-w-[240px] flex justify-center items-center rounded-xl overflow-hidden border-solid border border-[#0000001A]"
+                                        className="w-full min-w-[240px] h-[499px] max-w-[240px] flex justify-center items-center rounded-xl overflow-hidden border-solid border border-[#0000001A] object-cover"
                                       />
 
                                       <Tooltip delayDuration={0}>
@@ -742,7 +777,7 @@ const useView: React.FC = () => {
                 isOpen={!!selectedScreen}
                 onClose={() => setSelectedScreen(null)}
                 onImageUpdate={(newImage) => {}}
-                allScreens={filteredScreens}
+                allScreens={selectedGroupScreens}
                 onScreenChange={handleScreenChange}
               />
             )}

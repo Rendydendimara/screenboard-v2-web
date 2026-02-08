@@ -126,7 +126,7 @@ export const ScreenImageModalV2: React.FC<ScreenImageModalProps> = ({
         <DialogContent
           ref={boxRef}
           className={clsx(
-            "!p-8 !rounded-[24px]",
+            "!p-8 !rounded-[24px] h-[90vh] max-h-[786px]",
             allScreens.length > 2 ? "max-w-[1340px]" : "w-auto",
             "overflow-y-auto"
           )}
@@ -134,13 +134,13 @@ export const ScreenImageModalV2: React.FC<ScreenImageModalProps> = ({
           <DialogHeader>
             <div className="flex flex-col md:flex-row gap-2 md:gap-0 items-center justify-between !h-[32px]">
               <DialogTitle className="text-2xl font-bold !h-[32px]">
-                {screen.modul}
+                {screen?.category?.name ?? ""}
               </DialogTitle>
             </div>
           </DialogHeader>
           <div
             ref={scrollContainerRef}
-            className="flex w-full overflow-x-auto space-x-4 scroll-smooth px-4"
+            className="flex w-full overflow-x-auto gap-6 scroll-smooth px-4"
             style={{ maxWidth: `${widthContent - 50}px` }}
           >
             {allScreens.map((screenItem) => (
@@ -149,7 +149,7 @@ export const ScreenImageModalV2: React.FC<ScreenImageModalProps> = ({
                 ref={(el) => {
                   screenRefs.current[screenItem.id] = el;
                 }}
-                className="w-full flex items-start flex-col gap-2"
+                className="w-[288px] flex items-start flex-col gap-2"
               >
                 <Tooltip delayDuration={0}>
                   <TooltipTrigger asChild>
@@ -170,22 +170,22 @@ export const ScreenImageModalV2: React.FC<ScreenImageModalProps> = ({
                 </Tooltip>
 
                 <div
-                  className={`h-[95%] group cursor-pointer w-full flex-shrink-0 ${
-                    screenItem.id === screen.id
-                      ? "ring-2 ring-blue-500 rounded-lg"
-                      : ""
-                  }`}
+                  className={clsx(
+                    "h-[95%] group cursor-pointer  w-[288px] flex-shrink-0 ",
+                    screenItem.id === screen.id &&
+                      "ring-2 ring-blue-500 rounded-[8px]"
+                  )}
                   onClick={() => onScreenChange && onScreenChange(screenItem)}
                 >
-                  <div className="bg-white rounded-[10px] w-[338px]  h-full overflow-hidden shadow-sm hover:shadow-2xl transition-shadow duration-200">
+                  <div className="bg-white rounded-[8px] w-[288px]  h-full overflow-hidden shadow-sm hover:shadow-2xl tråansition-shadow duration-200">
                     <div className="overflow-hidden flex-1 h-full w-full relative flex justify-center items-center">
                       <ImageWithFallback
                         fallbackSrc={screenItem.image}
                         src={screenItem.image}
                         alt={screenItem.name}
-                        containerClassName="h-[100%] fill-available"
+                        containerClassName="h-[100%] fill-available w-full minw-h-[648px] max-h-[648px]"
                         className={clsx(
-                          "fill-available h-[100%] transition-all duration-200 rounded-[10px] border border-solid border-[#ECECEC]",
+                          "fill-available h-[100%] transition-all duration-200 w-full  border rounded-[8px] border-solid border-[#ECECEC]",
                           screenItem.id === screen.id &&
                             "border border-blue-500"
                         )}
