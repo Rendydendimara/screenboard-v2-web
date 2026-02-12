@@ -673,7 +673,7 @@ const useView: React.FC = () => {
                                         fallbackSrc="https://placehold.co/400"
                                         alt={screen.name}
                                         containerClassName="w-auto h-[100%]"
-                                        className="w-full min-w-[240px] h-[499px] max-w-[240px] flex justify-center items-center rounded-xl overflow-hidden border-solid border border-[#0000001A] object-cover"
+                                        className="w-full min-w-[240px] h-[499px] max-w-[240px] flex justify-center items-center rounded-xl overflow-hidden border-solid border border-[#0000001A] object-fill"
                                       />
 
                                       <Tooltip delayDuration={0}>
