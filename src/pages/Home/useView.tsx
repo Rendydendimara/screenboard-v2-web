@@ -157,11 +157,12 @@ const Index = () => {
                       )}
                     >
                       <div className="relative">
-                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400 ml-[40px] z-[1]" />
                         <Input
                           placeholder="Search apps..."
                           value={searchTerm}
                           onChange={(e) => handleChangeSearch(e.target.value)}
+                          onClear={() => handleChangeSearch("")}
                           className="
     pl-10 
     w-full 

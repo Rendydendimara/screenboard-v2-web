@@ -1,5 +1,6 @@
 // List of countries with their codes
 export const COUNTRIES = [
+  { name: "Multi Country", flag: "🇦", code: "", dial_code: "" },
   { name: "Afghanistan", flag: "🇦🇫", code: "AF", dial_code: "+93" },
   { name: "Åland Islands", flag: "🇦🇽", code: "AX", dial_code: "+358" },
   { name: "Albania", flag: "🇦🇱", code: "AL", dial_code: "+355" },

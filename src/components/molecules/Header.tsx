@@ -109,7 +109,7 @@ export const Header = ({
           <div className="w-full md:max-w-[700px] lg:max-w-[1200px]">
             <div className="flex w-full items-center justify-between h-16 lg:h-20 px-4 md:px-6 lg:px-0">
               {/* Logo */}
-              <div className="w-fit md:w-[222px]">
+              <div className="w-fit md:w-[203px] flex items-center gap-4">
                 <Link to="/" className="flex items-center space-x-2">
                   <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
                     <span className="text-white font-bold text-sm lg:text-base">
@@ -117,10 +117,57 @@ export const Header = ({
                     </span>
                   </div>
                 </Link>
+                <Link to="/">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className={clsx(
+                      "font-[Inter] font-normal text-[14px] leading-[20px] tracking-[0%] text-center align-middle",
+                      location.pathname === "/" ||
+                        location.pathname.includes("app")
+                        ? "font-bold"
+                        : ""
+                    )}
+                  >
+                    Apps
+                  </Button>
+                </Link>
+                <Link to="#">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className={clsx(
+                      "font-[Inter] font-normal text-[14px] leading-[20px] tracking-[0%] text-center align-middle",
+                      location.pathname === "/website" && "font-bold"
+                    )}
+                  >
+                    Module
+                  </Button>
+                </Link>
               </div>
 
+              <Input
+                placeholder="Search apps..."
+                value={searchTerm}
+                onChange={(e) => onSearchChange(e.target.value)}
+                onClear={() => onSearchChange("")}
+                className="
+    pl-10 
+    w-[473px] 
+    rounded-[20px]
+    focus:ring-0 
+    focus-visible:ring-0
+    ring-0
+    ring-offset-0
+    focus-visible:ring-offset-0
+    font-third
+    text-[13px]
+    placeholder:font-third
+  "
+              />
+
               {/* Search Bar - Responsive (only show if showSearch is true) */}
-              {showSearch && (
+              {/* {showSearch && (
                 <div
                   className={clsx(
                     "flex-1 max-w-md mx-4 lg:mx-8 transition-all duration-300 ease-in-out overflow-hidden",
@@ -140,9 +187,9 @@ export const Header = ({
                     />
                   </div>
                 </div>
-              )}
+              )} */}
 
-              {!scrolledSearch && (
+              {/* {!scrolledSearch && (
                 <div className="hidden md:flex items-center gap-3 ">
                   <Link to="/">
                     <Button
@@ -187,7 +234,7 @@ export const Header = ({
                     </Button>
                   </Link>
                 </div>
-              )}
+              )} */}
 
               {/* Action Buttons - Desktop */}
               <div className="hidden md:flex items-center gap-[10px]">
@@ -310,14 +357,14 @@ export const Header = ({
                         </p>
                       </Button>
                     </Link>
-                    <Button
+                    {/* <Button
                       variant="ghost"
                       size="sm"
                       onClick={handleLogout}
                       className="hidden sm:flex items-center space-x-2 font-[Inter] font-normal text-[13.3px] leading-[20px] tracking-[0%] text-center align-middle underline [text-decoration-style:solid] [text-decoration-skip-ink:auto] !text-[#4475EE]"
                     >
                       Logout
-                    </Button>
+                    </Button> */}
                     {user.userType === "administrator" && (
                       <Link to="/admin">
                         <Button

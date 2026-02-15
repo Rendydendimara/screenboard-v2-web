@@ -445,6 +445,7 @@ export const AdminComponentManager: React.FC<AdminComponentManagerProps> = ({
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="max-w-md"
+              onClear={() => setSearchTerm("")}
             />
           </div>
 
@@ -629,6 +630,7 @@ export const AdminComponentManager: React.FC<AdminComponentManagerProps> = ({
                 onChange={(e) =>
                   setFormData((prev) => ({ ...prev, name: e.target.value }))
                 }
+                onClear={() => setFormData((prev) => ({ ...prev, name: "" }))}
                 required
               />
             </div>

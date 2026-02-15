@@ -233,6 +233,13 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
     };
   }, []);
 
+  // Set default module filter when module options are available
+  useEffect(() => {
+    if (!selectedModuleFilter && getModuleOptions.length > 0) {
+      setSelectedModulFilter(getModuleOptions[0]);
+    }
+  }, [getModuleOptions]);
+
   // Reset category filter when module filter changes
   useEffect(() => {
     setSelectedCategoryFilter(null);
@@ -251,7 +258,7 @@ export const AdminScreenshotManager: React.FC<AdminScreenshotManagerProps> = ({
                     <Upload className="h-4 w-4 mr-2" />
                     Bulk Upload
                   </Button>
-                  <Button variant="outline" onClick={handleEnterReorderMode}>
+                  <Button variant="outline" onClick={() => handleEnterReorderMode(selectedModuleFilter, selectedCategoryFilter)}>
                     <ArrowDownUp className="h-4 w-4 mr-2" />
                     Reorder
                   </Button>

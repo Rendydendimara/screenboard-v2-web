@@ -5,6 +5,7 @@ import { TAppRes } from "@/api/admin/app/type";
 import { TModulRes } from "@/api/admin/modul/type";
 import { TScreenCategoryRes } from "@/api/admin/screenCategory/type";
 import ScreenAPI from "@/api/admin/screen/api";
+import { TSelect } from "@/types";
 import { ReorderLevel, Screenshot } from "../types";
 
 export const useReorderMode = (
@@ -35,11 +36,16 @@ export const useReorderMode = (
   const [activeId, setActiveId] = useState<string | null>(null);
   const [isLoadingPost, setIsLoadingPost] = useState(false);
 
-  const handleEnterReorderMode = useCallback(() => {
+  const handleEnterReorderMode = useCallback((
+    currentModuleFilter?: TSelect | null,
+    currentCategoryFilter?: TSelect | null,
+  ) => {
     setIsReorderMode(true);
 
+    let currentApp: TAppRes | null = null;
+
     if (appId) {
-      const currentApp = rawApps.find((app) => app._id === appId);
+      currentApp = rawApps.find((app) => app._id === appId) || null;
       if (currentApp) {
         setSelectedReorderApp(currentApp);
         setReorderLevel("module");
@@ -61,20 +67,83 @@ export const useReorderMode = (
           return orderA - orderB;
         });
         setOrderedModules(sorted);
+
+        // Auto-select module if filter is active
+        if (currentModuleFilter) {
+          const matchedModule = rawModules.find(
+            (m) => m._id === currentModuleFilter.value
+          );
+          if (matchedModule) {
+            setSelectedReorderModule(matchedModule);
+            setReorderLevel("category");
+
+            const categoriesWithScreenshots = categories.filter((category) => {
+              return screenshots.some(
+                (screenshot) =>
+                  String(screenshot.appId) === appId &&
+                  screenshot.modul === matchedModule._id &&
+                  screenshot.category === category._id
+              );
+            });
+            const sortedCategories = [...categoriesWithScreenshots].sort(() => 0);
+            setOrderedCategories(sortedCategories);
+
+            // Auto-select category if filter is active
+            if (currentCategoryFilter) {
+              const matchedCategory = categories.find(
+                (c) => c._id === currentCategoryFilter.value
+              );
+              if (matchedCategory) {
+                setSelectedReorderCategory(matchedCategory);
+                setReorderLevel("screenshot");
+
+                const filtered = screenshots.filter(
+                  (s) =>
+                    s.category === matchedCategory._id &&
+                    s.modul === matchedModule._id &&
+                    String(s.appId) === appId
+                );
+                const sortedScreenshots = [...filtered].sort(
+                  (a, b) => (a.order || 0) - (b.order || 0)
+                );
+                setOrderedScreenshots(sortedScreenshots);
+              } else {
+                setSelectedReorderCategory(null);
+                setOrderedScreenshots([]);
+              }
+            } else {
+              setSelectedReorderCategory(null);
+              setOrderedScreenshots([]);
+            }
+          } else {
+            setSelectedReorderModule(null);
+            setSelectedReorderCategory(null);
+            setOrderedCategories([]);
+            setOrderedScreenshots([]);
+          }
+        } else {
+          setSelectedReorderModule(null);
+          setSelectedReorderCategory(null);
+          setOrderedCategories([]);
+          setOrderedScreenshots([]);
+        }
       } else {
         setReorderLevel("app");
         setSelectedReorderApp(null);
+        setSelectedReorderModule(null);
+        setSelectedReorderCategory(null);
+        setOrderedCategories([]);
+        setOrderedScreenshots([]);
       }
     } else {
       setReorderLevel("app");
       setSelectedReorderApp(null);
+      setSelectedReorderModule(null);
+      setSelectedReorderCategory(null);
+      setOrderedCategories([]);
+      setOrderedScreenshots([]);
     }
-
-    setSelectedReorderModule(null);
-    setSelectedReorderCategory(null);
-    setOrderedCategories([]);
-    setOrderedScreenshots([]);
-  }, [appId, rawApps, rawModules, screenshots]);
+  }, [appId, rawApps, rawModules, screenshots, categories]);
 
   const handleExitReorderMode = useCallback(() => {
     startTransition(() => {

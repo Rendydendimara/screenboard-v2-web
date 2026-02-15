@@ -101,7 +101,6 @@ export const useScreenshotData = (appId: string | undefined, toast: any) => {
       }));
       setListModule(tempModule);
       setRawModules(dataModul);
-
       const dataApp: TAppRes[] = res[1]?.data ?? [];
       const tempApp: TSelect[] = dataApp.map((d) => ({
         label: d.name,

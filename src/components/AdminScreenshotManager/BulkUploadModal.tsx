@@ -203,6 +203,14 @@ export const BulkUploadModal: React.FC<BulkUploadModalProps> = ({
                           };
                           onFilesChange(newBulkFiles);
                         }}
+                        onClear={() => {
+                          const newBulkFiles = [...bulkFiles];
+                          newBulkFiles[index] = {
+                            ...newBulkFiles[index],
+                            name: "",
+                          };
+                          onFilesChange(newBulkFiles);
+                        }}
                         placeholder={
                           "Enter screenshot name (default name: using original name)"
                         }

@@ -463,6 +463,7 @@ export const AdminGlobalComponentManager: React.FC = () => {
                 placeholder="Search by name, description, or tags..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
+                onClear={() => setSearchTerm("")}
                 className="max-w-md"
               />
             </div>
@@ -610,6 +611,7 @@ export const AdminGlobalComponentManager: React.FC = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, name: e.target.value })
                     }
+                    onClear={() => setFormData({ ...formData, name: "" })}
                     placeholder="Enter component name"
                     required
                   />
@@ -659,6 +661,7 @@ export const AdminGlobalComponentManager: React.FC = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, link: e.target.value })
                     }
+                    onClear={() => setFormData({ ...formData, link: "" })}
                     placeholder="https://example.com"
                     required
                   />
@@ -673,6 +676,7 @@ export const AdminGlobalComponentManager: React.FC = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, tags: e.target.value })
                     }
+                    onClear={() => setFormData({ ...formData, tags: "" })}
                     placeholder="e.g., button, form, navigation"
                   />
                   {formData.tags && (
@@ -790,6 +794,7 @@ export const AdminGlobalComponentManager: React.FC = () => {
                 placeholder="Search by name..."
                 value={searchTermCategory}
                 onChange={(e) => setSearchTermCategory(e.target.value)}
+                onClear={() => setSearchTermCategory("")}
                 className="max-w-md"
               />
             </div>
@@ -895,6 +900,12 @@ export const AdminGlobalComponentManager: React.FC = () => {
                       setCategoryFormData({
                         ...categoryFormData,
                         name: e.target.value,
+                      })
+                    }
+                    onClear={() =>
+                      setCategoryFormData({
+                        ...categoryFormData,
+                        name: "",
                       })
                     }
                     placeholder="Enter category name"

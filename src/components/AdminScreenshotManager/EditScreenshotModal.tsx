@@ -116,6 +116,7 @@ export const EditScreenshotModal: React.FC<EditScreenshotModalProps> = ({
               placeholder={
                 "Enter screenshot name (default name: using original name)"
               }
+              onClear={() => onFormChange("name", "")}
             />
           </div>
 

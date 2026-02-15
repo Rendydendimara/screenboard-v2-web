@@ -50,14 +50,14 @@ const Filters: React.FC<IProps> = ({
           options={getOptionsSubCategoryItemFiltered}
         />
       ) : null}
-      {getOptionsMarketItemFiltered.length > 0 && (
+      {/* {getOptionsMarketItemFiltered.length > 0 && (
         <FilterItem
           handleChange={handleChangeFilterMarket}
           menuFilter={filterMarket}
           iconType="square"
           options={getOptionsMarketItemFiltered}
         />
-      )}
+      )} */}
     </div>
   );
 };

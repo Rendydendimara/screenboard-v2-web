@@ -447,11 +447,11 @@ export const AdminAppManager: React.FC = () => {
   };
 
   const handleViewApp = (app: App) => {
-    navigate(`/admin/app/${app.id}`);
+    window.open(`/admin/app/${app.id}`, "_blank", "noopener,noreferrer");
   };
 
   const handleViewComponent = (app: App) => {
-    navigate(`/admin/component/${app.id}`);
+    window.open(`/admin/component/${app.id}`, "_blank", "noopener,noreferrer");
   };
 
   const filteredApps = apps.filter(
@@ -784,6 +784,7 @@ export const AdminAppManager: React.FC = () => {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="max-w-md"
+                  onClear={() => setSearchTerm("")}
                 />
               </div>
 
@@ -1153,6 +1154,12 @@ export const AdminAppManager: React.FC = () => {
                         }))
                       }
                       required
+                      onClear={() =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          name: "",
+                        }))
+                      }
                     />
                   </div>
                   <div>
@@ -1168,6 +1175,12 @@ export const AdminAppManager: React.FC = () => {
                         }))
                       }
                       required
+                      onClear={() =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          company: "",
+                        }))
+                      }
                     />
                   </div>
                 </div>
@@ -1259,6 +1272,12 @@ export const AdminAppManager: React.FC = () => {
                       }))
                     }
                     required
+                    onClear={() =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        image: "",
+                      }))
+                    }
                   />
                 </div>
 
@@ -1310,6 +1329,12 @@ export const AdminAppManager: React.FC = () => {
                         }))
                       }
                       required
+                      onClear={() =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          downloads: "",
+                        }))
+                      }
                     />
                   </div>
                   <div>
@@ -1344,6 +1369,12 @@ export const AdminAppManager: React.FC = () => {
                           color: e.target.value,
                         }))
                       }
+                      onClear={() =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          color: "",
+                        }))
+                      }
                     />
                   </div>
                 </div>
@@ -1358,6 +1389,12 @@ export const AdminAppManager: React.FC = () => {
                       setFormData((prev) => ({ ...prev, tags: e.target.value }))
                     }
                     placeholder="Design, Mobile, UI/UX"
+                    onClear={() =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        tags: "",
+                      }))
+                    }
                   />
                 </div>
 
@@ -1388,6 +1425,12 @@ export const AdminAppManager: React.FC = () => {
                           linkPlayStore: e.target.value,
                         }))
                       }
+                      onClear={() =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          linkPlayStore: "",
+                        }))
+                      }
                       // placeholder="https://play.google.com/store/apps/details?id=..."
                     />
                   </div>
@@ -1404,6 +1447,12 @@ export const AdminAppManager: React.FC = () => {
                           linkAppStore: e.target.value,
                         }))
                       }
+                      onClear={() =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          linkAppStore: "",
+                        }))
+                      }
                       // placeholder="https://apps.apple.com/app/..."
                     />
                   </div>
@@ -1418,6 +1467,12 @@ export const AdminAppManager: React.FC = () => {
                         setFormData((prev) => ({
                           ...prev,
                           linkWebsite: e.target.value,
+                        }))
+                      }
+                      onClear={() =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          linkWebsite: "",
                         }))
                       }
                       // placeholder="https://example.com"
@@ -1466,6 +1521,12 @@ export const AdminAppManager: React.FC = () => {
                       }))
                     }
                     required
+                    onClear={() =>
+                      setFormDataCategory((prev) => ({
+                        ...prev,
+                        name: "",
+                      }))
+                    }
                   />
                 </div>
               </>
@@ -1479,6 +1540,12 @@ export const AdminAppManager: React.FC = () => {
                       setFormDataSubcategory((prev) => ({
                         ...prev,
                         name: e.target.value,
+                      }))
+                    }
+                    onClear={() =>
+                      setFormDataSubcategory((prev) => ({
+                        ...prev,
+                        name: "",
                       }))
                     }
                     required

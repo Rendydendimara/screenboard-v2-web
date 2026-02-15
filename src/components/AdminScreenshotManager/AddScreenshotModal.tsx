@@ -150,6 +150,7 @@ export const AddScreenshotModal: React.FC<AddScreenshotModalProps> = ({
               placeholder={
                 "Enter screenshot name (default name: using original name)"
               }
+              onClear={() => onFormChange("name", "")}
             />
           </div>
           <AdminPanelWrapperInputImage>

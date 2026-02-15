@@ -210,57 +210,55 @@ export const AdminCategoryScreenshotManager = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {isLoadingGet ? (
-                  Array.from({ length: 5 }).map((_, index) => (
-                    <TableRow key={index}>
-                      <TableCell>
-                        <Skeleton className="h-4 w-40" />
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center space-x-2">
-                          <Skeleton className="h-8 w-8" />
-                          <Skeleton className="h-8 w-8" />
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  categories.map((category) => (
-                    <TableRow
-                      key={category._id}
-                      className="cursor-pointer hover:bg-slate-50"
-                    >
-                      <TableCell>
-                        <div className="font-medium">{category.name}</div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center space-x-2">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleEditCategory(category);
-                            }}
-                          >
-                            <Edit3 className="h-3 w-3" />
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDeleteCategory(category._id);
-                            }}
-                            className="text-red-600 hover:text-red-700"
-                          >
-                            <Trash2 className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
+                {isLoadingGet
+                  ? Array.from({ length: 5 }).map((_, index) => (
+                      <TableRow key={index}>
+                        <TableCell>
+                          <Skeleton className="h-4 w-40" />
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center space-x-2">
+                            <Skeleton className="h-8 w-8" />
+                            <Skeleton className="h-8 w-8" />
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  : categories.map((category) => (
+                      <TableRow
+                        key={category._id}
+                        className="cursor-pointer hover:bg-slate-50"
+                      >
+                        <TableCell>
+                          <div className="font-medium">{category.name}</div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center space-x-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleEditCategory(category);
+                              }}
+                            >
+                              <Edit3 className="h-3 w-3" />
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteCategory(category._id);
+                              }}
+                              className="text-red-600 hover:text-red-700"
+                            >
+                              <Trash2 className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
               </TableBody>
             </Table>
           </div>
@@ -287,6 +285,12 @@ export const AdminCategoryScreenshotManager = () => {
                     setFormDataCategory((prev) => ({
                       ...prev,
                       name: e.target.value,
+                    }))
+                  }
+                  onClear={() =>
+                    setFormDataCategory((prev) => ({
+                      ...prev,
+                      name: "",
                     }))
                   }
                   required

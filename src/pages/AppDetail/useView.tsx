@@ -466,7 +466,7 @@ const useView: React.FC = () => {
                   ref={containerMainRef}
                   className="flex items-start gap-5 flex-col md:flex-row w-full"
                 >
-                  <div className="w-full flex flex-col gap-5 items-start">
+                  <div className="w-full flex flex-col gap-5 items-start z-[10]">
                     {/* App Link */}
                     {(isValidUrl(app.linkPlayStore) ||
                       isValidUrl(app.linkAppStore) ||
