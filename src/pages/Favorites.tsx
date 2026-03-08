@@ -23,6 +23,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import { useAppDispatch, useTypedSelector } from "@/hooks/use-typed-selector";
 import { useFavorites } from "@/hooks/useFavorites";
+import { AnalyticsEvent, trackEvent } from "@/lib/analytics";
 import { logout, setCredentials } from "@/provider/slices/authSlice";
 import {
   addToCompare,
@@ -183,6 +184,14 @@ const FavoritesPage = () => {
       return;
     }
     dispatch(addToCompare(app));
+    if (!alreadyIn) {
+      trackEvent(AnalyticsEvent.APP_COMPARE, {
+        app_id: app.id,
+        app_name: app.name,
+        compare_count: compareApps.length + 1,
+        source: "favorites",
+      });
+    }
   };
 
   const handleRemoveFromCompare = (appId: string) => {

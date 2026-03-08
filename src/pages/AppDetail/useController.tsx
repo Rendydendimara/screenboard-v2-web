@@ -7,6 +7,7 @@ import { TCategoryRes } from "@/api/user/category/type";
 import ScreenAPI from "@/api/user/screen/api";
 import { useToast } from "@/hooks/use-toast";
 import { useAppDispatch, useTypedSelector } from "@/hooks/use-typed-selector";
+import { AnalyticsEvent, trackEvent } from "@/lib/analytics";
 import { logout, setCredentials } from "@/provider/slices/authSlice";
 import {
   addToCompare,
@@ -183,6 +184,12 @@ const useController = () => {
         value: [],
       });
       setApp(data);
+      trackEvent(AnalyticsEvent.APP_VIEW, {
+        app_id: data.id,
+        app_name: data.name,
+        source: "detail",
+        screens_count: data.screens.length,
+      });
     } catch (error: any) {
       toast({
         title: "Error",
@@ -221,6 +228,14 @@ const useController = () => {
       return;
     }
     dispatch(addToCompare(app));
+    if (!alreadyIn) {
+      trackEvent(AnalyticsEvent.APP_COMPARE, {
+        app_id: app.id,
+        app_name: app.name,
+        compare_count: compareApps.length + 1,
+        source: "detail",
+      });
+    }
   };
 
   const handleRemoveFromCompare = (appId: string) => {

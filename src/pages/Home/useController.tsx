@@ -11,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAppDispatch, useTypedSelector } from "@/hooks/use-typed-selector";
 import { useFavorites } from "@/hooks/useFavorites";
 import { useDebounce } from "@/hooks/useDebounce";
+import { AnalyticsEvent, trackEvent } from "@/lib/analytics";
 import { logout, setCredentials } from "@/provider/slices/authSlice";
 import {
   addToCompare,
@@ -271,6 +272,10 @@ const useController = () => {
               },
             })
           );
+          trackEvent(AnalyticsEvent.APP_UNFAVORITE, {
+            app_id: appId,
+            app_name: listAppAny[currentIndex]?.name,
+          });
         } else {
           await AppLikeAPI.like({ appId: appId });
           dispatch(
@@ -282,6 +287,10 @@ const useController = () => {
               },
             })
           );
+          trackEvent(AnalyticsEvent.APP_FAVORITE, {
+            app_id: appId,
+            app_name: listAppAny[currentIndex]?.name,
+          });
         }
 
         setListApp([
@@ -321,6 +330,13 @@ const useController = () => {
       return;
     }
     dispatch(addToCompare(app));
+    if (!alreadyIn) {
+      trackEvent(AnalyticsEvent.APP_COMPARE, {
+        app_id: app.id,
+        app_name: app.name,
+        compare_count: compareApps.length + 1,
+      });
+    }
   };
 
   const handleRemoveFromCompare = (appId: string) => {
@@ -348,8 +364,14 @@ const useController = () => {
   };
 
   const gotoDetail = useCallback((id: string) => {
+    const app = listApp.find((a) => a.id === id);
+    trackEvent(AnalyticsEvent.APP_VIEW, {
+      app_id: id,
+      app_name: app?.name,
+      source: "home",
+    });
     navigate(`/app/${id}`);
-  }, []);
+  }, [listApp]);
 
   const getListData = async (callbackGetListCategory?: boolean) => {
     try {
@@ -810,6 +832,15 @@ const useController = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Track search event (debounced)
+  useEffect(() => {
+    if (!debouncedSearchTerm) return;
+    trackEvent(AnalyticsEvent.APP_SEARCH, {
+      search_term: debouncedSearchTerm,
+      results_count: allFilteredApps.length,
+    });
+  }, [debouncedSearchTerm]);
 
   // Reset displayed items ketika filter berubah
   useEffect(() => {

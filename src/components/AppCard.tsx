@@ -394,18 +394,18 @@ export const AppCard: React.FC<AppCardProps> = ({
       </div>
       <div className="pl-3 flex items-start gap-[10px] overflow-x-auto pr-3 pb-1">
         {app.screens.slice(0, 5).map((screen, i) => (
-          <div className="relative">
+          <div className="relative w-[161px] aspect-[9/20] flex-shrink-0">
             <ImageWithFallback
               src={screen.image}
               fallbackSrc={screen.image}
               alt={screen.name}
-              containerClassName="min-w-[161px] h-[357px] rounded-[10px]"
-              className="w-[161px] h-[357px] rounded-[10px] object-cover group-hover:scale-105 transition-transform duration-500"
+              containerClassName="w-full h-full rounded-[10px] border-[0.5px] border-[solid] border-[#CECECE]"
+              className="w-full h-full rounded-[10px] object-cover group-hover:scale-105 transition-transform duration-500"
             />
             {i + 1 === 5 && (
               <div
                 onClick={onDetail}
-                className="absolute  hover:cursor-pointer top-0 w-[161px] h-[357px] flex justify-center items-center opacity-100 rounded-[10px] bg-[linear-gradient(180deg,_rgba(255,_255,_255,_0.3)_0%,_#FFFFFF_100%)] border-[0.5px] border-[solid] border-[#CECECE]"
+                className="absolute inset-0 hover:cursor-pointer flex justify-center items-center rounded-[10px] bg-[linear-gradient(180deg,_rgba(255,_255,_255,_0.3)_0%,_#FFFFFF_100%)] border-[0.5px] border-[solid] border-[#CECECE]"
               >
                 <p className="font-secondary font-semibold text-[16px] leading-[100%] tracking-[0%] align-middle">
                   See More
