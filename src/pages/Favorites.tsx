@@ -6,6 +6,7 @@ import CategoryAPI from "@/api/user/category/api";
 import { TCategoryRes } from "@/api/user/category/type";
 import { AppCard } from "@/components/AppCard";
 import { AuthModal } from "@/components/AuthModal";
+import { CompareMaxModal } from "@/components/CompareMaxModal";
 import { CompareModal } from "@/components/CompareModal";
 import { FavoritesModal } from "@/components/FavoritesModal";
 import { HeroSectionFavorites } from "@/components/HeroSectionFavorites";
@@ -84,6 +85,7 @@ const FavoritesPage = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showFilters, setShowFilters] = useState(false);
   const [showCompare, setShowCompare] = useState(false);
+  const [showCompareMaxModal, setShowCompareMaxModal] = useState(false);
   const [selectedScreen, setSelectedScreen] = useState<ScreenPublic | null>(
     null
   );
@@ -175,6 +177,11 @@ const FavoritesPage = () => {
   const [selectedApp, setSelectedApp] = useState<AppPublic | null>(null);
 
   const handleAddToCompare = (app: AppPublic) => {
+    const alreadyIn = compareApps.some((a) => a.id === app.id);
+    if (!alreadyIn && compareApps.length >= 2) {
+      setShowCompareMaxModal(true);
+      return;
+    }
     dispatch(addToCompare(app));
   };
 
@@ -423,6 +430,11 @@ const FavoritesPage = () => {
         </div>
 
         {/* Modals */}
+        <CompareMaxModal
+          isOpen={showCompareMaxModal}
+          onClose={() => setShowCompareMaxModal(false)}
+        />
+
         <CompareModal
           isOpen={showCompare}
           setShowCompare={setShowCompare}

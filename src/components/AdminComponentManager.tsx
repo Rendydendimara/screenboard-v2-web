@@ -13,6 +13,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import ReactSelect from "react-select";
 import {
   Select,
   SelectContent,
@@ -603,23 +604,28 @@ export const AdminComponentManager: React.FC<AdminComponentManagerProps> = ({
             )}
             <div>
               <label className="block text-sm font-medium mb-2">Category</label>
-              <Select
-                value={formData.category}
-                onValueChange={(value) =>
-                  setFormData((prev) => ({ ...prev, category: value }))
+              <ReactSelect
+                isSearchable
+                placeholder="Select category"
+                options={categories.map((c) => ({ value: c._id, label: c.name }))}
+                value={
+                  formData.category
+                    ? { value: formData.category, label: categories.find((c) => c._id === formData.category)?.name ?? "" }
+                    : null
                 }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.map((category) => (
-                    <SelectItem key={category._id} value={category._id}>
-                      {category.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                onChange={(opt) =>
+                  setFormData((prev) => ({ ...prev, category: opt?.value ?? "" }))
+                }
+                styles={{
+                  control: (base) => ({
+                    ...base,
+                    minHeight: "40px",
+                    borderRadius: "6px",
+                    borderColor: "#e2e8f0",
+                    fontSize: "14px",
+                  }),
+                }}
+              />
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">

@@ -49,6 +49,7 @@ const useController = () => {
   const [app, setApp] = useState<AppPublic | null>(null);
   const [isLoadingDetail, setIsLoadingDetail] = useState(true);
   const [showCompare, setShowCompare] = useState(false);
+  const [showCompareMaxModal, setShowCompareMaxModal] = useState(false);
   const compareApps = useTypedSelector(
     (state: RootState) => state.compare.compareApps
   );
@@ -214,6 +215,11 @@ const useController = () => {
   };
 
   const handleAddToCompare = (app: AppPublic) => {
+    const alreadyIn = compareApps.some((a) => a.id === app.id);
+    if (!alreadyIn && compareApps.length >= 2) {
+      setShowCompareMaxModal(true);
+      return;
+    }
     dispatch(addToCompare(app));
   };
 
@@ -417,6 +423,8 @@ const useController = () => {
     handleLogout,
     handleAddToCompare,
     handleRemoveFromCompare,
+    showCompareMaxModal,
+    setShowCompareMaxModal,
     onCloseOpenAuth,
     handleChangeCategory,
     handleOpenAuthModal,

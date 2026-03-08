@@ -1,4 +1,5 @@
 import { AuthModal } from "@/components/AuthModal";
+import { CompareMaxModal } from "@/components/CompareMaxModal";
 import { CompareModal } from "@/components/CompareModal";
 import { ScreenImageModalV2 } from "@/components/ScreenImageModalV2";
 import SEO from "@/components/SEO";
@@ -70,6 +71,8 @@ const useView: React.FC = () => {
     handleLogout,
     handleAddToCompare,
     handleRemoveFromCompare,
+    showCompareMaxModal,
+    setShowCompareMaxModal,
     onCloseOpenAuth,
     handleChangeCategory,
     handleOpenAuthModal,
@@ -800,6 +803,11 @@ const useView: React.FC = () => {
         initialMode="login"
         isOpen={isOpenAuth}
         onClose={onCloseOpenAuth}
+      />
+
+      <CompareMaxModal
+        isOpen={showCompareMaxModal}
+        onClose={() => setShowCompareMaxModal(false)}
       />
     </>
   );

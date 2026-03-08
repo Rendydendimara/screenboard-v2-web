@@ -146,16 +146,23 @@ export const Header = ({
                 </Link>
               </div>
 
-              <Input
-                placeholder="Search apps..."
-                value={searchTerm}
-                onChange={(e) => onSearchChange(e.target.value)}
-                onClear={() => onSearchChange("")}
-                className="
-    pl-10 
-    w-[473px] 
+              <div
+                className={clsx(
+                  "transition-all duration-300 ease-in-out overflow-hidden",
+                  scrolledSearch
+                    ? "opacity-100 max-w-[473px] w-[473px]"
+                    : "opacity-0 max-w-0 w-0 pointer-events-none"
+                )}
+              >
+                <Input
+                  placeholder="Search apps..."
+                  value={searchTerm}
+                  onChange={(e) => onSearchChange(e.target.value)}
+                  onClear={() => onSearchChange("")}
+                  className="
+    !w-[473px]
     rounded-[20px]
-    focus:ring-0 
+    focus:ring-0
     focus-visible:ring-0
     ring-0
     ring-offset-0
@@ -164,7 +171,8 @@ export const Header = ({
     text-[13px]
     placeholder:font-third
   "
-              />
+                />
+              </div>
 
               {/* Search Bar - Responsive (only show if showSearch is true) */}
               {/* {showSearch && (

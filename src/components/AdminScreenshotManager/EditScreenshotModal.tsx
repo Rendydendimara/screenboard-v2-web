@@ -7,16 +7,20 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import ReactSelect from "react-select";
 import { TSelect } from "@/types";
 import { TScreenCategoryRes } from "@/api/admin/screenCategory/type";
 import { EditFormData } from "./types";
+
+const reactSelectStyles = {
+  control: (base: any) => ({
+    ...base,
+    minHeight: "40px",
+    borderRadius: "6px",
+    borderColor: "#e2e8f0",
+    fontSize: "14px",
+  }),
+};
 
 interface EditScreenshotModalProps {
   isOpen: boolean;
@@ -43,6 +47,10 @@ export const EditScreenshotModal: React.FC<EditScreenshotModalProps> = ({
   appId,
   isLoading = false,
 }) => {
+  const appOptions = listApp.map((a) => ({ value: a.value.toString(), label: a.label }));
+  const modulOptions = listModule.map((m) => ({ value: m.value.toString(), label: m.label }));
+  const categoryOptions = categories.map((c) => ({ value: c._id, label: c.name }));
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="overflow-y-auto max-h-[90%] max-w-2xl">
@@ -53,58 +61,37 @@ export const EditScreenshotModal: React.FC<EditScreenshotModalProps> = ({
           {!appId && (
             <div>
               <label className="block text-sm font-medium mb-2">App</label>
-              <Select
-                value={formData.appId}
-                onValueChange={(value) => onFormChange("appId", value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select app" />
-                </SelectTrigger>
-                <SelectContent>
-                  {listApp.map((app) => (
-                    <SelectItem key={app.value} value={app.value.toString()}>
-                      {app.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <ReactSelect
+                isSearchable
+                placeholder="Select app"
+                options={appOptions}
+                value={appOptions.find((o) => o.value === formData.appId) ?? null}
+                onChange={(opt) => onFormChange("appId", opt?.value ?? "")}
+                styles={reactSelectStyles}
+              />
             </div>
           )}
           <div>
             <label className="block text-sm font-medium mb-2">Modul</label>
-            <Select
-              value={formData.module}
-              onValueChange={(value) => onFormChange("module", value)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select modul" />
-              </SelectTrigger>
-              <SelectContent>
-                {listModule.map((modul) => (
-                  <SelectItem key={modul.value} value={modul.value}>
-                    {modul.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <ReactSelect
+              isSearchable
+              placeholder="Select modul"
+              options={modulOptions}
+              value={modulOptions.find((o) => o.value === formData.module) ?? null}
+              onChange={(opt) => onFormChange("module", opt?.value ?? "")}
+              styles={reactSelectStyles}
+            />
           </div>
           <div>
             <label className="block text-sm font-medium mb-2">Category</label>
-            <Select
-              value={formData.category}
-              onValueChange={(value) => onFormChange("category", value)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select category" />
-              </SelectTrigger>
-              <SelectContent>
-                {categories.map((category) => (
-                  <SelectItem key={category._id} value={category._id}>
-                    {category.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <ReactSelect
+              isSearchable
+              placeholder="Select category"
+              options={categoryOptions}
+              value={categoryOptions.find((o) => o.value === formData.category) ?? null}
+              onChange={(opt) => onFormChange("category", opt?.value ?? "")}
+              styles={reactSelectStyles}
+            />
           </div>
           <div>
             <label className="block text-sm font-medium mb-2">

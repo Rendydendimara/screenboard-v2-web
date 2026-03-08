@@ -13,6 +13,7 @@ import {
   Users,
   Package,
   Layers,
+  ArrowLeft,
 } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useLocation, Link } from "react-router-dom";
@@ -141,6 +142,12 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               <span className="text-sm text-gray-600">
                 Welcome, {user.username}
               </span>
+              <Link to="/">
+                <Button variant="outline" size="sm">
+                  <ArrowLeft className="h-4 w-4 mr-1" />
+                  Back to Home
+                </Button>
+              </Link>
               <Button variant="outline" onClick={handleLogout}>
                 Logout
               </Button>

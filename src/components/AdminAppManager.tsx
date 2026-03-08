@@ -4,6 +4,7 @@ import CategoryAPI from "@/api/admin/category/api";
 import { TCategoryRes } from "@/api/admin/category/type";
 import SubcategoryAPI from "@/api/admin/subcategory/api";
 import { TSubcategoryRes } from "@/api/admin/subcategory/type";
+import ReactSelect from "react-select";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -1190,51 +1191,46 @@ export const AdminAppManager: React.FC = () => {
                     <label className="block text-sm font-medium mb-2">
                       Category
                     </label>
-                    <Select
-                      required
-                      value={formData.category}
-                      onValueChange={(value: string) =>
+                    <ReactSelect
+                      isSearchable
+                      placeholder="Select category..."
+                      options={categories.map((c) => ({ value: c._id, label: c.name }))}
+                      value={
+                        formData.category
+                          ? { value: formData.category, label: categories.find((c) => c._id === formData.category)?.name ?? "" }
+                          : null
+                      }
+                      onChange={(opt) =>
                         setFormData((prev) => ({
                           ...prev,
-                          category: value,
+                          category: opt?.value ?? "",
                           subcategory: "",
                         }))
                       }
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {categories.map((category, i) => (
-                          <SelectItem key={i} value={category._id}>
-                            {category.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                      classNamePrefix="r-select"
+                      styles={{ control: (base) => ({ ...base, minHeight: "40px", borderRadius: "6px", borderColor: "#e2e8f0", fontSize: "14px" }) }}
+                    />
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-2">
                       Subcategory
                     </label>
-                    <Select
-                      required
-                      value={formData.subcategory}
-                      onValueChange={(value: string) =>
-                        setFormData((prev) => ({ ...prev, subcategory: value }))
+                    <ReactSelect
+                      isSearchable
+                      placeholder="Select subcategory..."
+                      options={getFilteredSubcategory.map((s) => ({ value: s._id, label: s.name }))}
+                      value={
+                        formData.subcategory
+                          ? { value: formData.subcategory, label: getFilteredSubcategory.find((s) => s._id === formData.subcategory)?.name ?? "" }
+                          : null
                       }
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {getFilteredSubcategory.map((subcategory, i) => (
-                          <SelectItem key={i} value={subcategory._id}>
-                            {subcategory.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                      onChange={(opt) =>
+                        setFormData((prev) => ({ ...prev, subcategory: opt?.value ?? "" }))
+                      }
+                      isDisabled={!formData.category}
+                      classNamePrefix="r-select"
+                      styles={{ control: (base) => ({ ...base, minHeight: "40px", borderRadius: "6px", borderColor: "#e2e8f0", fontSize: "14px" }) }}
+                    />
                   </div>
                 </div>
 
@@ -1555,26 +1551,24 @@ export const AdminAppManager: React.FC = () => {
                   <label className="block text-sm font-medium mb-2">
                     Category
                   </label>
-                  <Select
-                    value={formDataSubcategory.categoryId}
-                    onValueChange={(value: string) =>
+                  <ReactSelect
+                    isSearchable
+                    placeholder="Select category..."
+                    options={categories.map((c) => ({ value: c._id, label: c.name }))}
+                    value={
+                      formDataSubcategory.categoryId
+                        ? { value: formDataSubcategory.categoryId, label: categories.find((c) => c._id === formDataSubcategory.categoryId)?.name ?? "" }
+                        : null
+                    }
+                    onChange={(opt) =>
                       setFormDataSubcategory((prev) => ({
                         ...prev,
-                        categoryId: value,
+                        categoryId: opt?.value ?? "",
                       }))
                     }
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {categories.map((category, i) => (
-                        <SelectItem key={i} value={category._id}>
-                          {category.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                    classNamePrefix="r-select"
+                    styles={{ control: (base) => ({ ...base, minHeight: "40px", borderRadius: "6px", borderColor: "#e2e8f0", fontSize: "14px" }) }}
+                  />
                 </div>
               </>
             )}

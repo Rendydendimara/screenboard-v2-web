@@ -4,7 +4,6 @@ import { Eye, EyeOff } from "lucide-react";
 import { useFormControl } from "./FormControl";
 import { FormHelperText } from "./FormHelperText";
 import { FormErrorMessage } from "./FormErrorMessage";
-import { Input } from "@/components/ui/input";
 
 export interface InputTextProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -80,25 +79,7 @@ export function InputText({
       )}
       <div className="relative">
         {leftIcon}
-        {/* <input
-          id={id}
-          name={name}
-          value={value ?? ""}
-          placeholder={placeholder}
-          type={isPasswordField ? (showPassword ? "text" : "password") : type}
-          onChange={handleOnChange}
-          className={clsx(
-            "block w-full rounded-lg border px-3 py-2 text-sm outline-none",
-            isInvalid
-              ? "border-red-500 focus:ring-1 focus:ring-red-500"
-              : "border-gray-300 focus:border-gray-900 focus:ring-1 focus:ring-gray-900/10",
-            isPasswordField && "pr-10", // padding ekstra biar ga ketimpa tombol
-            className
-          )}
-          {...rest}
-        /> */}
-
-        <Input
+        <input
           id={id}
           name={name}
           value={value ?? ""}
@@ -106,17 +87,22 @@ export function InputText({
           type={isPasswordField ? (showPassword ? "text" : "password") : type}
           onChange={handleOnChange}
           autoFocus={autoFocus}
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
+          spellCheck={false}
           className={clsx(
-            "h-8 rounded-[8px] pl-8 !text-body-4 pt-[5px]",
+            "flex w-full rounded-[8px] border border-input bg-background px-3 py-2 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
+            "h-8 !text-body-4 pt-[5px]",
+            leftIcon && "pl-8",
+            isPasswordField && "pr-10",
             isInvalid
               ? "border-red-500 focus:ring-1 focus:ring-red-500"
-              : "focus:![box-shadow:0px_0px_0px_2.5px_rgba(232,_208,_253,_1)] focus:!border-[1px] focus:!border-solid focus:!border-[rgba(147,51,234,1)]", //"border-gray-300 focus:border-gray-900 focus:ring-1 focus:ring-gray-900/10",
-            isPasswordField || leftIcon ? "pr-10" : "", // padding ekstra biar ga ketimpa tombol
+              : "focus:[box-shadow:0px_0px_0px_2.5px_rgba(232,_208,_253,_1)] focus:border-[rgba(147,51,234,1)]",
             className
           )}
           {...rest}
         />
-        {/* [box-shadow:0px_0px_0px_2.5px_rgba(232,_208,_253,_1)] border-[1px] border-solid border-[rgba(147,51,234,1)] */}
         {isPasswordField && (
           <button
             type="button"

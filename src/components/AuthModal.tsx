@@ -282,7 +282,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                       formik.setFieldValue("role", value)
                     }
                   >
-                    <SelectTrigger className="h-8 rounded-[8px] !text-body-4">
+                    <SelectTrigger className="h-[44px] rounded-[8px] !text-body-4">
                       <div className="relative pl-[22px]">
                         <svg
                           className="absolute left-0 top-1/2 transform -translate-y-1/2"

@@ -27,6 +27,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
+import ReactSelect from "react-select";
 import { FORMAT_INPUT_IMAGE_FILE } from "@/constant/app";
 import { useToast } from "@/hooks/use-toast";
 import { UploadImageType } from "@/types";
@@ -636,21 +637,28 @@ export const AdminGlobalComponentManager: React.FC = () => {
                   <label className="block text-sm font-medium mb-2">
                     Category
                   </label>
-                  <Select
-                    value={formData.category}
-                    onValueChange={(value: string) =>
-                      setFormData((prev) => ({ ...prev, category: value }))
+                  <ReactSelect
+                    isSearchable
+                    placeholder="Select category..."
+                    options={categories.map((c) => ({ value: c._id, label: c.name }))}
+                    value={
+                      formData.category
+                        ? { value: formData.category, label: categories.find((c) => c._id === formData.category)?.name ?? "" }
+                        : null
                     }
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {categories.map((c, i) => (
-                        <SelectItem value={c._id}>{c.name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                    onChange={(opt) =>
+                      setFormData((prev) => ({ ...prev, category: opt?.value ?? "" }))
+                    }
+                    styles={{
+                      control: (base) => ({
+                        ...base,
+                        minHeight: "40px",
+                        borderRadius: "6px",
+                        borderColor: "#e2e8f0",
+                        fontSize: "14px",
+                      }),
+                    }}
+                  />
                 </div>
 
                 <div>

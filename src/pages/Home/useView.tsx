@@ -1,5 +1,6 @@
 import { AppCardSkeleton } from "@/components/AppCardSkeleton";
 import { AuthModal } from "@/components/AuthModal";
+import { CompareMaxModal } from "@/components/CompareMaxModal";
 import { CompareModal } from "@/components/CompareModal";
 import { FavoritesModal } from "@/components/FavoritesModal";
 import { HeroSection } from "@/components/HeroSection";
@@ -40,6 +41,8 @@ const Index = () => {
     setSelectedScreen,
     showFavorites,
     setShowFavorites,
+    showCompareMaxModal,
+    setShowCompareMaxModal,
     scrolled,
     scrolledSearch,
     scrolledCategories,
@@ -157,25 +160,23 @@ const Index = () => {
                       )}
                     >
                       <div className="relative">
-                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400 ml-[40px] z-[1]" />
-                        <Input
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none z-[1]" />
+                        <input
                           placeholder="Search apps..."
                           value={searchTerm}
                           onChange={(e) => handleChangeSearch(e.target.value)}
-                          onClear={() => handleChangeSearch("")}
-                          className="
-    pl-10 
-    w-full 
-    rounded-[20px]
-    focus:ring-0 
-    focus-visible:ring-0
-    ring-0
-    ring-offset-0
-    focus-visible:ring-offset-0
-    font-third
-    text-[13px]
-  "
+                          className="w-full h-[40px] pl-10 pr-8 rounded-[20px] border border-input bg-background font-third text-[13px] outline-none focus:ring-0"
                         />
+                        {searchTerm && (
+                          <button
+                            type="button"
+                            onClick={() => handleChangeSearch("")}
+                            className="absolute right-2 top-1/2 -translate-y-1/2 rounded-sm p-0.5 text-muted-foreground hover:text-foreground"
+                            tabIndex={-1}
+                          >
+                            <X className="h-4 w-4" />
+                          </button>
+                        )}
                       </div>
                     </div>
 
@@ -510,6 +511,11 @@ const Index = () => {
           favoriteScreens={favoriteScreens}
           onRemoveFavorite={toggleFavorite}
           onScreenClick={setSelectedScreen}
+        />
+
+        <CompareMaxModal
+          isOpen={showCompareMaxModal}
+          onClose={() => setShowCompareMaxModal(false)}
         />
 
         {/* ScreenPublic Detail Modal */}

@@ -8,13 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import ReactSelect from "react-select";
 import { FolderOpen, Trash2, Upload } from "lucide-react";
 import { TSelect } from "@/types";
 import { TScreenCategoryRes } from "@/api/admin/screenCategory/type";
@@ -22,6 +16,16 @@ import { FORMAT_INPUT_IMAGE_FILE } from "@/constant/app";
 import { formatFileSize, getImageUrlFromFile } from "@/utils";
 import { BulkFileItem } from "./types";
 import ImageWithFallback from "../ui/ImageWithFallback";
+
+const reactSelectStyles = {
+  control: (base: any) => ({
+    ...base,
+    minHeight: "40px",
+    borderRadius: "6px",
+    borderColor: "#e2e8f0",
+    fontSize: "14px",
+  }),
+};
 
 interface BulkUploadModalProps {
   isOpen: boolean;
@@ -62,6 +66,10 @@ export const BulkUploadModal: React.FC<BulkUploadModalProps> = ({
   isLoading = false,
   onFileSelect,
 }) => {
+  const appOptions = listApp.map((a) => ({ value: a.value.toString(), label: a.label }));
+  const modulOptions = listModule.map((m) => ({ value: m.value.toString(), label: m.label }));
+  const categoryOptions = categories.map((c) => ({ value: c._id, label: c.name }));
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl overflow-y-auto max-h-[90%]">
@@ -76,53 +84,41 @@ export const BulkUploadModal: React.FC<BulkUploadModalProps> = ({
                 <label className="block text-sm font-medium mb-2">
                   Select App
                 </label>
-                <Select value={selectedApp} onValueChange={onAppChange}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Choose app" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {listApp.map((app) => (
-                      <SelectItem key={app.value} value={app.value.toString()}>
-                        {app.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <ReactSelect
+                  isSearchable
+                  placeholder="Choose app"
+                  options={appOptions}
+                  value={appOptions.find((o) => o.value === selectedApp) ?? null}
+                  onChange={(opt) => onAppChange(opt?.value ?? "")}
+                  styles={reactSelectStyles}
+                />
               </div>
             )}
             <div>
               <label className="block text-sm font-medium mb-2">
                 Select Modul
               </label>
-              <Select value={selectedModul} onValueChange={onModulChange}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Choose modul" />
-                </SelectTrigger>
-                <SelectContent>
-                  {listModule.map((modul) => (
-                    <SelectItem key={modul.value} value={modul.value}>
-                      {modul.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <ReactSelect
+                isSearchable
+                placeholder="Choose modul"
+                options={modulOptions}
+                value={modulOptions.find((o) => o.value === selectedModul) ?? null}
+                onChange={(opt) => onModulChange(opt?.value ?? "")}
+                styles={reactSelectStyles}
+              />
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">
                 Select Category
               </label>
-              <Select value={selectedCategory} onValueChange={onCategoryChange}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Choose category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.map((category) => (
-                    <SelectItem key={category._id} value={category._id}>
-                      {category.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <ReactSelect
+                isSearchable
+                placeholder="Choose category"
+                options={categoryOptions}
+                value={categoryOptions.find((o) => o.value === selectedCategory) ?? null}
+                onChange={(opt) => onCategoryChange(opt?.value ?? "")}
+                styles={reactSelectStyles}
+              />
             </div>
           </div>
 

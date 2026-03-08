@@ -1,17 +1,21 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import ReactSelect from "react-select";
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import { TSelect } from "@/types";
 import { Screenshot } from "./types";
 import ImageWithFallback from "../ui/ImageWithFallback";
+
+const reactSelectStyles = {
+  control: (base: any) => ({
+    ...base,
+    minHeight: "40px",
+    borderRadius: "6px",
+    borderColor: "#e2e8f0",
+    fontSize: "14px",
+  }),
+};
 
 interface NormalViewProps {
   screenshots: Screenshot[];
@@ -28,6 +32,8 @@ interface NormalViewProps {
   onDelete: (id: string, name: string) => void;
 }
 
+const ALL_CATEGORY_OPTION = { value: "", label: "All" };
+
 export const NormalView: React.FC<NormalViewProps> = ({
   screenshots,
   searchTerm,
@@ -42,44 +48,33 @@ export const NormalView: React.FC<NormalViewProps> = ({
   onEdit,
   onDelete,
 }) => {
+  const categorySelectOptions = [ALL_CATEGORY_OPTION, ...categoryOptions];
+
   return (
     <>
       <div className="mb-4 flex gap-2 items-start justify-start">
         <div className="flex-1 sm:flex-none sm:min-w-[200px]">
-          <Select
-            value={selectedModuleFilter?.value}
-            onValueChange={onModuleFilterChange}
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select Modul" />
-            </SelectTrigger>
-            <SelectContent className="bg-white">
-              {moduleOptions.map((modul, i) => (
-                <SelectItem key={i} value={modul.value}>
-                  {modul.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <label className="block text-sm font-medium mb-1">Modul</label>
+          <ReactSelect
+            isSearchable
+            placeholder="Select Modul"
+            options={moduleOptions}
+            value={selectedModuleFilter ?? null}
+            onChange={(opt) => onModuleFilterChange(opt?.value?.toString() ?? "")}
+            styles={reactSelectStyles}
+          />
         </div>
 
         <div className="flex-1 sm:flex-none sm:min-w-[200px]">
-          <Select
-            value={selectedCategoryFilter?.value}
-            onValueChange={onCategoryFilterChange}
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select Category" />
-            </SelectTrigger>
-            <SelectContent className="bg-white">
-              <SelectItem value={null}>All</SelectItem>
-              {categoryOptions.map((category, i) => (
-                <SelectItem key={i} value={category.value}>
-                  {category.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <label className="block text-sm font-medium mb-1">Category</label>
+          <ReactSelect
+            isSearchable
+            placeholder="Select Category"
+            options={categorySelectOptions}
+            value={selectedCategoryFilter ?? ALL_CATEGORY_OPTION}
+            onChange={(opt) => onCategoryFilterChange(opt?.value?.toString() ?? "")}
+            styles={reactSelectStyles}
+          />
         </div>
 
         <Input
