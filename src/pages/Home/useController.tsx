@@ -719,9 +719,20 @@ const useController = () => {
     const usedCategoryIds = new Set(listApp.map((app) => app?.category?._id));
 
     // Filter filterCategories.items, keep "All" dan category yang digunakan
-    return filterCategories.items.filter(
-      (item) => item.value === "All" || usedCategoryIds.has(item.value)
-    );
+    // Recompute count dari listApp agar label selalu akurat
+    return filterCategories.items
+      .filter((item) => item.value === "All" || usedCategoryIds.has(item.value))
+      .map((item) => {
+        if (item.value === "All") return item;
+        const countApp = listApp.filter(
+          (app) => app?.category?._id === item.value
+        ).length;
+        const nameWithoutCount = item.label.replace(/\s*\(\d+\)$/, "");
+        return {
+          ...item,
+          label: `${nameWithoutCount} (${countApp})`,
+        };
+      });
   }, [listApp, filterCategories.items]);
 
   const getOptionsSubCategoryItemFiltered: TItemMenuFilter[] = useMemo(() => {
