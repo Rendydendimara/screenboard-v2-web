@@ -14,6 +14,7 @@ import {
   ArrowLeft,
   Building,
   Calendar,
+  Copy,
   Download,
   ExternalLink,
   Globe,
@@ -231,8 +232,37 @@ const AdminAppDetails: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
             <Card>
-              <CardHeader>
+              <CardHeader className="flex flex-row w-full justify-between items-center">
                 <CardTitle>App Information</CardTitle>
+                {(() => {
+                  const publicLink = `${window.location.origin}/app/${id}`;
+                  return (
+                    <div className="flex items-center gap-2 text-sm">
+                      <a
+                        href={publicLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-1"
+                      >
+                        <ExternalLink className="h-3.5 w-3.5" />
+                        Public Link
+                      </a>
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(publicLink);
+                          toast({
+                            title: "Link copied!",
+                            description: "Public link has been copied to clipboard.",
+                          });
+                        }}
+                        className="p-1 rounded hover:bg-gray-100 text-gray-500 hover:text-gray-700 transition-colors"
+                        title="Copy link"
+                      >
+                        <Copy className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  );
+                })()}
               </CardHeader>
               <CardContent className="space-y-6">
                 <div>
