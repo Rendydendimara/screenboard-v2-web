@@ -35,37 +35,43 @@ export const HeroSection: React.FC<IProps> = ({
                   {subtitle}
                 </p>
               </div>
-              <div className="flex items-center gap-5">
-                <Badge
-                  onClick={onClickBtn}
-                  className="bg-gradient-to-r h-[58px] rounded-[20px] from-blue-500 to-purple-600 border-0 px-8 py-3 flex justify-center items-center gap-2"
-                >
-                  <svg
-                    width="14"
-                    height="19"
-                    viewBox="0 0 14 19"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
+              <div className="flex flex-col items-start gap-3">
+                <div className="flex items-center gap-5 ">
+                  <Badge
+                    onClick={onClickBtn}
+                    className="hover:cursor-pointer bg-gradient-to-r h-[58px] rounded-[20px] from-blue-500 to-purple-600 border-0 px-8 py-3 flex justify-center items-center gap-2"
                   >
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M3.39913 0.5C3.53413 0.195833 3.83497 0 4.1683 0H10.8158C11.4408 0 11.8483 0.658333 11.5683 1.21833L9.67747 5H12.4758C13.2258 5 13.6008 5.90667 13.0708 6.43667L3.10997 16.3975C2.48164 17.0258 1.43497 16.3792 1.71664 15.5367L3.83997 9.16667H0.841635C0.701422 9.16666 0.563432 9.13163 0.440198 9.06475C0.316964 8.99787 0.212391 8.90126 0.135977 8.7837C0.0595628 8.66614 0.0137284 8.53135 0.00263747 8.39158C-0.00845349 8.2518 0.0155503 8.11147 0.0724683 7.98333L3.39913 0.5Z"
-                      fill="#F8B303"
-                    />
-                  </svg>
-                  <div className="flex flex-col items-start gap-1">
-                    <p className="font-secondary font-bold text-[18px] text[#FFFFFF]">
-                      Join Membership
-                    </p>
-                    <p className="font-secondary font-[300] text-[12x] text[##E1E1E1]">
-                      Free Membership — This Month Only
-                    </p>
-                  </div>
-                </Badge>
-                <button className="h-[58px] flex justify-between items-center  opacity-100 gap-[4px] rounded-[20px] px-8 py-3  bg-[#FFFFFF] [box-shadow:0px_10px_15px_-3px_#0000001A] font-bold text-[18px] text-center text-[#1B1B1B]">
-                  Explore
-                </button>
+                    <svg
+                      width="14"
+                      height="19"
+                      viewBox="0 0 14 19"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M3.39913 0.5C3.53413 0.195833 3.83497 0 4.1683 0H10.8158C11.4408 0 11.8483 0.658333 11.5683 1.21833L9.67747 5H12.4758C13.2258 5 13.6008 5.90667 13.0708 6.43667L3.10997 16.3975C2.48164 17.0258 1.43497 16.3792 1.71664 15.5367L3.83997 9.16667H0.841635C0.701422 9.16666 0.563432 9.13163 0.440198 9.06475C0.316964 8.99787 0.212391 8.90126 0.135977 8.7837C0.0595628 8.66614 0.0137284 8.53135 0.00263747 8.39158C-0.00845349 8.2518 0.0155503 8.11147 0.0724683 7.98333L3.39913 0.5Z"
+                        fill="#F8B303"
+                      />
+                    </svg>
+                    <div className="flex flex-col items-start gap-1">
+                      <p className="font-secondary font-bold text-[18px] text[#FFFFFF]">
+                        Join Membership
+                      </p>
+                      <p className="font-secondary font-[300] text-[12x] text[##E1E1E1]">
+                        Free Membership — This Month Only
+                      </p>
+                    </div>
+                  </Badge>
+                  <button className="h-[58px] flex justify-between items-center  opacity-100 gap-[4px] rounded-[20px] px-8 py-3  bg-[#FFFFFF] [box-shadow:0px_10px_15px_-3px_#0000001A] font-bold text-[18px] text-center text-[#1B1B1B]">
+                    Explore
+                  </button>
+                </div>
+                <p className="font-secondary font-normal text-[14px] leading-[125%] tracking-[0%] text-[#565D61]">
+                  Get full access to the design gallery while the promotion
+                  lasts.
+                </p>
               </div>
             </div>
           </div>

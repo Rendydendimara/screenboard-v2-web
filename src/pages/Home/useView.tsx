@@ -22,6 +22,7 @@ import { useMemo } from "react";
 import Filters from "./components/Filters";
 import { InfiniteScrollList } from "./components/InfiniteScrollList";
 import useController from "./useController";
+import { Top10Apps } from "@/components/molecules/Top10Apps";
 
 const Index = () => {
   const {
@@ -139,6 +140,8 @@ const Index = () => {
             />
           </div>
         </section>
+        {/* Top 10 Apps This Month */}
+        <Top10Apps apps={filteredApps.slice(0, 10)} />
         {/* Main Content */}
         <div
           ref={appsContainerRef}
@@ -300,26 +303,6 @@ const Index = () => {
                           </Sheet>
                         </div>
                       </div>
-
-                      {/* Download Button */}
-                      {/* {selectedCategory && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleDownloadScreens}
-                    disabled={isDownloading}
-                    className="flex-1 sm:flex-none"
-                  >
-                    {isDownloading ? (
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    ) : (
-                      <Download className="h-4 w-4 mr-2 sm:mr-0 lg:mr-2" />
-                    )}
-                    <span className="sm:hidden lg:inline">
-                      {isDownloading ? "Downloading..." : "Download"}
-                    </span>
-                  </Button>
-                )} */}
                     </div>
                   </div>
                 </div>
