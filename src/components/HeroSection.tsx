@@ -24,7 +24,7 @@ export const HeroSection: React.FC<IProps> = ({
       </div>
 
       <div className="w-full flex justify-center items-center">
-        <div className="w-full md:max-w-[700px] lg:max-w-[1200px]">
+        <div className="w-full md:max-w-[700px] lg:max-w-[1440px]">
           <div className="w-full">
             <div className="w-full md:w-[832px] flex flex-col items-start gap-4 md:gap-8">
               <div className="flex flex-col items-start gap-4 w-full">

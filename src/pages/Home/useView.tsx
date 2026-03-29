@@ -145,7 +145,7 @@ const Index = () => {
           ref={appsContainerRef}
           className="w-full flex justify-center items-center"
         >
-          <div className="w-full lg:max-w-[920px] xl:max-w-[1200px]">
+          <div className="w-full lg:max-w-[920px] xl:max-w-[1440px]">
             <main className="px-4 py-6 md:px-0 md:py-8 lg:py-12 w-full">
               {user && (
                 <div className="mb-6">
@@ -451,7 +451,7 @@ const Index = () => {
                           isLoading={isLoadingGetApp}
                         />
                         {!user && allFilteredApps.length > 9 && (
-                          <div className="-mt-[12rem] pt-32 pb-8 bg-[linear-gradient(180.13deg,rgba(255,255,255,0)_-24.49%,#FFFFFF_33.51%)] absolute w-full max-w-[1200px]">
+                          <div className="-mt-[12rem] pt-32 pb-8 bg-[linear-gradient(180.13deg,rgba(255,255,255,0)_-24.49%,#FFFFFF_33.51%)] absolute w-full max-w-[1440px]">
                             <div className="flex flex-col w-full gap-6">
                               <div className="flex justify-center items-center w-full">
                                 <div className="flex flex-col gap-3 items-center w-full md:w-[889px] px-4">

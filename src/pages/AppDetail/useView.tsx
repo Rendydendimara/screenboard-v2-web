@@ -113,7 +113,7 @@ const useView: React.FC = () => {
         <section className="relative overflow-hidden ">
           <header className="fixed w-full top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md shadow-sm">
             <div className="w-full flex justify-center items-center">
-              <div className="w-full md:max-w-[700px] lg:max-w-[1200px]">
+              <div className="w-full md:max-w-[700px] lg:max-w-[1440px]">
                 <div className="flex items-center justify-between h-16 lg:h-20 px-4 md:px-0">
                   <Link to="/">
                     <div className="flex items-center space-x-2">
@@ -131,7 +131,7 @@ const useView: React.FC = () => {
 
           {/* App Overview Skeleton */}
           <div className="w-full flex justify-center items-center">
-            <div className="w-full md:max-w-[700px] lg:max-w-[1200px]">
+            <div className="w-full md:max-w-[700px] lg:max-w-[1440px]">
               <div className="pt-24 px-4 md:px-0">
                 <div className="flex items-center justify-between md:flex-row flex-col">
                   <div className="flex items-start gap-6 w-full">
@@ -164,7 +164,7 @@ const useView: React.FC = () => {
 
         {/* Screenshots Skeleton */}
         <div className="w-full flex justify-center items-center">
-          <div className="w-full md:max-w-[700px] lg:max-w-[1200px]">
+          <div className="w-full md:max-w-[700px] lg:max-w-[1440px]">
             <div className="px-4 md:px-0 py-12">
               <div className="mb-8">
                 <div className="flex flex-col md:flex-row items-start gap-3 md:gap-0 md:items-center justify-between mb-9">
@@ -232,7 +232,7 @@ const useView: React.FC = () => {
 
         {/* App Overview */}
         <div className="w-full flex justify-center items-center">
-          <div className="w-full md:max-w-[700px] lg:max-w-[1200px]">
+          <div className="w-full md:max-w-[700px] lg:max-w-[1440px]">
             <div className="flex w-full justify-between items-center"></div>
             <div className="pt-24 px-4 md:px-0 w-full flex justify-between items-center">
               {/* App Info */}
@@ -409,7 +409,7 @@ const useView: React.FC = () => {
       </section>
 
       <div className="w-full flex justify-center items-center">
-        <div className="w-full md:max-w-[700px] lg:max-w-[1200px]">
+        <div className="w-full md:max-w-[700px] lg:max-w-[1440px]">
           <div>
             <div className="px-4 md:px-0 pt-[45px] pb-12">
               <div className="mb-8">

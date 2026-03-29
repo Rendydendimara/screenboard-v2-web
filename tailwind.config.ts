@@ -227,6 +227,7 @@ export default {
         primary: ["Inter", "sans-serif"],
         secondary: ["Albert Sans Variable", "sans-serif"],
         third: ["Alegreya Sans", "sans-serif"],
+        belanosima: ["Belanosima", "sans-serif"],
       },
       fontWeight: {
         hairline: "100",

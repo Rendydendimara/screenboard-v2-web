@@ -102,7 +102,7 @@ export default function Subscription() {
 
         {/* Main Content */}
         <div className="w-full flex justify-center items-center">
-          <div className="w-full md:max-w-[700px] lg:max-w-[1200px]">
+          <div className="w-full md:max-w-[700px] lg:max-w-[1440px]">
             <main className="pt-24 lg:pt-28 px-4 md:px-0 py-8">
               <h1 className="text-4xl font-bold mb-8">Subscription</h1>
 

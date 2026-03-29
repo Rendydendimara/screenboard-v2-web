@@ -39,7 +39,7 @@ const useView: React.FC = () => {
 
           {/* Component Overview Skeleton */}
           <div className="w-full flex justify-center items-center">
-            <div className="w-full md:max-w-[700px] lg:max-w-[1200px]">
+            <div className="w-full md:max-w-[700px] lg:max-w-[1440px]">
               <div className="pt-24 px-4 md:px-0 pb-[40px]">
                 <Skeleton className="h-10 w-32 mb-6" />
                 <Skeleton className="h-12 w-96 mb-4" />
@@ -56,7 +56,7 @@ const useView: React.FC = () => {
 
         {/* Screenshots Skeleton */}
         <div className="w-full flex justify-center items-center">
-          <div className="w-full md:max-w-[700px] lg:max-w-[1200px]">
+          <div className="w-full md:max-w-[700px] lg:max-w-[1440px]">
             <div className="px-4 md:px-0 py-12">
               <div className="flex flex-col lg:flex-row gap-6">
                 <Skeleton className="w-full lg:w-[590px] h-[363px] rounded-xl" />
@@ -112,7 +112,7 @@ const useView: React.FC = () => {
 
         {/* Component Overview */}
         <div className="w-full flex justify-center items-center">
-          <div className="w-full md:max-w-[700px] lg:max-w-[1200px]">
+          <div className="w-full md:max-w-[700px] lg:max-w-[1440px]">
             <div className="pt-24 px-4 md:px-0 pb-[40px] flex justify-center items-center">
               <div className="max-w-[590px]">
                 <div className="flex justify-center items-center flex-col gap-6">
