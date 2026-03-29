@@ -86,7 +86,6 @@ const Index = () => {
             <HeroSection
               mainHeading="Collection of Favorite Component"
               subtitle="Explore thousands of carefully curated mobile applications. Comparefeatures, discover UI patterns, and find inspiration for your next project."
-              labelBtn="Join to Unlock Everything"
               onClickBtn={handleOpenAuthModal}
             />
           </div>

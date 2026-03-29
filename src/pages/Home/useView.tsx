@@ -133,9 +133,8 @@ const Index = () => {
           {/* Hero Section */}
           <div className="pt-16 lg:pt-20">
             <HeroSection
-              mainHeading="Study Real UI Patterns from Real Apps"
+              mainHeading="Explore Design Patterns from Real Apps"
               subtitle="Analyze hundreds of design examples. Register now to unlock complete app screens and learn from the best."
-              labelBtn="Join to Free Membership"
               onClickBtn={handleOpenAuthModal}
             />
           </div>

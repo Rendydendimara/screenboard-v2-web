@@ -6,16 +6,14 @@ interface IProps {
   onClickBtn: () => void;
   mainHeading: string;
   subtitle: string;
-  labelBtn: string;
 }
 export const HeroSection: React.FC<IProps> = ({
   onClickBtn,
   mainHeading,
   subtitle,
-  labelBtn,
 }) => {
   return (
-    <section className="py-10 md:py-12 lg:py-20 container px-4 md:px-0 !pb-8">
+    <section className="py-10 md:py-12 lg:py-20 w-full min-h-[582px]  px-4 md:px-0 !pb-8">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-10 left-10 w-20 h-20 bg-blue-500 rounded-full blur-xl animate-pulse"></div>
@@ -23,29 +21,51 @@ export const HeroSection: React.FC<IProps> = ({
         <div className="absolute bottom-20 left-1/3 w-24 h-24 bg-indigo-500 rounded-full blur-xl animate-pulse delay-500"></div>
       </div>
 
-      <div className="w-full flex justify-center items-center">
-        <div className="w-full md:max-w-[700px] lg:max-w-[1440px]">
-          <div className="w-full">
-            <div className="w-full md:w-[832px] flex flex-col items-start gap-4 md:gap-8">
-              <div className="flex flex-col items-start gap-4 w-full">
+      <div className="flex w-full justify-center items-center">
+        <div className="max-w-[1440px] w-full">
+          <div className="w-full justify-start flex items-start">
+            <div className="w-full  max-w-[739px] flex flex-col items-start gap-[40px]">
+              <div className="flex flex-col items-start gap-6 w-full">
                 {/* Main Heading */}
-                <h1 className="w-full md:w-[812px] h-auto md:h-[152px] leading-[32px] text-[32px] md:text-[64px] font-semibold text-[#323638] md:leading-[72px] !tracking-[0%] align-middle font-secondary">
+                <h1 className="w-full md:w-[812px] h-auto md:h-[152px] leading-[32px] text-[32px] md:text-[64px] font-extrabold text-[#323638] md:leading-[72px] !tracking-[0%] align-middle font-secondary">
                   {mainHeading}
                 </h1>
                 {/* Subtitle */}
-                <p className="font-medium text-[20px] leading-[100%]  md:text-xl text-[#323638] font-secondary md:!leading-[100%] tracking-[0%] align-middle w-full md:w-[832px]">
+                <p className="font-medium max-w-[739px] text-[20px] leading-[100%]  md:text-xl text-[#464C4F] font-secondary md:!leading-[100%] tracking-[0%] align-middle w-full md:w-[832px]">
                   {subtitle}
                 </p>
               </div>
-              {/* Badge */}
-              <div
-                onClick={onClickBtn}
-                className="flex justify-center mb-6 lg:mb-8 hover:!cursor-pointer z-[10] h-[48px]"
-              >
-                <Badge className="bg-gradient-to-r from-blue-500 to-purple-600 text-white border-0 px-8 py-3 text-sm font-bold text-[17.6px] leading-[28px] tracking-[0%] text-center align-middle font-third">
-                  <Zap className="h-4 w-4 mr-1" />
-                  {labelBtn}
+              <div className="flex items-center gap-5">
+                <Badge
+                  onClick={onClickBtn}
+                  className="bg-gradient-to-r h-[58px] rounded-[20px] from-blue-500 to-purple-600 border-0 px-8 py-3 flex justify-center items-center gap-2"
+                >
+                  <svg
+                    width="14"
+                    height="19"
+                    viewBox="0 0 14 19"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M3.39913 0.5C3.53413 0.195833 3.83497 0 4.1683 0H10.8158C11.4408 0 11.8483 0.658333 11.5683 1.21833L9.67747 5H12.4758C13.2258 5 13.6008 5.90667 13.0708 6.43667L3.10997 16.3975C2.48164 17.0258 1.43497 16.3792 1.71664 15.5367L3.83997 9.16667H0.841635C0.701422 9.16666 0.563432 9.13163 0.440198 9.06475C0.316964 8.99787 0.212391 8.90126 0.135977 8.7837C0.0595628 8.66614 0.0137284 8.53135 0.00263747 8.39158C-0.00845349 8.2518 0.0155503 8.11147 0.0724683 7.98333L3.39913 0.5Z"
+                      fill="#F8B303"
+                    />
+                  </svg>
+                  <div className="flex flex-col items-start gap-1">
+                    <p className="font-secondary font-bold text-[18px] text[#FFFFFF]">
+                      Join Membership
+                    </p>
+                    <p className="font-secondary font-[300] text-[12x] text[##E1E1E1]">
+                      Free Membership — This Month Only
+                    </p>
+                  </div>
                 </Badge>
+                <button className="h-[58px] flex justify-between items-center  opacity-100 gap-[4px] rounded-[20px] px-8 py-3  bg-[#FFFFFF] [box-shadow:0px_10px_15px_-3px_#0000001A] font-bold text-[18px] text-center text-[#1B1B1B]">
+                  Explore
+                </button>
               </div>
             </div>
           </div>
