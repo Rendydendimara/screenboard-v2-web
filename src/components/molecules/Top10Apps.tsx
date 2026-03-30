@@ -36,7 +36,7 @@ export const Top10Apps = ({ apps }: IProps) => {
           >
             Top 10 UI this month
           </p>
-          <p className="text-[#B9B9B9] font-medium text-[18px] leading-[100%] tracking-[0%]">
+          <p className="text-[#B9B9B9] font-secondary font-medium text-[18px] leading-[100%] tracking-[0%]">
             Curated apps with cool design for this month
           </p>
         </div>
@@ -49,7 +49,7 @@ export const Top10Apps = ({ apps }: IProps) => {
         {apps.map((app, i) => (
           <div
             key={i}
-            className="w-[218px] rounded-[24px] pt-px pb-px bg-[#2B2828] border-[1px] border-[solid] border-[#CECECE]"
+            className="w-[218px] rounded-[24px] pt-px pb-px bg-[#2B2828]"
           >
             <div className="flex w-full items-center gap-3 py-2 px-4">
               <ImageWithFallback
@@ -75,7 +75,7 @@ export const Top10Apps = ({ apps }: IProps) => {
                   "https://source.unsplash.com/400x300?game"
                 }
                 fallbackSrc={"https://source.unsplash.com/400x300?game"}
-                containerClassName="min-w-[186px] min-h-[412px] border-[solid] border-[#CECECE] rounded-[12px] border-[0.5px]"
+                containerClassName="min-w-[186px] min-h-[412px] rounded-[12px]"
                 className="min-w-[186px] min-h-[412px] object-cover border-[0.5px] border-[solid] border-[#CECECE] rounded-[12px]"
               />
             </div>

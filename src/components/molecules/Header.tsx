@@ -216,6 +216,7 @@ export const Header = ({
                       <button
                         onClick={handleShowCompare}
                         className="
+                        relative
                         w-[110px]
                         h-[36px]
                         flex items-center justify-center gap-2

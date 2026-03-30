@@ -6,11 +6,13 @@ interface IProps {
   onClickBtn: () => void;
   mainHeading: string;
   subtitle: string;
+  isLogin?: boolean;
 }
 export const HeroSection: React.FC<IProps> = ({
   onClickBtn,
   mainHeading,
   subtitle,
+  isLogin,
 }) => {
   return (
     <section className="py-10 md:py-12 lg:py-20 w-full min-h-[582px]  px-4 md:px-0 !pb-8">
@@ -55,23 +57,33 @@ export const HeroSection: React.FC<IProps> = ({
                         fill="#F8B303"
                       />
                     </svg>
-                    <div className="flex flex-col items-start gap-1">
+                    {isLogin ? (
                       <p className="font-secondary font-bold text-[18px] text[#FFFFFF]">
-                        Join Membership
+                        Explore
                       </p>
-                      <p className="font-secondary font-[300] text-[12x] text[##E1E1E1]">
-                        Free Membership — This Month Only
-                      </p>
-                    </div>
+                    ) : (
+                      <div className="flex flex-col items-start gap-1">
+                        <p className="font-secondary font-bold text-[18px] text[#FFFFFF]">
+                          Join Membership
+                        </p>
+                        <p className="font-secondary font-[300] text-[12x] text[##E1E1E1]">
+                          Free Membership — This Month Only
+                        </p>
+                      </div>
+                    )}
                   </Badge>
-                  <button className="h-[58px] flex justify-between items-center  opacity-100 gap-[4px] rounded-[20px] px-8 py-3  bg-[#FFFFFF] [box-shadow:0px_10px_15px_-3px_#0000001A] font-bold text-[18px] text-center text-[#1B1B1B]">
-                    Explore
-                  </button>
+                  {isLogin ? null : (
+                    <button className="h-[58px] flex justify-between items-center  opacity-100 gap-[4px] rounded-[20px] px-8 py-3  bg-[#FFFFFF] [box-shadow:0px_10px_15px_-3px_#0000001A] font-bold text-[18px] text-center text-[#1B1B1B]">
+                      Explore
+                    </button>
+                  )}
                 </div>
-                <p className="font-secondary font-normal text-[14px] leading-[125%] tracking-[0%] text-[#565D61]">
-                  Get full access to the design gallery while the promotion
-                  lasts.
-                </p>
+                {isLogin ? null : (
+                  <p className="font-secondary font-normal text-[14px] leading-[125%] tracking-[0%] text-[#565D61]">
+                    Get full access to the design gallery while the promotion
+                    lasts.
+                  </p>
+                )}
               </div>
             </div>
           </div>
