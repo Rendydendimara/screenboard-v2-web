@@ -15,7 +15,7 @@ import { setCredentials } from "@/provider/slices/authSlice";
 import clsx from "clsx";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useFormik } from "formik";
-import { Loader2 } from "lucide-react";
+import { Badge, Loader2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { FormControl } from "./molecules/Forms/FormControl";
@@ -174,14 +174,61 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md !rounded-[32px] !gap-6 p-8">
-        <DialogHeader>
-          <DialogTitle className="!font-bold text-left !text-heading-6">
-            {mode === "login" ? "Login" : "Sign Up"}
-          </DialogTitle>
+      <DialogContent
+        classNameClose="!hidden"
+        className="max-w-[439px] min-w-[439px] !rounded-b-[32px] !rounded-t-[12px] !gap-0 !m-0 !p-0 !border-none"
+      >
+        <DialogHeader
+          className="
+          h-[107px]
+          flex gap-2
+          pt-3 px-8 pb-3
+          rounded-t-xl
+          bg-gradient-to-r from-blue-600 to-purple-600
+          shadow-[0px_4px_6px_-4px_rgba(0,0,0,0.1),0px_10px_15px_-3px_rgba(0,0,0,0.1)] justify-center"
+        >
+          <div className="flex  items-center gap-2">
+            {mode === "login" ? (
+              <>
+                <div className="flex flex-col items-start gap-1">
+                  <p className="font-secondary font-bold text-[24px] !text-[#FFFFFF] leading-[100%] tracking-[0%]">
+                    Login
+                  </p>
+                  <p className="font-secondary font-[300] text-[12px] !text-[#E1E1E1] leading-[100%] tracking-[0%]">
+                    Welcome back to uxboard
+                  </p>
+                </div>
+              </>
+            ) : (
+              <>
+                <svg
+                  width="40"
+                  height="40"
+                  viewBox="0 0 40 40"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M13.4731 4.33337C13.7431 3.72504 14.3447 3.33337 15.0114 3.33337H28.3064C29.5564 3.33337 30.3714 4.65004 29.8114 5.77004L26.0297 13.3334H31.6264C33.1264 13.3334 33.8764 15.1467 32.8164 16.2067L12.8947 36.1284C11.6381 37.385 9.54474 36.0917 10.1081 34.4067L14.3547 21.6667H8.35807C8.07765 21.6667 7.80167 21.5966 7.5552 21.4629C7.30873 21.3291 7.09959 21.1359 6.94676 20.9008C6.79393 20.6657 6.70226 20.3961 6.68008 20.1165C6.6579 19.837 6.70591 19.5563 6.81974 19.3L13.4731 4.33337Z"
+                    fill="#F8B303"
+                  />
+                </svg>
+                <div className="flex flex-col items-start gap-1">
+                  <p className="font-secondary font-bold text-[24px] !text-[#FFFFFF] leading-[100%] tracking-[0%]">
+                    Join Membership
+                  </p>
+                  <p className="font-secondary font-[300] text-[12px] !text-[#E1E1E1] leading-[100%] tracking-[0%]">
+                    Join Free Today — Exclusive Offer Ends Soon!
+                  </p>
+                </div>
+              </>
+            )}
+          </div>
         </DialogHeader>
-        <div className="space-y-4">
-          <form onSubmit={handleFormSubmit} className="space-y-4">
+        <div className="p-8 flex flex-col gap-4 items-start w-full">
+          <form onSubmit={handleFormSubmit} className="w-full space-y-4">
             {mode === "register" && (
               <div className="space-y-2">
                 <FormControl
@@ -386,67 +433,74 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 {isSubmitting ? (
                   <Loader2 className="h-4 w-4 animate-spin mr-2" />
                 ) : null}
-                {mode === "login" ? "Login" : "Create Account"}
+                {mode === "login" ? "Login" : "Join"}
               </Button>
-              <p className="text-body-4 font-normal text-black">Or</p>
+              <p className="text-body-4 font-normal text-black">or</p>
+              <div className="p-[1px] w-full rounded-[16px] bg-gradient-to-r from-blue-600 to-purple-600">
+                <Button
+                  type="submit"
+                  variant="outline"
+                  onClick={googleAuth}
+                  className="w-full h-11 font-bold text-sm lg:text-base rounded-[16px] bg-white text-black"
+                >
+                  <svg
+                    width="17"
+                    height="16"
+                    viewBox="0 0 17 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      opacity="0.987"
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M7.70875 1.06099C8.43375 0.979994 8.86275 0.979994 9.64175 1.06099C11.0207 1.26509 12.299 1.90248 13.2918 2.88099C12.6209 3.51513 11.9588 4.15852 11.3058 4.81099C10.0551 3.75099 8.65909 3.50633 7.11775 4.07699C5.98709 4.59699 5.19975 5.43966 4.75575 6.60499C4.03019 6.06482 3.31409 5.51207 2.60775 4.94699C2.55867 4.92116 2.5026 4.9117 2.44775 4.91999C3.56975 2.75666 5.32309 1.46999 7.70775 1.05999"
+                      fill="#F44336"
+                    />
+                    <path
+                      opacity="0.997"
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M2.44576 4.92C2.50243 4.91133 2.5561 4.92033 2.60676 4.947C3.3131 5.51208 4.0292 6.06483 4.75476 6.605C4.64059 7.05906 4.56862 7.52269 4.53976 7.99C4.56443 8.442 4.6361 8.88566 4.75476 9.321L2.49976 11.116C1.51776 9.064 1.49976 6.99866 2.44576 4.92Z"
+                      fill="#FFC107"
+                    />
+                    <path
+                      opacity="0.999"
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M13.1846 13.29C12.4824 12.6708 11.7474 12.0899 10.9826 11.55C11.7492 11.0087 12.2146 10.266 12.3786 9.32199H8.62158V6.71299C10.7882 6.69499 12.9539 6.71332 15.1186 6.76799C15.5292 8.99799 15.0549 11.0087 13.6956 12.8C13.5339 12.9718 13.3627 13.1354 13.1846 13.29Z"
+                      fill="#448AFF"
+                    />
+                    <path
+                      opacity="0.993"
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M4.755 9.32202C5.575 11.36 7.07833 12.3114 9.265 12.176C9.87883 12.105 10.4673 11.8905 10.983 11.55C11.7483 12.0914 12.4823 12.6714 13.185 13.29C12.0716 14.2905 10.6521 14.8841 9.158 14.974C8.81854 15.0012 8.47746 15.0012 8.138 14.974C5.59267 14.674 3.71333 13.388 2.5 11.116L4.755 9.32202Z"
+                      fill="#43A047"
+                    />
+                  </svg>
+
+                  {mode === "login"
+                    ? "Sign In using Google"
+                    : "Sign Up using Google"}
+                </Button>
+              </div>
             </div>
           </form>
-          <div className="p-[1px] w-full rounded-[16px] bg-gradient-to-r from-blue-600 to-purple-600">
-            <Button
-              type="submit"
-              variant="outline"
-              onClick={googleAuth}
-              className="w-full h-11 font-bold text-sm lg:text-base rounded-[16px] bg-white text-black"
-            >
-              <svg
-                width="17"
-                height="16"
-                viewBox="0 0 17 16"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  opacity="0.987"
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M7.70875 1.06099C8.43375 0.979994 8.86275 0.979994 9.64175 1.06099C11.0207 1.26509 12.299 1.90248 13.2918 2.88099C12.6209 3.51513 11.9588 4.15852 11.3058 4.81099C10.0551 3.75099 8.65909 3.50633 7.11775 4.07699C5.98709 4.59699 5.19975 5.43966 4.75575 6.60499C4.03019 6.06482 3.31409 5.51207 2.60775 4.94699C2.55867 4.92116 2.5026 4.9117 2.44775 4.91999C3.56975 2.75666 5.32309 1.46999 7.70775 1.05999"
-                  fill="#F44336"
-                />
-                <path
-                  opacity="0.997"
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M2.44576 4.92C2.50243 4.91133 2.5561 4.92033 2.60676 4.947C3.3131 5.51208 4.0292 6.06483 4.75476 6.605C4.64059 7.05906 4.56862 7.52269 4.53976 7.99C4.56443 8.442 4.6361 8.88566 4.75476 9.321L2.49976 11.116C1.51776 9.064 1.49976 6.99866 2.44576 4.92Z"
-                  fill="#FFC107"
-                />
-                <path
-                  opacity="0.999"
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M13.1846 13.29C12.4824 12.6708 11.7474 12.0899 10.9826 11.55C11.7492 11.0087 12.2146 10.266 12.3786 9.32199H8.62158V6.71299C10.7882 6.69499 12.9539 6.71332 15.1186 6.76799C15.5292 8.99799 15.0549 11.0087 13.6956 12.8C13.5339 12.9718 13.3627 13.1354 13.1846 13.29Z"
-                  fill="#448AFF"
-                />
-                <path
-                  opacity="0.993"
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M4.755 9.32202C5.575 11.36 7.07833 12.3114 9.265 12.176C9.87883 12.105 10.4673 11.8905 10.983 11.55C11.7483 12.0914 12.4823 12.6714 13.185 13.29C12.0716 14.2905 10.6521 14.8841 9.158 14.974C8.81854 15.0012 8.47746 15.0012 8.138 14.974C5.59267 14.674 3.71333 13.388 2.5 11.116L4.755 9.32202Z"
-                  fill="#43A047"
-                />
-              </svg>
-
+          <div className="flex justify-center items-center w-full">
+            <p className="w-full text-sm text-[#000000] text-center">
               {mode === "login"
-                ? "Sign In using Google"
-                : "Sign Up using Google"}
-            </Button>
+                ? "Don’t have an account ?"
+                : "Already have an account?"}
+              <span
+                className="font-bold hover:cursor-pointer"
+                onClick={toggleMode}
+              >
+                {" "}
+                {mode === "login" ? "Join us here" : "Click here to Login"}
+              </span>
+            </p>
           </div>
-        </div>
-        <div className="text-center">
-          <Button variant="link" onClick={toggleMode} className="text-sm">
-            {mode === "login"
-              ? "Don’t have an account ? Join us here"
-              : "Already have an account? Login here"}
-          </Button>
         </div>
       </DialogContent>
     </Dialog>

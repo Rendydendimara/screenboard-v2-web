@@ -169,14 +169,13 @@ const Index = () => {
                 <div className="flex flex-col gap-1 items-center">
                   <p
                     className="
-                                text-[32px]
-                                font-bold
-                                font-secondary
-                                leading-none
-                                bg-gradient-to-r from-blue-600 to-purple-600
-                                bg-clip-text
-                                text-transparent
-                              "
+                      text-[32px]
+                      font-bold
+                      font-secondary
+                      bg-gradient-to-r from-blue-600 to-purple-600
+                      bg-clip-text
+                      text-transparent
+                    "
                   >
                     Explore All Design
                   </p>
@@ -500,10 +499,10 @@ const Index = () => {
                                 </svg>
 
                                 <div className="flex flex-col items-start gap-1">
-                                  <p className="font-secondary font-bold text-[18px] text[#FFFFFF]">
+                                  <p className="font-secondary font-bold text-[18px] text-[#FFFFFF]">
                                     Join Membership
                                   </p>
-                                  <p className="font-secondary font-[300] text-[12x] text[##E1E1E1]">
+                                  <p className="font-secondary font-[300] text-[12px] text-[#E1E1E1]">
                                     Free Membership — This Month Only
                                   </p>
                                 </div>
@@ -525,33 +524,6 @@ const Index = () => {
                             </div>
                           </div>
                         )}
-                        {/* {!user && allFilteredApps.length > 9 && (
-                          <div className="-mt-[12rem] pt-32 pb-8 bg-[linear-gradient(180.13deg,rgba(255,255,255,0)_-24.49%,#FFFFFF_33.51%)] absolute w-full max-w-[1440px]">
-                            <div className="flex flex-col w-full gap-6">
-                              <div className="flex justify-center items-center w-full">
-                                <div className="flex flex-col gap-3 items-center w-full md:w-[889px] px-4">
-                                  <h5 className="font-['Inter'] font-semibold text-[32px] md:text-[64px] leading-[80px] text-center bg-gradient-to-r from-slate-900 via-blue-800 to-purple-800 bg-clip-text text-transparent">
-                                    Join and get more inspiration from real
-                                    product
-                                  </h5>
-                                  <p className="font-[Inter] font-normal text-[16px] md:text-[20px] text-[#464C4F] leading-[31px] text-center">
-                                    We believe real design give more sense to
-                                    your design process
-                                  </p>
-                                  <div
-                                    onClick={() => setIsOpenAuth(true)}
-                                    className="flex justify-center hover:cursor-pointer"
-                                  >
-                                    <Badge className="bg-gradient-to-r from-blue-500 to-purple-600 text-white border-0 px-8 py-3 text-sm font-[Inter] font-bold text-[17.6px] leading-[28px] text-center">
-                                      <Zap className="h-4 w-4 mr-1" />
-                                      Join to Unlock Everything
-                                    </Badge>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        )} */}
                       </div>
                     )}
                   </div>

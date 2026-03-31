@@ -328,7 +328,7 @@ const FavoritesPage = () => {
         </section>
         {/* Main Content */}
         <div className="w-full flex justify-center items-center">
-          <div className="w-full md:max-w-[700px] lg:max-w-[1440px]">
+          <div className="w-full md:max-w-[700px] lg:max-w-[1200px]">
             <main className="px-4 py-6 md:px-0 md:py-8 lg:py-12">
               {/* Apps Grid/List - Responsive */}
               {isLoadingGetListFavorit ? (

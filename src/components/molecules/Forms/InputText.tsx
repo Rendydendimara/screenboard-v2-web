@@ -92,7 +92,7 @@ export function InputText({
           autoCapitalize="off"
           spellCheck={false}
           className={clsx(
-            "flex w-full rounded-[8px] border border-input bg-background px-3 py-2 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
+            "flex w-full rounded-[8px] border border-input bg-background px-3 py-2 text-sm outline-none placeholder:text-[#A7AAAC] placeholder:font-normal disabled:cursor-not-allowed disabled:opacity-50",
             "h-8 !text-body-4 pt-[5px]",
             leftIcon && "pl-8",
             isPasswordField && "pr-10",
@@ -145,7 +145,7 @@ export const CLabel = ({
     <label
       htmlFor={id}
       className={clsx(
-        "block text-sm font-medium text-gray-800 mb-1",
+        "block text-sm font-medium text-[#323638] mb-1",
         classNameLabel
       )}
     >

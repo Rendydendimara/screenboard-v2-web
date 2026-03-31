@@ -96,7 +96,7 @@ export const Header = ({
   return (
     <header
       className={clsx(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out ",
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out",
         isScrolled
           ? "bg-white/90 backdrop-blur-md shadow-sm"
           : transparentBg
@@ -106,7 +106,7 @@ export const Header = ({
     >
       <div className="px-0">
         <div className="w-full flex justify-center items-center">
-          <div className="w-full md:max-w-[700px] lg:max-w-[1440px]">
+          <div className="w-full md:max-w-[700px] lg:max-w-[1200px]">
             <div className="flex w-full items-center justify-between h-16 lg:h-20 px-4 md:px-6 lg:px-0">
               {/* Logo */}
               <Link to="/" className="flex items-center gap-2">
@@ -164,10 +164,10 @@ export const Header = ({
                     Applications
                   </Link>
                   <Link
-                    to="#"
+                    to="/module"
                     className={clsx(
                       "w-[110px] h-[36px] flex justify-center items-center opacity-100 gap-[8px] rounded-[6px] pr-[12px] pl-[12px] font-secondary  text-[14px] leading-[20px] tracking-[0%] text-center align-middle text-[#323638]",
-                      location.pathname === "/website"
+                      location.pathname === "/module"
                         ? "font-bold"
                         : "font-normal"
                     )}

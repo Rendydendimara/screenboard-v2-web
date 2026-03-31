@@ -28,6 +28,7 @@ import AdminGlobalComponents from "@/pages/AdminGlobalComponents";
 import AdminUsers from "@/pages/AdminUsers";
 import { usePageTracking } from "./hooks/use-page-tracking";
 import { identifyUser } from "./lib/analytics";
+import ModulePage from "./pages/Module/useView";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -88,40 +89,41 @@ const App = () => {
 
   return (
     <>
-    <ScrollToTop />
-    <Routes>
-      <Route path="/" element={<Index />} />
-      <Route path="/app/:id" element={<AppDetails />} />
-      {/* <Route path="/favorites" element={<FavoritesPage />} /> */}
-      <Route path="/profile" element={<Profile />} />
-      <Route path="/subscription" element={<Subscription />} />
-      <Route path="/subscription/success" element={<SubscriptionSuccess />} />
-      {/* <Route path="/component" element={<Component />} /> */}
-      {/* <Route path="/component/:id" element={<ComponentDetail />} /> */}
-      <Route path="/login-admin" element={<LoginAdmin />} />
-      <Route path="/admin" element={<Admin />} />
-      <Route path="/admin/dashboard" element={<AdminDashboard />} />
-      <Route path="/admin/apps" element={<AdminApps />} />
-      <Route path="/admin/modules" element={<AdminModules />} />
-      <Route path="/admin/screenshots" element={<AdminScreenshots />} />
-      <Route path="/admin/plans" element={<AdminPlans />} />
-      <Route
-        path="/admin/global-components"
-        element={<AdminGlobalComponents />}
-      />
-      <Route path="/admin/users" element={<AdminUsers />} />
-      <Route path="/admin/app/:id" element={<AdminAppDetails />} />
-      <Route
-        path="/admin/component/:appId"
-        element={<AdminComponentDetails />}
-      />
-      <Route
-        path="/admin/global-component/:id"
-        element={<AdminGlobalComponentDetails />}
-      />
+      <ScrollToTop />
+      <Routes>
+        <Route path="/" element={<Index />} />
+        <Route path="/module" element={<ModulePage />} />
+        <Route path="/app/:id" element={<AppDetails />} />
+        {/* <Route path="/favorites" element={<FavoritesPage />} /> */}
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/subscription" element={<Subscription />} />
+        <Route path="/subscription/success" element={<SubscriptionSuccess />} />
+        {/* <Route path="/component" element={<Component />} /> */}
+        {/* <Route path="/component/:id" element={<ComponentDetail />} /> */}
+        <Route path="/login-admin" element={<LoginAdmin />} />
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/admin/apps" element={<AdminApps />} />
+        <Route path="/admin/modules" element={<AdminModules />} />
+        <Route path="/admin/screenshots" element={<AdminScreenshots />} />
+        <Route path="/admin/plans" element={<AdminPlans />} />
+        <Route
+          path="/admin/global-components"
+          element={<AdminGlobalComponents />}
+        />
+        <Route path="/admin/users" element={<AdminUsers />} />
+        <Route path="/admin/app/:id" element={<AdminAppDetails />} />
+        <Route
+          path="/admin/component/:appId"
+          element={<AdminComponentDetails />}
+        />
+        <Route
+          path="/admin/global-component/:id"
+          element={<AdminGlobalComponentDetails />}
+        />
 
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+        <Route path="*" element={<NotFound />} />
+      </Routes>
     </>
   );
 };

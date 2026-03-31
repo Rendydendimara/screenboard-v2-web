@@ -225,7 +225,7 @@ export default function Profile() {
 
         {/* Main Content */}
         <div className="w-full flex justify-center items-center">
-          <div className="w-full md:max-w-[700px] lg:max-w-[1440px]">
+          <div className="w-full md:max-w-[700px] lg:max-w-[1200px]">
             <div className="pt-24 lg:pt-28 px-4 md:px-0 py-8">
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Left Column - User Info */}

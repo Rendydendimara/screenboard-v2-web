@@ -4,14 +4,10 @@ import React from "react";
 
 interface IProps {
   onClickBtn: () => void;
-  mainHeading: string;
-  subtitle: string;
   isLogin?: boolean;
 }
-export const HeroSection: React.FC<IProps> = ({
+export const HeroSectionModule: React.FC<IProps> = ({
   onClickBtn,
-  mainHeading,
-  subtitle,
   isLogin,
 }) => {
   return (
@@ -25,19 +21,49 @@ export const HeroSection: React.FC<IProps> = ({
 
       <div className="flex w-full justify-center items-center">
         <div className="max-w-[1200px] w-full">
-          <div className="w-full justify-start flex items-start">
-            <div className="w-full  max-w-[739px] flex flex-col items-start gap-[40px]">
+          <div className="w-full justify-center flex items-start">
+            <div className="w-full  max-w-[739px] flex flex-col items-center">
+              <svg
+                width="40"
+                height="40"
+                viewBox="0 0 40 40"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g clip-path="url(#clip0_621_9401)">
+                  <path
+                    d="M34.2859 20C35.4811 20.6199 36.5005 21.5315 37.2496 22.6503C37.9988 23.769 38.4535 25.0588 38.5716 26.4C38.5716 31.9143 30.2573 36.4 20.0001 36.4C9.743 36.4 1.42871 31.9429 1.42871 26.4286C1.54214 25.0823 1.99466 23.7867 2.74406 22.6626C3.49347 21.5385 4.51536 20.6225 5.71443 20"
+                    stroke="#323638"
+                    stroke-width="4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M11.6574 6.42858C5.9431 13.5714 17.3717 16.4286 11.6574 23.5714M20.0002 3.57144C14.286 10.7143 25.7145 19.2857 20.0002 26.4286M28.3431 6.42858C22.6288 13.5714 34.0574 16.4286 28.3431 23.5714"
+                    stroke="#323638"
+                    stroke-width="4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </g>
+                <defs>
+                  <clipPath id="clip0_621_9401">
+                    <rect width="40" height="40" fill="white" />
+                  </clipPath>
+                </defs>
+              </svg>
               <div className="flex flex-col items-start gap-6 w-full">
                 {/* Main Heading */}
-                <h1 className="w-full md:w-[812px] h-auto md:h-[152px] leading-[32px] text-[32px] md:text-[64px] font-extrabold text-[#323638] md:leading-[72px] !tracking-[0%] align-middle font-secondary">
-                  {mainHeading}
+                <h1 className="w-full  max-w-[739px] text-center md:w-[812px] h-auto md:h-[152px] leading-[32px] text-[32px] md:text-[64px] font-extrabold text-[#323638] md:leading-[72px] !tracking-[0%] align-middle font-secondary">
+                  Explore Design Patterns by Module
                 </h1>
                 {/* Subtitle */}
-                <p className="font-medium max-w-[739px] text-[20px] leading-[100%]  md:text-xl text-[#464C4F] font-secondary md:!leading-[100%] tracking-[0%] align-middle w-full md:w-[832px]">
-                  {subtitle}
+                <p className="font-medium max-w-[739px] text-center text-[20px] leading-[100%]  md:text-xl text-[#464C4F] font-secondary md:!leading-[100%] tracking-[0%] align-middle w-full md:w-[832px]">
+                  Browse product design patterns organized by modules like
+                  onboarding, checkout, search, and more.
                 </p>
               </div>
-              <div className="flex flex-col items-start gap-3">
+              <div className="flex flex-col items-start gap-3 mt-10">
                 <div className="flex items-center gap-5 ">
                   <Badge
                     onClick={onClickBtn}

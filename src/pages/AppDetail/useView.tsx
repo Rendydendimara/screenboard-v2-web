@@ -32,7 +32,7 @@ import {
 import React, { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import useController from "./useController";
-
+import ScrollContainer from "react-indiana-drag-scroll";
 import FilterItem from "@/components/FilterItem";
 import { Header } from "@/components/molecules";
 import { isValidUrl } from "@/utils";
@@ -113,7 +113,7 @@ const useView: React.FC = () => {
         <section className="relative overflow-hidden ">
           <header className="fixed w-full top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md shadow-sm">
             <div className="w-full flex justify-center items-center">
-              <div className="w-full md:max-w-[700px] lg:max-w-[1440px]">
+              <div className="w-full md:max-w-[700px] lg:max-w-[1200px]">
                 <div className="flex items-center justify-between h-16 lg:h-20 px-4 md:px-0">
                   <Link to="/">
                     <div className="flex items-center space-x-2">
@@ -131,7 +131,7 @@ const useView: React.FC = () => {
 
           {/* App Overview Skeleton */}
           <div className="w-full flex justify-center items-center">
-            <div className="w-full md:max-w-[700px] lg:max-w-[1440px]">
+            <div className="w-full md:max-w-[700px] lg:max-w-[1200px]">
               <div className="pt-24 px-4 md:px-0">
                 <div className="flex items-center justify-between md:flex-row flex-col">
                   <div className="flex items-start gap-6 w-full">
@@ -164,7 +164,7 @@ const useView: React.FC = () => {
 
         {/* Screenshots Skeleton */}
         <div className="w-full flex justify-center items-center">
-          <div className="w-full md:max-w-[700px] lg:max-w-[1440px]">
+          <div className="w-full md:max-w-[700px] lg:max-w-[1200px]">
             <div className="px-4 md:px-0 py-12">
               <div className="mb-8">
                 <div className="flex flex-col md:flex-row items-start gap-3 md:gap-0 md:items-center justify-between mb-9">
@@ -230,14 +230,80 @@ const useView: React.FC = () => {
           transparentBg={true}
         />
 
+        <div
+          className={clsx(
+            "w-full bg-[#353535] h-[40px] fixed z-50 top-[80px] py-2 ransition-all duration-300 ease-in-out",
+            scrolled ? "opacity-100" : "opacity-0"
+          )}
+        >
+          <div className="w-full flex justify-center items-center">
+            <div className="w-full md:max-w-[700px] lg:max-w-[1200px]">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-5">
+                  <div className="w-6 h-6 rounded-2xl overflow-hidden shadow-2xl">
+                    <ImageWithFallback
+                      src={
+                        app?.image ?? "https://source.unsplash.com/400x300?game"
+                      }
+                      fallbackSrc="https://placehold.co/400"
+                      alt={app.name}
+                      containerClassName="w-full h-full"
+                      className="w-full h-full object-cover shadow-2xl"
+                    />
+                  </div>
+                  <h1 className="text-[14px] font-bold font-secondary text-[#FFFFFF]">
+                    {app.name}
+                  </h1>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button className="w-6 h-6 flex justify-center items-center border-[E2E8F0] rounded-[6px] bg-white">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M5.99984 2.6665H9.99984C10.3535 2.6665 10.6926 2.80698 10.9426 3.05703C11.1927 3.30708 11.3332 3.64622 11.3332 3.99984V13.3332L7.99984 11.3332L4.6665 13.3332V3.99984C4.6665 3.64622 4.80698 3.30708 5.05703 3.05703C5.30708 2.80698 5.64622 2.6665 5.99984 2.6665Z"
+                        stroke="#181A1B"
+                        stroke-width="1.3"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </button>
+                  <button className="w-6 h-6 flex justify-center items-center border-[E2E8F0] rounded-[6px] bg-white">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M3.99984 5.33333C3.64622 5.33333 3.30708 5.19286 3.05703 4.94281C2.80698 4.69276 2.6665 4.35362 2.6665 4C2.6665 3.64638 2.80698 3.30724 3.05703 3.05719C3.30708 2.80714 3.64622 2.66667 3.99984 2.66667C4.35346 2.66667 4.6926 2.80714 4.94265 3.05719C5.19269 3.30724 5.33317 3.64638 5.33317 4C5.33317 4.35362 5.19269 4.69276 4.94265 4.94281C4.6926 5.19286 4.35346 5.33333 3.99984 5.33333ZM3.99984 5.33333V10.6667C3.99984 11.0203 4.14031 11.3594 4.39036 11.6095C4.64041 11.8595 4.97955 12 5.33317 12H8.6665M11.9998 10.6667C12.3535 10.6667 12.6926 10.8071 12.9426 11.0572C13.1927 11.3072 13.3332 11.6464 13.3332 12C13.3332 12.3536 13.1927 12.6928 12.9426 12.9428C12.6926 13.1929 12.3535 13.3333 11.9998 13.3333C11.6462 13.3333 11.3071 13.1929 11.057 12.9428C10.807 12.6928 10.6665 12.3536 10.6665 12C10.6665 11.6464 10.807 11.3072 11.057 11.0572C11.3071 10.8071 11.6462 10.6667 11.9998 10.6667ZM11.9998 10.6667V5.33333C11.9998 4.97971 11.8594 4.64057 11.6093 4.39052C11.3593 4.14048 11.0201 4 10.6665 4H7.33317M7.33317 4L9.33317 6M7.33317 4L9.33317 2M8.6665 12L6.6665 10M8.6665 12L6.6665 14"
+                        stroke="#181A1B"
+                        stroke-width="1.3"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* App Overview */}
         <div className="w-full flex justify-center items-center">
-          <div className="w-full md:max-w-[700px] lg:max-w-[1440px]">
+          <div className="w-full md:max-w-[700px] lg:max-w-[1200px]">
             <div className="flex w-full justify-between items-center"></div>
             <div className="pt-24 px-4 md:px-0 w-full flex justify-between items-center">
               {/* App Info */}
               <div className="flex items-start gap-4 justify-between flex-col max-w-[909px]">
-                <div className="flex items-start w-full flex-col gap-2">
+                <div className="flex items-start w-full flex-col gap-4">
                   <div className="flex items-center gap-5 flex-col md:flex-row">
                     {/* App Image */}
                     <div className="relative">
@@ -372,26 +438,23 @@ const useView: React.FC = () => {
                     app.isLiked && "!bg-[#9333EA] !text-white"
                   )}
                 >
-                  {user ? (
-                    <Heart className="h-4 w-4" />
-                  ) : (
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 16 16"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M5.3335 7.33333V4.66667C5.3335 3.95942 5.61445 3.28115 6.11454 2.78105C6.61464 2.28095 7.29292 2 8.00016 2C8.70741 2 9.38568 2.28095 9.88578 2.78105C10.3859 3.28115 10.6668 3.95942 10.6668 4.66667V7.33333M3.3335 8.66667C3.3335 8.31304 3.47397 7.97391 3.72402 7.72386C3.97407 7.47381 4.31321 7.33333 4.66683 7.33333H11.3335C11.6871 7.33333 12.0263 7.47381 12.2763 7.72386C12.5264 7.97391 12.6668 8.31304 12.6668 8.66667V12.6667C12.6668 13.0203 12.5264 13.3594 12.2763 13.6095C12.0263 13.8595 11.6871 14 11.3335 14H4.66683C4.31321 14 3.97407 13.8595 3.72402 13.6095C3.47397 13.3594 3.3335 13.0203 3.3335 12.6667V8.66667ZM7.3335 10.6667C7.3335 10.8435 7.40373 11.013 7.52876 11.1381C7.65378 11.2631 7.82335 11.3333 8.00016 11.3333C8.17697 11.3333 8.34654 11.2631 8.47157 11.1381C8.59659 11.013 8.66683 10.8435 8.66683 10.6667C8.66683 10.4899 8.59659 10.3203 8.47157 10.1953C8.34654 10.0702 8.17697 10 8.00016 10C7.82335 10 7.65378 10.0702 7.52876 10.1953C7.40373 10.3203 7.3335 10.4899 7.3335 10.6667Z"
-                        stroke="black"
-                        stroke-width="1.33333"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                    </svg>
-                  )}
-                  {app.isLiked ? "Liked" : "Like"}
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M5.99984 2.6665H9.99984C10.3535 2.6665 10.6926 2.80698 10.9426 3.05703C11.1927 3.30708 11.3332 3.64622 11.3332 3.99984V13.3332L7.99984 11.3332L4.6665 13.3332V3.99984C4.6665 3.64622 4.80698 3.30708 5.05703 3.05703C5.30708 2.80698 5.64622 2.6665 5.99984 2.6665Z"
+                      stroke="#181A1B"
+                      stroke-width="1.3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+
+                  {app.isLiked ? "Bookmarked" : "Bookmark"}
                 </Button>
                 <Button
                   variant="outline"
@@ -399,7 +462,21 @@ const useView: React.FC = () => {
                   onClick={handleAddCompare}
                   className="h-10 rounded-[6px] py-[1px] px-[13px] font-normal"
                 >
-                  <GitCompare className="h-4 w-4" />
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M3.99984 5.33333C3.64622 5.33333 3.30708 5.19286 3.05703 4.94281C2.80698 4.69276 2.6665 4.35362 2.6665 4C2.6665 3.64638 2.80698 3.30724 3.05703 3.05719C3.30708 2.80714 3.64622 2.66667 3.99984 2.66667C4.35346 2.66667 4.6926 2.80714 4.94265 3.05719C5.19269 3.30724 5.33317 3.64638 5.33317 4C5.33317 4.35362 5.19269 4.69276 4.94265 4.94281C4.6926 5.19286 4.35346 5.33333 3.99984 5.33333ZM3.99984 5.33333V10.6667C3.99984 11.0203 4.14031 11.3594 4.39036 11.6095C4.64041 11.8595 4.97955 12 5.33317 12H8.6665M11.9998 10.6667C12.3535 10.6667 12.6926 10.8071 12.9426 11.0572C13.1927 11.3072 13.3332 11.6464 13.3332 12C13.3332 12.3536 13.1927 12.6928 12.9426 12.9428C12.6926 13.1929 12.3535 13.3333 11.9998 13.3333C11.6462 13.3333 11.3071 13.1929 11.057 12.9428C10.807 12.6928 10.6665 12.3536 10.6665 12C10.6665 11.6464 10.807 11.3072 11.057 11.0572C11.3071 10.8071 11.6462 10.6667 11.9998 10.6667ZM11.9998 10.6667V5.33333C11.9998 4.97971 11.8594 4.64057 11.6093 4.39052C11.3593 4.14048 11.0201 4 10.6665 4H7.33317M7.33317 4L9.33317 6M7.33317 4L9.33317 2M8.6665 12L6.6665 10M8.6665 12L6.6665 14"
+                      stroke="#181A1B"
+                      stroke-width="1.3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
                   Compare
                 </Button>
               </div>
@@ -409,7 +486,7 @@ const useView: React.FC = () => {
       </section>
 
       <div className="w-full flex justify-center items-center">
-        <div className="w-full md:max-w-[700px] lg:max-w-[1440px]">
+        <div className="w-full md:max-w-[700px] lg:max-w-[1200px]">
           <div>
             <div className="px-4 md:px-0 pt-[45px] pb-12">
               <div className="mb-8">
@@ -622,7 +699,7 @@ const useView: React.FC = () => {
                     {/* Fixed Filters - visible when scrolled - Hidden on mobile */}
                     <div
                       className={clsx(
-                        "hidden md:block min-w-[200px] max-w-[200px] fixed max-h-[90vh] overflow-y-auto z-50 pb-8 transition-all ease-in-out rounded-[20px] p-5 bg-[#FAFAFA]",
+                        "hidden md:block min-w-[200px] max-w-[200px] mt-10 fixed max-h-[90vh] overflow-y-auto z-50 pb-8 transition-all ease-in-out rounded-[20px] p-5 bg-[#FAFAFA]",
                         isValidUrl(app.linkPlayStore) ||
                           isValidUrl(app.linkAppStore) ||
                           isValidUrl(app.linkWebsite)
