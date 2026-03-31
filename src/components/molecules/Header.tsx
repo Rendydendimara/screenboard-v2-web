@@ -122,7 +122,7 @@ export const Header = ({
 
               <div
                 className={clsx(
-                  "w-[448px] transition-all duration-300 ease-in-out overflow-hidden h-[40px]",
+                  "hidden md:block w-[448px] transition-all duration-300 ease-in-out overflow-hidden h-[40px]",
                   scrolledSearch
                     ? "max-h-[100px] opacity-100 translate-y-0"
                     : "max-h-0 opacity-0 -translate-y-4 pointer-events-none"
@@ -150,7 +150,7 @@ export const Header = ({
               </div>
 
               <div className="flex items-center gap-[10px]">
-                <div className="flex items-center gap-3">
+                <div className="hidden md:flex items-center gap-3">
                   <Link
                     to="/"
                     className={clsx(
@@ -348,32 +348,24 @@ export const Header = ({
                               "bg-slate-100 font-bold"
                           )}
                         >
-                          Apps
+                          Applications
                         </Button>
                       </Link>
                       <Link
-                        to="/component"
+                        to="/module"
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         <Button
                           variant="ghost"
                           className={clsx(
                             "w-full justify-start gap-2",
-                            (location.pathname === "/component" ||
-                              location.pathname.includes("component")) &&
+                            location.pathname.includes("module") &&
                               "bg-slate-100 font-bold"
                           )}
                         >
-                          Component
+                          Module
                         </Button>
                       </Link>
-                      <Button
-                        variant="ghost"
-                        className="w-full justify-start gap-2"
-                        disabled
-                      >
-                        Website (Coming Soon)
-                      </Button>
                     </div>
 
                     {user ? (

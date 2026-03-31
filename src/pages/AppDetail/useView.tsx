@@ -262,7 +262,10 @@ const useView: React.FC = () => {
                   </h1>
                 </div>
                 <div className="flex items-center gap-2">
-                  <button className="w-6 h-6 flex justify-center items-center border-[E2E8F0] rounded-[6px] bg-white">
+                  <button
+                    onClick={toggleLike}
+                    className="w-6 h-6 flex justify-center items-center border-[E2E8F0] rounded-[6px] bg-white"
+                  >
                     <svg
                       width="16"
                       height="16"
@@ -279,7 +282,10 @@ const useView: React.FC = () => {
                       />
                     </svg>
                   </button>
-                  <button className="w-6 h-6 flex justify-center items-center border-[E2E8F0] rounded-[6px] bg-white">
+                  <button
+                    onClick={handleAddCompare}
+                    className="w-6 h-6 flex justify-center items-center border-[E2E8F0] rounded-[6px] bg-white"
+                  >
                     <svg
                       width="16"
                       height="16"

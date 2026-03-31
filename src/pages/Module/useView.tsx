@@ -55,7 +55,7 @@ const ModulePage = () => {
           </div>
         </section>
         {/* Main Content */}
-        <main className="w-full flex justify-center items-center py-6 md:px-0 md:py-8 lg:py-12 ">
+        <main className="w-full flex justify-center items-center py-6 px-4 md:px-0 md:py-8 lg:py-12 ">
           <div className="w-full md:max-w-[700px] lg:max-w-[1200px]">
             <div className="flex flex-col items-center gap-4 mb-8">
               <svg

@@ -306,6 +306,11 @@ const useController = () => {
 
   const handleAddCompare = useCallback(() => {
     const ids = compareApps.map((d) => d.id);
+    const alreadyIn = compareApps.some((a) => a.id === app.id);
+    if (!alreadyIn && compareApps.length >= 2) {
+      setShowCompareMaxModal(true);
+      return;
+    }
     if (ids.includes(app.id)) return;
     handleAddToCompare(app);
     setShowCompare(true);

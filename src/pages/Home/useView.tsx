@@ -227,7 +227,7 @@ const Index = () => {
                       className={clsx(
                         "bg-[white] md:w-fit w-full left-[0] transition-all duration-300 ease-in-out",
                         scrolledSearch &&
-                          "fixed md:[position:initial] py-1 pl-[16px] z-[10000]",
+                          "fixed md:[position:initial] py-1 pl-[16px] z-[10]",
                         showFilters ? "top-0 h-fit" : "top-[63px]"
                       )}
                     >

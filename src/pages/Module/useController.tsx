@@ -97,6 +97,7 @@ const useController = () => {
     isLoading,
     hasMoreItems,
     loadMoreItems,
+    showCompare,
   };
 };
 
