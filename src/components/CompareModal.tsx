@@ -33,7 +33,7 @@ interface CompareModalProps {
   onAddApp?: (app: AppPublic) => void;
   availableApps?: AppPublic[];
   categories: TCategoryRes[];
-  setShowCompare: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowCompare: (show: boolean) => void;
 }
 
 export const CompareModal: React.FC<CompareModalProps> = ({

@@ -97,7 +97,6 @@ export default function Subscription() {
         <Header
           scrolled={scrolled}
           onOpenAuthModal={handleOpenAuthModal}
-          onShowCompare={() => navigate("/")}
         />
 
         {/* Main Content */}

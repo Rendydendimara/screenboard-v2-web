@@ -24,8 +24,6 @@ const Index = () => {
   const {
     searchTerm,
     setSearchTerm,
-    showCompare,
-    setShowCompare,
     scrolled,
     scrolledSearch,
     scrolledCategories,
@@ -77,7 +75,6 @@ const Index = () => {
             scrolled={scrolled}
             scrolledSearch={scrolledSearch}
             onOpenAuthModal={() => setIsOpenAuth(true)}
-            onShowCompare={() => setShowCompare(true)}
             transparentBg={true}
           />
 

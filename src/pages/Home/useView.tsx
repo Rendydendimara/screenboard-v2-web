@@ -1,7 +1,5 @@
 import { AppCardSkeleton } from "@/components/AppCardSkeleton";
 import { AuthModal } from "@/components/AuthModal";
-import { CompareMaxModal } from "@/components/CompareMaxModal";
-import { CompareModal } from "@/components/CompareModal";
 import { FavoritesModal } from "@/components/FavoritesModal";
 import { HeroSection } from "@/components/HeroSection";
 import { Header } from "@/components/molecules";
@@ -36,14 +34,10 @@ const Index = () => {
     setViewMode,
     showFilters,
     setShowFilters,
-    showCompare,
-    setShowCompare,
     selectedScreen,
     setSelectedScreen,
     showFavorites,
     setShowFavorites,
-    showCompareMaxModal,
-    setShowCompareMaxModal,
     scrolled,
     scrolledSearch,
     scrolledCategories,
@@ -128,9 +122,10 @@ const Index = () => {
             scrolled={scrolled}
             scrolledSearch={scrolledSearch}
             onOpenAuthModal={() => setIsOpenAuth(true)}
-            onShowCompare={() => setShowCompare(true)}
             transparentBg={true}
             callbackLogout={callbackAuth}
+            availableApps={listApp}
+            categories={getListCategoryFiltered}
           />
 
           {/* Hero Section */}
@@ -538,17 +533,6 @@ const Index = () => {
         </div>
 
         {/* Modals */}
-        <CompareModal
-          isOpen={showCompare}
-          setShowCompare={setShowCompare}
-          onClose={() => setShowCompare(false)}
-          apps={compareApps}
-          onRemoveApp={handleRemoveFromCompare}
-          onAddApp={handleAddToCompare}
-          availableApps={listApp}
-          categories={getListCategoryFiltered}
-        />
-
         <AuthModal
           initialMode="login"
           isOpen={isOpenAuth}
@@ -562,11 +546,6 @@ const Index = () => {
           favoriteScreens={favoriteScreens}
           onRemoveFavorite={toggleFavorite}
           onScreenClick={setSelectedScreen}
-        />
-
-        <CompareMaxModal
-          isOpen={showCompareMaxModal}
-          onClose={() => setShowCompareMaxModal(false)}
         />
 
         {/* ScreenPublic Detail Modal */}

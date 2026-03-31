@@ -6,8 +6,6 @@ import CategoryAPI from "@/api/user/category/api";
 import { TCategoryRes } from "@/api/user/category/type";
 import { AppCard } from "@/components/AppCard";
 import { AuthModal } from "@/components/AuthModal";
-import { CompareMaxModal } from "@/components/CompareMaxModal";
-import { CompareModal } from "@/components/CompareModal";
 import { FavoritesModal } from "@/components/FavoritesModal";
 import { HeroSectionFavorites } from "@/components/HeroSectionFavorites";
 import SEO from "@/components/SEO";
@@ -28,6 +26,8 @@ import { logout, setCredentials } from "@/provider/slices/authSlice";
 import {
   addToCompare,
   removeFromCompare,
+  setShowCompare,
+  setShowCompareMaxModal,
 } from "@/provider/slices/compareSlice";
 import { RootState } from "@/provider/store";
 import { adapterListAppBEToFEPublic } from "@/utils/adapterBEToFE";
@@ -85,8 +85,6 @@ const FavoritesPage = () => {
   const [selectedCategory, setSelectedCategory] = useState<TCategoryRes>();
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showFilters, setShowFilters] = useState(false);
-  const [showCompare, setShowCompare] = useState(false);
-  const [showCompareMaxModal, setShowCompareMaxModal] = useState(false);
   const [selectedScreen, setSelectedScreen] = useState<ScreenPublic | null>(
     null
   );
@@ -180,7 +178,7 @@ const FavoritesPage = () => {
   const handleAddToCompare = (app: AppPublic) => {
     const alreadyIn = compareApps.some((a) => a.id === app.id);
     if (!alreadyIn && compareApps.length >= 2) {
-      setShowCompareMaxModal(true);
+      dispatch(setShowCompareMaxModal(true));
       return;
     }
     dispatch(addToCompare(app));
@@ -191,6 +189,7 @@ const FavoritesPage = () => {
         compare_count: compareApps.length + 1,
         source: "favorites",
       });
+      dispatch(setShowCompare(true));
     }
   };
 
@@ -317,8 +316,9 @@ const FavoritesPage = () => {
           <Header
             scrolled={scrolled}
             onOpenAuthModal={handleOpenAuthModal}
-            onShowCompare={() => setShowCompare(true)}
             transparentBg={true}
+            availableApps={listApp}
+            categories={getListCategoryFiltered}
           />
 
           {/* Hero Section */}
@@ -439,22 +439,6 @@ const FavoritesPage = () => {
         </div>
 
         {/* Modals */}
-        <CompareMaxModal
-          isOpen={showCompareMaxModal}
-          onClose={() => setShowCompareMaxModal(false)}
-        />
-
-        <CompareModal
-          isOpen={showCompare}
-          setShowCompare={setShowCompare}
-          onClose={() => setShowCompare(false)}
-          apps={compareApps}
-          onRemoveApp={handleRemoveFromCompare}
-          onAddApp={handleAddToCompare}
-          availableApps={listApp}
-          categories={getListCategoryFiltered}
-        />
-
         <AuthModal
           initialMode="login"
           isOpen={isOpenAuth}

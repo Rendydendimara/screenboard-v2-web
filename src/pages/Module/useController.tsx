@@ -15,7 +15,6 @@ const useController = () => {
 
   const [scrolled, setScrolled] = useState(false);
   const [scrolledSearch, setScrolledSearch] = useState(false);
-  const [showCompare, setShowCompare] = useState(false);
   const user = useTypedSelector((state: RootState) => state.auth.user);
   const containerMainRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
@@ -86,7 +85,6 @@ const useController = () => {
     handleChangeSearch,
     scrolled,
     setIsOpenAuth,
-    setShowCompare,
     callbackAuth,
     handleOpenAuthModal,
     scrolledSearch,
@@ -97,7 +95,6 @@ const useController = () => {
     isLoading,
     hasMoreItems,
     loadMoreItems,
-    showCompare,
   };
 };
 

@@ -25,7 +25,6 @@ const useController = () => {
     []
   );
   const [searchTerm, setSearchTerm] = useState("");
-  const [showCompare, setShowCompare] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [scrolledSearch, setScrolledSearch] = useState(false);
   const [scrolledCategories, setScrolledCategories] = useState(false);
@@ -191,8 +190,6 @@ const useController = () => {
     listComponent,
     searchTerm,
     setSearchTerm,
-    showCompare,
-    setShowCompare,
     scrolled,
     scrolledSearch,
     scrolledCategories,

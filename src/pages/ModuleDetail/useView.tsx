@@ -125,7 +125,6 @@ const ModuleDetailPage: React.FC = () => {
         <Header
           scrolled={scrolled}
           onOpenAuthModal={handleOpenAuthModal}
-          onShowCompare={() => {}}
           transparentBg={false}
         />
 

@@ -16,6 +16,8 @@ import { logout, setCredentials } from "@/provider/slices/authSlice";
 import {
   addToCompare,
   removeFromCompare,
+  setShowCompare,
+  setShowCompareMaxModal,
 } from "@/provider/slices/compareSlice";
 import { RootState } from "@/provider/store";
 import { TItemMenuFilter, TMenuFilter } from "@/types/filter";
@@ -124,12 +126,10 @@ const useController = () => {
   const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showFilters, setShowFilters] = useState(false);
-  const [showCompare, setShowCompare] = useState(false);
   const [selectedScreen, setSelectedScreen] = useState<ScreenPublic | null>(
     null
   );
   const [showFavorites, setShowFavorites] = useState(false);
-  const [showCompareMaxModal, setShowCompareMaxModal] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [scrolledSearch, setScrolledSearch] = useState(false);
   const [scrolledCategories, setScrolledCategories] = useState(false);
@@ -328,7 +328,7 @@ const useController = () => {
   const handleAddToCompare = (app: AppPublic) => {
     const alreadyIn = compareApps.some((a) => a.id === app.id);
     if (!alreadyIn && compareApps.length >= 2) {
-      setShowCompareMaxModal(true);
+      dispatch(setShowCompareMaxModal(true));
       return;
     }
     dispatch(addToCompare(app));
@@ -338,6 +338,7 @@ const useController = () => {
         app_name: app.name,
         compare_count: compareApps.length + 1,
       });
+      dispatch(setShowCompare(true));
     }
   };
 
@@ -892,14 +893,10 @@ const useController = () => {
     setViewMode,
     showFilters,
     setShowFilters,
-    showCompare,
-    setShowCompare,
     selectedScreen,
     setSelectedScreen,
     showFavorites,
     setShowFavorites,
-    showCompareMaxModal,
-    setShowCompareMaxModal,
     scrolled,
     scrolledSearch,
     scrolledCategories,

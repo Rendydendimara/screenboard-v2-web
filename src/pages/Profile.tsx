@@ -220,7 +220,6 @@ export default function Profile() {
         <Header
           scrolled={scrolled}
           onOpenAuthModal={handleOpenAuthModal}
-          onShowCompare={() => navigate("/")}
         />
 
         {/* Main Content */}

@@ -3,6 +3,8 @@ import { AppPublic } from "@/pages/Home/useController";
 
 interface CompareState {
   compareApps: AppPublic[];
+  showCompare: boolean;
+  showCompareMaxModal: boolean;
 }
 
 // Load initial state from localStorage
@@ -18,6 +20,8 @@ const loadCompareFromStorage = (): AppPublic[] => {
 
 const initialState: CompareState = {
   compareApps: loadCompareFromStorage(),
+  showCompare: false,
+  showCompareMaxModal: false,
 };
 
 const compareSlice = createSlice({
@@ -49,9 +53,20 @@ const compareSlice = createSlice({
       // Clear from localStorage
       localStorage.removeItem("compareApps");
     },
+    setShowCompare: (state, action: PayloadAction<boolean>) => {
+      state.showCompare = action.payload;
+    },
+    setShowCompareMaxModal: (state, action: PayloadAction<boolean>) => {
+      state.showCompareMaxModal = action.payload;
+    },
   },
 });
 
-export const { addToCompare, removeFromCompare, clearCompare } =
-  compareSlice.actions;
+export const {
+  addToCompare,
+  removeFromCompare,
+  clearCompare,
+  setShowCompare,
+  setShowCompareMaxModal,
+} = compareSlice.actions;
 export default compareSlice.reducer;

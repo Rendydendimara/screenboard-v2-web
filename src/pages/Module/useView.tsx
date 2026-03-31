@@ -13,7 +13,6 @@ const ModulePage = () => {
     handleChangeSearch,
     scrolled,
     setIsOpenAuth,
-    setShowCompare,
     callbackAuth,
     handleOpenAuthModal,
     scrolledSearch,
@@ -41,7 +40,6 @@ const ModulePage = () => {
             scrolled={scrolled}
             scrolledSearch={scrolledSearch}
             onOpenAuthModal={() => setIsOpenAuth(true)}
-            onShowCompare={() => setShowCompare(true)}
             transparentBg={true}
             callbackLogout={callbackAuth}
           />

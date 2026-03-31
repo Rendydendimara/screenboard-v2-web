@@ -12,6 +12,8 @@ import { logout, setCredentials } from "@/provider/slices/authSlice";
 import {
   addToCompare,
   removeFromCompare,
+  setShowCompare,
+  setShowCompareMaxModal,
 } from "@/provider/slices/compareSlice";
 import { RootState } from "@/provider/store";
 import {
@@ -49,8 +51,6 @@ const useController = () => {
   );
   const [app, setApp] = useState<AppPublic | null>(null);
   const [isLoadingDetail, setIsLoadingDetail] = useState(true);
-  const [showCompare, setShowCompare] = useState(false);
-  const [showCompareMaxModal, setShowCompareMaxModal] = useState(false);
   const compareApps = useTypedSelector(
     (state: RootState) => state.compare.compareApps
   );
@@ -224,7 +224,7 @@ const useController = () => {
   const handleAddToCompare = (app: AppPublic) => {
     const alreadyIn = compareApps.some((a) => a.id === app.id);
     if (!alreadyIn && compareApps.length >= 2) {
-      setShowCompareMaxModal(true);
+      dispatch(setShowCompareMaxModal(true));
       return;
     }
     dispatch(addToCompare(app));
@@ -305,15 +305,14 @@ const useController = () => {
   }, [user]);
 
   const handleAddCompare = useCallback(() => {
-    const ids = compareApps.map((d) => d.id);
     const alreadyIn = compareApps.some((a) => a.id === app.id);
     if (!alreadyIn && compareApps.length >= 2) {
-      setShowCompareMaxModal(true);
+      dispatch(setShowCompareMaxModal(true));
       return;
     }
-    if (ids.includes(app.id)) return;
+    if (alreadyIn) return;
     handleAddToCompare(app);
-    setShowCompare(true);
+    dispatch(setShowCompare(true));
   }, [compareApps, app]);
 
   const handleDownloadScreens = async (categoryId?: string) => {
@@ -416,7 +415,6 @@ const useController = () => {
     selectedScreenCategory,
     screenViewMode,
     selectedScreen,
-    showCompare,
     compareApps,
     listApp,
     categories,
@@ -434,7 +432,6 @@ const useController = () => {
     setSelectedScreenCategory,
     setScreenViewMode,
     setSelectedScreen,
-    setShowCompare,
     setIsOpenAuth,
     setMobileMenuOpen,
     getPlatformIcon,
@@ -443,8 +440,6 @@ const useController = () => {
     handleLogout,
     handleAddToCompare,
     handleRemoveFromCompare,
-    showCompareMaxModal,
-    setShowCompareMaxModal,
     onCloseOpenAuth,
     handleChangeCategory,
     handleOpenAuthModal,

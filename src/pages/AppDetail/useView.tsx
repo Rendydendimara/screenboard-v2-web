@@ -1,6 +1,4 @@
 import { AuthModal } from "@/components/AuthModal";
-import { CompareMaxModal } from "@/components/CompareMaxModal";
-import { CompareModal } from "@/components/CompareModal";
 import { ScreenImageModalV2 } from "@/components/ScreenImageModalV2";
 import SEO from "@/components/SEO";
 import { Badge } from "@/components/ui/badge";
@@ -44,7 +42,6 @@ const useView: React.FC = () => {
     selectedScreenCategory,
     screenViewMode,
     selectedScreen,
-    showCompare,
     compareApps,
     listApp,
     categories,
@@ -62,7 +59,6 @@ const useView: React.FC = () => {
     setSelectedScreenCategory,
     setScreenViewMode,
     setSelectedScreen,
-    setShowCompare,
     setIsOpenAuth,
     setMobileMenuOpen,
     getPlatformIcon,
@@ -71,8 +67,6 @@ const useView: React.FC = () => {
     handleLogout,
     handleAddToCompare,
     handleRemoveFromCompare,
-    showCompareMaxModal,
-    setShowCompareMaxModal,
     onCloseOpenAuth,
     handleChangeCategory,
     handleOpenAuthModal,
@@ -232,8 +226,9 @@ const useView: React.FC = () => {
         <Header
           scrolled={scrolled}
           onOpenAuthModal={handleOpenAuthModal}
-          onShowCompare={() => setShowCompare(true)}
           transparentBg={true}
+          availableApps={listApp}
+          categories={getListCategoryFiltered}
         />
 
         <div
@@ -874,17 +869,6 @@ const useView: React.FC = () => {
               />
             )}
 
-            {/* Modals */}
-            <CompareModal
-              isOpen={showCompare}
-              setShowCompare={setShowCompare}
-              onClose={() => setShowCompare(false)}
-              apps={compareApps}
-              onRemoveApp={handleRemoveFromCompare}
-              onAddApp={handleAddToCompare}
-              availableApps={listApp}
-              categories={getListCategoryFiltered}
-            />
           </div>
         </div>
       </div>
@@ -892,11 +876,6 @@ const useView: React.FC = () => {
         initialMode="login"
         isOpen={isOpenAuth}
         onClose={onCloseOpenAuth}
-      />
-
-      <CompareMaxModal
-        isOpen={showCompareMaxModal}
-        onClose={() => setShowCompareMaxModal(false)}
       />
     </>
   );
