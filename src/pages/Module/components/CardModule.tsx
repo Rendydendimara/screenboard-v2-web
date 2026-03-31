@@ -1,6 +1,22 @@
-const CardModule: React.FC = () => {
+import { TModulRes } from "@/api/user/modul/type";
+import { useNavigate } from "react-router-dom";
+
+interface CardModuleProps {
+  modul: TModulRes;
+}
+
+const CardModule: React.FC<CardModuleProps> = ({ modul }) => {
+  const navigate = useNavigate();
+
+  const goDetail = () => {
+    navigate(`/module/${modul._id}`);
+  };
+
   return (
-    <div className="w-full gap-2 flex p-6 rounded-[16px] flex-col items-start bg-[#F5F5F5]">
+    <div
+      onClick={goDetail}
+      className="w-full gap-2 flex p-6 rounded-[16px] flex-col items-start bg-[#F5F5F5] hover:cursor-pointer"
+    >
       <svg
         width="24"
         height="24"
@@ -15,11 +31,13 @@ const CardModule: React.FC = () => {
       </svg>
       <div className="flex flex-col gap-2 items-start">
         <p className="text-[#000000] font-secondary font-bold text-[18px]">
-          Cart
+          {modul.name}
         </p>
-        <p className="text-[#565D61] font-secondary font-medium text-[14px]">
-          Used for keep item before next phase
-        </p>
+        {modul.description && (
+          <p className="text-[#565D61] font-secondary font-medium text-[14px]">
+            {modul.description}
+          </p>
+        )}
       </div>
     </div>
   );

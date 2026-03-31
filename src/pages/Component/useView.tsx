@@ -64,8 +64,8 @@ const Index = () => {
   return (
     <>
       <SEO
-        title="Screenboard"
-        description="Discover and explore amazing mobile app designs. Get inspired by the world's best mobile apps."
+        title="UI Components & Design Library | UXBoard"
+        description="Browse a curated library of mobile UI components with real-world design examples. Find buttons, cards, forms, navigation patterns and more."
       />
       <div className="min-h-screen bg-white">
         {/* Fixed Header */}

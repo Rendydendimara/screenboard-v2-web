@@ -99,6 +99,8 @@ const URL_API = {
         DETAIL: "/api/v1/user/app/detail",
         GET_LIST: "/api/v1/user/app/get-list",
         GET_LIST_FAVORITES: "/api/v1/user/app/get-list-favorites",
+        TRACK_VIEW: "/api/v1/user/app/track-view",
+        TOP10_MONTH: "/api/v1/user/app/top10-month",
       },
     },
     SCREEN: {
@@ -120,6 +122,7 @@ const URL_API = {
     MODUL: {
       V1: {
         GET_LIST: "/api/v1/user/modul/get-list",
+        DETAIL: "/api/v1/user/modul/detail",
       },
     },
     AUTH: {

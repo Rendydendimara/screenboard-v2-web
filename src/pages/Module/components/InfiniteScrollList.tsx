@@ -1,14 +1,18 @@
+import { TModulRes } from "@/api/user/modul/type";
+import { Skeleton } from "@/components/ui/skeleton";
 import clsx from "clsx";
 import { memo, useCallback, useEffect, useRef } from "react";
 import CardModule from "./CardModule";
 
 interface InfiniteScrollListProps {
+  moduls: TModulRes[];
   hasMoreItems: boolean;
   loadMoreItems: () => void;
   isLoading?: boolean;
 }
 
 const InfiniteScrollListComponent = ({
+  moduls,
   hasMoreItems,
   loadMoreItems,
   isLoading = false,
@@ -31,7 +35,7 @@ const InfiniteScrollListComponent = ({
 
     const option = {
       root: null,
-      rootMargin: "400px", // Load sebelum user sampai ke bottom
+      rootMargin: "400px",
       threshold: 0,
     };
 
@@ -44,6 +48,7 @@ const InfiniteScrollListComponent = ({
       }
     };
   }, [handleObserver]);
+
   return (
     <>
       <div
@@ -52,12 +57,16 @@ const InfiniteScrollListComponent = ({
           "grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4"
         )}
       >
-        {Array.from({ length: 6 }).map((_, index) => (
-          <CardModule key={index} />
-        ))}
+        {isLoading
+          ? Array.from({ length: 6 }).map((_, index) => (
+              <Skeleton key={index} className="h-[120px] w-full rounded-[16px]" />
+            ))
+          : moduls.map((modul) => (
+              <CardModule key={modul._id} modul={modul} />
+            ))}
       </div>
 
-      {/* Intersection Observer Target - Only show if has more items */}
+      {/* Intersection Observer Target */}
       {hasMoreItems && (
         <div
           ref={observerTarget}
@@ -70,5 +79,4 @@ const InfiniteScrollListComponent = ({
   );
 };
 
-// Memoize component untuk mencegah re-render yang tidak perlu
 export const InfiniteScrollList = memo(InfiniteScrollListComponent);

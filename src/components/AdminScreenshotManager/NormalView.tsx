@@ -89,15 +89,15 @@ export const NormalView: React.FC<NormalViewProps> = ({
           {screenshots.map((screenshot) => (
             <div
               key={screenshot.id}
-              className="shrink-0 w-full relative group cursor-pointer"
+              className="shrink-0 w-full group cursor-pointer"
             >
-              <div className="w-full h-full rounded-lg overflow-hidden bg-gray-100 shadow-md hover:shadow-lg transition-shadow">
+              <div className="w-full relative rounded-lg overflow-hidden bg-gray-100 shadow-md hover:shadow-lg transition-shadow">
                 <ImageWithFallback
                   src={screenshot.image}
                   fallbackSrc={screenshot.image}
                   alt={screenshot?.name ?? ""}
-                  containerClassName="w-full h-full"
-                  className="w-full h-full object-contain"
+                  containerClassName="w-full"
+                  className="w-full h-auto object-contain"
                 />
                 {screenshot.dominantColor && (
                   <div
@@ -136,9 +136,12 @@ export const NormalView: React.FC<NormalViewProps> = ({
                   </Button>
                 </div>
               </div>
-              <div className="mt-1 text-xs">
-                <div className="font-medium">{screenshot?.name ?? ""}</div>
-              </div>
+              <p
+                className="mt-2 mb-4 text-sm font-medium text-[#565D61] truncate"
+                title={screenshot?.name ?? ""}
+              >
+                {screenshot?.name || "-"}
+              </p>
             </div>
           ))}
         </div>

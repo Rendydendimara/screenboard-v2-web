@@ -107,7 +107,7 @@ const useView: React.FC = () => {
     return (
       <>
         <SEO
-          title="Loading... | Screenboard"
+          title="Loading... | UXBoard"
           description="Discover and explore amazing mobile app designs. Get inspired by the world's best mobile apps."
         />
         <section className="relative overflow-hidden ">
@@ -216,8 +216,14 @@ const useView: React.FC = () => {
   return (
     <>
       <SEO
-        title={`${app?.name} | Screenboard`}
-        description="Discover and explore amazing mobile app designs. Get inspired by the world's best mobile apps."
+        title={`${app?.name} – UI Screens & Design Patterns | UXBoard`}
+        description={
+          app?.description
+            ? `${app.description.slice(0, 155)}…`
+            : `Explore ${app?.name} app screens, UI patterns and design inspiration on UXBoard.`
+        }
+        image={app?.screens?.[0]?.image || app?.image}
+        type="article"
       />
 
       {/* Navigation */}

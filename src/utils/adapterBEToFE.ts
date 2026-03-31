@@ -24,6 +24,7 @@ export const adapterListAppBEToFE = (data: TAppRes[]): App[] => {
       screenshots: d.screenshots,
       screens: d.screens,
       iconFile: d.iconFile,
+      lastUpdated: d.updatedAt ? new Date(d.updatedAt).toLocaleDateString() : "",
       countries: d?.countries ?? [],
       linkPlayStore: d.linkPlayStore,
       linkAppStore: d.linkAppStore,

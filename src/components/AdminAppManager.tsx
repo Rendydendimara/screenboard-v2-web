@@ -36,6 +36,9 @@ import { useToast } from "@/hooks/use-toast";
 import { UploadImageType } from "@/types";
 import { adapterListAppBEToFE } from "@/utils/adapterBEToFE";
 import {
+  ArrowDown,
+  ArrowUp,
+  ArrowUpDown,
   Component,
   Edit3,
   ExternalLink,
@@ -462,6 +465,72 @@ export const AdminAppManager: React.FC = () => {
       app.company.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  type SortField =
+    | "name"
+    | "category"
+    | "platform"
+    | "rating"
+    | "downloads"
+    | "updatedAt";
+
+  const [sortField, setSortField] = useState<SortField>("name");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
+
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    } else {
+      setSortField(field);
+      setSortDir("asc");
+    }
+  };
+
+  const sortedApps = useMemo(() => {
+    return [...filteredApps].sort((a, b) => {
+      let valA: any;
+      let valB: any;
+      switch (sortField) {
+        case "name":
+          valA = a.name.toLowerCase();
+          valB = b.name.toLowerCase();
+          break;
+        case "category":
+          valA = a.category?.name.toLowerCase() ?? "";
+          valB = b.category?.name.toLowerCase() ?? "";
+          break;
+        case "platform":
+          valA = a.platform.toLowerCase();
+          valB = b.platform.toLowerCase();
+          break;
+        case "rating":
+          valA = a.rating;
+          valB = b.rating;
+          break;
+        case "downloads":
+          valA = a.downloads.toLowerCase();
+          valB = b.downloads.toLowerCase();
+          break;
+        case "updatedAt":
+          valA = a.lastUpdated ?? "";
+          valB = b.lastUpdated ?? "";
+          break;
+      }
+      if (valA < valB) return sortDir === "asc" ? -1 : 1;
+      if (valA > valB) return sortDir === "asc" ? 1 : -1;
+      return 0;
+    });
+  }, [filteredApps, sortField, sortDir]);
+
+  const SortIcon = ({ field }: { field: SortField }) => {
+    if (sortField !== field)
+      return <ArrowUpDown className="h-3 w-3 ml-1 inline opacity-40" />;
+    return sortDir === "asc" ? (
+      <ArrowUp className="h-3 w-3 ml-1 inline" />
+    ) : (
+      <ArrowDown className="h-3 w-3 ml-1 inline" />
+    );
+  };
+
   const handleDropImages = useCallback(
     (image: File) => {
       if (image) {
@@ -793,11 +862,42 @@ export const AdminAppManager: React.FC = () => {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>App</TableHead>
-                      <TableHead>Category</TableHead>
-                      <TableHead>Platform</TableHead>
-                      <TableHead>Rating</TableHead>
-                      <TableHead>Downloads</TableHead>
+                      <TableHead
+                        className="cursor-pointer select-none"
+                        onClick={() => handleSort("name")}
+                      >
+                        App <SortIcon field="name" />
+                      </TableHead>
+                      <TableHead
+                        className="cursor-pointer select-none"
+                        onClick={() => handleSort("category")}
+                      >
+                        Category <SortIcon field="category" />
+                      </TableHead>
+                      <TableHead
+                        className="cursor-pointer select-none"
+                        onClick={() => handleSort("platform")}
+                      >
+                        Platform <SortIcon field="platform" />
+                      </TableHead>
+                      <TableHead
+                        className="cursor-pointer select-none"
+                        onClick={() => handleSort("rating")}
+                      >
+                        Rating <SortIcon field="rating" />
+                      </TableHead>
+                      <TableHead
+                        className="cursor-pointer select-none"
+                        onClick={() => handleSort("downloads")}
+                      >
+                        Downloads <SortIcon field="downloads" />
+                      </TableHead>
+                      <TableHead
+                        className="cursor-pointer select-none"
+                        onClick={() => handleSort("updatedAt")}
+                      >
+                        Updated At <SortIcon field="updatedAt" />
+                      </TableHead>
                       <TableHead>Actions</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -830,6 +930,9 @@ export const AdminAppManager: React.FC = () => {
                               <Skeleton className="h-4 w-16" />
                             </TableCell>
                             <TableCell>
+                              <Skeleton className="h-4 w-24" />
+                            </TableCell>
+                            <TableCell>
                               <div className="flex items-center space-x-2">
                                 <Skeleton className="h-8 w-8" />
                                 <Skeleton className="h-8 w-8" />
@@ -839,7 +942,7 @@ export const AdminAppManager: React.FC = () => {
                             </TableCell>
                           </TableRow>
                         ))
-                      : filteredApps.map((app) => (
+                      : sortedApps.map((app) => (
                           <TableRow
                             key={app.id}
                             className="cursor-pointer hover:bg-slate-50"
@@ -885,6 +988,11 @@ export const AdminAppManager: React.FC = () => {
                               </div>
                             </TableCell>
                             <TableCell>{app.downloads}</TableCell>
+                            <TableCell>
+                              <div className="text-sm text-gray-500">
+                                {app.lastUpdated || "-"}
+                              </div>
+                            </TableCell>
                             <TableCell>
                               <div className="flex items-center space-x-2">
                                 <Button

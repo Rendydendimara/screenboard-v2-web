@@ -19,6 +19,7 @@ import { ChevronLeft, ChevronRight, Download } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import ImageWithFallback from "./ui/ImageWithFallback";
+import { getImageUrl } from "@/utils";
 
 interface Screen {
   id: string;
@@ -39,6 +40,8 @@ interface ScreenImageModalProps {
   onImageUpdate: (newImage: string) => void;
   allScreens?: Screen[];
   onScreenChange?: (screen: Screen) => void;
+  enableGetImgURL?: boolean;
+  modalTitle?: string;
 }
 
 export const ScreenImageModalV2: React.FC<ScreenImageModalProps> = ({
@@ -47,6 +50,8 @@ export const ScreenImageModalV2: React.FC<ScreenImageModalProps> = ({
   onClose,
   allScreens = [],
   onScreenChange,
+  enableGetImgURL,
+  modalTitle,
 }) => {
   const [showAnnotations, setShowAnnotations] = useState(true);
   const [showMonetizationModal, setShowMonetizationModal] = useState(false);
@@ -134,7 +139,7 @@ export const ScreenImageModalV2: React.FC<ScreenImageModalProps> = ({
           <DialogHeader>
             <div className="flex flex-col md:flex-row gap-2 md:gap-0 items-center justify-between !h-[32px]">
               <DialogTitle className="text-2xl font-bold !h-[32px]">
-                {screen?.category?.name ?? ""}
+                {modalTitle ?? screen?.category?.name ?? ""}
               </DialogTitle>
             </div>
           </DialogHeader>
@@ -180,8 +185,16 @@ export const ScreenImageModalV2: React.FC<ScreenImageModalProps> = ({
                   <div className="bg-white rounded-[8px] w-[288px]  h-full overflow-hidden shadow-sm hover:shadow-2xl tråansition-shadow duration-200">
                     <div className="overflow-hidden flex-1 h-full w-full relative flex justify-center items-center">
                       <ImageWithFallback
-                        fallbackSrc={screenItem.image}
-                        src={screenItem.image}
+                        fallbackSrc={
+                          enableGetImgURL
+                            ? getImageUrl(screenItem.image)
+                            : screenItem.image
+                        }
+                        src={
+                          enableGetImgURL
+                            ? getImageUrl(screenItem.image)
+                            : screenItem.image
+                        }
                         alt={screenItem.name}
                         containerClassName="h-[100%] fill-available w-full minw-h-[648px] max-h-[648px]"
                         className={clsx(

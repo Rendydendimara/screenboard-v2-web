@@ -1,7 +1,14 @@
 import Admin from "@/pages/Admin";
 import AdminAppDetails from "@/pages/AdminAppDetails";
+import AdminApps from "@/pages/AdminApps";
 import AdminComponentDetails from "@/pages/AdminComponentDetails";
+import AdminDashboard from "@/pages/AdminDashboard";
 import AdminGlobalComponentDetails from "@/pages/AdminGlobalComponentDetails";
+import AdminGlobalComponents from "@/pages/AdminGlobalComponents";
+import AdminModules from "@/pages/AdminModules";
+import AdminPlans from "@/pages/AdminPlans";
+import AdminScreenshots from "@/pages/AdminScreenshots";
+import AdminUsers from "@/pages/AdminUsers";
 import AppDetails from "@/pages/AppDetail/useView";
 import Index from "@/pages/Home/useView";
 import NotFound from "@/pages/NotFound";
@@ -10,25 +17,15 @@ import { useEffect, useState } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import AdminAuthAPI from "./api/admin/auth/api";
 import CModalDialogLoading from "./components/modal-dialog-loading";
+import { usePageTracking } from "./hooks/use-page-tracking";
 import { useAppDispatch } from "./hooks/use-typed-selector";
-import { setCredentials } from "./provider/slices/authSlice";
+import { identifyUser } from "./lib/analytics";
 import { LoginAdmin } from "./pages/LoginAdmin";
-import FavoritesPage from "./pages/Favorites";
+import ModulePage from "./pages/Module/useView";
+import ModuleDetailPage from "./pages/ModuleDetail/useView";
 import Subscription from "./pages/Subscription";
 import SubscriptionSuccess from "./pages/SubscriptionSuccess";
-import SubscriptionCancel from "./pages/SubscriptionCancel";
-import Component from "@/pages/Component/useView";
-import ComponentDetail from "@/pages/ComponentDetail/useView";
-import AdminDashboard from "@/pages/AdminDashboard";
-import AdminApps from "@/pages/AdminApps";
-import AdminModules from "@/pages/AdminModules";
-import AdminScreenshots from "@/pages/AdminScreenshots";
-import AdminPlans from "@/pages/AdminPlans";
-import AdminGlobalComponents from "@/pages/AdminGlobalComponents";
-import AdminUsers from "@/pages/AdminUsers";
-import { usePageTracking } from "./hooks/use-page-tracking";
-import { identifyUser } from "./lib/analytics";
-import ModulePage from "./pages/Module/useView";
+import { setCredentials } from "./provider/slices/authSlice";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -93,6 +90,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/module" element={<ModulePage />} />
+        <Route path="/module/:id" element={<ModuleDetailPage />} />
         <Route path="/app/:id" element={<AppDetails />} />
         {/* <Route path="/favorites" element={<FavoritesPage />} /> */}
         <Route path="/profile" element={<Profile />} />

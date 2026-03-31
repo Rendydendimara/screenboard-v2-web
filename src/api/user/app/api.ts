@@ -22,10 +22,26 @@ const getListFavorites = async () => {
   return response.data;
 };
 
+const trackView = async (appId: string) => {
+  const response = await axiosInstanceWithAuth.post(
+    `${URL_API.USER.APP.V1.TRACK_VIEW}/${appId}`
+  );
+  return response.data;
+};
+
+const getTop10Month = async () => {
+  const response = await axiosInstanceWithAuth.get(
+    URL_API.USER.APP.V1.TOP10_MONTH
+  );
+  return response.data;
+};
+
 const UserAppAPI = {
   getAll,
   getDetail,
   getListFavorites,
+  trackView,
+  getTop10Month,
 };
 
 export default UserAppAPI;

@@ -19,13 +19,17 @@ const ModulePage = () => {
     scrolledSearch,
     onCloseOpenAuth,
     isOpenAuth,
+    displayedModuls,
+    isLoading,
+    hasMoreItems,
+    loadMoreItems,
   } = useController();
 
   return (
     <>
       <SEO
-        title="Screenboard"
-        description="Discover and explore amazing mobile app designs. Get inspired by the world's best mobile apps."
+        title="UI Modules & Design Patterns | UXBoard"
+        description="Browse curated UI modules and design patterns from the world's best mobile apps. Find inspiration for onboarding, checkout, login, and more."
       />
       <div className="min-h-screen bg-white">
         {/* Fixed Header */}
@@ -89,10 +93,10 @@ const ModulePage = () => {
             </div>
 
             <InfiniteScrollList
-              hasMoreItems={false}
-              loadMoreItems={function (): void {
-                throw new Error("Function not implemented.");
-              }}
+              moduls={displayedModuls}
+              hasMoreItems={hasMoreItems}
+              loadMoreItems={loadMoreItems}
+              isLoading={isLoading}
             />
 
             {!user && (

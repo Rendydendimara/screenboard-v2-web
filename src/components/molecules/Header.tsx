@@ -167,7 +167,7 @@ export const Header = ({
                     to="/module"
                     className={clsx(
                       "w-[110px] h-[36px] flex justify-center items-center opacity-100 gap-[8px] rounded-[6px] pr-[12px] pl-[12px] font-secondary  text-[14px] leading-[20px] tracking-[0%] text-center align-middle text-[#323638]",
-                      location.pathname === "/module"
+                      location.pathname.includes("module")
                         ? "font-bold"
                         : "font-normal"
                     )}

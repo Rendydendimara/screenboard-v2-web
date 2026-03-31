@@ -87,7 +87,7 @@ const AdminAppDetails: React.FC = () => {
         <div className="mb-8">
           <Button
             variant="outline"
-            onClick={() => navigate("/admin#apps")}
+            onClick={() => navigate("/admin/apps")}
             className="mb-4"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
@@ -252,7 +252,8 @@ const AdminAppDetails: React.FC = () => {
                           navigator.clipboard.writeText(publicLink);
                           toast({
                             title: "Link copied!",
-                            description: "Public link has been copied to clipboard.",
+                            description:
+                              "Public link has been copied to clipboard.",
                           });
                         }}
                         className="p-1 rounded hover:bg-gray-100 text-gray-500 hover:text-gray-700 transition-colors"

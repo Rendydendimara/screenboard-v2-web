@@ -91,6 +91,8 @@ const Index = () => {
     callbackAuth,
     getOptionsSubCategoryItemFiltered,
     getOptionsMarketItemFiltered,
+    top10Apps,
+    isLoadingTop10,
   } = useController();
 
   // Count active filters
@@ -113,8 +115,8 @@ const Index = () => {
   return (
     <>
       <SEO
-        title="Screenboard"
-        description="Discover and explore amazing mobile app designs. Get inspired by the world's best mobile apps."
+        title="UXBoard – Explore Mobile App Design Patterns"
+        description="Discover and explore amazing mobile app designs. Browse hundreds of real app screenshots and UI patterns. Get inspired by the world's best mobile apps."
       />
       <div className="min-h-screen bg-white">
         {/* Fixed Header */}
@@ -142,7 +144,9 @@ const Index = () => {
           </div>
         </section>
         {/* Top 10 Apps This Month */}
-        <Top10Apps apps={filteredApps.slice(0, 10)} />
+        {(isLoadingTop10 || top10Apps.length > 0) && (
+          <Top10Apps apps={top10Apps} isLoading={isLoadingTop10} />
+        )}
         {/* Main Content */}
         <div
           ref={appsContainerRef}

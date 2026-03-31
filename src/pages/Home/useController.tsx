@@ -138,6 +138,8 @@ const useController = () => {
   const [isLoadingGetCategory, setIsLoadingGetCategory] = useState(true);
   const [isLoadingGetApp, setIsLoadingGetApp] = useState(true);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [top10Apps, setTop10Apps] = useState<AppPublic[]>([]);
+  const [isLoadingTop10, setIsLoadingTop10] = useState(true);
   const [displayedItemsCount, setDisplayedItemsCount] =
     useState(ITEMS_PER_PAGE);
   const user = useTypedSelector((state: RootState) => state.auth.user);
@@ -370,6 +372,7 @@ const useController = () => {
       app_name: app?.name,
       source: "home",
     });
+    UserAppAPI.trackView(id).catch(() => {});
     navigate(`/app/${id}`);
   }, [listApp]);
 
@@ -824,7 +827,21 @@ const useController = () => {
 
   useEffect(() => {
     getListData(true);
+    getTop10Apps();
   }, []);
+
+  const getTop10Apps = async () => {
+    try {
+      setIsLoadingTop10(true);
+      const res = await UserAppAPI.getTop10Month();
+      const dataAdpt = adapterListAppBEToFEPublic(res.data ?? []);
+      setTop10Apps(dataAdpt);
+    } catch {
+      // silently fail — Top10 is non-critical
+    } finally {
+      setIsLoadingTop10(false);
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -930,6 +947,8 @@ const useController = () => {
     callbackAuth,
     getOptionsSubCategoryItemFiltered,
     getOptionsMarketItemFiltered,
+    top10Apps,
+    isLoadingTop10,
   };
 };
 

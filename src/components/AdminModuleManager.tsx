@@ -9,6 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Table,
   TableBody,
@@ -27,10 +28,12 @@ import { Skeleton } from "./ui/skeleton";
 interface IModul {
   _id: string;
   name: string;
+  description: string | null;
 }
 
 interface FormData {
   name: string;
+  description: string;
 }
 
 export const AdminModuleManager: React.FC = () => {
@@ -47,11 +50,13 @@ export const AdminModuleManager: React.FC = () => {
 
   const [formData, setFormData] = useState<FormData>({
     name: "",
+    description: "",
   });
 
   const resetForm = () => {
     setFormData({
       name: "",
+      description: "",
     });
     setEditingModul(null);
   };
@@ -64,6 +69,7 @@ export const AdminModuleManager: React.FC = () => {
   const handleEdit = (app: IModul) => {
     setFormData({
       name: app.name,
+      description: app.description ?? "",
     });
     setEditingModul(app);
     setIsModalOpen(true);
@@ -76,6 +82,7 @@ export const AdminModuleManager: React.FC = () => {
       if (editingModul) {
         await ModulAPI.update({
           name: formData.name,
+          description: formData.description || null,
           modulId: editingModul._id,
         });
         toast({
@@ -85,6 +92,7 @@ export const AdminModuleManager: React.FC = () => {
       } else {
         await ModulAPI.create({
           name: formData.name,
+          description: formData.description || null,
         });
         toast({
           title: "Modul Created",
@@ -127,6 +135,7 @@ export const AdminModuleManager: React.FC = () => {
         return {
           _id: d._id,
           name: d.name,
+          description: d.description,
         };
       });
       setModuls(dataTemp);
@@ -203,6 +212,7 @@ export const AdminModuleManager: React.FC = () => {
               <TableHeader>
                 <TableRow>
                   <TableHead>Name</TableHead>
+                  <TableHead>Description</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -212,6 +222,9 @@ export const AdminModuleManager: React.FC = () => {
                       <TableRow key={index}>
                         <TableCell>
                           <Skeleton className="h-4 w-40" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-4 w-60" />
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center space-x-2">
@@ -228,6 +241,9 @@ export const AdminModuleManager: React.FC = () => {
                       >
                         <TableCell>
                           <div className="font-medium">{app.name}</div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="text-sm text-muted-foreground">{app.description ?? "-"}</div>
                         </TableCell>
 
                         <TableCell>
@@ -281,6 +297,17 @@ export const AdminModuleManager: React.FC = () => {
                 }
                 required
                 onClear={() => setFormData((prev) => ({ ...prev, name: "" }))}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">Description</label>
+              <Textarea
+                value={formData.description}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, description: e.target.value }))
+                }
+                rows={3}
               />
             </div>
 

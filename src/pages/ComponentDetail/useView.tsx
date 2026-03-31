@@ -27,7 +27,7 @@ const useView: React.FC = () => {
     return (
       <>
         <SEO
-          title="Loading... | Screenboard"
+          title="Loading... | UXBoard"
           description="Discover and explore amazing component designs."
         />
         <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
@@ -99,8 +99,18 @@ const useView: React.FC = () => {
   return (
     <>
       <SEO
-        title={`${component.name} | Screenboard`}
-        description={component.description}
+        title={`${component.name} – UI Component Design | UXBoard`}
+        description={
+          component.description
+            ? `${component.description.slice(0, 155)}…`
+            : `Explore the ${component.name} UI component with design examples and screenshots on UXBoard.`
+        }
+        image={
+          component.screenshots?.[0]?.filePath
+            ? getImageUrl(component.screenshots[0].filePath)
+            : undefined
+        }
+        type="article"
       />
 
       <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">

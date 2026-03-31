@@ -1,5 +1,6 @@
 export type TModul = {
   name: string;
+  description?: string | null;
 };
 
 export type TModulPut = {
@@ -9,6 +10,7 @@ export type TModulPut = {
 export type TModulRes = {
   _id: string;
   name: string;
+  description: string | null;
   createdAt: Date;
   deletedAt: Date | null;
   updatedAt: Date | null;

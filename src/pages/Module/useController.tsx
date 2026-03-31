@@ -1,12 +1,16 @@
+import ModulAPI from "@/api/user/modul/api";
+import { TModulRes } from "@/api/user/modul/type";
+import { useToast } from "@/hooks/use-toast";
 import { useTypedSelector } from "@/hooks/use-typed-selector";
 import { RootState } from "@/provider/store";
 import { useCallback, useEffect, useRef, useState } from "react";
+
+const PAGE_SIZE = 9;
 
 const useController = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const handleChangeSearch = useCallback((value: string) => {
     setSearchTerm(value);
-    // handleScrollTop();
   }, []);
 
   const [scrolled, setScrolled] = useState(false);
@@ -14,16 +18,49 @@ const useController = () => {
   const [showCompare, setShowCompare] = useState(false);
   const user = useTypedSelector((state: RootState) => state.auth.user);
   const containerMainRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
 
   const [isOpenAuth, setIsOpenAuth] = useState(false);
+
+  // Module data
+  const [moduls, setModuls] = useState<TModulRes[]>([]);
+  const [displayedModuls, setDisplayedModuls] = useState<TModulRes[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const hasMoreItems = displayedModuls.length < moduls.length;
+
+  const loadMoreItems = useCallback(() => {
+    setDisplayedModuls((prev) => {
+      const next = moduls.slice(prev.length, prev.length + PAGE_SIZE);
+      return [...prev, ...next];
+    });
+  }, [moduls]);
+
+  const getListData = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const res = await ModulAPI.getAll();
+      const data: TModulRes[] = res.data;
+      setModuls(data);
+      setDisplayedModuls(data.slice(0, PAGE_SIZE));
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error?.response?.data?.message || error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   const onCloseOpenAuth = useCallback(() => {
     setIsOpenAuth(false);
   }, []);
 
   const callbackAuth = useCallback(() => {
-    // getListData();
-  }, []);
+    getListData();
+  }, [getListData]);
 
   const handleOpenAuthModal = useCallback(() => {
     if (user) return;
@@ -31,14 +68,13 @@ const useController = () => {
   }, [user]);
 
   useEffect(() => {
+    getListData();
+  }, [getListData]);
+
+  useEffect(() => {
     const handleScroll = () => {
-      const isMobile = window.innerWidth <= 375;
-
-      const shouldFixMenu =
-        containerMainRef?.current?.getBoundingClientRect().top <= 85;
-
-      setScrolled(isMobile ? window.scrollY > 80 : window.scrollY > 80);
-      setScrolledSearch(isMobile ? window.scrollY > 400 : window.scrollY > 680);
+      setScrolled(window.scrollY > 80);
+      setScrolledSearch(window.scrollY > 680);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -56,6 +92,11 @@ const useController = () => {
     scrolledSearch,
     isOpenAuth,
     onCloseOpenAuth,
+    moduls,
+    displayedModuls,
+    isLoading,
+    hasMoreItems,
+    loadMoreItems,
   };
 };
 

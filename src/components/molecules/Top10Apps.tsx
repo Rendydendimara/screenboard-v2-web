@@ -1,12 +1,14 @@
-import { AppPublic } from "@/pages/Favorites";
+import { AppPublic } from "@/pages/Home/useController";
 import ScrollContainer from "react-indiana-drag-scroll";
 import ImageWithFallback from "../ui/ImageWithFallback";
+import { Link } from "react-router-dom";
 
 interface IProps {
   apps: AppPublic[];
+  isLoading?: boolean;
 }
 
-export const Top10Apps = ({ apps }: IProps) => {
+export const Top10Apps = ({ apps, isLoading }: IProps) => {
   return (
     <div className="h-[801px] gap-[32px] flex items-center flex-col py-[80px] bg-[linear-gradient(180deg,_#020202_0%,_#353535_100%)]">
       <div className="flex flex-col gap-4 items-center  px-[64px]">
@@ -46,41 +48,63 @@ export const Top10Apps = ({ apps }: IProps) => {
         vertical={false}
         className="w-full flex gap-4 items-center px-6"
       >
-        {apps.map((app, i) => (
-          <div
-            key={i}
-            className="w-[218px] rounded-[24px] pt-px pb-px bg-[#2B2828]"
-          >
-            <div className="flex w-full items-center gap-3 py-2 px-4">
-              <ImageWithFallback
-                src={app?.image ?? "https://source.unsplash.com/400x300?game"}
-                fallbackSrc="https://placehold.co/400"
-                alt={app.name}
-                containerClassName="w-[32px] h-[32px]"
-                className="w-[32px] h-[32px] rounded-[8px] object-cover  transition-transform"
-              />
-              <div>
-                <h5 className="font-secondary not-italic font-bold text-[16px] leading-[28px] items-center text-[#FFFFFF]">
-                  {app.name}
-                </h5>
-                <h6 className="font-secondary not-italic font-normal text-[12px] leading-[20px] flex items-center text-[#CBCBCB]">
-                  {app.company}
-                </h6>
+        {isLoading
+          ? Array.from({ length: 8 }).map((_, i) => (
+              <div
+                key={i}
+                className="w-[218px] shrink-0 rounded-[24px] pt-px pb-px bg-[#2B2828] animate-pulse"
+              >
+                <div className="flex w-full items-center gap-3 py-2 px-4">
+                  <div className="w-[32px] h-[32px] rounded-[8px] bg-[#3a3a3a]" />
+                  <div className="flex-1">
+                    <div className="h-4 bg-[#3a3a3a] rounded mb-1 w-24" />
+                    <div className="h-3 bg-[#3a3a3a] rounded w-16" />
+                  </div>
+                </div>
+                <div className="pt-[8px] pr-[16px] pb-[16px] pl-[16px]">
+                  <div className="w-[186px] h-[412px] rounded-[12px] bg-[#3a3a3a]" />
+                </div>
               </div>
-            </div>
-            <div className="min-w-[186px] h-full pt-[8px] pr-[16px] pb-[16px] pl-[16px]">
-              <ImageWithFallback
-                src={
-                  app.screens[0]?.image ??
-                  "https://source.unsplash.com/400x300?game"
-                }
-                fallbackSrc={"https://source.unsplash.com/400x300?game"}
-                containerClassName="min-w-[186px] min-h-[412px] rounded-[12px]"
-                className="min-w-[186px] min-h-[412px] object-cover border-[0.5px] border-[solid] border-[#CECECE] rounded-[12px]"
-              />
-            </div>
-          </div>
-        ))}
+            ))
+          : apps.map((app, i) => (
+              <div
+                key={i}
+                className="w-[218px] rounded-[24px] pt-px pb-px bg-[#2B2828]"
+              >
+                <Link className="hover:cursor-pointer" to={`/app/${app.id}`}>
+                  <div className="flex w-full items-center gap-3 py-2 px-4">
+                    <ImageWithFallback
+                      src={
+                        app?.image ?? "https://source.unsplash.com/400x300?game"
+                      }
+                      fallbackSrc="https://placehold.co/400"
+                      alt={app.name}
+                      containerClassName="w-[32px] h-[32px]"
+                      className="w-[32px] h-[32px] rounded-[8px] object-cover  transition-transform"
+                    />
+                    <div>
+                      <h5 className="font-secondary not-italic font-bold text-[16px] leading-[28px] items-center text-[#FFFFFF]">
+                        {app.name}
+                      </h5>
+                      <h6 className="font-secondary not-italic font-normal text-[12px] leading-[20px] flex items-center text-[#CBCBCB]">
+                        {app.company}
+                      </h6>
+                    </div>
+                  </div>
+                </Link>
+                <div className="min-w-[186px] h-full pt-[8px] pr-[16px] pb-[16px] pl-[16px]">
+                  <ImageWithFallback
+                    src={
+                      app.screens[0]?.image ??
+                      "https://source.unsplash.com/400x300?game"
+                    }
+                    fallbackSrc={"https://source.unsplash.com/400x300?game"}
+                    containerClassName="min-w-[186px] min-h-[412px] rounded-[12px]"
+                    className="min-w-[186px] min-h-[412px] object-cover border-[0.5px] border-[solid] border-[#CECECE] rounded-[12px]"
+                  />
+                </div>
+              </div>
+            ))}
       </ScrollContainer>
     </div>
   );

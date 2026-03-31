@@ -152,12 +152,12 @@ export const SortableScreenshotItem: React.FC<{
     <div
       ref={setNodeRef}
       style={style}
-      className={`shrink-0 w-full relative group cursor-move ${
+      className={`shrink-0 w-full group cursor-move ${
         isDragging ? "scale-105 opacity-90" : "scale-100 opacity-100"
       } transition-all duration-200`}
     >
       <div
-        className={`w-full h-full rounded-lg overflow-hidden bg-gray-100 transition-all duration-200 ${
+        className={`w-full rounded-lg overflow-hidden bg-gray-100 transition-all duration-200 relative ${
           isDragging
             ? "shadow-2xl ring-2 ring-blue-400 ring-opacity-50"
             : "shadow-md hover:shadow-lg"
@@ -178,8 +178,8 @@ export const SortableScreenshotItem: React.FC<{
           src={screenshot.image}
           fallbackSrc={screenshot.image}
           alt={screenshot?.name ?? ""}
-          containerClassName="w-full h-full"
-          className="w-full h-full object-cover pointer-events-none select-none"
+          containerClassName="w-full"
+          className="w-full h-auto object-cover pointer-events-none select-none"
         />
         {screenshot.dominantColor && (
           <div
@@ -193,9 +193,14 @@ export const SortableScreenshotItem: React.FC<{
           <div className="absolute inset-0 bg-blue-500 bg-opacity-10 pointer-events-none" />
         )}
       </div>
-      <div className="mt-2 text-xs">
-        <div className="font-medium">{screenshot?.name ?? ""}</div>
-        {screenshot.colors && (
+      <div className="mt-2 mb-4">
+        <p
+          className="text-sm font-medium text-[#565D61] truncate"
+          title={screenshot?.name ?? ""}
+        >
+          {screenshot?.name || "-"}
+        </p>
+        {/* {screenshot.colors && (
           <div className="flex space-x-1 mt-1">
             {screenshot.colors.slice(0, 3).map((color, index) => (
               <div
@@ -205,7 +210,7 @@ export const SortableScreenshotItem: React.FC<{
               />
             ))}
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );

@@ -308,7 +308,7 @@ const FavoritesPage = () => {
   return (
     <>
       <SEO
-        title="Screenboard"
+        title="UXBoard"
         description="Discover and explore amazing mobile app designs. Get inspired by the world's best mobile apps."
       />
       <div className="min-h-screen bg-white">
