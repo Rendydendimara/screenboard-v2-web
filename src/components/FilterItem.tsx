@@ -48,7 +48,14 @@ const FilterItem: React.FC<IProps> = ({
           classNameContainerItem
         )}
       >
-        {getOptions.map((filter, i) => (
+        {[
+          ...getOptions,
+          ...getOptions,
+          ...getOptions,
+          ...getOptions,
+          ...getOptions,
+          ...getOptions,
+        ].map((filter, i) => (
           <div
             className="flex items-center gap-2 hover:cursor-pointer"
             onClick={() => handleChange(filter.value)}

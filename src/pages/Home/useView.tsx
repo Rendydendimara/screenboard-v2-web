@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/sheet";
 import clsx from "clsx";
 import { Filter, Grid, List, Search, X, Zap } from "lucide-react";
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import Filters from "./components/Filters";
 import { InfiniteScrollList } from "./components/InfiniteScrollList";
 import useController from "./useController";
@@ -89,6 +89,16 @@ const Index = () => {
     isLoadingTop10,
   } = useController();
 
+  const top10Ref = useRef<HTMLDivElement>(null);
+
+  const handleScrollToTop10 = () => {
+    if (!top10Ref.current) return;
+    const yOffset = -80; // kompensasi fixed header
+    const y =
+      top10Ref.current.getBoundingClientRect().top + window.scrollY + yOffset;
+    window.scrollTo({ top: y, behavior: "smooth" });
+  };
+
   // Count active filters
   const activeFiltersCount = useMemo(() => {
     let count = 0;
@@ -134,13 +144,16 @@ const Index = () => {
               mainHeading="Explore Design Patterns from Real Apps"
               subtitle="Analyze hundreds of design examples. Register now to unlock complete app screens and learn from the best."
               onClickBtn={handleOpenAuthModal}
+              onClickExplore={handleScrollToTop10}
               isLogin={!!user}
             />
           </div>
         </section>
         {/* Top 10 Apps This Month */}
         {(isLoadingTop10 || top10Apps.length > 0) && (
-          <Top10Apps apps={top10Apps} isLoading={isLoadingTop10} />
+          <div ref={top10Ref}>
+            <Top10Apps apps={top10Apps} isLoading={isLoadingTop10} />
+          </div>
         )}
         {/* Main Content */}
         <div

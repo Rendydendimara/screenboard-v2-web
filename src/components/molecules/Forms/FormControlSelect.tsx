@@ -19,7 +19,10 @@ export function FormControlSelect({
 }: FormControlProps) {
   return (
     <div className="space-y-2 w-full">
-      <label className="text-sm font-medium" htmlFor="patient-kelurahan">
+      <label
+        className="text-sm font-medium font-secondary"
+        htmlFor="patient-kelurahan"
+      >
         {label}
         {isRequired && <span className="text-red-500">*</span>}
       </label>

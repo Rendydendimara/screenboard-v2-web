@@ -77,7 +77,7 @@ export function InputText({
           classNameLabel={classNameLabel}
         />
       )}
-      <div className="relative">
+      <div className="relative flex items-center">
         {leftIcon}
         <input
           id={id}
@@ -93,8 +93,8 @@ export function InputText({
           spellCheck={false}
           className={clsx(
             "flex w-full rounded-[8px] border border-input bg-background px-3 py-2 text-sm outline-none placeholder:text-[#A7AAAC] placeholder:font-normal disabled:cursor-not-allowed disabled:opacity-50",
-            "h-8 !text-body-4 pt-[5px]",
-            leftIcon && "pl-8",
+            "h-8 text-[14px] font-secondary",
+            leftIcon && "pl-9",
             isPasswordField && "pr-10",
             isInvalid
               ? "border-red-500 focus:ring-1 focus:ring-red-500"
@@ -145,7 +145,7 @@ export const CLabel = ({
     <label
       htmlFor={id}
       className={clsx(
-        "block text-sm font-medium text-[#323638] mb-1",
+        "block text-[14px] font-secondary font-medium text-[#323638] mb-1",
         classNameLabel
       )}
     >

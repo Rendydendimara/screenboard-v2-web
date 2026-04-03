@@ -1,13 +1,14 @@
 import { Badge } from "@/components/ui/badge";
-import { Zap } from "lucide-react";
 import React from "react";
 
 interface IProps {
   onClickBtn: () => void;
+  onClickExplore?: () => void;
   isLogin?: boolean;
 }
 export const HeroSectionModule: React.FC<IProps> = ({
   onClickBtn,
+  onClickExplore,
   isLogin,
 }) => {
   return (
@@ -99,7 +100,10 @@ export const HeroSectionModule: React.FC<IProps> = ({
                     )}
                   </Badge>
                   {isLogin ? null : (
-                    <button className="h-[58px] flex justify-between items-center  opacity-100 gap-[4px] rounded-[20px] px-8 py-3  bg-[#FFFFFF] [box-shadow:0px_10px_15px_-3px_#0000001A] font-bold text-[18px] text-center text-[#1B1B1B]">
+                    <button
+                      onClick={onClickExplore}
+                      className="font-bold text-[18px]  z-20  text-center text-[#1B1B1B] min-h-[58px] hover:bg-transparent hover:cursor-pointer w-[114px] max-h-[58px] flex justify-center items-center  opacity-100 rounded-[20px] px-8 py-3  bg-[#FFFFFF] [box-shadow:0px_10px_15px_-3px_#0000001A]"
+                    >
                       Explore
                     </button>
                   )}

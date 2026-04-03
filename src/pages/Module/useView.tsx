@@ -5,6 +5,7 @@ import SEO from "@/components/SEO";
 import useController from "./useController";
 import { InfiniteScrollList } from "./components/InfiniteScrollList";
 import { Badge } from "@/components/ui/badge";
+import { useRef } from "react";
 
 const ModulePage = () => {
   const {
@@ -23,6 +24,18 @@ const ModulePage = () => {
     hasMoreItems,
     loadMoreItems,
   } = useController();
+
+  const modulesRef = useRef<HTMLElement>(null);
+
+  const handleScrollToModules = () => {
+    if (!modulesRef.current) return;
+    const yOffset = -80;
+    const y =
+      modulesRef.current.getBoundingClientRect().top +
+      window.scrollY +
+      yOffset;
+    window.scrollTo({ top: y, behavior: "smooth" });
+  };
 
   return (
     <>
@@ -48,12 +61,13 @@ const ModulePage = () => {
           <div className="pt-16 lg:pt-20">
             <HeroSectionModule
               onClickBtn={handleOpenAuthModal}
+              onClickExplore={handleScrollToModules}
               isLogin={!!user}
             />
           </div>
         </section>
         {/* Main Content */}
-        <main className="w-full flex justify-center items-center py-6 px-4 md:px-0 md:py-8 lg:py-12 ">
+        <main ref={modulesRef} className="w-full flex justify-center items-center py-6 px-4 md:px-0 md:py-8 lg:py-12 ">
           <div className="w-full md:max-w-[700px] lg:max-w-[1200px]">
             <div className="flex flex-col items-center gap-4 mb-8">
               <svg

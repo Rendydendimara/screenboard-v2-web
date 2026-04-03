@@ -1,12 +1,6 @@
 import UserAuthAPI from "@/api/user/auth/api";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { USERS_ROLES } from "@/constant/app";
 import { useToast } from "@/hooks/use-toast";
 import { useAppDispatch } from "@/hooks/use-typed-selector";
@@ -15,10 +9,11 @@ import { setCredentials } from "@/provider/slices/authSlice";
 import clsx from "clsx";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useFormik } from "formik";
-import { Badge, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { FormControl } from "./molecules/Forms/FormControl";
+import { FormControlSelect } from "./molecules/Forms/FormControlSelect";
 import { InputText } from "./molecules/Forms/InputText";
 import {
   Select,
@@ -27,7 +22,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { FormControlSelect } from "./molecules/Forms/FormControlSelect";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -244,7 +238,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     label="Full Name"
                     onChange={formik.handleChange}
                     // onBlur={formik.handleBlur}
-                    className="h-[44px]"
+                    className="h-[36px] placeholder:text-[14px] placeholder:font-secondary"
+                    classNameLabel="font-secondary"
                     name="name"
                     isRequired={false}
                     value={formik.values.name}
@@ -252,7 +247,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     errorMessage={formik.errors.name}
                     leftIcon={
                       <svg
-                        className="absolute left-3 top-1/2 transform -translate-y-1/2"
+                        className="absolute w-5 h-5 left-3 top-1/2 transform -translate-y-1/2"
                         width="16"
                         height="16"
                         viewBox="0 0 16 16"
@@ -288,14 +283,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   onChange={formik.handleChange}
                   // onBlur={formik.handleBlur}
                   name="email"
-                  className="h-[44px]"
+                  className="h-[36px] !text-[14px] placeholder:!text-[14px] placeholder:!font-secondary font-normal"
+                  classNameLabel="font-secondary"
                   isRequired={false}
                   value={formik.values.email}
                   isInvalid={isFormSubmitted && !!formik.errors.email}
                   errorMessage={formik.errors.email}
                   leftIcon={
                     <svg
-                      className="absolute left-3 top-1/2 transform -translate-y-1/2"
+                      className="absolute  w-5 h-5  left-3 top-1/2 transform -translate-y-1/2"
                       width="16"
                       height="16"
                       viewBox="0 0 16 16"
@@ -329,10 +325,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                       formik.setFieldValue("role", value)
                     }
                   >
-                    <SelectTrigger className="h-[44px] rounded-[8px] !text-body-4">
-                      <div className="relative pl-[22px]">
+                    <SelectTrigger className="h-[36px] rounded-[8px] font-secondary text-[14px]">
+                      <div className="flex items-center gap-2">
                         <svg
-                          className="absolute left-0 top-1/2 transform -translate-y-1/2"
+                          className="w-4 h-4 shrink-0"
                           width="16"
                           height="16"
                           viewBox="0 0 16 16"
@@ -342,13 +338,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                           <path
                             d="M5.66683 6.99998L5.00016 5.33331H1.3335L2.98683 9.19198C3.08971 9.43198 3.2608 9.63649 3.47887 9.78013C3.69693 9.92377 3.95237 10.0002 4.2135 9.99998H5.66683M10.3335 6.99998L11.0002 5.33331H14.6668L13.0135 9.19198C12.9106 9.43198 12.7395 9.63649 12.5215 9.78013C12.3034 9.92377 12.048 10.0002 11.7868 9.99998H10.3335M5.3335 8.66665C5.3335 9.37389 5.61445 10.0522 6.11454 10.5523C6.61464 11.0524 7.29292 11.3333 8.00016 11.3333C8.70741 11.3333 9.38568 11.0524 9.88578 10.5523C10.3859 10.0522 10.6668 9.37389 10.6668 8.66665C10.6668 7.9594 10.3859 7.28112 9.88578 6.78103C9.38568 6.28093 8.70741 5.99998 8.00016 5.99998C7.29292 5.99998 6.61464 6.28093 6.11454 6.78103C5.61445 7.28112 5.3335 7.9594 5.3335 8.66665Z"
                             stroke="#323638"
-                            stroke-width="1.2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
+                            strokeWidth="1.2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                           />
                         </svg>
-
-                        <SelectValue placeholder="Select Roles" />
+                        <SelectValue
+                          className="font-secondary text-[14px]"
+                          placeholder="Select Roles"
+                        />
                       </div>
                     </SelectTrigger>
                     <SelectContent
@@ -357,7 +355,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     >
                       {USERS_ROLES.map((d, i) => (
                         <SelectItem
-                          className="!items-start !py-[9px] !px-2 truncate"
+                          className="!items-start !py-[9px] !px-2 truncate font-secondary !text-[14px]"
                           key={i}
                           isRemoveCheckIndocator
                           withRoundedEdge
@@ -388,14 +386,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     onChange={formik.handleChange}
                     // onBlur={formik.handleBlur}
                     name="password"
-                    className="h-[44px]"
+                    className="h-[36px] placeholder:text-[14px] placeholder:font-secondary"
+                    classNameLabel="font-secondary"
                     isRequired={false}
                     value={formik.values.password}
                     isInvalid={isFormSubmitted && !!formik.errors.password}
                     errorMessage={formik.errors.password}
                     leftIcon={
                       <svg
-                        className="absolute left-3 top-1/2 transform -translate-y-1/2"
+                        className="absolute  w-5 h-5 left-3 top-1/2 transform -translate-y-1/2"
                         width="16"
                         height="16"
                         viewBox="0 0 16 16"
@@ -415,7 +414,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 </FormControl>
 
                 {mode === "login" && (
-                  <p className="text-body-4 text-right hover:cursor-pointer font-medium text-black">
+                  <p className="text-body-4 text-right hover:cursor-pointer font-secondary font-medium text-black">
                     forgot password?
                   </p>
                 )}
@@ -425,7 +424,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <Button
                 type="submit"
                 className={clsx(
-                  "font-bold bg-gradient-to-r from-blue-500 to-purple-600 text-white border-0 px-4 py-3 h-11 w-full rounded-2xl text-sm lg:text-base",
+                  "font-bold bg-gradient-to-r font-secondary from-blue-500 to-purple-600 text-white border-0 px-4 py-3 h-11 w-full rounded-2xl text-sm lg:text-base",
                   isSubmitting && "cursor-progress"
                 )}
                 disabled={isSubmitting}
@@ -435,13 +434,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 ) : null}
                 {mode === "login" ? "Login" : "Join"}
               </Button>
-              <p className="text-body-4 font-normal text-black">or</p>
+              <p className="text-body-4 font-normal text-black font-secondary">
+                or
+              </p>
               <div className="p-[1px] w-full rounded-[16px] bg-gradient-to-r from-blue-600 to-purple-600">
                 <Button
                   type="submit"
                   variant="outline"
                   onClick={googleAuth}
-                  className="w-full h-11 font-bold text-sm lg:text-base rounded-[16px] bg-white text-black"
+                  className="w-full h-11 font-bold text-sm lg:text-base font-secondary rounded-[16px] bg-white text-black"
                 >
                   <svg
                     width="17"
@@ -488,7 +489,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             </div>
           </form>
           <div className="flex justify-center items-center w-full">
-            <p className="w-full text-sm text-[#000000] text-center">
+            <p className="w-full text-sm text-[#000000] text-center font-secondary">
               {mode === "login"
                 ? "Don’t have an account ?"
                 : "Already have an account?"}

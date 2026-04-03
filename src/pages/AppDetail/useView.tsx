@@ -75,9 +75,7 @@ const useView: React.FC = () => {
     navigate,
     filterCategories,
     containerMainRef,
-    scrolledFilterMenu,
     handleChangeFilterCategories,
-    countLinkReferenceApp,
   } = useController();
 
   const [showFilters, setShowFilters] = useState(false);
@@ -249,7 +247,7 @@ const useView: React.FC = () => {
                       fallbackSrc="https://placehold.co/400"
                       alt={app.name}
                       containerClassName="w-full h-full"
-                      className="w-full h-full object-cover shadow-2xl"
+                      className="w-full h-full object-contain shadow-2xl"
                     />
                   </div>
                   <h1 className="text-[14px] font-bold font-secondary text-[#FFFFFF]">
@@ -323,7 +321,7 @@ const useView: React.FC = () => {
                           fallbackSrc="https://placehold.co/400"
                           alt={app.name}
                           containerClassName="w-full h-full"
-                          className="w-full h-full object-cover shadow-2xl"
+                          className="w-full h-full object-contain shadow-2xl"
                         />
                       </div>
                     </div>
@@ -492,13 +490,10 @@ const useView: React.FC = () => {
         </div>
       </section>
 
-      <div className="w-full flex justify-center items-center">
-        <div className="w-full md:max-w-[700px] lg:max-w-[1200px]">
-          <div>
-            <div className="px-4 md:px-0 pt-[45px] pb-12">
-              <div className="mb-8">
-                {/* Mobile Filter Button */}
-                <div className="md:hidden mb-4">
+      <div className="w-full pt-[45px] pb-12">
+        <div className="mb-8">
+          {/* Mobile Filter Button */}
+          <div className="md:hidden mb-4 px-4">
                   <Sheet open={showFilters} onOpenChange={setShowFilters}>
                     <SheetTrigger asChild>
                       <Button variant="outline" size="sm" className="w-full">
@@ -548,179 +543,72 @@ const useView: React.FC = () => {
                   </Sheet>
                 </div>
 
-                {/*  Filters */}
-                <div
-                  ref={containerMainRef}
-                  className="flex items-start gap-5 flex-col md:flex-row w-full"
-                >
-                  <div className="w-full flex flex-col gap-5 items-start z-[10]">
-                    {/* App Link */}
+          {/*  Filters */}
+          <div
+            ref={containerMainRef}
+            className="flex items-start gap-5 flex-col md:flex-row w-full"
+            style={{ paddingLeft: 'max(16px, calc((100vw - 1200px) / 2))' }}
+          >
+                  {/* Sticky sidebar - hidden on mobile */}
+                  <div className="hidden md:flex flex-col gap-5 min-w-[200px] max-w-[200px] self-start sticky top-[130px] max-h-[calc(100vh-140px)] overflow-y-auto pb-4 z-[10]">
+                    {/* Reference links */}
                     {(isValidUrl(app.linkPlayStore) ||
                       isValidUrl(app.linkAppStore) ||
                       isValidUrl(app.linkWebsite)) && (
-                      <>
-                        {/* Static Filters - visible when not scrolled - Hidden on mobile */}
-                        <div
-                          className={clsx(
-                            "hidden md:flex min-w-[200px] max-w-[200px] transition-all ease-in-out rounded-[20px] p-5 bg-[#FAFAFA] flex-col items-start gap-4",
-                            scrolledFilterMenu
-                              ? "opacity-0 pointer-events-none"
-                              : "opacity-100"
+                      <div className="rounded-[20px] p-5 bg-[#FAFAFA] flex flex-col items-start gap-4 w-full">
+                        <p className="font-secondary font-bold text-[14px] leading-[20px] tracking-[-0.2%] align-middle text-[#323638]">
+                          Reference
+                        </p>
+                        <div className="w-full flex flex-col items-start gap-3">
+                          {isValidUrl(app.linkPlayStore) && (
+                            <a
+                              href={app.linkPlayStore}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600 font-secondary bg-white"
+                            >
+                              <ExternalLink className="h-4 w-4" />
+                              <span>Play Store</span>
+                            </a>
                           )}
-                        >
-                          <p className="font-secondary font-bold text-[14px] leading-[20px] tracking-[-0.2%] align-middle text-[#323638]">
-                            Reference
-                          </p>
-                          <div className="w-full flex flex-col items-start gap-3">
-                            {isValidUrl(app.linkPlayStore) && (
-                              <a
-                                href={app.linkPlayStore}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600 font-secondary bg-white"
-                              >
-                                <ExternalLink className="h-4 w-4" />
-                                <span>Play Store</span>
-                              </a>
-                            )}
-                            {isValidUrl(app.linkAppStore) && (
-                              <a
-                                href={app.linkAppStore}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600 font-secondary bg-white"
-                              >
-                                <ExternalLink className="h-4 w-4" />
-                                <span>App Store</span>
-                              </a>
-                            )}
-                            {isValidUrl(app.linkWebsite) && (
-                              <a
-                                href={app.linkWebsite}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600 font-secondary bg-white"
-                              >
-                                <svg
-                                  width="14"
-                                  height="14"
-                                  viewBox="0 0 14 14"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <path
-                                    d="M6.66667 0C2.99067 0 0 2.99067 0 6.66667C0 10.3427 2.99067 13.3333 6.66667 13.3333C10.3427 13.3333 13.3333 10.3427 13.3333 6.66667C13.3333 2.99067 10.3427 0 6.66667 0ZM1.33333 6.66667C1.33333 6.06733 1.43733 5.492 1.62067 4.954L2.66667 6L4 7.33333V8.66667L5.33333 10L6 10.6667V11.954C3.374 11.624 1.33333 9.38133 1.33333 6.66667ZM10.8867 9.91533C10.4513 9.56467 9.79133 9.33333 9.33333 9.33333V8.66667C9.33333 8.31304 9.19286 7.97391 8.94281 7.72386C8.69276 7.47381 8.35362 7.33333 8 7.33333H5.33333V5.33333C5.68695 5.33333 6.02609 5.19286 6.27614 4.94281C6.52619 4.69276 6.66667 4.35362 6.66667 4V3.33333H7.33333C7.68695 3.33333 8.02609 3.19286 8.27614 2.94281C8.52619 2.69276 8.66667 2.35362 8.66667 2V1.726C10.6187 2.51867 12 4.43333 12 6.66667C11.9997 7.84311 11.608 8.98602 10.8867 9.91533Z"
-                                    fill="#475569"
-                                  />
-                                </svg>
-
-                                <span>Website</span>
-                              </a>
-                            )}
-                          </div>
-                        </div>
-                        {/* Fixed Filters - visible when scrolled - Hidden on mobile */}
-                        <div
-                          className={clsx(
-                            "hidden md:flex flex-col items-start gap-4 min-w-[200px] max-w-[200px] fixed max-h-[90vh] overflow-y-auto  z-50 pb-8 transition-all ease-in-out rounded-[20px] p-5 bg-[#FAFAFA]",
-                            isValidUrl(app.linkPlayStore) ||
-                              isValidUrl(app.linkAppStore) ||
-                              isValidUrl(app.linkWebsite)
-                              ? "top-[100px]"
-                              : "top-24",
-                            scrolledFilterMenu
-                              ? "opacity-100 translate-y-0"
-                              : "opacity-0 -translate-y-4 pointer-events-none"
+                          {isValidUrl(app.linkAppStore) && (
+                            <a
+                              href={app.linkAppStore}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600 font-secondary bg-white"
+                            >
+                              <ExternalLink className="h-4 w-4" />
+                              <span>App Store</span>
+                            </a>
                           )}
-                        >
-                          <p className="font-secondary font-bold text-[14px] leading-[20px] tracking-[-0.2%] align-middle text-[#323638]">
-                            Reference
-                          </p>
-                          <div className="w-full flex flex-col items-start gap-3">
-                            {isValidUrl(app.linkPlayStore) && (
-                              <a
-                                href={app.linkPlayStore}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600 font-secondary bg-white"
+                          {isValidUrl(app.linkWebsite) && (
+                            <a
+                              href={app.linkWebsite}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600 font-secondary bg-white"
+                            >
+                              <svg
+                                width="14"
+                                height="14"
+                                viewBox="0 0 14 14"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
                               >
-                                <ExternalLink className="h-4 w-4" />
-                                <span>Play Store</span>
-                              </a>
-                            )}
-                            {isValidUrl(app.linkAppStore) && (
-                              <a
-                                href={app.linkAppStore}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600 font-secondary bg-white"
-                              >
-                                <ExternalLink className="h-4 w-4" />
-                                <span>App Store</span>
-                              </a>
-                            )}
-                            {isValidUrl(app.linkWebsite) && (
-                              <a
-                                href={app.linkWebsite}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600 font-secondary bg-white"
-                              >
-                                <svg
-                                  width="14"
-                                  height="14"
-                                  viewBox="0 0 14 14"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <path
-                                    d="M6.66667 0C2.99067 0 0 2.99067 0 6.66667C0 10.3427 2.99067 13.3333 6.66667 13.3333C10.3427 13.3333 13.3333 10.3427 13.3333 6.66667C13.3333 2.99067 10.3427 0 6.66667 0ZM1.33333 6.66667C1.33333 6.06733 1.43733 5.492 1.62067 4.954L2.66667 6L4 7.33333V8.66667L5.33333 10L6 10.6667V11.954C3.374 11.624 1.33333 9.38133 1.33333 6.66667ZM10.8867 9.91533C10.4513 9.56467 9.79133 9.33333 9.33333 9.33333V8.66667C9.33333 8.31304 9.19286 7.97391 8.94281 7.72386C8.69276 7.47381 8.35362 7.33333 8 7.33333H5.33333V5.33333C5.68695 5.33333 6.02609 5.19286 6.27614 4.94281C6.52619 4.69276 6.66667 4.35362 6.66667 4V3.33333H7.33333C7.68695 3.33333 8.02609 3.19286 8.27614 2.94281C8.52619 2.69276 8.66667 2.35362 8.66667 2V1.726C10.6187 2.51867 12 4.43333 12 6.66667C11.9997 7.84311 11.608 8.98602 10.8867 9.91533Z"
-                                    fill="#475569"
-                                  />
-                                </svg>
-
-                                <span>Website</span>
-                              </a>
-                            )}
-                          </div>
+                                <path
+                                  d="M6.66667 0C2.99067 0 0 2.99067 0 6.66667C0 10.3427 2.99067 13.3333 6.66667 13.3333C10.3427 13.3333 13.3333 10.3427 13.3333 6.66667C13.3333 2.99067 10.3427 0 6.66667 0ZM1.33333 6.66667C1.33333 6.06733 1.43733 5.492 1.62067 4.954L2.66667 6L4 7.33333V8.66667L5.33333 10L6 10.6667V11.954C3.374 11.624 1.33333 9.38133 1.33333 6.66667ZM10.8867 9.91533C10.4513 9.56467 9.79133 9.33333 9.33333 9.33333V8.66667C9.33333 8.31304 9.19286 7.97391 8.94281 7.72386C8.69276 7.47381 8.35362 7.33333 8 7.33333H5.33333V5.33333C5.68695 5.33333 6.02609 5.19286 6.27614 4.94281C6.52619 4.69276 6.66667 4.35362 6.66667 4V3.33333H7.33333C7.68695 3.33333 8.02609 3.19286 8.27614 2.94281C8.52619 2.69276 8.66667 2.35362 8.66667 2V1.726C10.6187 2.51867 12 4.43333 12 6.66667C11.9997 7.84311 11.608 8.98602 10.8867 9.91533Z"
+                                  fill="#475569"
+                                />
+                              </svg>
+                              <span>Website</span>
+                            </a>
+                          )}
                         </div>
-                      </>
+                      </div>
                     )}
-                    {/* Static Filters - visible when not scrolled - Hidden on mobile */}
-                    <div
-                      className={clsx(
-                        "hidden md:block min-w-[200px] max-w-[200px] transition-all ease-in-out rounded-[20px] p-5 bg-[#FAFAFA]",
-                        scrolledFilterMenu
-                          ? "opacity-0 pointer-events-none"
-                          : "opacity-100"
-                      )}
-                    >
-                      <FilterItem
-                        handleChange={handleChangeFilterCategories}
-                        menuFilter={filterCategories}
-                        iconType="square"
-                        className="gap-4"
-                        classNameContainerItem="gap-4"
-                      />
-                    </div>
-                    {/* Fixed Filters - visible when scrolled - Hidden on mobile */}
-                    <div
-                      className={clsx(
-                        "hidden md:block min-w-[200px] max-w-[200px] mt-10 fixed max-h-[90vh] overflow-y-auto z-50 pb-8 transition-all ease-in-out rounded-[20px] p-5 bg-[#FAFAFA]",
-                        isValidUrl(app.linkPlayStore) ||
-                          isValidUrl(app.linkAppStore) ||
-                          isValidUrl(app.linkWebsite)
-                          ? countLinkReferenceApp === 1
-                            ? "top-[246px]"
-                            : countLinkReferenceApp === 2
-                            ? "top-[300px]"
-                            : "top-[354px]"
-                          : "top-24",
-                        scrolledFilterMenu
-                          ? "opacity-100 translate-y-0"
-                          : "opacity-0 -translate-y-4 pointer-events-none"
-                      )}
-                    >
+                    {/* Categories filter */}
+                    <div className="rounded-[20px] p-5 bg-[#FAFAFA] w-full">
                       <FilterItem
                         handleChange={handleChangeFilterCategories}
                         menuFilter={filterCategories}
@@ -732,8 +620,8 @@ const useView: React.FC = () => {
                   </div>
 
                   {/* Screens Grid/List/Horizontal */}
-                  <div className="w-full flex justify-end absolute right-0 pb-[80px]">
-                    <div className="w-full lg:max-w-[1100px] 2xl:max-w-[1340px] flex items-start gap-5 overflow-x-auto">
+                  <div className="flex-1 min-w-0 pb-[80px] pr-4 md:pr-0">
+                    <div className="w-full">
                       {screenViewMode === "list" ? (
                         <div className="flex gap-8 flex-col items-start  bg-[#F6F6F6] p-5 pr-0 rounded-[20px] rounded-tr-none rounded-br-none w-full">
                           {Object.entries(groupedScreensFilter).map(
@@ -853,24 +741,20 @@ const useView: React.FC = () => {
                       )}
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Scr Image Modal */}
-            {selectedScreen && (
-              <ScreenImageModalV2
-                screen={selectedScreen}
-                isOpen={!!selectedScreen}
-                onClose={() => setSelectedScreen(null)}
-                onImageUpdate={(newImage) => {}}
-                allScreens={selectedGroupScreens}
-                onScreenChange={handleScreenChange}
-              />
-            )}
-
           </div>
         </div>
+
+        {/* Scr Image Modal */}
+        {selectedScreen && (
+          <ScreenImageModalV2
+            screen={selectedScreen}
+            isOpen={!!selectedScreen}
+            onClose={() => setSelectedScreen(null)}
+            onImageUpdate={(newImage) => {}}
+            allScreens={selectedGroupScreens}
+            onScreenChange={handleScreenChange}
+          />
+        )}
       </div>
       <AuthModal
         initialMode="login"

@@ -1,15 +1,16 @@
 import { Badge } from "@/components/ui/badge";
-import { Zap } from "lucide-react";
 import React from "react";
 
 interface IProps {
   onClickBtn: () => void;
+  onClickExplore?: () => void;
   mainHeading: string;
   subtitle: string;
   isLogin?: boolean;
 }
 export const HeroSection: React.FC<IProps> = ({
   onClickBtn,
+  onClickExplore,
   mainHeading,
   subtitle,
   isLogin,
@@ -43,20 +44,22 @@ export const HeroSection: React.FC<IProps> = ({
                     onClick={onClickBtn}
                     className="hover:cursor-pointer z-20 bg-gradient-to-r h-[58px] rounded-[20px] from-blue-500 to-purple-600 border-0 px-8 py-3 flex justify-center items-center gap-2"
                   >
-                    <svg
-                      width="14"
-                      height="19"
-                      viewBox="0 0 14 19"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        clip-rule="evenodd"
-                        d="M3.39913 0.5C3.53413 0.195833 3.83497 0 4.1683 0H10.8158C11.4408 0 11.8483 0.658333 11.5683 1.21833L9.67747 5H12.4758C13.2258 5 13.6008 5.90667 13.0708 6.43667L3.10997 16.3975C2.48164 17.0258 1.43497 16.3792 1.71664 15.5367L3.83997 9.16667H0.841635C0.701422 9.16666 0.563432 9.13163 0.440198 9.06475C0.316964 8.99787 0.212391 8.90126 0.135977 8.7837C0.0595628 8.66614 0.0137284 8.53135 0.00263747 8.39158C-0.00845349 8.2518 0.0155503 8.11147 0.0724683 7.98333L3.39913 0.5Z"
-                        fill="#F8B303"
-                      />
-                    </svg>
+                    <div className="w-5 h-5">
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M6.73666 2.16669C6.87166 1.86252 7.17249 1.66669 7.50583 1.66669H14.1533C14.7783 1.66669 15.1858 2.32502 14.9058 2.88502L13.015 6.66669H15.8133C16.5633 6.66669 16.9383 7.57335 16.4083 8.10335L6.44749 18.0642C5.81916 18.6925 4.77249 18.0459 5.05416 17.2034L7.17749 10.8334H4.17916C4.03895 10.8333 3.90096 10.7983 3.77772 10.7314C3.65449 10.6646 3.54992 10.5679 3.4735 10.4504C3.39709 10.3328 3.35125 10.198 3.34016 10.0583C3.32907 9.91849 3.35307 9.77816 3.40999 9.65002L6.73666 2.16669Z"
+                          fill="#F8B303"
+                        />
+                      </svg>
+                    </div>
                     {isLogin ? (
                       <p className="font-secondary font-bold text-[18px] text-[#FFFFFF]">
                         Explore
@@ -73,7 +76,10 @@ export const HeroSection: React.FC<IProps> = ({
                     )}
                   </Badge>
                   {isLogin ? null : (
-                    <button className="h-[58px] flex justify-between items-center  opacity-100 gap-[4px] rounded-[20px] px-8 py-3  bg-[#FFFFFF] [box-shadow:0px_10px_15px_-3px_#0000001A] font-bold text-[18px] text-center text-[#1B1B1B]">
+                    <button
+                      onClick={onClickExplore}
+                      className="font-bold text-[18px]  z-20  text-center text-[#1B1B1B] min-h-[58px] hover:bg-transparent hover:cursor-pointer w-[114px] max-h-[58px] flex justify-center items-center  opacity-100 rounded-[20px] px-8 py-3  bg-[#FFFFFF] [box-shadow:0px_10px_15px_-3px_#0000001A]"
+                    >
                       Explore
                     </button>
                   )}

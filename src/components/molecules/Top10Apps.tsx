@@ -2,6 +2,7 @@ import { AppPublic } from "@/pages/Home/useController";
 import ScrollContainer from "react-indiana-drag-scroll";
 import ImageWithFallback from "../ui/ImageWithFallback";
 import { Link } from "react-router-dom";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 interface IProps {
   apps: AppPublic[];
@@ -69,26 +70,56 @@ export const Top10Apps = ({ apps, isLoading }: IProps) => {
           : apps.map((app, i) => (
               <div
                 key={i}
-                className="w-[218px] rounded-[24px] pt-px pb-px bg-[#2B2828]"
+                className="w-[218px] min-h-[497px] max-h-[497px] rounded-[24px] pt-px pb-px bg-[#2B2828]"
               >
                 <Link className="hover:cursor-pointer" to={`/app/${app.id}`}>
                   <div className="flex w-full items-center gap-3 py-2 px-4">
-                    <ImageWithFallback
-                      src={
-                        app?.image ?? "https://source.unsplash.com/400x300?game"
-                      }
-                      fallbackSrc="https://placehold.co/400"
-                      alt={app.name}
-                      containerClassName="w-[32px] h-[32px]"
-                      className="w-[32px] h-[32px] rounded-[8px] object-cover  transition-transform"
-                    />
-                    <div>
-                      <h5 className="font-secondary not-italic font-bold text-[16px] leading-[28px] items-center text-[#FFFFFF]">
-                        {app.name}
-                      </h5>
-                      <h6 className="font-secondary not-italic font-normal text-[12px] leading-[20px] flex items-center text-[#CBCBCB]">
-                        {app.company}
-                      </h6>
+                    <div className="w-[32px] h-[32px]">
+                      <ImageWithFallback
+                        src={
+                          app?.image ??
+                          "https://source.unsplash.com/400x300?game"
+                        }
+                        fallbackSrc="https://placehold.co/400"
+                        alt={app.name}
+                        containerClassName="w-[32px] h-[32px]"
+                        className="w-[32px] h-[32px] rounded-[8px] object-contain transition-transform"
+                      />
+                    </div>
+                    <div className="max-w-[142px] min-w-0 overflow-hidden">
+                      <Tooltip delayDuration={0}>
+                        <TooltipTrigger asChild>
+                          <h5 className="font-secondary not-italic font-bold text-[16px] truncate leading-[28px] text-[#FFFFFF]">
+                            {app.name}
+                          </h5>
+                        </TooltipTrigger>
+                        <TooltipContent
+                          side="bottom"
+                          align="center"
+                          hidden={app.name.length < 19}
+                        >
+                          <h5 className="font-secondary not-italic font-bold text-[16px] truncate leading-[28px] text-black">
+                            {app.name}
+                          </h5>
+                        </TooltipContent>
+                      </Tooltip>
+
+                      <Tooltip delayDuration={0}>
+                        <TooltipTrigger asChild>
+                          <p className="font-secondary truncate not-italic font-normal text-[12px] text-[#CBCBCB]">
+                            {app.company}
+                          </p>
+                        </TooltipTrigger>
+                        <TooltipContent
+                          side="bottom"
+                          align="center"
+                          hidden={app.company.length < 20}
+                        >
+                          <p className="font-secondary truncate not-italic font-normal text-[12px] text-black">
+                            {app.company}
+                          </p>
+                        </TooltipContent>
+                      </Tooltip>
                     </div>
                   </div>
                 </Link>
@@ -99,8 +130,8 @@ export const Top10Apps = ({ apps, isLoading }: IProps) => {
                       "https://source.unsplash.com/400x300?game"
                     }
                     fallbackSrc={"https://source.unsplash.com/400x300?game"}
-                    containerClassName="min-w-[186px] min-h-[412px] rounded-[12px]"
-                    className="min-w-[186px] min-h-[412px] object-cover border-[0.5px] border-[solid] border-[#CECECE] rounded-[12px]"
+                    containerClassName="min-w-[186px] min-h-[412px]  max-h-[412px] rounded-[12px]"
+                    className="min-w-[186px] min-h-[412px]  max-h-[412px] object-cover rounded-[12px]"
                   />
                 </div>
               </div>
