@@ -154,7 +154,7 @@ export const Header = ({
 
                 <div
                   className={clsx(
-                    "hidden md:block w-[448px] transition-all duration-300 ease-in-out overflow-hidden h-[40px]",
+                    "hidden md:block w-[369px] transition-all duration-300 ease-in-out overflow-hidden h-[40px]",
                     scrolledSearch
                       ? "max-h-[100px] opacity-100 translate-y-0"
                       : "max-h-0 opacity-0 -translate-y-4 pointer-events-none"
