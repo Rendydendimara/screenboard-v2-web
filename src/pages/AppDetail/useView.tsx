@@ -232,7 +232,7 @@ const useView: React.FC = () => {
         <div
           className={clsx(
             "w-full bg-[#353535] h-[40px] fixed z-50 top-[80px] py-2 ransition-all duration-300 ease-in-out",
-            scrolled ? "opacity-100" : "opacity-0"
+            scrolled ? "opacity-100" : "opacity-0",
           )}
         >
           <div className="w-full flex justify-center items-center">
@@ -440,7 +440,7 @@ const useView: React.FC = () => {
                   onClick={toggleLike}
                   className={clsx(
                     "h-10 rounded-[6px] py-[1px] px-[13px] font-normal",
-                    app.isLiked && "!bg-[#9333EA] !text-white"
+                    app.isLiked && "!bg-[#9333EA] !text-white",
                   )}
                 >
                   <svg
@@ -494,253 +494,253 @@ const useView: React.FC = () => {
         <div className="mb-8">
           {/* Mobile Filter Button */}
           <div className="md:hidden mb-4 px-4">
-                  <Sheet open={showFilters} onOpenChange={setShowFilters}>
-                    <SheetTrigger asChild>
-                      <Button variant="outline" size="sm" className="w-full">
-                        <Filter className="h-4 w-4 mr-2" />
-                        <span>Filters</span>
+            <Sheet open={showFilters} onOpenChange={setShowFilters}>
+              <SheetTrigger asChild>
+                <Button variant="outline" size="sm" className="w-full">
+                  <Filter className="h-4 w-4 mr-2" />
+                  <span>Filters</span>
+                  {activeFiltersCount > 0 && (
+                    <Badge
+                      variant="destructive"
+                      className="ml-2 h-5 w-5 p-0 flex items-center justify-center rounded-full text-xs"
+                    >
+                      {activeFiltersCount}
+                    </Badge>
+                  )}
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="bottom" className="h-[85vh] p-0">
+                <div className="flex flex-col h-full">
+                  <SheetHeader className="px-6 py-4 border-b sticky top-0 bg-white z-10">
+                    <div className="flex items-center justify-between">
+                      <SheetTitle className="text-lg font-semibold">
+                        Filters
                         {activeFiltersCount > 0 && (
-                          <Badge
-                            variant="destructive"
-                            className="ml-2 h-5 w-5 p-0 flex items-center justify-center rounded-full text-xs"
-                          >
-                            {activeFiltersCount}
+                          <Badge variant="secondary" className="ml-2">
+                            {activeFiltersCount} active
                           </Badge>
                         )}
+                      </SheetTitle>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setShowFilters(false)}
+                        className="h-8 w-8 p-0"
+                      >
+                        <X className="h-4 w-4" />
                       </Button>
-                    </SheetTrigger>
-                    <SheetContent side="bottom" className="h-[85vh] p-0">
-                      <div className="flex flex-col h-full">
-                        <SheetHeader className="px-6 py-4 border-b sticky top-0 bg-white z-10">
-                          <div className="flex items-center justify-between">
-                            <SheetTitle className="text-lg font-semibold">
-                              Filters
-                              {activeFiltersCount > 0 && (
-                                <Badge variant="secondary" className="ml-2">
-                                  {activeFiltersCount} active
-                                </Badge>
-                              )}
-                            </SheetTitle>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => setShowFilters(false)}
-                              className="h-8 w-8 p-0"
-                            >
-                              <X className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </SheetHeader>
-                        <div className="flex-1 overflow-y-auto px-6 py-6">
-                          <FilterItem
-                            handleChange={handleChangeFilterCategories}
-                            menuFilter={filterCategories}
-                            iconType="square"
-                          />
-                        </div>
-                      </div>
-                    </SheetContent>
-                  </Sheet>
+                    </div>
+                  </SheetHeader>
+                  <div className="flex-1 overflow-y-auto px-6 py-6">
+                    <FilterItem
+                      handleChange={handleChangeFilterCategories}
+                      menuFilter={filterCategories}
+                      iconType="square"
+                    />
+                  </div>
                 </div>
+              </SheetContent>
+            </Sheet>
+          </div>
 
           {/*  Filters */}
           <div
             ref={containerMainRef}
             className="flex items-start gap-5 flex-col md:flex-row w-full"
-            style={{ paddingLeft: 'max(16px, calc((100vw - 1200px) / 2))' }}
+            style={{ paddingLeft: "max(16px, calc((100vw - 1200px) / 2))" }}
           >
-                  {/* Sticky sidebar - hidden on mobile */}
-                  <div className="hidden md:flex flex-col gap-5 min-w-[200px] max-w-[200px] self-start sticky top-[130px] max-h-[calc(100vh-140px)] overflow-y-auto pb-4 z-[10]">
-                    {/* Reference links */}
-                    {(isValidUrl(app.linkPlayStore) ||
-                      isValidUrl(app.linkAppStore) ||
-                      isValidUrl(app.linkWebsite)) && (
-                      <div className="rounded-[20px] p-5 bg-[#FAFAFA] flex flex-col items-start gap-4 w-full">
-                        <p className="font-secondary font-bold text-[14px] leading-[20px] tracking-[-0.2%] align-middle text-[#323638]">
-                          Reference
-                        </p>
-                        <div className="w-full flex flex-col items-start gap-3">
-                          {isValidUrl(app.linkPlayStore) && (
-                            <a
-                              href={app.linkPlayStore}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600 font-secondary bg-white"
-                            >
-                              <ExternalLink className="h-4 w-4" />
-                              <span>Play Store</span>
-                            </a>
-                          )}
-                          {isValidUrl(app.linkAppStore) && (
-                            <a
-                              href={app.linkAppStore}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600 font-secondary bg-white"
-                            >
-                              <ExternalLink className="h-4 w-4" />
-                              <span>App Store</span>
-                            </a>
-                          )}
-                          {isValidUrl(app.linkWebsite) && (
-                            <a
-                              href={app.linkWebsite}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600 font-secondary bg-white"
-                            >
-                              <svg
-                                width="14"
-                                height="14"
-                                viewBox="0 0 14 14"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M6.66667 0C2.99067 0 0 2.99067 0 6.66667C0 10.3427 2.99067 13.3333 6.66667 13.3333C10.3427 13.3333 13.3333 10.3427 13.3333 6.66667C13.3333 2.99067 10.3427 0 6.66667 0ZM1.33333 6.66667C1.33333 6.06733 1.43733 5.492 1.62067 4.954L2.66667 6L4 7.33333V8.66667L5.33333 10L6 10.6667V11.954C3.374 11.624 1.33333 9.38133 1.33333 6.66667ZM10.8867 9.91533C10.4513 9.56467 9.79133 9.33333 9.33333 9.33333V8.66667C9.33333 8.31304 9.19286 7.97391 8.94281 7.72386C8.69276 7.47381 8.35362 7.33333 8 7.33333H5.33333V5.33333C5.68695 5.33333 6.02609 5.19286 6.27614 4.94281C6.52619 4.69276 6.66667 4.35362 6.66667 4V3.33333H7.33333C7.68695 3.33333 8.02609 3.19286 8.27614 2.94281C8.52619 2.69276 8.66667 2.35362 8.66667 2V1.726C10.6187 2.51867 12 4.43333 12 6.66667C11.9997 7.84311 11.608 8.98602 10.8867 9.91533Z"
-                                  fill="#475569"
-                                />
-                              </svg>
-                              <span>Website</span>
-                            </a>
-                          )}
-                        </div>
-                      </div>
+            {/* Sticky sidebar - hidden on mobile */}
+            <div className="hidden md:flex flex-col gap-5 min-w-[200px] max-w-[200px] self-start sticky top-[130px] max-h-[calc(100vh-140px)] overflow-y-auto pb-4 z-[10]">
+              {/* Reference links */}
+              {(isValidUrl(app.linkPlayStore) ||
+                isValidUrl(app.linkAppStore) ||
+                isValidUrl(app.linkWebsite)) && (
+                <div className="rounded-[20px] p-5 bg-[#FAFAFA] flex flex-col items-start gap-4 w-full">
+                  <p className="font-secondary font-bold text-[14px] leading-[20px] tracking-[-0.2%] align-middle text-[#323638]">
+                    Reference
+                  </p>
+                  <div className="w-full flex flex-col items-start gap-3">
+                    {isValidUrl(app.linkPlayStore) && (
+                      <a
+                        href={app.linkPlayStore}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600 font-secondary bg-white"
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                        <span>Play Store</span>
+                      </a>
                     )}
-                    {/* Categories filter */}
-                    <div className="rounded-[20px] p-5 bg-[#FAFAFA] w-full">
-                      <FilterItem
-                        handleChange={handleChangeFilterCategories}
-                        menuFilter={filterCategories}
-                        iconType="square"
-                        className="gap-4"
-                        classNameContainerItem="gap-4"
-                      />
-                    </div>
+                    {isValidUrl(app.linkAppStore) && (
+                      <a
+                        href={app.linkAppStore}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600 font-secondary bg-white"
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                        <span>App Store</span>
+                      </a>
+                    )}
+                    {isValidUrl(app.linkWebsite) && (
+                      <a
+                        href={app.linkWebsite}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600 font-secondary bg-white"
+                      >
+                        <svg
+                          width="14"
+                          height="14"
+                          viewBox="0 0 14 14"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M6.66667 0C2.99067 0 0 2.99067 0 6.66667C0 10.3427 2.99067 13.3333 6.66667 13.3333C10.3427 13.3333 13.3333 10.3427 13.3333 6.66667C13.3333 2.99067 10.3427 0 6.66667 0ZM1.33333 6.66667C1.33333 6.06733 1.43733 5.492 1.62067 4.954L2.66667 6L4 7.33333V8.66667L5.33333 10L6 10.6667V11.954C3.374 11.624 1.33333 9.38133 1.33333 6.66667ZM10.8867 9.91533C10.4513 9.56467 9.79133 9.33333 9.33333 9.33333V8.66667C9.33333 8.31304 9.19286 7.97391 8.94281 7.72386C8.69276 7.47381 8.35362 7.33333 8 7.33333H5.33333V5.33333C5.68695 5.33333 6.02609 5.19286 6.27614 4.94281C6.52619 4.69276 6.66667 4.35362 6.66667 4V3.33333H7.33333C7.68695 3.33333 8.02609 3.19286 8.27614 2.94281C8.52619 2.69276 8.66667 2.35362 8.66667 2V1.726C10.6187 2.51867 12 4.43333 12 6.66667C11.9997 7.84311 11.608 8.98602 10.8867 9.91533Z"
+                            fill="#475569"
+                          />
+                        </svg>
+                        <span>Website</span>
+                      </a>
+                    )}
                   </div>
+                </div>
+              )}
+              {/* Categories filter */}
+              <div className="rounded-[20px] p-5 bg-[#FAFAFA] w-full">
+                <FilterItem
+                  handleChange={handleChangeFilterCategories}
+                  menuFilter={filterCategories}
+                  iconType="square"
+                  className="gap-4"
+                  classNameContainerItem="gap-4"
+                />
+              </div>
+            </div>
 
-                  {/* Screens Grid/List/Horizontal */}
-                  <div className="flex-1 min-w-0 pb-[80px] pr-4 md:pr-0">
-                    <div className="w-full">
-                      {screenViewMode === "list" ? (
-                        <div className="flex gap-8 flex-col items-start  bg-[#F6F6F6] p-5 pr-0 rounded-[20px] rounded-tr-none rounded-br-none w-full">
-                          {Object.entries(groupedScreensFilter).map(
-                            ([key, screens]) => (
+            {/* Screens Grid/List/Horizontal */}
+            <div className="flex-1 min-w-0 pb-[80px] pr-4 md:pr-0">
+              <div className="w-full">
+                {screenViewMode === "list" ? (
+                  <div className="flex gap-8 flex-col items-start  bg-[#F6F6F6] p-5 pr-0 rounded-[20px] rounded-tr-none rounded-br-none w-full">
+                    {Object.entries(groupedScreensFilter).map(
+                      ([key, screens]) => (
+                        <div
+                          className="flex gap-4 flex-col items-start w-full"
+                          key={key}
+                        >
+                          <div className="bg-[linear-gradient(90deg,#2563EB_0%,#9333EA_100%)] font-primary font-bold text-[16px] leading-[16px] text-center flex items-center justify-center text-white py-2 px-4 rounded-full">
+                            {key}
+                          </div>
+                          <div className="flex items-start max-w-full pr-5 overflow-x-auto gap-4 pb-1 styled-scrollbar-black">
+                            {screens.map((screen, i) => (
                               <div
-                                className="flex gap-4 flex-col items-start w-full"
-                                key={key}
+                                key={i}
+                                className="w-full flex flex-col items-start gap-3 hover:cursor-pointer pb-1"
+                                onClick={() => setSelectedScreen(screen)}
                               >
-                                <div className="bg-[linear-gradient(90deg,#2563EB_0%,#9333EA_100%)] font-primary font-bold text-[16px] leading-[16px] text-center flex items-center justify-center text-white py-2 px-4 rounded-full">
-                                  {key}
-                                </div>
-                                <div className="flex items-start max-w-full pr-5 overflow-x-auto gap-4 pb-1 styled-scrollbar-black">
-                                  {screens.map((screen, i) => (
-                                    <div
-                                      key={i}
-                                      className="w-full flex flex-col items-start gap-3 hover:cursor-pointer pb-1"
-                                      onClick={() => setSelectedScreen(screen)}
-                                    >
-                                      <ImageWithFallback
-                                        src={
-                                          screen?.image ??
-                                          "https://source.unsplash.com/400x300?game"
-                                        }
-                                        fallbackSrc="https://placehold.co/400"
-                                        alt={screen.name}
-                                        containerClassName="w-auto h-[100%]"
-                                        className="w-full min-w-[240px] h-[499px] max-w-[240px] flex justify-center items-center rounded-xl overflow-hidden border-solid border border-[#0000001A] object-fill"
-                                      />
+                                <ImageWithFallback
+                                  src={
+                                    screen?.image ??
+                                    "https://source.unsplash.com/400x300?game"
+                                  }
+                                  fallbackSrc="https://placehold.co/400"
+                                  alt={screen.name}
+                                  containerClassName="w-auto h-[100%]"
+                                  className="w-full min-w-[240px] h-[499px] max-w-[240px] flex justify-center items-center rounded-xl overflow-hidden border-solid border border-[#0000001A] object-fill"
+                                />
 
-                                      <Tooltip delayDuration={0}>
-                                        <TooltipTrigger asChild>
-                                          <h4
-                                            className="
+                                <Tooltip delayDuration={0}>
+                                  <TooltipTrigger asChild>
+                                    <h4
+                                      className="
                                          text-ellipsis 
             break-words 
             [display:-webkit-box] 
             [-webkit-line-clamp:1] 
             [-webkit-box-orient:vertical
                                         font-[Inter] font-medium text-[12px] leading-normal tracking-[0%] align-middle text-[#565D61] min-w-[240px] max-w-[240px]"
-                                            style={{
-                                              display: "-webkit-box",
-                                              WebkitLineClamp: 1,
-                                              WebkitBoxOrient: "vertical",
-                                              overflow: "hidden",
-                                            }}
-                                          >
-                                            {screen.name}
-                                          </h4>
-                                        </TooltipTrigger>
-                                        <TooltipContent
-                                          side="bottom"
-                                          align="center"
-                                          hidden={screen.name.length < 26}
-                                          children={
-                                            <h4 className="bg-black font-[Inter] font-medium text-[12px] leading-normal tracking-[0%] align-middle text-white p-1 ">
-                                              {screen.name}
-                                            </h4>
-                                          }
-                                        />
-                                      </Tooltip>
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
-                            )
-                          )}
-                        </div>
-                      ) : (
-                        <div className="flex gap-8 flex-col items-start  w-full">
-                          {Object.entries(groupedScreensFilter).map(
-                            ([key, screens]) => (
-                              <div
-                                className="flex gap-4 flex-col items-start w-full"
-                                key={key}
-                              >
-                                <div className="h-8 py-2 px-4 flex items-center justify-center font-[Inter] font-bold text-[16px] leading-[16px] tracking-[0%] text-[#020817] rounded-full border border-solid border-[#E2E8F0]">
-                                  {key}
-                                </div>
-                                {/* <div className="flex items-start max-w-full pr-5 overflow-x-auto gap-7 pb-1 !styled-scrollbar-black"> */}
-                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-7">
-                                  {screens.map((screen, i) => (
-                                    <div
-                                      key={i}
-                                      className="w-full max-w-[272px] flex flex-col items-start gap-1 hover:cursor-pointer"
-                                      onClick={() => setSelectedScreen(screen)}
+                                      style={{
+                                        display: "-webkit-box",
+                                        WebkitLineClamp: 1,
+                                        WebkitBoxOrient: "vertical",
+                                        overflow: "hidden",
+                                      }}
                                     >
-                                      {/* <div className="w-full max-w-[272px] h-[565px] aspect-[272/623] flex justify-center items-center rounded-xl overflow-hidden border-[1px] border-solid border-[rgba(0,0,0,0.1)]"> */}
-                                      <ImageWithFallback
-                                        src={
-                                          screen?.image ??
-                                          "https://source.unsplash.com/400x300?game"
-                                        }
-                                        fallbackSrc="https://placehold.co/400"
-                                        alt={screen.name}
-                                        containerClassName="w-auto h-[100%]"
-                                        className="w-full max-w-[272px] h-[565px] aspect-[272/623] flex justify-center items-center rounded-xl overflow-hidden border-[1px] border-solid border-[rgba(0,0,0,0.1)]"
-                                      />
-                                      {/* </div> */}
-                                      <h4
-                                        className="font-[Inter] font-medium text-[12px] leading-[100%] tracking-[0%] align-middle text-[#565D61]"
-                                        style={{
-                                          display: "-webkit-box",
-                                          WebkitLineClamp: 2,
-                                          WebkitBoxOrient: "vertical",
-                                          overflow: "hidden",
-                                        }}
-                                      >
+                                      {screen.name}
+                                    </h4>
+                                  </TooltipTrigger>
+                                  <TooltipContent
+                                    side="bottom"
+                                    align="center"
+                                    hidden={screen.name.length < 26}
+                                    children={
+                                      <h4 className="bg-black font-[Inter] font-medium text-[12px] leading-normal tracking-[0%] align-middle text-white p-1 ">
                                         {screen.name}
                                       </h4>
-                                    </div>
-                                  ))}
-                                </div>
+                                    }
+                                  />
+                                </Tooltip>
                               </div>
-                            )
-                          )}
+                            ))}
+                          </div>
                         </div>
-                      )}
-                    </div>
+                      ),
+                    )}
                   </div>
+                ) : (
+                  <div className="flex gap-8 flex-col items-start  w-full">
+                    {Object.entries(groupedScreensFilter).map(
+                      ([key, screens]) => (
+                        <div
+                          className="flex gap-4 flex-col items-start w-full"
+                          key={key}
+                        >
+                          <div className="h-8 py-2 px-4 flex items-center justify-center font-[Inter] font-bold text-[16px] leading-[16px] tracking-[0%] text-[#020817] rounded-full border border-solid border-[#E2E8F0]">
+                            {key}
+                          </div>
+                          {/* <div className="flex items-start max-w-full pr-5 overflow-x-auto gap-7 pb-1 !styled-scrollbar-black"> */}
+                          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-7">
+                            {screens.map((screen, i) => (
+                              <div
+                                key={i}
+                                className="w-full max-w-[272px] flex flex-col items-start gap-1 hover:cursor-pointer"
+                                onClick={() => setSelectedScreen(screen)}
+                              >
+                                {/* <div className="w-full max-w-[272px] h-[565px] aspect-[272/623] flex justify-center items-center rounded-xl overflow-hidden border-[1px] border-solid border-[rgba(0,0,0,0.1)]"> */}
+                                <ImageWithFallback
+                                  src={
+                                    screen?.image ??
+                                    "https://source.unsplash.com/400x300?game"
+                                  }
+                                  fallbackSrc="https://placehold.co/400"
+                                  alt={screen.name}
+                                  containerClassName="w-auto h-[100%]"
+                                  className="w-full max-w-[272px] h-[565px] aspect-[272/623] flex justify-center items-center rounded-xl overflow-hidden border-[1px] border-solid border-[rgba(0,0,0,0.1)]"
+                                />
+                                {/* </div> */}
+                                <h4
+                                  className="font-[Inter] font-medium text-[12px] leading-[100%] tracking-[0%] align-middle text-[#565D61]"
+                                  style={{
+                                    display: "-webkit-box",
+                                    WebkitLineClamp: 2,
+                                    WebkitBoxOrient: "vertical",
+                                    overflow: "hidden",
+                                  }}
+                                >
+                                  {screen.name}
+                                </h4>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ),
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
 

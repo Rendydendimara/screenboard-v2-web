@@ -64,11 +64,11 @@ export const HeroSectionModule: React.FC<IProps> = ({
                   onboarding, checkout, search, and more.
                 </p>
               </div>
-              <div className="flex flex-col items-start gap-3 mt-10">
-                <div className="flex items-center gap-5 ">
+              <div className="flex flex-col items-start gap-3 mt-10 w-full">
+                <div className="flex flex-col justify-center w-full md:flex-row items-center gap-5 ">
                   <Badge
                     onClick={onClickBtn}
-                    className="hover:cursor-pointer z-20 bg-gradient-to-r h-[58px] rounded-[20px] from-blue-500 to-purple-600 border-0 px-8 py-3 flex justify-center items-center gap-2"
+                    className="hover:cursor-pointer w-full md:w-auto z-20 bg-gradient-to-r md:h-[58px] rounded-[20px] from-blue-500 to-purple-600 border-0 px-8 py-3 flex justify-center items-center gap-2"
                   >
                     <svg
                       width="14"
@@ -102,14 +102,14 @@ export const HeroSectionModule: React.FC<IProps> = ({
                   {isLogin ? null : (
                     <button
                       onClick={onClickExplore}
-                      className="font-bold text-[18px]  z-20  text-center text-[#1B1B1B] min-h-[58px] hover:bg-transparent hover:cursor-pointer w-[114px] max-h-[58px] flex justify-center items-center  opacity-100 rounded-[20px] px-8 py-3  bg-[#FFFFFF] [box-shadow:0px_10px_15px_-3px_#0000001A]"
+                      className="font-bold text-[18px] w-full md:w-auto z-20  text-center text-[#1B1B1B] md:min-h-[58px] hover:bg-transparent hover:cursor-pointer  md:max-h-[58px] flex justify-center items-center  opacity-100 rounded-[20px] px-8 py-3  bg-[#FFFFFF] [box-shadow:0px_10px_15px_-3px_#0000001A]"
                     >
                       Explore
                     </button>
                   )}
                 </div>
                 {isLogin ? null : (
-                  <p className="font-secondary font-normal text-[14px] leading-[125%] tracking-[0%] text-[#565D61]">
+                  <p className="font-secondary text-center font-normal text-[14px] leading-[125%] tracking-[0%] text-[#565D61]">
                     Get full access to the design gallery while the promotion
                     lasts.
                   </p>

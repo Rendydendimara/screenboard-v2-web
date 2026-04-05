@@ -11,8 +11,8 @@ interface IProps {
 
 export const Top10Apps = ({ apps, isLoading }: IProps) => {
   return (
-    <div className="h-[801px] gap-[32px] flex items-center flex-col py-[80px] bg-[linear-gradient(180deg,_#020202_0%,_#353535_100%)]">
-      <div className="flex flex-col gap-4 items-center  px-[64px]">
+    <div className=" gap-[32px] flex items-center flex-col py-[80px] bg-[linear-gradient(180deg,_#020202_0%,_#353535_100%)]">
+      <div className="flex flex-col gap-4 items-center px-4 md:px-[64px]">
         <svg
           width="32"
           height="32"
@@ -39,7 +39,7 @@ export const Top10Apps = ({ apps, isLoading }: IProps) => {
           >
             Top 10 UI this month
           </p>
-          <p className="text-[#B9B9B9] font-secondary font-medium text-[18px] leading-[100%] tracking-[0%]">
+          <p className="text-[#B9B9B9] font-secondary font-medium text-[18px] text-center leading-[100%] tracking-[0%]">
             Curated apps with cool design for this month
           </p>
         </div>
@@ -70,7 +70,7 @@ export const Top10Apps = ({ apps, isLoading }: IProps) => {
           : apps.map((app, i) => (
               <div
                 key={i}
-                className="w-[218px] min-h-[497px] max-h-[497px] rounded-[24px] pt-px pb-px bg-[#2B2828]"
+                className="w-[218px] md:min-h-[497px] md:max-h-[497px] rounded-[24px] pt-px pb-px bg-[#2B2828]"
               >
                 <Link className="hover:cursor-pointer" to={`/app/${app.id}`}>
                   <div className="flex w-full items-center gap-3 py-2 px-4">
