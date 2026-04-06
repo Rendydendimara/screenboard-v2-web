@@ -41,7 +41,7 @@ export const HeroSection: React.FC<IProps> = ({
               <div className="flex flex-col items-start w-full gap-3">
                 <div className="flex flex-col justify-center md:justify-start w-full md:flex-row items-center gap-5 ">
                   <Badge
-                    onClick={onClickBtn}
+                    onClick={isLogin ? onClickExplore : onClickBtn}
                     className="hover:cursor-pointer w-full md:w-auto z-20 bg-gradient-to-r md:h-[58px] rounded-[20px] from-blue-500 to-purple-600 border-0 px-8 py-3 flex justify-center items-center gap-2"
                   >
                     <div className="w-5 h-5">
