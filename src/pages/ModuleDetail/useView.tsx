@@ -231,19 +231,23 @@ const ModuleDetailPage: React.FC = () => {
                 {/* Fixed filter when scrolled */}
                 <div
                   className={clsx(
-                    "min-w-[200px] max-w-[200px] fixed top-24 max-h-[90vh] overflow-y-auto z-50 pb-8 transition-all ease-in-out rounded-[20px] p-5 bg-[#FAFAFA]",
+                    "fixed top-24 z-50 transition-all ease-in-out",
                     scrolledFilterMenu
                       ? "opacity-100 translate-y-0"
                       : "opacity-0 -translate-y-4 pointer-events-none"
                   )}
                 >
-                  <FilterItem
-                    handleChange={handleChangeFilterCategories}
-                    menuFilter={filterCategories}
-                    iconType="square"
-                    className="gap-4"
-                    classNameContainerItem="gap-4"
-                  />
+                  <div className="w-[216px] max-h-[90vh] overflow-y-auto pb-8 pr-2 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300/70 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-track]:my-6">
+                    <div className="w-[200px] rounded-[20px] bg-[#FAFAFA] p-5">
+                      <FilterItem
+                        handleChange={handleChangeFilterCategories}
+                        menuFilter={filterCategories}
+                        iconType="square"
+                        className="gap-4"
+                        classNameContainerItem="gap-4"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
 

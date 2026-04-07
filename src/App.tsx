@@ -1,3 +1,4 @@
+import React from "react";
 import Admin from "@/pages/Admin";
 import AdminAppDetails from "@/pages/AdminAppDetails";
 import AdminApps from "@/pages/AdminApps";
@@ -14,11 +15,11 @@ import Index from "@/pages/Home/useView";
 import NotFound from "@/pages/NotFound";
 import Profile from "@/pages/Profile";
 import { useEffect, useState } from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import AdminAuthAPI from "./api/admin/auth/api";
 import CModalDialogLoading from "./components/modal-dialog-loading";
 import { usePageTracking } from "./hooks/use-page-tracking";
-import { useAppDispatch } from "./hooks/use-typed-selector";
+import { useAppDispatch, useTypedSelector } from "./hooks/use-typed-selector";
 import { identifyUser } from "./lib/analytics";
 import { LoginAdmin } from "./pages/LoginAdmin";
 import ModulePage from "./pages/Module/useView";
@@ -26,6 +27,12 @@ import ModuleDetailPage from "./pages/ModuleDetail/useView";
 import Subscription from "./pages/Subscription";
 import SubscriptionSuccess from "./pages/SubscriptionSuccess";
 import { setCredentials } from "./provider/slices/authSlice";
+
+function AdminOnlyRoute({ children }: { children: React.ReactNode }) {
+  const user = useTypedSelector((state) => state.auth.user);
+  if (user?.userType !== "administrator") return <Navigate to="/" replace />;
+  return <>{children}</>;
+}
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -89,8 +96,8 @@ const App = () => {
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<Index />} />
-        <Route path="/module" element={<ModulePage />} />
-        <Route path="/module/:id" element={<ModuleDetailPage />} />
+        <Route path="/module" element={<AdminOnlyRoute><ModulePage /></AdminOnlyRoute>} />
+        <Route path="/module/:id" element={<AdminOnlyRoute><ModuleDetailPage /></AdminOnlyRoute>} />
         <Route path="/app/:id" element={<AppDetails />} />
         {/* <Route path="/favorites" element={<FavoritesPage />} /> */}
         <Route path="/profile" element={<Profile />} />

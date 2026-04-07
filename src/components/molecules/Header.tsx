@@ -195,17 +195,19 @@ export const Header = ({
                     >
                       Applications
                     </Link>
-                    <Link
-                      to="/module"
-                      className={clsx(
-                        "w-[110px] h-[36px] flex justify-center items-center opacity-100 gap-[8px] rounded-[6px] pr-[12px] pl-[12px] font-secondary  text-[14px] text-center align-middle text-[#323638]",
-                        location.pathname.includes("module")
-                          ? "font-bold"
-                          : "font-normal"
-                      )}
-                    >
-                      Module
-                    </Link>
+                    {user?.userType === "administrator" && (
+                      <Link
+                        to="/module"
+                        className={clsx(
+                          "w-[110px] h-[36px] flex justify-center items-center opacity-100 gap-[8px] rounded-[6px] pr-[12px] pl-[12px] font-secondary  text-[14px] text-center align-middle text-[#323638]",
+                          location.pathname.includes("module")
+                            ? "font-bold"
+                            : "font-normal"
+                        )}
+                      >
+                        Module
+                      </Link>
+                    )}
                   </div>
 
                   {/* Action Buttons - Desktop */}
@@ -383,21 +385,23 @@ export const Header = ({
                             Applications
                           </Button>
                         </Link>
-                        <Link
-                          to="/module"
-                          onClick={() => setMobileMenuOpen(false)}
-                        >
-                          <Button
-                            variant="ghost"
-                            className={clsx(
-                              "w-full justify-start gap-2",
-                              location.pathname.includes("module") &&
-                                "bg-slate-100 font-bold"
-                            )}
+                        {user?.userType === "administrator" && (
+                          <Link
+                            to="/module"
+                            onClick={() => setMobileMenuOpen(false)}
                           >
-                            Module
-                          </Button>
-                        </Link>
+                            <Button
+                              variant="ghost"
+                              className={clsx(
+                                "w-full justify-start gap-2",
+                                location.pathname.includes("module") &&
+                                  "bg-slate-100 font-bold"
+                              )}
+                            >
+                              Module
+                            </Button>
+                          </Link>
+                        )}
                       </div>
 
                       {user ? (

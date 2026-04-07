@@ -107,14 +107,15 @@ const useView: React.FC = () => {
             <div className="w-full flex justify-center items-center">
               <div className="w-full md:max-w-[700px] lg:max-w-[1200px]">
                 <div className="flex items-center justify-between h-16 lg:h-20 px-4 md:px-0">
-                  <Link to="/">
-                    <div className="flex items-center space-x-2">
-                      <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
-                        <span className="text-white font-bold text-sm lg:text-base">
-                          S
-                        </span>
-                      </div>
-                    </div>
+                  <Link to="/" className="flex items-center gap-2">
+                    <img
+                      src="/assets/images/logo.png"
+                      alt="logo"
+                      className="w-[38px] h-[40px] object-cover object-center"
+                    />
+                    <p className="font-belanosima text-[#9333EA] font-normal text-[24px] leading-[20px] tracking-[0%] text-center align-middle">
+                      UXBoard
+                    </p>
                   </Link>
                 </div>
               </div>
@@ -232,7 +233,7 @@ const useView: React.FC = () => {
         <div
           className={clsx(
             "w-full bg-[#353535] h-[40px] fixed z-50 top-[80px] py-2 ransition-all duration-300 ease-in-out",
-            scrolled ? "opacity-100" : "opacity-0",
+            scrolled ? "opacity-100" : "opacity-0"
           )}
         >
           <div className="w-full flex justify-center items-center">
@@ -384,9 +385,10 @@ const useView: React.FC = () => {
                                 <TooltipContent
                                   side="bottom"
                                   align="center"
+                                  className="z-[10000]"
                                   hidden={app.countries.join(", ").length < 50}
                                   children={
-                                    <p className="font-secondary not-italic font-normal text-[13.3px] leading-[20px] items-center text-white bg-black">
+                                    <p className="font-secondary max-w-[500px] p-4 rounded-lg not-italic font-normal text-[12px] bg-gray-200 text-black">
                                       {app.countries.join(", ")}
                                     </p>
                                   }
@@ -440,7 +442,7 @@ const useView: React.FC = () => {
                   onClick={toggleLike}
                   className={clsx(
                     "h-10 rounded-[6px] py-[1px] px-[13px] font-normal",
-                    app.isLiked && "!bg-[#9333EA] !text-white",
+                    app.isLiked && "!bg-[#9333EA] !text-white"
                   )}
                 >
                   <svg
@@ -550,7 +552,8 @@ const useView: React.FC = () => {
             style={{ paddingLeft: "max(16px, calc((100vw - 1200px) / 2))" }}
           >
             {/* Sticky sidebar - hidden on mobile */}
-            <div className="hidden md:flex flex-col gap-5 min-w-[200px] max-w-[200px] self-start sticky top-[130px] max-h-[calc(100vh-140px)] overflow-y-auto pb-4 z-[10]">
+            <div className="hidden md:block self-start sticky top-[130px] z-[10]">
+            <div className="flex flex-col gap-5 w-[210px] max-h-[calc(100vh-140px)] overflow-y-auto pb-4 pr-2 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300/70 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-track]:my-6">
               {/* Reference links */}
               {(isValidUrl(app.linkPlayStore) ||
                 isValidUrl(app.linkAppStore) ||
@@ -617,6 +620,7 @@ const useView: React.FC = () => {
                   classNameContainerItem="gap-4"
                 />
               </div>
+            </div>
             </div>
 
             {/* Screens Grid/List/Horizontal */}
@@ -686,7 +690,7 @@ const useView: React.FC = () => {
                             ))}
                           </div>
                         </div>
-                      ),
+                      )
                     )}
                   </div>
                 ) : (
@@ -735,7 +739,7 @@ const useView: React.FC = () => {
                             ))}
                           </div>
                         </div>
-                      ),
+                      )
                     )}
                   </div>
                 )}

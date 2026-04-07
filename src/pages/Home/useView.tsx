@@ -399,35 +399,37 @@ const Index = () => {
                     {/* Fixed Filters - visible when scrolled - Hidden on mobile */}
                     <div
                       className={clsx(
-                        "hidden md:block min-w-[200px] max-w-[200px] fixed h-[90vh] overflow-y-auto top-24 z-50 pb-8 transition-all ease-in-out",
+                        "hidden md:block fixed top-24 z-50 transition-all ease-in-out",
                         scrolledFilterMenu
                           ? "opacity-100 translate-y-0"
                           : "opacity-0 -translate-y-4 pointer-events-none"
                       )}
                     >
-                      <Filters
-                        getOptionsCategoryItemFiltered={
-                          getOptionsCategoryItemFiltered
-                        }
-                        filterCategories={filterCategories}
-                        filterSubCategories={filterSubCategories}
-                        filterSortBy={filterSortBy}
-                        filterMarket={filterMarket}
-                        handleChangeFilterSortBy={handleChangeFilterSortBy}
-                        handleChangeFilterCategories={
-                          handleChangeFilterCategories
-                        }
-                        handleChangeFilterSubCategories={
-                          handleChangeFilterSubCategories
-                        }
-                        handleChangeFilterMarket={handleChangeFilterMarket}
-                        getOptionsSubCategoryItemFiltered={
-                          getOptionsSubCategoryItemFiltered
-                        }
-                        getOptionsMarketItemFiltered={
-                          getOptionsMarketItemFiltered
-                        }
-                      />
+                      <div className="w-[210px] h-[90vh] overflow-y-auto pb-8 pr-2 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300/70 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-track]:my-6">
+                        <Filters
+                          getOptionsCategoryItemFiltered={
+                            getOptionsCategoryItemFiltered
+                          }
+                          filterCategories={filterCategories}
+                          filterSubCategories={filterSubCategories}
+                          filterSortBy={filterSortBy}
+                          filterMarket={filterMarket}
+                          handleChangeFilterSortBy={handleChangeFilterSortBy}
+                          handleChangeFilterCategories={
+                            handleChangeFilterCategories
+                          }
+                          handleChangeFilterSubCategories={
+                            handleChangeFilterSubCategories
+                          }
+                          handleChangeFilterMarket={handleChangeFilterMarket}
+                          getOptionsSubCategoryItemFiltered={
+                            getOptionsSubCategoryItemFiltered
+                          }
+                          getOptionsMarketItemFiltered={
+                            getOptionsMarketItemFiltered
+                          }
+                        />
+                      </div>
                     </div>
                   </>
                 )}
