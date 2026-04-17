@@ -44,11 +44,7 @@ export const Top10Apps = ({ apps, isLoading }: IProps) => {
           </p>
         </div>
       </div>
-      <ScrollContainer
-        horizontal
-        vertical={false}
-        className="w-full flex gap-4 items-center px-6"
-      >
+      <div className="w-full flex gap-4 items-center px-6 max-w-full pr-5 overflow-x-auto styled-scrollbar-grey">
         {isLoading
           ? Array.from({ length: 8 }).map((_, i) => (
               <div
@@ -123,20 +119,20 @@ export const Top10Apps = ({ apps, isLoading }: IProps) => {
                     </div>
                   </div>
                 </Link>
-                <div className="min-w-[186px] h-full pt-[8px] pr-[16px] pb-[16px] pl-[16px]">
+                <div className="min-w-[186px] h-[412px] pt-[8px] pr-[16px] pb-[16px] pl-[16px]">
                   <ImageWithFallback
                     src={
                       app.screens[0]?.image ??
                       "https://source.unsplash.com/400x300?game"
                     }
                     fallbackSrc={"https://source.unsplash.com/400x300?game"}
-                    containerClassName="min-w-[186px] min-h-[412px]  max-h-[412px] rounded-[12px]"
-                    className="min-w-[186px] min-h-[412px]  max-h-[412px] object-cover rounded-[12px]"
+                    containerClassName="min-w-[186px] h-[412px] rounded-[12px]"
+                    className="w-full h-full rounded-[12px]"
                   />
                 </div>
               </div>
             ))}
-      </ScrollContainer>
+      </div>
     </div>
   );
 };

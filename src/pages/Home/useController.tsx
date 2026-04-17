@@ -25,6 +25,7 @@ import { adapterListAppBEToFEPublic } from "@/utils/adapterBEToFE";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TSelect } from "@/types";
+import { set } from "date-fns";
 
 export interface ScreenPublic {
   id: string;
@@ -122,12 +123,13 @@ const ITEMS_PER_PAGE = 20; // Jumlah item yang di-load per batch
 const useController = () => {
   const [listApp, setListApp] = useState<AppPublic[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchTermHeader, setSearchTermHeader] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<TCategoryRes>();
   const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showFilters, setShowFilters] = useState(false);
   const [selectedScreen, setSelectedScreen] = useState<ScreenPublic | null>(
-    null
+    null,
   );
   const [showFavorites, setShowFavorites] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -144,7 +146,7 @@ const useController = () => {
     useState(ITEMS_PER_PAGE);
   const user = useTypedSelector((state: RootState) => state.auth.user);
   const compareApps = useTypedSelector(
-    (state: RootState) => state.compare.compareApps
+    (state: RootState) => state.compare.compareApps,
   );
   const dispatch = useAppDispatch();
   const { favorites: favoriteScreens, toggleFavorite } = useFavorites();
@@ -158,10 +160,10 @@ const useController = () => {
   const [filterSortBy, setFilterSortBy] =
     useState<TMenuFilter>(MENU_FILTER_SORT_BY);
   const [filterCategories, setFilterCategories] = useState<TMenuFilter>(
-    MENU_FILTER_CATEGORIES
+    MENU_FILTER_CATEGORIES,
   );
   const [filterSubCategories, setFilterSubCategories] = useState<TMenuFilter>(
-    MENU_FILTER_SUB_CATEGORIES
+    MENU_FILTER_SUB_CATEGORIES,
   );
   const [filterMarket, setFilterMarket] =
     useState<TMenuFilter>(MENU_FILTER_MARKET);
@@ -171,13 +173,22 @@ const useController = () => {
   const appsContainerRef = useRef<HTMLDivElement>(null);
   // Debounce search term untuk performa lebih baik
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
+  const debouncedSearchTermHeader = useDebounce(searchTermHeader, 300);
 
   // Filtered apps (semua data yang match filter)
   const allFilteredApps = useMemo(() => {
     const result = listApp.filter((app) => {
-      const matchesSearch = app.name
-        .toLowerCase()
-        .includes(debouncedSearchTerm.toLowerCase());
+      const lowerName = app.name.toLowerCase();
+      const matchesByTerm = debouncedSearchTerm
+        ? lowerName.includes(debouncedSearchTerm.toLowerCase())
+        : false;
+      const matchesByHeader = debouncedSearchTermHeader
+        ? lowerName.includes(debouncedSearchTermHeader.toLowerCase())
+        : false;
+      const matchesSearch =
+        !debouncedSearchTerm && !debouncedSearchTermHeader
+          ? true
+          : matchesByTerm || matchesByHeader;
 
       // Handle multiple category selection
       const categoryValues = Array.isArray(filterCategories.value)
@@ -209,7 +220,7 @@ const useController = () => {
           ? true
           : (app?.countries?.length === 0 && hasAllOption) ||
             app?.countries?.some((countryName) =>
-              marketValues.includes(countryName)
+              marketValues.includes(countryName),
             );
 
       return (
@@ -239,6 +250,7 @@ const useController = () => {
     filterSubCategories,
     filterMarket,
     debouncedSearchTerm,
+    debouncedSearchTermHeader,
     selectedCountries,
   ]);
 
@@ -251,7 +263,7 @@ const useController = () => {
   const loadMoreItems = useCallback(() => {
     if (displayedItemsCount < allFilteredApps.length) {
       setDisplayedItemsCount((prev) =>
-        Math.min(prev + ITEMS_PER_PAGE, allFilteredApps.length)
+        Math.min(prev + ITEMS_PER_PAGE, allFilteredApps.length),
       );
     }
   }, [displayedItemsCount, allFilteredApps.length]);
@@ -272,7 +284,7 @@ const useController = () => {
                 ...user,
                 appLikes: user.appLikes.filter((d) => d !== appId),
               },
-            })
+            }),
           );
           trackEvent(AnalyticsEvent.APP_UNFAVORITE, {
             app_id: appId,
@@ -287,7 +299,7 @@ const useController = () => {
                 ...user,
                 appLikes: [...user.appLikes, appId],
               },
-            })
+            }),
           );
           trackEvent(AnalyticsEvent.APP_FAVORITE, {
             app_id: appId,
@@ -366,16 +378,19 @@ const useController = () => {
     }
   };
 
-  const gotoDetail = useCallback((id: string) => {
-    const app = listApp.find((a) => a.id === id);
-    trackEvent(AnalyticsEvent.APP_VIEW, {
-      app_id: id,
-      app_name: app?.name,
-      source: "home",
-    });
-    UserAppAPI.trackView(id).catch(() => {});
-    navigate(`/app/${id}`);
-  }, [listApp]);
+  const gotoDetail = useCallback(
+    (id: string) => {
+      const app = listApp.find((a) => a.id === id);
+      trackEvent(AnalyticsEvent.APP_VIEW, {
+        app_id: id,
+        app_name: app?.name,
+        source: "home",
+      });
+      UserAppAPI.trackView(id).catch(() => {});
+      navigate(`/app/${id}`);
+    },
+    [listApp],
+  );
 
   const getListData = async (callbackGetListCategory?: boolean) => {
     try {
@@ -404,7 +419,7 @@ const useController = () => {
 
       // itemsFilterMarket
       const itemsFilterMarketFix = Array.from(
-        new Set(itemsFilterMarket.map((item) => item.value))
+        new Set(itemsFilterMarket.map((item) => item.value)),
       ).map((value) => {
         // const countApp = listApp.filter((app) =>
         //   app.countries.includes(value)
@@ -455,7 +470,7 @@ const useController = () => {
       ];
       dataCategory.map((d) => {
         const countApp = apps.filter(
-          (app) => app?.category?._id === d?._id
+          (app) => app?.category?._id === d?._id,
         ).length;
         itemsFilterCategory.push({
           label: `${d.name} (${countApp})`,
@@ -464,7 +479,7 @@ const useController = () => {
       });
       dataSubCategory.map((d) => {
         const countApp = apps.filter(
-          (app) => app?.subcategory?._id === d?._id
+          (app) => app?.subcategory?._id === d?._id,
         ).length;
         itemsFilterSubCategory.push({
           label: `${d.name} (${countApp})`,
@@ -507,7 +522,7 @@ const useController = () => {
         }
       }
     },
-    [categories, selectedCategory]
+    [categories, selectedCategory],
   );
 
   const handleOpenAuthModal = useCallback(() => {
@@ -560,7 +575,7 @@ const useController = () => {
       setFilterSortBy(newFilter);
       handleScrollTop();
     },
-    [filterSortBy]
+    [filterSortBy],
   );
 
   const handleChangeFilterCategories = useCallback(
@@ -601,11 +616,11 @@ const useController = () => {
           .filter((d) =>
             categoryValuesFiltered.length === 0
               ? true
-              : categoryValuesFiltered.includes(d.categoryId._id)
+              : categoryValuesFiltered.includes(d.categoryId._id),
           )
           .map((d) => {
             const countApp = listApp.filter(
-              (app) => app?.subcategory?._id === d._id
+              (app) => app?.subcategory?._id === d._id,
             ).length;
             return {
               label: `${d.name} (${countApp})`,
@@ -622,7 +637,7 @@ const useController = () => {
         ? filterSubCategories.value
         : [];
       const validSubValues = currentSubValues.filter((subValue) =>
-        newItemsFilterSubCategory.some((item) => item.value === subValue)
+        newItemsFilterSubCategory.some((item) => item.value === subValue),
       );
 
       setFilterSubCategories({
@@ -632,7 +647,7 @@ const useController = () => {
       });
       handleScrollTop();
     },
-    [filterCategories, filterSubCategories, subCategories]
+    [filterCategories, filterSubCategories, subCategories],
   );
 
   const handleChangeFilterSubCategories = useCallback(
@@ -668,7 +683,7 @@ const useController = () => {
       setFilterSubCategories(newFilterSubCategories);
       handleScrollTop();
     },
-    [filterSubCategories, filterMarket]
+    [filterSubCategories, filterMarket],
   );
 
   const handleChangeFilterMarket = useCallback(
@@ -700,7 +715,7 @@ const useController = () => {
       setFilterMarket(newFilterMarket);
       handleScrollTop();
     },
-    [filterMarket]
+    [filterMarket],
   );
 
   const handleScrollTop = useCallback(() => {
@@ -712,6 +727,11 @@ const useController = () => {
 
   const handleChangeSearch = useCallback((value: string) => {
     setSearchTerm(value);
+    // handleScrollTop();
+  }, []);
+
+  const handleChangeSearchHeader = useCallback((value: string) => {
+    setSearchTermHeader(value);
     // handleScrollTop();
   }, []);
 
@@ -729,7 +749,7 @@ const useController = () => {
       .map((item) => {
         if (item.value === "All") return item;
         const countApp = listApp.filter(
-          (app) => app?.category?._id === item.value
+          (app) => app?.category?._id === item.value,
         ).length;
         const nameWithoutCount = item.label.replace(/\s*\(\d+\)$/, "");
         return {
@@ -748,7 +768,7 @@ const useController = () => {
       const countApp = listApp.filter(
         (app) =>
           app?.subcategory?._id === d._id &&
-          filterCategories.value.includes(app?.category?._id)
+          filterCategories.value.includes(app?.category?._id),
       ).length;
       if (countApp > 0) {
         items.push({
@@ -829,7 +849,7 @@ const useController = () => {
   useEffect(() => {
     getListData(true);
     getTop10Apps();
-  }, []);
+  }, [user]);
 
   const getTop10Apps = async () => {
     try {
@@ -855,7 +875,7 @@ const useController = () => {
       setScrolled(isMobile ? window.scrollY > 80 : window.scrollY > 80);
       setScrolledSearch(isMobile ? window.scrollY > 400 : window.scrollY > 680);
       setScrolledCategories(
-        isMobile ? window.scrollY > 500 : window.scrollY > 680
+        isMobile ? window.scrollY > 500 : window.scrollY > 680,
       );
     };
     window.addEventListener("scroll", handleScroll);
@@ -864,23 +884,32 @@ const useController = () => {
 
   // Track search event (debounced)
   useEffect(() => {
-    if (!debouncedSearchTerm) return;
+    if (!debouncedSearchTerm || !debouncedSearchTermHeader) return;
     trackEvent(AnalyticsEvent.APP_SEARCH, {
-      search_term: debouncedSearchTerm,
+      search_term: `${debouncedSearchTerm} || ${debouncedSearchTermHeader}`,
       results_count: allFilteredApps.length,
     });
-  }, [debouncedSearchTerm]);
+  }, [debouncedSearchTerm, debouncedSearchTermHeader]);
 
   // Reset displayed items ketika filter berubah
   useEffect(() => {
     setDisplayedItemsCount(ITEMS_PER_PAGE);
   }, [
     debouncedSearchTerm,
+    debouncedSearchTermHeader,
     filterCategories.value,
     filterSubCategories.value,
     filterMarket.value,
     filterSortBy.value,
   ]);
+
+  // useEffect(() => {
+  //   if (scrolledFilterMenu) {
+  //     setSearchTermHeader(searchTerm);
+  //   } else {
+  //     setSearchTerm(searchTermHeader);
+  //   }
+  // }, [scrolledFilterMenu]);
 
   return {
     listApp,
@@ -946,6 +975,8 @@ const useController = () => {
     getOptionsMarketItemFiltered,
     top10Apps,
     isLoadingTop10,
+    searchTermHeader,
+    handleChangeSearchHeader,
   };
 };
 
@@ -955,12 +986,12 @@ export default useController;
 // ASC (terlama dulu): C, A, B
 const sortByDate = <T extends { createdAt: string }>(
   data: T[],
-  order: "asc" | "desc" = "desc"
+  order: "asc" | "desc" = "desc",
 ): T[] => {
   return data.sort((a, b) =>
     order === "desc"
       ? b.createdAt.localeCompare(a.createdAt)
-      : a.createdAt.localeCompare(b.createdAt)
+      : a.createdAt.localeCompare(b.createdAt),
   );
 };
 
@@ -969,11 +1000,11 @@ const sortByDate = <T extends { createdAt: string }>(
 // DESC (Z-A): Z, Y, X
 const sortByName = <T extends { name: string }>(
   data: T[],
-  order: "asc" | "desc" = "asc"
+  order: "asc" | "desc" = "asc",
 ): T[] => {
   return data.sort((a, b) =>
     order === "asc"
       ? a.name.localeCompare(b.name)
-      : b.name.localeCompare(a.name)
+      : b.name.localeCompare(a.name),
   );
 };

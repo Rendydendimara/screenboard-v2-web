@@ -87,6 +87,8 @@ const Index = () => {
     getOptionsMarketItemFiltered,
     top10Apps,
     isLoadingTop10,
+    searchTermHeader,
+    handleChangeSearchHeader,
   } = useController();
 
   const top10Ref = useRef<HTMLDivElement>(null);
@@ -127,10 +129,10 @@ const Index = () => {
         <section className="relative overflow-hidden bg-[#E0E0E033]">
           <Header
             showSearch={true}
-            searchTerm={searchTerm}
-            onSearchChange={handleChangeSearch}
+            searchTerm={searchTermHeader}
+            onSearchChange={handleChangeSearchHeader}
             scrolled={scrolled}
-            scrolledSearch={scrolledSearch}
+            scrolledSearch={true}
             onOpenAuthModal={() => setIsOpenAuth(true)}
             transparentBg={true}
             callbackLogout={callbackAuth}
@@ -204,9 +206,9 @@ const Index = () => {
                     <div
                       className={clsx(
                         "w-[448px] transition-all duration-300 ease-in-out overflow-hidden h-[40px]",
-                        scrolledSearch
+                        !scrolledFilterMenu
                           ? "max-h-[100px] opacity-100 translate-y-0"
-                          : "max-h-0 opacity-0 -translate-y-4 pointer-events-none"
+                          : "max-h-0 opacity-0 -translate-y-4 pointer-events-none",
                       )}
                     >
                       <div className="relative">
@@ -234,9 +236,9 @@ const Index = () => {
                     <div
                       className={clsx(
                         "bg-[white] md:w-fit w-full left-[0] transition-all duration-300 ease-in-out",
-                        scrolledSearch &&
+                        scrolledFilterMenu &&
                           "fixed md:[position:initial] py-1 pl-[16px] z-[10]",
-                        showFilters ? "top-0 h-fit" : "top-[63px]"
+                        showFilters ? "top-0 h-fit" : "top-[63px]",
                       )}
                     >
                       <div className="flex flex-row md:flex-col sm:flex-row gap-4 lg:gap-6">
@@ -368,7 +370,7 @@ const Index = () => {
                         "hidden md:block min-w-[200px] max-w-[200px] max-h-[2000px] overflow-y-hidden transition-all ease-in-out",
                         scrolledFilterMenu
                           ? "opacity-0 pointer-events-none"
-                          : "opacity-100"
+                          : "opacity-100",
                       )}
                     >
                       <Filters
@@ -402,7 +404,7 @@ const Index = () => {
                         "hidden md:block fixed top-24 z-50 transition-all ease-in-out",
                         scrolledFilterMenu
                           ? "opacity-100 translate-y-0"
-                          : "opacity-0 -translate-y-4 pointer-events-none"
+                          : "opacity-0 -translate-y-4 pointer-events-none",
                       )}
                     >
                       <div className="w-[210px] h-[90vh] overflow-y-auto pb-8 pr-2 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300/70 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-track]:my-6">
@@ -438,7 +440,7 @@ const Index = () => {
                   <div
                     className={clsx(
                       "w-full flex items-start gap-5",
-                      user && "max-w-[990px]"
+                      user && "max-w-[990px]",
                     )}
                   >
                     {/* Apps Grid/List */}
@@ -448,7 +450,7 @@ const Index = () => {
                           "w-full",
                           viewMode === "grid"
                             ? "grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6"
-                            : "space-y-4 lg:space-y-6"
+                            : "space-y-4 lg:space-y-6",
                         )}
                       >
                         {[1, 2, 3, 4, 5, 6].map((i) => (

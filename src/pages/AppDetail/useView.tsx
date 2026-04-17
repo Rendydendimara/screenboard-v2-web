@@ -233,7 +233,7 @@ const useView: React.FC = () => {
         <div
           className={clsx(
             "w-full bg-[#353535] h-[40px] fixed z-50 top-[80px] py-2 ransition-all duration-300 ease-in-out",
-            scrolled ? "opacity-100" : "opacity-0"
+            scrolled ? "opacity-100" : "opacity-0",
           )}
         >
           <div className="w-full flex justify-center items-center">
@@ -442,7 +442,7 @@ const useView: React.FC = () => {
                   onClick={toggleLike}
                   className={clsx(
                     "h-10 rounded-[6px] py-[1px] px-[13px] font-normal",
-                    app.isLiked && "!bg-[#9333EA] !text-white"
+                    app.isLiked && "!bg-[#9333EA] !text-white",
                   )}
                 >
                   <svg
@@ -553,74 +553,74 @@ const useView: React.FC = () => {
           >
             {/* Sticky sidebar - hidden on mobile */}
             <div className="hidden md:block self-start sticky top-[130px] z-[10]">
-            <div className="flex flex-col gap-5 w-[210px] max-h-[calc(100vh-140px)] overflow-y-auto pb-4 pr-2 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300/70 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-track]:my-6">
-              {/* Reference links */}
-              {(isValidUrl(app.linkPlayStore) ||
-                isValidUrl(app.linkAppStore) ||
-                isValidUrl(app.linkWebsite)) && (
-                <div className="rounded-[20px] p-5 bg-[#FAFAFA] flex flex-col items-start gap-4 w-full">
-                  <p className="font-secondary font-bold text-[14px] leading-[20px] tracking-[-0.2%] align-middle text-[#323638]">
-                    Reference
-                  </p>
-                  <div className="w-full flex flex-col items-start gap-3">
-                    {isValidUrl(app.linkPlayStore) && (
-                      <a
-                        href={app.linkPlayStore}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600 font-secondary bg-white"
-                      >
-                        <ExternalLink className="h-4 w-4" />
-                        <span>Play Store</span>
-                      </a>
-                    )}
-                    {isValidUrl(app.linkAppStore) && (
-                      <a
-                        href={app.linkAppStore}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600 font-secondary bg-white"
-                      >
-                        <ExternalLink className="h-4 w-4" />
-                        <span>App Store</span>
-                      </a>
-                    )}
-                    {isValidUrl(app.linkWebsite) && (
-                      <a
-                        href={app.linkWebsite}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600 font-secondary bg-white"
-                      >
-                        <svg
-                          width="14"
-                          height="14"
-                          viewBox="0 0 14 14"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
+              <div className="flex flex-col gap-5 w-[210px] max-h-[calc(100vh-140px)] overflow-y-auto pb-4 pr-2 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300/70 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-track]:my-6">
+                {/* Reference links */}
+                {(isValidUrl(app.linkPlayStore) ||
+                  isValidUrl(app.linkAppStore) ||
+                  isValidUrl(app.linkWebsite)) && (
+                  <div className="rounded-[20px] p-5 bg-[#FAFAFA] flex flex-col items-start gap-4 w-full">
+                    <p className="font-secondary font-bold text-[14px] leading-[20px] tracking-[-0.2%] align-middle text-[#323638]">
+                      Reference
+                    </p>
+                    <div className="w-full flex flex-col items-start gap-3">
+                      {isValidUrl(app.linkPlayStore) && (
+                        <a
+                          href={app.linkPlayStore}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600 font-secondary bg-white"
                         >
-                          <path
-                            d="M6.66667 0C2.99067 0 0 2.99067 0 6.66667C0 10.3427 2.99067 13.3333 6.66667 13.3333C10.3427 13.3333 13.3333 10.3427 13.3333 6.66667C13.3333 2.99067 10.3427 0 6.66667 0ZM1.33333 6.66667C1.33333 6.06733 1.43733 5.492 1.62067 4.954L2.66667 6L4 7.33333V8.66667L5.33333 10L6 10.6667V11.954C3.374 11.624 1.33333 9.38133 1.33333 6.66667ZM10.8867 9.91533C10.4513 9.56467 9.79133 9.33333 9.33333 9.33333V8.66667C9.33333 8.31304 9.19286 7.97391 8.94281 7.72386C8.69276 7.47381 8.35362 7.33333 8 7.33333H5.33333V5.33333C5.68695 5.33333 6.02609 5.19286 6.27614 4.94281C6.52619 4.69276 6.66667 4.35362 6.66667 4V3.33333H7.33333C7.68695 3.33333 8.02609 3.19286 8.27614 2.94281C8.52619 2.69276 8.66667 2.35362 8.66667 2V1.726C10.6187 2.51867 12 4.43333 12 6.66667C11.9997 7.84311 11.608 8.98602 10.8867 9.91533Z"
-                            fill="#475569"
-                          />
-                        </svg>
-                        <span>Website</span>
-                      </a>
-                    )}
+                          <ExternalLink className="h-4 w-4" />
+                          <span>Play Store</span>
+                        </a>
+                      )}
+                      {isValidUrl(app.linkAppStore) && (
+                        <a
+                          href={app.linkAppStore}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600 font-secondary bg-white"
+                        >
+                          <ExternalLink className="h-4 w-4" />
+                          <span>App Store</span>
+                        </a>
+                      )}
+                      {isValidUrl(app.linkWebsite) && (
+                        <a
+                          href={app.linkWebsite}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-sm text-slate-700 hover:text-blue-600 font-secondary bg-white"
+                        >
+                          <svg
+                            width="14"
+                            height="14"
+                            viewBox="0 0 14 14"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M6.66667 0C2.99067 0 0 2.99067 0 6.66667C0 10.3427 2.99067 13.3333 6.66667 13.3333C10.3427 13.3333 13.3333 10.3427 13.3333 6.66667C13.3333 2.99067 10.3427 0 6.66667 0ZM1.33333 6.66667C1.33333 6.06733 1.43733 5.492 1.62067 4.954L2.66667 6L4 7.33333V8.66667L5.33333 10L6 10.6667V11.954C3.374 11.624 1.33333 9.38133 1.33333 6.66667ZM10.8867 9.91533C10.4513 9.56467 9.79133 9.33333 9.33333 9.33333V8.66667C9.33333 8.31304 9.19286 7.97391 8.94281 7.72386C8.69276 7.47381 8.35362 7.33333 8 7.33333H5.33333V5.33333C5.68695 5.33333 6.02609 5.19286 6.27614 4.94281C6.52619 4.69276 6.66667 4.35362 6.66667 4V3.33333H7.33333C7.68695 3.33333 8.02609 3.19286 8.27614 2.94281C8.52619 2.69276 8.66667 2.35362 8.66667 2V1.726C10.6187 2.51867 12 4.43333 12 6.66667C11.9997 7.84311 11.608 8.98602 10.8867 9.91533Z"
+                              fill="#475569"
+                            />
+                          </svg>
+                          <span>Website</span>
+                        </a>
+                      )}
+                    </div>
                   </div>
+                )}
+                {/* Categories filter */}
+                <div className="rounded-[20px] p-5 bg-[#FAFAFA] w-full">
+                  <FilterItem
+                    handleChange={handleChangeFilterCategories}
+                    menuFilter={filterCategories}
+                    iconType="square"
+                    className="gap-4"
+                    classNameContainerItem="gap-4"
+                  />
                 </div>
-              )}
-              {/* Categories filter */}
-              <div className="rounded-[20px] p-5 bg-[#FAFAFA] w-full">
-                <FilterItem
-                  handleChange={handleChangeFilterCategories}
-                  menuFilter={filterCategories}
-                  iconType="square"
-                  className="gap-4"
-                  classNameContainerItem="gap-4"
-                />
               </div>
-            </div>
             </div>
 
             {/* Screens Grid/List/Horizontal */}
@@ -690,7 +690,7 @@ const useView: React.FC = () => {
                             ))}
                           </div>
                         </div>
-                      )
+                      ),
                     )}
                   </div>
                 ) : (
@@ -739,7 +739,7 @@ const useView: React.FC = () => {
                             ))}
                           </div>
                         </div>
-                      )
+                      ),
                     )}
                   </div>
                 )}
