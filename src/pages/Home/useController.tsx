@@ -129,7 +129,7 @@ const useController = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showFilters, setShowFilters] = useState(false);
   const [selectedScreen, setSelectedScreen] = useState<ScreenPublic | null>(
-    null,
+    null
   );
   const [showFavorites, setShowFavorites] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -146,7 +146,7 @@ const useController = () => {
     useState(ITEMS_PER_PAGE);
   const user = useTypedSelector((state: RootState) => state.auth.user);
   const compareApps = useTypedSelector(
-    (state: RootState) => state.compare.compareApps,
+    (state: RootState) => state.compare.compareApps
   );
   const dispatch = useAppDispatch();
   const { favorites: favoriteScreens, toggleFavorite } = useFavorites();
@@ -160,10 +160,10 @@ const useController = () => {
   const [filterSortBy, setFilterSortBy] =
     useState<TMenuFilter>(MENU_FILTER_SORT_BY);
   const [filterCategories, setFilterCategories] = useState<TMenuFilter>(
-    MENU_FILTER_CATEGORIES,
+    MENU_FILTER_CATEGORIES
   );
   const [filterSubCategories, setFilterSubCategories] = useState<TMenuFilter>(
-    MENU_FILTER_SUB_CATEGORIES,
+    MENU_FILTER_SUB_CATEGORIES
   );
   const [filterMarket, setFilterMarket] =
     useState<TMenuFilter>(MENU_FILTER_MARKET);
@@ -220,7 +220,7 @@ const useController = () => {
           ? true
           : (app?.countries?.length === 0 && hasAllOption) ||
             app?.countries?.some((countryName) =>
-              marketValues.includes(countryName),
+              marketValues.includes(countryName)
             );
 
       return (
@@ -263,7 +263,7 @@ const useController = () => {
   const loadMoreItems = useCallback(() => {
     if (displayedItemsCount < allFilteredApps.length) {
       setDisplayedItemsCount((prev) =>
-        Math.min(prev + ITEMS_PER_PAGE, allFilteredApps.length),
+        Math.min(prev + ITEMS_PER_PAGE, allFilteredApps.length)
       );
     }
   }, [displayedItemsCount, allFilteredApps.length]);
@@ -284,7 +284,7 @@ const useController = () => {
                 ...user,
                 appLikes: user.appLikes.filter((d) => d !== appId),
               },
-            }),
+            })
           );
           trackEvent(AnalyticsEvent.APP_UNFAVORITE, {
             app_id: appId,
@@ -299,7 +299,7 @@ const useController = () => {
                 ...user,
                 appLikes: [...user.appLikes, appId],
               },
-            }),
+            })
           );
           trackEvent(AnalyticsEvent.APP_FAVORITE, {
             app_id: appId,
@@ -389,7 +389,7 @@ const useController = () => {
       UserAppAPI.trackView(id).catch(() => {});
       navigate(`/app/${id}`);
     },
-    [listApp],
+    [listApp]
   );
 
   const getListData = async (callbackGetListCategory?: boolean) => {
@@ -419,7 +419,7 @@ const useController = () => {
 
       // itemsFilterMarket
       const itemsFilterMarketFix = Array.from(
-        new Set(itemsFilterMarket.map((item) => item.value)),
+        new Set(itemsFilterMarket.map((item) => item.value))
       ).map((value) => {
         // const countApp = listApp.filter((app) =>
         //   app.countries.includes(value)
@@ -470,7 +470,7 @@ const useController = () => {
       ];
       dataCategory.map((d) => {
         const countApp = apps.filter(
-          (app) => app?.category?._id === d?._id,
+          (app) => app?.category?._id === d?._id
         ).length;
         itemsFilterCategory.push({
           label: `${d.name} (${countApp})`,
@@ -479,7 +479,7 @@ const useController = () => {
       });
       dataSubCategory.map((d) => {
         const countApp = apps.filter(
-          (app) => app?.subcategory?._id === d?._id,
+          (app) => app?.subcategory?._id === d?._id
         ).length;
         itemsFilterSubCategory.push({
           label: `${d.name} (${countApp})`,
@@ -522,7 +522,7 @@ const useController = () => {
         }
       }
     },
-    [categories, selectedCategory],
+    [categories, selectedCategory]
   );
 
   const handleOpenAuthModal = useCallback(() => {
@@ -575,7 +575,7 @@ const useController = () => {
       setFilterSortBy(newFilter);
       handleScrollTop();
     },
-    [filterSortBy],
+    [filterSortBy]
   );
 
   const handleChangeFilterCategories = useCallback(
@@ -616,11 +616,11 @@ const useController = () => {
           .filter((d) =>
             categoryValuesFiltered.length === 0
               ? true
-              : categoryValuesFiltered.includes(d.categoryId._id),
+              : categoryValuesFiltered.includes(d.categoryId._id)
           )
           .map((d) => {
             const countApp = listApp.filter(
-              (app) => app?.subcategory?._id === d._id,
+              (app) => app?.subcategory?._id === d._id
             ).length;
             return {
               label: `${d.name} (${countApp})`,
@@ -637,7 +637,7 @@ const useController = () => {
         ? filterSubCategories.value
         : [];
       const validSubValues = currentSubValues.filter((subValue) =>
-        newItemsFilterSubCategory.some((item) => item.value === subValue),
+        newItemsFilterSubCategory.some((item) => item.value === subValue)
       );
 
       setFilterSubCategories({
@@ -647,7 +647,7 @@ const useController = () => {
       });
       handleScrollTop();
     },
-    [filterCategories, filterSubCategories, subCategories],
+    [filterCategories, filterSubCategories, subCategories]
   );
 
   const handleChangeFilterSubCategories = useCallback(
@@ -683,7 +683,7 @@ const useController = () => {
       setFilterSubCategories(newFilterSubCategories);
       handleScrollTop();
     },
-    [filterSubCategories, filterMarket],
+    [filterSubCategories, filterMarket]
   );
 
   const handleChangeFilterMarket = useCallback(
@@ -715,7 +715,7 @@ const useController = () => {
       setFilterMarket(newFilterMarket);
       handleScrollTop();
     },
-    [filterMarket],
+    [filterMarket]
   );
 
   const handleScrollTop = useCallback(() => {
@@ -749,7 +749,7 @@ const useController = () => {
       .map((item) => {
         if (item.value === "All") return item;
         const countApp = listApp.filter(
-          (app) => app?.category?._id === item.value,
+          (app) => app?.category?._id === item.value
         ).length;
         const nameWithoutCount = item.label.replace(/\s*\(\d+\)$/, "");
         return {
@@ -768,7 +768,7 @@ const useController = () => {
       const countApp = listApp.filter(
         (app) =>
           app?.subcategory?._id === d._id &&
-          filterCategories.value.includes(app?.category?._id),
+          filterCategories.value.includes(app?.category?._id)
       ).length;
       if (countApp > 0) {
         items.push({
@@ -875,7 +875,7 @@ const useController = () => {
       setScrolled(isMobile ? window.scrollY > 80 : window.scrollY > 80);
       setScrolledSearch(isMobile ? window.scrollY > 400 : window.scrollY > 680);
       setScrolledCategories(
-        isMobile ? window.scrollY > 500 : window.scrollY > 680,
+        isMobile ? window.scrollY > 500 : window.scrollY > 680
       );
     };
     window.addEventListener("scroll", handleScroll);
@@ -986,12 +986,12 @@ export default useController;
 // ASC (terlama dulu): C, A, B
 const sortByDate = <T extends { createdAt: string }>(
   data: T[],
-  order: "asc" | "desc" = "desc",
+  order: "asc" | "desc" = "desc"
 ): T[] => {
   return data.sort((a, b) =>
     order === "desc"
       ? b.createdAt.localeCompare(a.createdAt)
-      : a.createdAt.localeCompare(b.createdAt),
+      : a.createdAt.localeCompare(b.createdAt)
   );
 };
 
@@ -1000,11 +1000,11 @@ const sortByDate = <T extends { createdAt: string }>(
 // DESC (Z-A): Z, Y, X
 const sortByName = <T extends { name: string }>(
   data: T[],
-  order: "asc" | "desc" = "asc",
+  order: "asc" | "desc" = "asc"
 ): T[] => {
   return data.sort((a, b) =>
     order === "asc"
       ? a.name.localeCompare(b.name)
-      : b.name.localeCompare(a.name),
+      : b.name.localeCompare(a.name)
   );
 };

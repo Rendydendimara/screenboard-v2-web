@@ -1,4 +1,5 @@
 import { AppCardSkeleton } from "@/components/AppCardSkeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 import { AuthModal } from "@/components/AuthModal";
 import { FavoritesModal } from "@/components/FavoritesModal";
 import { HeroSection } from "@/components/HeroSection";
@@ -373,41 +374,9 @@ const Index = () => {
                           : "opacity-100",
                       )}
                     >
-                      <Filters
-                        getOptionsCategoryItemFiltered={
-                          getOptionsCategoryItemFiltered
-                        }
-                        filterCategories={filterCategories}
-                        filterSubCategories={filterSubCategories}
-                        filterSortBy={filterSortBy}
-                        filterMarket={filterMarket}
-                        handleChangeFilterSortBy={handleChangeFilterSortBy}
-                        handleChangeFilterCategories={
-                          handleChangeFilterCategories
-                        }
-                        handleChangeFilterSubCategories={
-                          handleChangeFilterSubCategories
-                        }
-                        handleChangeFilterMarket={handleChangeFilterMarket}
-                        getOptionsSubCategoryItemFiltered={
-                          getOptionsSubCategoryItemFiltered
-                        }
-                        getOptionsMarketItemFiltered={
-                          getOptionsMarketItemFiltered
-                        }
-                      />
-                    </div>
-
-                    {/* Fixed Filters - visible when scrolled - Hidden on mobile */}
-                    <div
-                      className={clsx(
-                        "hidden md:block fixed top-24 z-50 transition-all ease-in-out",
-                        scrolledFilterMenu
-                          ? "opacity-100 translate-y-0"
-                          : "opacity-0 -translate-y-4 pointer-events-none",
-                      )}
-                    >
-                      <div className="w-[210px] h-[90vh] overflow-y-auto pb-8 pr-2 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300/70 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-track]:my-6">
+                      {isLoadingGetApp ? (
+                        <FilterSkeleton />
+                      ) : (
                         <Filters
                           getOptionsCategoryItemFiltered={
                             getOptionsCategoryItemFiltered
@@ -431,6 +400,46 @@ const Index = () => {
                             getOptionsMarketItemFiltered
                           }
                         />
+                      )}
+                    </div>
+
+                    {/* Fixed Filters - visible when scrolled - Hidden on mobile */}
+                    <div
+                      className={clsx(
+                        "hidden md:block fixed top-24 z-50 transition-all ease-in-out",
+                        scrolledFilterMenu
+                          ? "opacity-100 translate-y-0"
+                          : "opacity-0 -translate-y-4 pointer-events-none"
+                      )}
+                    >
+                      <div className="w-[210px] h-[90vh] overflow-y-auto pb-8 pr-2 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300/70 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-track]:my-6">
+                        {isLoadingGetApp ? (
+                          <FilterSkeleton />
+                        ) : (
+                          <Filters
+                            getOptionsCategoryItemFiltered={
+                              getOptionsCategoryItemFiltered
+                            }
+                            filterCategories={filterCategories}
+                            filterSubCategories={filterSubCategories}
+                            filterSortBy={filterSortBy}
+                            filterMarket={filterMarket}
+                            handleChangeFilterSortBy={handleChangeFilterSortBy}
+                            handleChangeFilterCategories={
+                              handleChangeFilterCategories
+                            }
+                            handleChangeFilterSubCategories={
+                              handleChangeFilterSubCategories
+                            }
+                            handleChangeFilterMarket={handleChangeFilterMarket}
+                            getOptionsSubCategoryItemFiltered={
+                              getOptionsSubCategoryItemFiltered
+                            }
+                            getOptionsMarketItemFiltered={
+                              getOptionsMarketItemFiltered
+                            }
+                          />
+                        )}
                       </div>
                     </div>
                   </>
@@ -595,5 +604,43 @@ const Index = () => {
     </>
   );
 };
+
+const FilterSkeleton = () => (
+  <div className="flex flex-col gap-5 p-1">
+    {/* Sort by */}
+    <div className="flex flex-col gap-3">
+      <Skeleton className="h-4 w-16" />
+      {[1, 2, 3, 4].map((i) => (
+        <div key={i} className="flex items-center gap-2">
+          <Skeleton className="w-4 h-4 rounded-full" />
+          <Skeleton className="h-3 w-20" />
+        </div>
+      ))}
+    </div>
+    {/* Categories */}
+    <div className="flex flex-col gap-3">
+      <Skeleton className="h-4 w-20" />
+      {[1, 2, 3, 4, 5, 6, 7].map((i) => (
+        <div key={i} className="flex items-center gap-2">
+          <Skeleton className="w-4 h-4 rounded-sm" />
+          <Skeleton
+            className="h-3"
+            style={{ width: `${50 + ((i * 17) % 50)}px` }}
+          />
+        </div>
+      ))}
+    </div>
+    {/* Market */}
+    <div className="flex flex-col gap-3">
+      <Skeleton className="h-4 w-14" />
+      {[1, 2, 3].map((i) => (
+        <div key={i} className="flex items-center gap-2">
+          <Skeleton className="w-4 h-4 rounded-sm" />
+          <Skeleton className="h-3 w-16" />
+        </div>
+      ))}
+    </div>
+  </div>
+);
 
 export default Index;
