@@ -1,6 +1,7 @@
 import { AppCard } from "@/components/AppCard";
 import { AppPublic, ScreenPublic } from "../useController";
 import { useEffect, useRef, useCallback, memo } from "react";
+import { motion } from "framer-motion";
 import clsx from "clsx";
 
 interface InfiniteScrollListProps {
@@ -63,30 +64,47 @@ const InfiniteScrollListComponent = ({
   }, [handleObserver]);
   return (
     <>
-      <div
+      <motion.div
         className={clsx(
           "w-full",
           viewMode === "grid"
             ? "grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-8"
             : "space-y-4 lg:space-y-8"
         )}
+        initial="hidden"
+        animate="visible"
+        variants={{
+          hidden: {},
+          visible: { transition: { staggerChildren: 0.06 } },
+        }}
       >
         {apps.map((app) => (
-          <AppCard
+          <motion.div
             key={app.id}
-            app={app}
-            viewMode={viewMode}
-            onLike={() => onLike(app.id, app.isLiked)}
-            onClick={() => onAppClick(app)}
-            onDetail={() => onDetail(app.id)}
-            onAddToCompare={() => onAddToCompare(app)}
-            isInCompare={compareApps.some(
-              (compareApp) => compareApp.id === app.id
-            )}
-            setSelectedScreen={setSelectedScreen}
-          />
+            variants={{
+              hidden: { opacity: 0, y: 28 },
+              visible: {
+                opacity: 1,
+                y: 0,
+                transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
+              },
+            }}
+          >
+            <AppCard
+              app={app}
+              viewMode={viewMode}
+              onLike={() => onLike(app.id, app.isLiked)}
+              onClick={() => onAppClick(app)}
+              onDetail={() => onDetail(app.id)}
+              onAddToCompare={() => onAddToCompare(app)}
+              isInCompare={compareApps.some(
+                (compareApp) => compareApp.id === app.id
+              )}
+              setSelectedScreen={setSelectedScreen}
+            />
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
 
       {/* Intersection Observer Target - Only show if has more items */}
       {hasMoreItems && (

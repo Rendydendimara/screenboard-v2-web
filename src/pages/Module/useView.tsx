@@ -2,6 +2,7 @@ import { AuthModal } from "@/components/AuthModal";
 import { HeroSectionModule } from "@/components/HeroSectionModule";
 import { Header } from "@/components/molecules";
 import SEO from "@/components/SEO";
+import { motion } from "framer-motion";
 import useController from "./useController";
 import { InfiniteScrollList } from "./components/InfiniteScrollList";
 import { Badge } from "@/components/ui/badge";
@@ -69,40 +70,33 @@ const ModulePage = () => {
         {/* Main Content */}
         <main ref={modulesRef} className="w-full flex justify-center items-center py-6 px-4 md:px-0 md:py-8 lg:py-12 ">
           <div className="w-full md:max-w-[700px] lg:max-w-[1200px]">
-            <div className="flex flex-col items-center gap-4 mb-8">
-              <svg
-                width="32"
-                height="32"
-                viewBox="0 0 32 32"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M16 4C10.8453 4 6.66666 8.36267 6.66666 13.3333V26.6667C6.66666 27.0203 6.80713 27.3594 7.05718 27.6095C7.30723 27.8595 7.64637 28 7.99999 28H24C24.3536 28 24.6928 27.8595 24.9428 27.6095C25.1928 27.3594 25.3333 27.0203 25.3333 26.6667V13.3333C25.3333 8.36267 21.1547 4 16 4ZM16 4V28M6.66666 17.3333H25.3333"
-                  stroke="black"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-              <div className="flex flex-col gap-1 items-center">
-                <p
-                  className="
-                    text-[32px]
-                    font-bold
-                    font-secondary
-                    bg-gradient-to-r from-blue-600 to-purple-600
-                    bg-clip-text
-                    text-transparent
-                  "
-                >
-                  Explore All Module
-                </p>
-                <p className="text-[#B9B9B9] font-secondar yfont-medium text-[18px] leading-[100%] tracking-[0%]">
-                  Collected with carefully, enjoy your exploration
+
+            {/* Section Header — editorial style */}
+            <motion.div
+              className="flex flex-col items-start gap-4 mb-10"
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.5 }}
+              transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+            >
+              {/* Eyebrow */}
+              <div className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-gradient-to-br from-blue-500 to-purple-600" />
+                <span className="text-[11px] font-secondary font-semibold tracking-[0.14em] text-[#939393] uppercase">
+                  Module Library
+                </span>
+              </div>
+
+              {/* Heading + subtitle */}
+              <div className="flex flex-col gap-2">
+                <h2 className="text-[36px] md:text-[40px] font-secondary font-extrabold text-[#0F0F0F] leading-[1.1]">
+                  Browse by Module
+                </h2>
+                <p className="text-[#939393] font-secondary font-normal text-[15px] leading-[1.5]">
+                  Organized patterns for Login, Register, Cart, Checkout, and more.
                 </p>
               </div>
-            </div>
+            </motion.div>
 
             <InfiniteScrollList
               moduls={displayedModuls}

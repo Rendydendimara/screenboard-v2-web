@@ -1,5 +1,19 @@
 import { Badge } from "@/components/ui/badge";
+import { motion } from "framer-motion";
 import React from "react";
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 32 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: i * 0.12,
+      duration: 0.6,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  }),
+};
 
 interface IProps {
   onClickBtn: () => void;
@@ -30,19 +44,40 @@ export const HeroSection: React.FC<IProps> = ({
             <div className="w-full  max-w-[739px] flex flex-col items-start gap-[40px]">
               <div className="flex flex-col items-start gap-6 w-full">
                 {/* Main Heading */}
-                <h1 className="w-full md:w-[812px] h-auto md:h-[152px] leading-[32px] text-[32px] md:text-[64px] font-extrabold text-[#323638] md:leading-[72px] !tracking-[0%] align-middle font-secondary">
+                <motion.h1
+                  custom={0}
+                  variants={fadeUp}
+                  initial="hidden"
+                  animate="visible"
+                  className="w-full md:w-[812px] h-auto md:h-[152px] leading-[32px] text-[32px] md:text-[64px] font-extrabold text-[#323638] md:leading-[72px] !tracking-[0%] align-middle font-secondary"
+                >
                   {mainHeading}
-                </h1>
+                </motion.h1>
                 {/* Subtitle */}
-                <p className="font-medium max-w-[739px] text-[20px] leading-[100%]  md:text-xl text-[#464C4F] font-secondary md:!leading-[100%] tracking-[0%] align-middle w-full md:w-[832px]">
+                <motion.p
+                  custom={1}
+                  variants={fadeUp}
+                  initial="hidden"
+                  animate="visible"
+                  className="font-medium max-w-[739px] text-[20px] leading-[100%]  md:text-xl text-[#464C4F] font-secondary md:!leading-[100%] tracking-[0%] align-middle w-full md:w-[832px]"
+                >
                   {subtitle}
-                </p>
+                </motion.p>
               </div>
-              <div className="flex flex-col items-start w-full gap-3">
+              <motion.div
+                custom={2}
+                variants={fadeUp}
+                initial="hidden"
+                animate="visible"
+                className="flex flex-col items-start w-full gap-3"
+              >
                 <div className="flex flex-col justify-center md:justify-start w-full md:flex-row items-center gap-5 ">
-                  <Badge
+                  <motion.div
                     onClick={isLogin ? onClickExplore : onClickBtn}
-                    className="hover:cursor-pointer w-full md:w-auto z-20 bg-gradient-to-r md:h-[58px] rounded-[20px] from-blue-500 to-purple-600 border-0 px-8 py-3 flex justify-center items-center gap-2"
+                    whileHover={{ scale: 1.04, boxShadow: "0px 12px 32px -4px rgba(99,102,241,0.55)" }}
+                    whileTap={{ scale: 0.97 }}
+                    transition={{ type: "spring", stiffness: 340, damping: 22 }}
+                    className="hover:cursor-pointer w-full md:w-auto z-20 bg-gradient-to-r md:h-[58px] rounded-[20px] from-blue-500 to-purple-600 px-8 py-3 flex justify-center items-center gap-2"
                   >
                     <div className="w-5 h-5">
                       <svg
@@ -74,7 +109,7 @@ export const HeroSection: React.FC<IProps> = ({
                         </p>
                       </div>
                     )}
-                  </Badge>
+                  </motion.div>
                   {isLogin ? null : (
                     <button
                       onClick={onClickExplore}
@@ -90,7 +125,7 @@ export const HeroSection: React.FC<IProps> = ({
                     lasts.
                   </p>
                 )}
-              </div>
+              </motion.div>
             </div>
           </div>
         </div>

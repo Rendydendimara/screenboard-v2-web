@@ -392,9 +392,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     value={formik.values.password}
                     isInvalid={isFormSubmitted && !!formik.errors.password}
                     errorMessage={formik.errors.password}
+                    withTogglePassword={true}
                     leftIcon={
                       <svg
-                        className="absolute  w-5 h-5 left-3 top-1/2 transform -translate-y-1/2"
+                        className="absolute w-5 h-5 left-3 top-1/2 transform -translate-y-1/2"
                         width="16"
                         height="16"
                         viewBox="0 0 16 16"
