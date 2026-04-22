@@ -208,6 +208,14 @@ export const Header = ({
                         Module
                       </Link>
                     )}
+                    <a
+                      href="https://forms.gle/Mi4GsDznBocUdrMz8"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-[110px] h-[36px] flex justify-center items-center opacity-100 gap-[8px] rounded-[6px] pr-[12px] pl-[12px] font-secondary font-normal text-[14px] text-center align-middle text-[#323638]"
+                    >
+                      Request
+                    </a>
                   </div>
 
                   {/* Action Buttons - Desktop */}
@@ -402,6 +410,17 @@ export const Header = ({
                             </Button>
                           </Link>
                         )}
+                        <a
+                          href="https://forms.gle/Mi4GsDznBocUdrMz8"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={() => setMobileMenuOpen(false)}
+                          className="w-full"
+                        >
+                          <Button variant="ghost" className="w-full justify-start gap-2">
+                            Request
+                          </Button>
+                        </a>
                       </div>
 
                       {user ? (
