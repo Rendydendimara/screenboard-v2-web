@@ -8,6 +8,7 @@ import SEO from "@/components/SEO";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { motion } from "framer-motion";
 import {
   Sheet,
   SheetContent,
@@ -165,7 +166,13 @@ const Index = () => {
         >
           <div className="w-full lg:max-w-[920px] xl:max-w-[1200px]">
             <main className="px-4 py-6 md:px-0 md:py-8 lg:py-12 w-full">
-              <div className="flex flex-col items-center gap-4 mb-8">
+              <motion.div
+                className="flex flex-col items-center gap-4 mb-8"
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.5 }}
+                transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+              >
                 <svg
                   width="32"
                   height="32"
@@ -198,7 +205,7 @@ const Index = () => {
                     Collected with carefully, enjoy your exploration
                   </p>
                 </div>
-              </div>
+              </motion.div>
 
               {user && (
                 <div className="mb-6">

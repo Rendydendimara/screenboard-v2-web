@@ -1,4 +1,5 @@
 import { AppPublic } from "@/pages/Home/useController";
+import { motion } from "framer-motion";
 import ScrollContainer from "react-indiana-drag-scroll";
 import ImageWithFallback from "../ui/ImageWithFallback";
 import { Link } from "react-router-dom";
@@ -9,10 +10,40 @@ interface IProps {
   isLoading?: boolean;
 }
 
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.07,
+    },
+  },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
 export const Top10Apps = ({ apps, isLoading }: IProps) => {
   return (
-    <div className=" gap-[32px] flex items-center flex-col py-[80px] bg-[linear-gradient(180deg,_#020202_0%,_#353535_100%)]">
-      <div className="flex flex-col gap-4 items-center px-4 md:px-[64px]">
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+      className=" gap-[32px] flex items-center flex-col py-[80px] bg-[linear-gradient(180deg,_#020202_0%,_#353535_100%)]"
+    >
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.55, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+        className="flex flex-col gap-4 items-center px-4 md:px-[64px]"
+      >
         <svg
           width="32"
           height="32"
@@ -43,12 +74,21 @@ export const Top10Apps = ({ apps, isLoading }: IProps) => {
             Curated apps with cool design for this month
           </p>
         </div>
-      </div>
-      <div className="w-full flex gap-4 items-center px-6 max-w-full pr-5 overflow-x-auto styled-scrollbar-grey">
+      </motion.div>
+      {/* Outer div handles scroll only — motion.div inside handles animation without clipping */}
+      <div className="w-full overflow-x-auto styled-scrollbar-grey">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          className="flex gap-4 items-start px-6 pr-5 py-4 w-max"
+        >
         {isLoading
           ? Array.from({ length: 8 }).map((_, i) => (
-              <div
+              <motion.div
                 key={i}
+                variants={cardVariants}
                 className="w-[218px] shrink-0 rounded-[24px] pt-px pb-px bg-[#2B2828] animate-pulse"
               >
                 <div className="flex w-full items-center gap-3 py-2 px-4">
@@ -61,11 +101,14 @@ export const Top10Apps = ({ apps, isLoading }: IProps) => {
                 <div className="pt-[8px] pr-[16px] pb-[16px] pl-[16px]">
                   <div className="w-[186px] h-[412px] rounded-[12px] bg-[#3a3a3a]" />
                 </div>
-              </div>
+              </motion.div>
             ))
           : apps.map((app, i) => (
-              <div
+              <motion.div
                 key={i}
+                variants={cardVariants}
+                whileHover={{ y: -8, boxShadow: "0px 20px 40px -8px rgba(0,0,0,0.6)" }}
+                transition={{ type: "spring", stiffness: 320, damping: 26 }}
                 className="w-[218px] md:min-h-[497px] md:max-h-[497px] rounded-[24px] pt-px pb-px bg-[#2B2828]"
               >
                 <Link className="hover:cursor-pointer" to={`/app/${app.id}`}>
@@ -130,9 +173,10 @@ export const Top10Apps = ({ apps, isLoading }: IProps) => {
                     className="w-full h-full rounded-[12px]"
                   />
                 </div>
-              </div>
+              </motion.div>
             ))}
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 };

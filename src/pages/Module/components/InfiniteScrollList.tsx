@@ -1,5 +1,6 @@
 import { TModulRes } from "@/api/user/modul/type";
 import { Skeleton } from "@/components/ui/skeleton";
+import { motion } from "framer-motion";
 import clsx from "clsx";
 import { memo, useCallback, useEffect, useRef } from "react";
 import CardModule from "./CardModule";
@@ -10,6 +11,15 @@ interface InfiniteScrollListProps {
   loadMoreItems: () => void;
   isLoading?: boolean;
 }
+
+const cardVariant = {
+  hidden: { opacity: 0, y: 24 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] as const },
+  },
+};
 
 const InfiniteScrollListComponent = ({
   moduls,
@@ -51,20 +61,30 @@ const InfiniteScrollListComponent = ({
 
   return (
     <>
-      <div
+      <motion.div
         className={clsx(
           "w-full mb-20",
-          "grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4"
+          "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
         )}
+        initial="hidden"
+        animate="visible"
+        variants={{
+          hidden: {},
+          visible: { transition: { staggerChildren: 0.07 } },
+        }}
       >
         {isLoading
           ? Array.from({ length: 6 }).map((_, index) => (
-              <Skeleton key={index} className="h-[120px] w-full rounded-[16px]" />
+              <motion.div key={index} variants={cardVariant}>
+                <Skeleton className="h-[200px] w-full rounded-[20px]" />
+              </motion.div>
             ))
-          : moduls.map((modul) => (
-              <CardModule key={modul._id} modul={modul} />
+          : moduls.map((modul, index) => (
+              <motion.div key={modul._id} variants={cardVariant}>
+                <CardModule modul={modul} index={index} />
+              </motion.div>
             ))}
-      </div>
+      </motion.div>
 
       {/* Intersection Observer Target */}
       {hasMoreItems && (
