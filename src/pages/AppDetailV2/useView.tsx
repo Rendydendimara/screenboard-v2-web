@@ -631,9 +631,9 @@ const AppDetailV2: React.FC = () => {
   const [showSavePanel, setShowSavePanel] = useState(false);
 
   /* ── screen compare mode ── */
-  const [compareMode, setCompareMode] = useState(false);
-  const [compareList, setCompareList] = useState<LightboxScreen[]>([]);
   const [showCompareView, setShowCompareView] = useState(false);
+  const [compareLeftTab, setCompareLeftTab] = useState<string | null>(null);
+  const [compareRightTab, setCompareRightTab] = useState<string | null>(null);
 
   /* ── view mode (grid | flow) ── */
   const [browseMode, setBrowseMode] = useState<"grid" | "flow">("grid");
@@ -649,6 +649,14 @@ const AppDetailV2: React.FC = () => {
     () => Object.keys(groupedScreensFilter ?? {}),
     [groupedScreensFilter]
   );
+
+  /* initialise compare columns when the overlay opens */
+  useEffect(() => {
+    if (showCompareView && tabs.length > 0) {
+      setCompareLeftTab((prev) => prev ?? tabs[0]);
+      setCompareRightTab((prev) => prev ?? (tabs[1] ?? tabs[0]));
+    }
+  }, [showCompareView, tabs]);
 
   const activeTabScreens = useMemo(() => {
     const key = activeTab ?? tabs[0];
@@ -880,13 +888,15 @@ const AppDetailV2: React.FC = () => {
                 )}
                 {app.isLiked ? "Saved" : "Save"}
               </button>
-              <button
-                onClick={handleAddCompare}
-                className="flex items-center gap-2 h-10 px-4 rounded-[20px] border border-white/20 bg-white/10 text-white font-secondary text-[13px] font-semibold hover:bg-white/15 transition-all"
-              >
-                <GitCompare className="w-4 h-4" />
-                Compare
-              </button>
+              {user && (
+                <button
+                  onClick={handleAddCompare}
+                  className="flex items-center gap-2 h-10 px-4 rounded-[20px] border border-white/20 bg-white/10 text-white font-secondary text-[13px] font-semibold hover:bg-white/15 transition-all"
+                >
+                  <GitCompare className="w-4 h-4" />
+                  Compare
+                </button>
+              )}
             </motion.div>
           </div>
         </div>
@@ -969,12 +979,12 @@ const AppDetailV2: React.FC = () => {
                 <p
                   className={clsx(
                     "font-secondary text-[14px] text-white/50 leading-[1.75] transition-all",
-                    !showFullDesc && "line-clamp-2"
+                    app.description.length > 200 && !showFullDesc && "line-clamp-2"
                   )}
                 >
                   {app.description}
                 </p>
-                {app.description.length > 160 && (
+                {app.description.length > 200 && (
                   <button
                     onClick={() => setShowFullDesc((v) => !v)}
                     className="mt-2 font-secondary text-[12px] font-semibold text-purple-400 hover:text-purple-300 transition-colors"
@@ -1138,18 +1148,15 @@ const AppDetailV2: React.FC = () => {
                       Flow
                     </button>
                   </div>
-                  <button
-                    onClick={() => { setCompareMode((v) => !v); setCompareList([]); setShowCompareView(false); }}
-                    className={clsx(
-                      "flex items-center gap-1.5 h-8 px-3 rounded-full border font-secondary text-[12px] font-semibold transition-all whitespace-nowrap",
-                      compareMode
-                        ? "bg-purple-600 border-purple-600 text-white"
-                        : "border-[#E8E8E8] bg-[#F8F8F8] text-[#939393] hover:border-purple-300 hover:text-purple-600"
-                    )}
-                  >
-                    <GitCompare className="w-3.5 h-3.5" />
-                    {compareMode ? "Exit" : "Compare"}
-                  </button>
+                  {user && (
+                    <button
+                      onClick={() => setShowCompareView(true)}
+                      className="flex items-center gap-1.5 h-8 px-3 rounded-full border border-[#E8E8E8] bg-[#F8F8F8] text-[#939393] font-secondary text-[12px] font-semibold hover:border-purple-300 hover:text-purple-600 transition-all whitespace-nowrap"
+                    >
+                      <GitCompare className="w-3.5 h-3.5" />
+                      Compare
+                    </button>
+                  )}
                   <div className="relative">
                     <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#C0C0C0] pointer-events-none" />
                     <input
@@ -1231,7 +1238,6 @@ const AppDetailV2: React.FC = () => {
                   </div>
                 )}
                 {filteredScreens.map((screen, i) => {
-                  const isSelected = compareList.some((s) => s.image === screen.image);
                   const screenIsSaved = isSaved(screen.image);
                   return (
                   <motion.button
@@ -1243,55 +1249,21 @@ const AppDetailV2: React.FC = () => {
                       duration: 0.4,
                       ease: [0.22, 1, 0.36, 1],
                     }}
-                    whileHover={{ y: compareMode ? 0 : -4 }}
-                    onClick={() => {
-                      if (compareMode) {
-                        if (isSelected) {
-                          setCompareList((prev) => prev.filter((s) => s.image !== screen.image));
-                        } else if (compareList.length < 4) {
-                          setCompareList((prev) => [...prev, { name: screen.name, image: screen.image, id: (screen as any).id }]);
-                        }
-                      } else {
-                        openLightbox(filteredScreens as LightboxScreen[], i);
-                      }
-                    }}
+                    whileHover={{ y: -4 }}
+                    onClick={() => openLightbox(filteredScreens as LightboxScreen[], i)}
                     className="flex flex-col gap-2 items-start group"
                   >
-                    <div className={clsx(
-                      "w-full rounded-[16px] overflow-hidden border transition-all duration-300 relative",
-                      compareMode
-                        ? isSelected
-                          ? "border-purple-500 ring-2 ring-purple-400/30"
-                          : "border-[#F0F0F0] hover:border-purple-300"
-                        : "border-[#F0F0F0] group-hover:border-purple-300 group-hover:shadow-md"
-                    )}>
+                    <div className="w-full rounded-[16px] overflow-hidden border border-[#F0F0F0] group-hover:border-purple-300 group-hover:shadow-md transition-all duration-300 relative">
                       <ImageWithFallback
                         src={screen.image}
                         fallbackSrc="https://placehold.co/300x600"
                         alt={screen.name}
                         containerClassName="w-full"
-                        className={clsx(
-                          "w-full aspect-[9/19.5] object-contain bg-[#F6F6F6] transition-transform duration-300",
-                          !compareMode && "group-hover:scale-[1.02]"
-                        )}
+                        className="w-full aspect-[9/19.5] object-contain bg-[#F6F6F6] group-hover:scale-[1.02] transition-transform duration-300"
                       />
-                      {/* Saved indicator */}
-                      {screenIsSaved && !compareMode && (
+                      {screenIsSaved && (
                         <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-purple-600 flex items-center justify-center shadow-sm">
                           <Bookmark className="w-2.5 h-2.5 text-white fill-white" />
-                        </div>
-                      )}
-                      {compareMode && (
-                        <div className={clsx(
-                          "absolute inset-0 flex items-start justify-end p-2.5 pointer-events-none transition-colors",
-                          isSelected ? "bg-purple-500/10" : ""
-                        )}>
-                          <div className={clsx(
-                            "w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all",
-                            isSelected ? "bg-purple-500 border-purple-500" : "bg-white/80 border-[#ccc]"
-                          )}>
-                            {isSelected && <Check className="w-3 h-3 text-white" />}
-                          </div>
                         </div>
                       )}
                     </div>
@@ -1332,63 +1304,127 @@ const AppDetailV2: React.FC = () => {
                       You might also like
                     </h2>
                   </div>
-                  <Link
-                    to="/"
-                    className="flex items-center gap-1 text-[13px] font-secondary font-medium text-purple-600 hover:text-purple-700 transition-colors"
-                  >
-                    See all
-                    <ChevronRight className="w-4 h-4" />
-                  </Link>
+                  {user && (
+                    <Link
+                      to="/"
+                      className="flex items-center gap-1 text-[13px] font-secondary font-medium text-purple-600 hover:text-purple-700 transition-colors"
+                    >
+                      See all
+                      <ChevronRight className="w-4 h-4" />
+                    </Link>
+                  )}
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                  {similarApps.map((sa, i) => (
-                    <motion.div
-                      key={sa.id}
-                      initial={{ opacity: 0, y: 16 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{
-                        delay: i * 0.06,
-                        duration: 0.45,
-                        ease: [0.22, 1, 0.36, 1],
-                      }}
-                      whileHover={{ y: -4, boxShadow: "0px 12px 28px -6px rgba(0,0,0,0.12)" }}
-                    >
-                      <Link
-                        to={`/app-v2/${sa.id}`}
-                        className="flex flex-col gap-3 bg-white rounded-[20px] p-4 h-full border border-transparent hover:border-slate-100 transition-all"
+                {user ? (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                    {similarApps.map((sa, i) => (
+                      <motion.div
+                        key={sa.id}
+                        initial={{ opacity: 0, y: 16 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{
+                          delay: i * 0.06,
+                          duration: 0.45,
+                          ease: [0.22, 1, 0.36, 1],
+                        }}
+                        whileHover={{ y: -4, boxShadow: "0px 12px 28px -6px rgba(0,0,0,0.12)" }}
                       >
-                        <div className="flex items-center gap-3">
-                          <ImageWithFallback
-                            src={sa.image ?? "https://placehold.co/400"}
-                            fallbackSrc="https://placehold.co/400"
-                            alt={sa.name}
-                            containerClassName="w-10 h-10 shrink-0"
-                            className="w-10 h-10 rounded-[10px] object-contain"
-                          />
-                          <div className="min-w-0">
-                            <p className="font-secondary font-bold text-[14px] text-[#0F0F0F] truncate">
-                              {sa.name}
-                            </p>
-                            <p className="font-secondary text-[12px] text-[#939393] truncate">
-                              {sa.category?.name ?? ""}
-                            </p>
+                        <Link
+                          to={`/app-v2/${sa.id}`}
+                          className="flex flex-col gap-3 bg-white rounded-[20px] p-4 h-full border border-transparent hover:border-slate-100 transition-all"
+                        >
+                          <div className="flex items-center gap-3">
+                            <ImageWithFallback
+                              src={sa.image ?? "https://placehold.co/400"}
+                              fallbackSrc="https://placehold.co/400"
+                              alt={sa.name}
+                              containerClassName="w-10 h-10 shrink-0"
+                              className="w-10 h-10 rounded-[10px] object-contain"
+                            />
+                            <div className="min-w-0">
+                              <p className="font-secondary font-bold text-[14px] text-[#0F0F0F] truncate">
+                                {sa.name}
+                              </p>
+                              <p className="font-secondary text-[12px] text-[#939393] truncate">
+                                {sa.category?.name ?? ""}
+                              </p>
+                            </div>
                           </div>
+                          {sa.screens?.[0]?.image && (
+                            <ImageWithFallback
+                              src={sa.screens[0].image}
+                              fallbackSrc="https://placehold.co/400"
+                              alt={sa.name}
+                              containerClassName="w-full"
+                              className="w-full aspect-[9/19] rounded-[12px] object-contain bg-[#F6F6F6]"
+                            />
+                          )}
+                        </Link>
+                      </motion.div>
+                    ))}
+                  </div>
+                ) : (
+                  /* Locked gate for unauthenticated users */
+                  <div className="relative rounded-[24px] overflow-hidden">
+                    {/* Blurred preview grid */}
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 select-none pointer-events-none">
+                      {similarApps.slice(0, 4).map((sa) => (
+                        <div
+                          key={sa.id}
+                          className="flex flex-col gap-3 bg-white rounded-[20px] p-4 border border-transparent blur-[3px] opacity-70"
+                        >
+                          <div className="flex items-center gap-3">
+                            <ImageWithFallback
+                              src={sa.image ?? "https://placehold.co/400"}
+                              fallbackSrc="https://placehold.co/400"
+                              alt={sa.name}
+                              containerClassName="w-10 h-10 shrink-0"
+                              className="w-10 h-10 rounded-[10px] object-contain"
+                            />
+                            <div className="min-w-0">
+                              <p className="font-secondary font-bold text-[14px] text-[#0F0F0F] truncate">{sa.name}</p>
+                              <p className="font-secondary text-[12px] text-[#939393] truncate">{sa.category?.name ?? ""}</p>
+                            </div>
+                          </div>
+                          {sa.screens?.[0]?.image && (
+                            <ImageWithFallback
+                              src={sa.screens[0].image}
+                              fallbackSrc="https://placehold.co/400"
+                              alt={sa.name}
+                              containerClassName="w-full"
+                              className="w-full aspect-[9/19] rounded-[12px] object-contain bg-[#F6F6F6]"
+                            />
+                          )}
                         </div>
-                        {sa.screens?.[0]?.image && (
-                          <ImageWithFallback
-                            src={sa.screens[0].image}
-                            fallbackSrc="https://placehold.co/400"
-                            alt={sa.name}
-                            containerClassName="w-full"
-                            className="w-full aspect-[9/19] rounded-[12px] object-contain bg-[#F6F6F6]"
-                          />
-                        )}
-                      </Link>
-                    </motion.div>
-                  ))}
-                </div>
+                      ))}
+                    </div>
+                    {/* Overlay CTA */}
+                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-b from-[#F6F6F6]/60 to-[#F6F6F6]/95 backdrop-blur-[2px] px-4 gap-5">
+                      <div className="w-12 h-12 rounded-full bg-white shadow-md flex items-center justify-center">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                          <path d="M14 9V6a4 4 0 0 0-8 0v3" stroke="#7C3AED" strokeWidth="1.6" strokeLinecap="round" />
+                          <rect x="3" y="9" width="14" height="10" rx="2.5" fill="#7C3AED" fillOpacity="0.12" stroke="#7C3AED" strokeWidth="1.4" />
+                          <circle cx="10" cy="14" r="1.25" fill="#7C3AED" />
+                        </svg>
+                      </div>
+                      <div className="text-center max-w-[360px]">
+                        <p className="font-secondary font-extrabold text-[20px] text-[#0F0F0F] leading-snug">
+                          Discover {similarApps.length}+ similar apps
+                        </p>
+                        <p className="font-secondary text-[13px] text-[#888] mt-1.5 leading-relaxed">
+                          Sign in for free to explore apps in the same category, compare flows, and get inspired.
+                        </p>
+                      </div>
+                      <button
+                        onClick={handleOpenAuthModal}
+                        className="flex items-center gap-2 h-11 px-7 rounded-full bg-gradient-to-r from-purple-600 to-blue-600 text-white font-secondary font-bold text-[13px] shadow-lg shadow-purple-200 hover:scale-[1.03] hover:shadow-purple-300 transition-all duration-200"
+                      >
+                        Sign in — it&apos;s free
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </motion.section>
@@ -1437,128 +1473,94 @@ const AppDetailV2: React.FC = () => {
         </div>
       </div>
 
-      {/* ── Compare floating action bar ── */}
-      {compareMode && compareList.length > 0 && !showCompareView && (
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 16 }}
-          className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[9000] flex items-center gap-3 bg-[#111] border border-white/15 rounded-full pl-3 pr-4 py-2.5 shadow-2xl shadow-black/80 backdrop-blur-sm"
-        >
-          {/* Stacked thumbnails */}
-          <div className="flex -space-x-2">
-            {compareList.slice(0, 4).map((s, ci) => (
-              <img
-                key={s.image + ci}
-                src={s.image}
-                alt={s.name}
-                className="w-8 h-8 rounded-full border-2 border-[#111] object-cover"
-              />
-            ))}
-          </div>
-          <span className="font-secondary text-[13px] font-semibold text-white">
-            {compareList.length} screen{compareList.length !== 1 ? "s" : ""} selected
-          </span>
-          {compareList.length < 2 && (
-            <span className="font-secondary text-[11px] text-white/35">— select {2 - compareList.length} more</span>
-          )}
-          <button
-            disabled={compareList.length < 2}
-            onClick={() => setShowCompareView(true)}
-            className="flex items-center gap-1.5 h-8 px-4 rounded-full bg-purple-600 hover:bg-purple-500 disabled:opacity-40 text-white font-secondary text-[12px] font-bold transition-all"
-          >
-            <GitCompare className="w-3.5 h-3.5" />
-            Compare
-          </button>
-          <button
-            onClick={() => setCompareList([])}
-            className="text-white/30 hover:text-white/70 transition-colors ml-1"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </motion.div>
-      )}
 
-      {/* ── Compare side-by-side overlay ── */}
+
+      {/* ── Compare overlay: 2-column scrollable large images ── */}
       <AnimatePresence>
-        {showCompareView && compareList.length >= 2 && (
+        {showCompareView && (
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 24 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
             className="fixed inset-0 z-[9998] bg-[#0C0C0C] flex flex-col"
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-8 py-5 border-b border-white/10 shrink-0">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-purple-500/20 border border-purple-400/20 flex items-center justify-center">
-                  <GitCompare className="w-4 h-4 text-purple-400" />
+            <div className="flex items-center justify-between px-6 py-3.5 border-b border-white/[0.08] shrink-0">
+              <div className="flex items-center gap-2.5">
+                <div className="w-7 h-7 rounded-full bg-purple-500/20 border border-purple-400/20 flex items-center justify-center shrink-0">
+                  <GitCompare className="w-3.5 h-3.5 text-purple-400" />
                 </div>
-                <span className="font-secondary font-bold text-[16px] text-white">
-                  Comparing {compareList.length} screens
-                </span>
+                <span className="font-secondary font-bold text-[15px] text-white">Compare</span>
                 <span className="font-secondary text-[13px] text-white/30">— {app?.name}</span>
               </div>
-              <div className="flex items-center gap-4">
-                <button
-                  onClick={() => { setCompareList([]); setCompareMode(false); setShowCompareView(false); }}
-                  className="font-secondary text-[12px] text-white/35 hover:text-white/70 transition-colors"
-                >
-                  Clear all
-                </button>
-                <button
-                  onClick={() => setShowCompareView(false)}
-                  className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-all"
-                >
-                  <X className="w-4 h-4 text-white" />
-                </button>
-              </div>
+              <button
+                onClick={() => setShowCompareView(false)}
+                className="w-8 h-8 rounded-full bg-white/[0.07] flex items-center justify-center hover:bg-white/[0.14] transition-colors"
+              >
+                <X className="w-4 h-4 text-white" />
+              </button>
             </div>
 
-            {/* Side-by-side columns */}
-            <div className="flex-1 overflow-hidden flex">
-              {compareList.map((screen, ci) => (
-                <div
-                  key={screen.image + ci}
-                  className="flex flex-col border-r border-white/10 last:border-r-0"
-                  style={{ width: `${100 / compareList.length}%` }}
-                >
-                  {/* Column label */}
-                  <div className="flex items-center justify-between px-5 py-3 border-b border-white/[0.06] shrink-0">
-                    <div className="flex items-center gap-2">
-                      <span className="w-5 h-5 rounded-full bg-purple-500/20 border border-purple-400/20 flex items-center justify-center font-secondary font-bold text-[10px] text-purple-400">
-                        {String.fromCharCode(65 + ci)}
-                      </span>
-                      <span className="font-secondary text-[13px] text-white/60 truncate max-w-[180px]">
-                        {screen.name}
-                      </span>
-                    </div>
-                    <button
-                      onClick={() =>
-                        setCompareList((prev) => {
-                          const next = prev.filter((_, idx2) => idx2 !== ci);
-                          if (next.length < 2) setShowCompareView(false);
-                          return next;
-                        })
-                      }
-                      className="text-white/20 hover:text-white/60 transition-colors"
+            {/* Two columns */}
+            <div className="flex flex-1 overflow-hidden divide-x divide-white/[0.07]">
+              {[
+                { tab: compareLeftTab, setTab: setCompareLeftTab, label: "Left" },
+                { tab: compareRightTab, setTab: setCompareRightTab, label: "Right" },
+              ].map(({ tab, setTab }, colIdx) => {
+                const activeCol = tab ?? tabs[colIdx] ?? tabs[0];
+                const colScreens: LightboxScreen[] =
+                  (groupedScreensFilter as Record<string, LightboxScreen[]>)?.[activeCol] ??
+                  (filteredScreens as LightboxScreen[]);
+                return (
+                  <div key={colIdx} className="flex-1 flex flex-col min-w-0">
+                    {/* Module picker */}
+                    <div
+                      className="flex items-center gap-1.5 px-4 py-2.5 border-b border-white/[0.06] overflow-x-auto shrink-0"
+                      style={{ scrollbarWidth: "none" }}
                     >
-                      <X className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
+                      {tabs.map((t) => (
+                        <button
+                          key={t}
+                          onClick={() => setTab(t)}
+                          className={clsx(
+                            "px-3 py-1 rounded-full text-[11px] font-secondary font-semibold whitespace-nowrap transition-colors",
+                            activeCol === t
+                              ? "bg-purple-600 text-white"
+                              : "bg-white/[0.06] text-white/40 hover:text-white/70 hover:bg-white/[0.10]"
+                          )}
+                        >
+                          {t}
+                        </button>
+                      ))}
+                    </div>
 
-                  {/* Scrollable image */}
-                  <div className="flex-1 overflow-auto flex justify-center items-start py-8 px-4 [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
-                    <img
-                      src={screen.image}
-                      alt={screen.name}
-                      className="rounded-[20px] object-contain w-auto"
-                      style={{ maxHeight: "calc(100vh - 160px)", maxWidth: "100%" }}
-                    />
+                    {/* Scrollable screens */}
+                    <div
+                      className="flex-1 overflow-y-auto px-4 py-5 space-y-3"
+                      style={{ scrollbarWidth: "none" }}
+                    >
+                      <p className="font-secondary text-[11px] text-white/25 mb-2">
+                        {colScreens.length} screen{colScreens.length !== 1 ? "s" : ""}
+                      </p>
+                      {colScreens.map((screen, si) => (
+                        <div key={screen.image + si} className="w-full flex flex-col gap-1.5">
+                          <ImageWithFallback
+                            src={screen.image}
+                            fallbackSrc="https://placehold.co/300x600"
+                            alt={screen.name}
+                            containerClassName="w-full"
+                            className="w-full rounded-[14px] object-contain bg-[#1a1a1a]"
+                          />
+                          <p className="font-secondary text-[11px] text-white/35 truncate px-0.5">
+                            {screen.name}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </motion.div>
         )}

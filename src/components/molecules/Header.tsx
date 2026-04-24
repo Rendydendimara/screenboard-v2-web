@@ -19,7 +19,8 @@ import {
 import { RootState } from "@/provider/store";
 import { AppPublic } from "@/pages/Home/useController";
 import clsx from "clsx";
-import { GitCompare, Menu, Search, X } from "lucide-react";
+import { useFavorites } from "@/hooks/useFavorites";
+import { Bookmark, GitCompare, Menu, Search, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
@@ -31,6 +32,7 @@ interface HeaderProps {
   scrolled?: boolean;
   scrolledSearch?: boolean;
   onOpenAuthModal?: () => void;
+  onOpenFavoritesModal?: () => void;
   transparentBg?: boolean;
   callbackLogout?: () => void;
   availableApps?: AppPublic[];
@@ -45,6 +47,7 @@ export const Header = ({
   scrolled = false,
   scrolledSearch = false,
   onOpenAuthModal,
+  onOpenFavoritesModal,
   transparentBg = false,
   callbackLogout,
   availableApps = [],
@@ -52,6 +55,7 @@ export const Header = ({
 }: HeaderProps) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [localScrolled, setLocalScrolled] = useState(false);
+  const { favorites } = useFavorites();
 
   const user = useTypedSelector((state: RootState) => state.auth.user);
   const compareApps = useTypedSelector(
@@ -125,6 +129,7 @@ export const Header = ({
   };
 
   const isScrolled = scrolled || localScrolled;
+  const isDark = transparentBg && !isScrolled;
 
   return (
     <>
@@ -186,201 +191,135 @@ export const Header = ({
                   </div>
                 </div>
 
-                <div className="flex items-center gap-[10px]">
-                  <div className="hidden md:flex items-center gap-3">
+                {/* Desktop nav + actions */}
+                <div className="hidden md:flex items-center gap-0.5">
+                  {/* Nav links */}
+                  <Link
+                    to="/"
+                    className={clsx(
+                      "h-9 flex items-center px-3 rounded-md font-secondary text-[14px] transition-colors",
+                      isDark ? "text-white/85 hover:text-white" : "text-[#323638] hover:text-black",
+                      location.pathname === "/" || location.pathname.includes("app")
+                        ? "font-bold" : "font-normal"
+                    )}
+                  >
+                    Applications
+                  </Link>
+                  <Link
+                    to="/home-v2"
+                    className={clsx(
+                      "h-9 flex items-center px-3 rounded-md font-secondary text-[14px] whitespace-nowrap transition-colors",
+                      isDark ? "text-white/85 hover:text-white" : "text-[#323638] hover:text-black",
+                      location.pathname === "/home-v2" ? "font-bold" : "font-normal"
+                    )}
+                  >
+                    Home v2.0
+                  </Link>
+                  {user?.userType === "administrator" && (
                     <Link
-                      to="/"
+                      to="/module"
                       className={clsx(
-                        "w-[110px] h-[36px] flex justify-center items-center opacity-100 gap-[8px] rounded-[6px] pr-[12px] pl-[12px] font-secondary text-[14px] text-center align-middle text-[#323638]",
-                        location.pathname === "/" ||
-                          location.pathname.includes("app")
-                          ? "font-bold"
-                          : "font-normal"
+                        "h-9 flex items-center px-3 rounded-md font-secondary text-[14px] transition-colors",
+                        isDark ? "text-white/85 hover:text-white" : "text-[#323638] hover:text-black",
+                        location.pathname.includes("module") ? "font-bold" : "font-normal"
                       )}
                     >
-                      Applications
+                      Module
                     </Link>
-                    <Link
-                      to="/home-v2"
-                      className={clsx(
-                        "h-[36px] flex justify-center items-center opacity-100 gap-[8px] rounded-[6px] pr-[12px] pl-[12px] font-secondary text-[14px] text-center align-middle text-[#323638] whitespace-nowrap",
-                        location.pathname === "/home-v2" ? "font-bold" : "font-normal"
-                      )}
-                    >
-                      Home v2.0
-                    </Link>
-                    {user?.userType === "administrator" && (
-                      <Link
-                        to="/module"
+                  )}
+                  <a
+                    href="https://forms.gle/Mi4GsDznBocUdrMz8"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={clsx(
+                      "h-9 flex items-center px-3 rounded-md font-secondary font-normal text-[14px] transition-colors",
+                      isDark ? "text-white/85 hover:text-white" : "text-[#323638] hover:text-black"
+                    )}
+                  >
+                    Request
+                  </a>
+
+                  {/* Divider */}
+                  <div className={clsx("w-px h-5 mx-2", isDark ? "bg-white/15" : "bg-black/10")} />
+
+                  {/* Icon actions */}
+                  {user ? (
+                    <>
+                      {/* Bookmarks */}
+                      <button
+                        onClick={onOpenFavoritesModal}
+                        title="Bookmarks"
                         className={clsx(
-                          "w-[110px] h-[36px] flex justify-center items-center opacity-100 gap-[8px] rounded-[6px] pr-[12px] pl-[12px] font-secondary  text-[14px] text-center align-middle text-[#323638]",
-                          location.pathname.includes("module")
-                            ? "font-bold"
-                            : "font-normal"
+                          "relative w-9 h-9 rounded-lg flex items-center justify-center transition-colors",
+                          isDark
+                            ? "text-white/60 hover:text-white hover:bg-white/10"
+                            : "text-[#323638]/60 hover:text-[#323638] hover:bg-black/5"
                         )}
                       >
-                        Module
-                      </Link>
-                    )}
-                    <a
-                      href="https://forms.gle/Mi4GsDznBocUdrMz8"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-[110px] h-[36px] flex justify-center items-center opacity-100 gap-[8px] rounded-[6px] pr-[12px] pl-[12px] font-secondary font-normal text-[14px] text-center align-middle text-[#323638]"
-                    >
-                      Request
-                    </a>
-                  </div>
-
-                  {/* Action Buttons - Desktop */}
-                  <div className="hidden md:flex items-center gap-[10px]">
-                    {!user && (
-                      <button
-                        onClick={handleOpenAuth}
-                        className="
-                        w-[110px]
-                        h-[36px]
-                        flex items-center justify-center gap-2
-                        px-3
-                        rounded-md
-                        bg-gradient-to-r from-blue-600 to-purple-600
-                        border border-[#F2F2F2]
-                        font-secondary font-medium text-[13.3px] leading-[20px] tracking-[0%] text-center align-middle
-                        text-[#FFFFFF]
-                      "
-                      >
-                        <svg
-                          width="16"
-                          height="16"
-                          viewBox="0 0 16 16"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M6.66667 8L5.33333 6.53333L5.73333 5.86666M4 3.33333H12L14 6.66666L8.33333 13C8.28988 13.0443 8.23802 13.0796 8.18078 13.1036C8.12355 13.1277 8.06209 13.1401 8 13.1401C7.93792 13.1401 7.87645 13.1277 7.81922 13.1036C7.76198 13.0796 7.71012 13.0443 7.66667 13L2 6.66666L4 3.33333Z"
-                            stroke="white"
-                            stroke-width="1.3"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          />
-                        </svg>
-                        Join Us
+                        <Bookmark size={16} />
+                        {favorites.length > 0 && (
+                          <Badge className="absolute -top-1.5 -right-1.5 h-4 min-w-4 p-0 flex items-center justify-center text-[10px] leading-none">
+                            {favorites.length}
+                          </Badge>
+                        )}
                       </button>
-                    )}
-                    {user && (
-                      <>
-                        <button
-                          onClick={() => dispatch(setShowCompare(true))}
-                          className="
-                        relative
-                        w-[110px]
-                        h-[36px]
-                        flex items-center justify-center gap-2
-                        px-3
-                        rounded-md
-                        font-primary font-normal text-[13.3px] leading-[20px] tracking-[0%] text-center align-middle
-                        text-[#020817]
-                      "
-                        >
-                          <svg
-                            width="16"
-                            height="16"
-                            viewBox="0 0 16 16"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M12 14C13.1046 14 14 13.1046 14 12C14 10.8954 13.1046 10 12 10C10.8954 10 10 10.8954 10 12C10 13.1046 10.8954 14 12 14Z"
-                              stroke="#020817"
-                              stroke-width="1.33333"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                            <path
-                              d="M4 6C5.10457 6 6 5.10457 6 4C6 2.89543 5.10457 2 4 2C2.89543 2 2 2.89543 2 4C2 5.10457 2.89543 6 4 6Z"
-                              stroke="#020817"
-                              stroke-width="1.33333"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                            <path
-                              d="M8.6665 4H10.6665C11.0201 4 11.3593 4.14048 11.6093 4.39052C11.8594 4.64057 11.9998 4.97971 11.9998 5.33333V10"
-                              stroke="#020817"
-                              stroke-width="1.33333"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                            <path
-                              d="M7.33333 12H5.33333C4.97971 12 4.64057 11.8595 4.39052 11.6095C4.14048 11.3594 4 11.0203 4 10.6667V6"
-                              stroke="#020817"
-                              stroke-width="1.33333"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                          </svg>
-                          {compareApps.length > 0 && (
-                            <Badge className="absolute -top-2 -right-2 h-5 w-5 p-0 flex items-center justify-center text-xs">
-                              {compareApps.length}
-                            </Badge>
-                          )}
-                          Compare
-                        </button>
 
-                        <div className="flex items-center gap-2 px-3">
-                          <Link to="/profile">
-                            <button className="flex items-center gap-4 h-[36px] opacity-100 rounded-[12px] pr-[12px] pl-[12px] bg-[#323638]">
-                              <div className="flex items-center gap-2">
-                                <svg
-                                  width="16"
-                                  height="16"
-                                  viewBox="0 0 16 16"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <path
-                                    d="M4.112 12.566C4.27701 12.0168 4.61465 11.5355 5.07483 11.1933C5.53502 10.8512 6.09323 10.6665 6.66667 10.6667H9.33333C9.90751 10.6665 10.4664 10.8516 10.9269 11.1945C11.3874 11.5374 11.725 12.0199 11.8893 12.57M2 8C2 8.78793 2.15519 9.56815 2.45672 10.2961C2.75825 11.0241 3.20021 11.6855 3.75736 12.2426C4.31451 12.7998 4.97595 13.2417 5.7039 13.5433C6.43185 13.8448 7.21207 14 8 14C8.78793 14 9.56815 13.8448 10.2961 13.5433C11.0241 13.2417 11.6855 12.7998 12.2426 12.2426C12.7998 11.6855 13.2417 11.0241 13.5433 10.2961C13.8448 9.56815 14 8.78793 14 8C14 7.21207 13.8448 6.43185 13.5433 5.7039C13.2417 4.97595 12.7998 4.31451 12.2426 3.75736C11.6855 3.20021 11.0241 2.75825 10.2961 2.45672C9.56815 2.15519 8.78793 2 8 2C7.21207 2 6.43185 2.15519 5.7039 2.45672C4.97595 2.75825 4.31451 3.20021 3.75736 3.75736C3.20021 4.31451 2.75825 4.97595 2.45672 5.7039C2.15519 6.43185 2 7.21207 2 8ZM6 6.66667C6 7.1971 6.21071 7.70581 6.58579 8.08088C6.96086 8.45595 7.46957 8.66667 8 8.66667C8.53043 8.66667 9.03914 8.45595 9.41421 8.08088C9.78929 7.70581 10 7.1971 10 6.66667C10 6.13623 9.78929 5.62753 9.41421 5.25245C9.03914 4.87738 8.53043 4.66667 8 4.66667C7.46957 4.66667 6.96086 4.87738 6.58579 5.25245C6.21071 5.62753 6 6.13623 6 6.66667Z"
-                                    stroke="white"
-                                    stroke-width="1.3"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                  />
-                                </svg>
-                                <p className="font-[Inter] font-normal text-[13.3px] text-center text-[#FFFFFF]">
-                                  {user.username}
-                                </p>
-                              </div>
-                              <svg
-                                width="16"
-                                height="16"
-                                viewBox="0 0 16 16"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M4 6L8 10L12 6"
-                                  stroke="white"
-                                  stroke-width="1.3"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                />
-                              </svg>
-                            </button>
-                          </Link>
-                          {user.userType === "administrator" && (
-                            <Link to="/admin">
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="hidden sm:flex items-center space-x-2"
-                              >
-                                Admin
-                              </Button>
-                            </Link>
-                          )}
-                        </div>
-                      </>
-                    )}
-                  </div>
+                      {/* Compare */}
+                      <button
+                        onClick={() => dispatch(setShowCompare(true))}
+                        title="Compare"
+                        className={clsx(
+                          "relative w-9 h-9 rounded-lg flex items-center justify-center transition-colors",
+                          isDark
+                            ? "text-white/60 hover:text-white hover:bg-white/10"
+                            : "text-[#323638]/60 hover:text-[#323638] hover:bg-black/5"
+                        )}
+                      >
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M12 14C13.1046 14 14 13.1046 14 12C14 10.8954 13.1046 10 12 10C10.8954 10 10 10.8954 10 12C10 13.1046 10.8954 14 12 14Z" stroke="currentColor" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round" />
+                          <path d="M4 6C5.10457 6 6 5.10457 6 4C6 2.89543 5.10457 2 4 2C2.89543 2 2 2.89543 2 4C2 5.10457 2.89543 6 4 6Z" stroke="currentColor" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round" />
+                          <path d="M8.6665 4H10.6665C11.0201 4 11.3593 4.14048 11.6093 4.39052C11.8594 4.64057 11.9998 4.97971 11.9998 5.33333V10" stroke="currentColor" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round" />
+                          <path d="M7.33333 12H5.33333C4.97971 12 4.64057 11.8595 4.39052 11.6095C4.14048 11.3594 4 11.0203 4 10.6667V6" stroke="currentColor" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        {compareApps.length > 0 && (
+                          <Badge className="absolute -top-1.5 -right-1.5 h-4 min-w-4 p-0 flex items-center justify-center text-[10px] leading-none">
+                            {compareApps.length}
+                          </Badge>
+                        )}
+                      </button>
+
+                      {/* Divider */}
+                      <div className={clsx("w-px h-5 mx-2", isDark ? "bg-white/15" : "bg-black/10")} />
+
+                      {/* Profile */}
+                      <Link to="/profile">
+                        <button className="flex items-center gap-2 h-9 pl-3 pr-2.5 rounded-xl bg-[#323638] hover:bg-[#3f4447] transition-colors">
+                          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4.112 12.566C4.27701 12.0168 4.61465 11.5355 5.07483 11.1933C5.53502 10.8512 6.09323 10.6665 6.66667 10.6667H9.33333C9.90751 10.6665 10.4664 10.8516 10.9269 11.1945C11.3874 11.5374 11.725 12.0199 11.8893 12.57M2 8C2 8.78793 2.15519 9.56815 2.45672 10.2961C2.75825 11.0241 3.20021 11.6855 3.75736 12.2426C4.31451 12.7998 4.97595 13.2417 5.7039 13.5433C6.43185 13.8448 7.21207 14 8 14C8.78793 14 9.56815 13.8448 10.2961 13.5433C11.0241 13.2417 11.6855 12.7998 12.2426 12.2426C12.7998 11.6855 13.2417 11.0241 13.5433 10.2961C13.8448 9.56815 14 8.78793 14 8C14 7.21207 13.8448 6.43185 13.5433 5.7039C13.2417 4.97595 12.7998 4.31451 12.2426 3.75736C11.6855 3.20021 11.0241 2.75825 10.2961 2.45672C9.56815 2.15519 8.78793 2 8 2C7.21207 2 6.43185 2.15519 5.7039 2.45672C4.97595 2.75825 4.31451 3.20021 3.75736 3.75736C3.20021 4.31451 2.75825 4.97595 2.45672 5.7039C2.15519 6.43185 2 7.21207 2 8ZM6 6.66667C6 7.1971 6.21071 7.70581 6.58579 8.08088C6.96086 8.45595 7.46957 8.66667 8 8.66667C8.53043 8.66667 9.03914 8.45595 9.41421 8.08088C9.78929 7.70581 10 7.1971 10 6.66667C10 6.13623 9.78929 5.62753 9.41421 5.25245C9.03914 4.87738 8.53043 4.66667 8 4.66667C7.46957 4.66667 6.96086 4.87738 6.58579 5.25245C6.21071 5.62753 6 6.13623 6 6.66667Z" stroke="white" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" />
+                          </svg>
+                          <p className="font-[Inter] font-normal text-[13px] text-white">{user.username}</p>
+                        </button>
+                      </Link>
+
+                      {user.userType === "administrator" && (
+                        <Link to="/admin" className="ml-1">
+                          <Button variant="ghost" size="sm" className="hidden sm:flex items-center space-x-2">
+                            Admin
+                          </Button>
+                        </Link>
+                      )}
+                    </>
+                  ) : (
+                    <button
+                      onClick={handleOpenAuth}
+                      className="flex items-center justify-center gap-2 h-9 px-4 rounded-md bg-gradient-to-r from-blue-600 to-purple-600 border border-[#F2F2F2] font-secondary font-medium text-[13.3px] text-white"
+                    >
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6.66667 8L5.33333 6.53333L5.73333 5.86666M4 3.33333H12L14 6.66666L8.33333 13C8.28988 13.0443 8.23802 13.0796 8.18078 13.1036C8.12355 13.1277 8.06209 13.1401 8 13.1401C7.93792 13.1401 7.87645 13.1277 7.81922 13.1036C7.76198 13.0796 7.71012 13.0443 7.66667 13L2 6.66666L4 3.33333Z" stroke="white" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                      Join Us
+                    </button>
+                  )}
                 </div>
 
                 {/* Mobile Menu Button */}
@@ -470,6 +409,23 @@ export const Header = ({
                               {user.username}
                             </p>
                           </div>
+
+                          <Button
+                            variant="ghost"
+                            onClick={() => {
+                              setMobileMenuOpen(false);
+                              onOpenFavoritesModal?.();
+                            }}
+                            className="w-full justify-start gap-2 relative"
+                          >
+                            <Bookmark className="h-5 w-5" />
+                            Bookmarks
+                            {favorites.length > 0 && (
+                              <Badge className="absolute right-4 h-5 w-5 p-0 flex items-center justify-center text-xs">
+                                {favorites.length}
+                              </Badge>
+                            )}
+                          </Button>
 
                           <Button
                             variant="ghost"
