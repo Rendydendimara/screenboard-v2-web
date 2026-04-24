@@ -1,6 +1,7 @@
 import { AuthModal } from "@/components/AuthModal";
 import { HeroSectionModule } from "@/components/HeroSectionModule";
 import { Header } from "@/components/molecules";
+import { Footer } from "@/components/molecules";
 import SEO from "@/components/SEO";
 import { motion } from "framer-motion";
 import useController from "./useController";
@@ -170,6 +171,7 @@ const ModulePage = () => {
           callbackSuccessLogin={callbackAuth}
         />
       </div>
+      <Footer />
     </>
   );
 };

@@ -1,6 +1,7 @@
 import { AppPublic } from "@/pages/Home/useController";
 import { motion } from "framer-motion";
-import ScrollContainer from "react-indiana-drag-scroll";
+import { useRef } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import ImageWithFallback from "../ui/ImageWithFallback";
 import { Link } from "react-router-dom";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
@@ -29,6 +30,12 @@ const cardVariants = {
 };
 
 export const Top10Apps = ({ apps, isLoading }: IProps) => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scroll = (dir: "left" | "right") => {
+    scrollRef.current?.scrollBy({ left: dir === "left" ? -700 : 700, behavior: "smooth" });
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
@@ -75,15 +82,29 @@ export const Top10Apps = ({ apps, isLoading }: IProps) => {
           </p>
         </div>
       </motion.div>
-      {/* Outer div handles scroll only — motion.div inside handles animation without clipping */}
-      <div className="w-full overflow-x-auto styled-scrollbar-grey">
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.1 }}
-          className="flex gap-4 items-start px-6 pr-5 py-4 w-max"
+      {/* Scroll area with hidden scrollbar + arrow buttons */}
+      <div className="relative w-full">
+        {/* Left arrow */}
+        <button
+          onClick={() => scroll("left")}
+          aria-label="Scroll left"
+          className="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full flex items-center justify-center bg-white/10 hover:bg-white/20 border border-white/15 text-white backdrop-blur-sm transition-all duration-200 shadow-lg"
         >
+          <ChevronLeft className="w-5 h-5" />
+        </button>
+
+        {/* Scroll container — scrollbar hidden via CSS */}
+        <div
+          ref={scrollRef}
+          className="w-full overflow-x-auto [&::-webkit-scrollbar]:hidden [scrollbar-width:none]"
+        >
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.1 }}
+            className="flex gap-4 items-start px-14 py-4 w-max"
+          >
         {isLoading
           ? Array.from({ length: 8 }).map((_, i) => (
               <motion.div
@@ -175,7 +196,17 @@ export const Top10Apps = ({ apps, isLoading }: IProps) => {
                 </div>
               </motion.div>
             ))}
-        </motion.div>
+          </motion.div>
+        </div>
+
+        {/* Right arrow */}
+        <button
+          onClick={() => scroll("right")}
+          aria-label="Scroll right"
+          className="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full flex items-center justify-center bg-white/10 hover:bg-white/20 border border-white/15 text-white backdrop-blur-sm transition-all duration-200 shadow-lg"
+        >
+          <ChevronRight className="w-5 h-5" />
+        </button>
       </div>
     </motion.div>
   );

@@ -170,14 +170,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
         classNameClose="!hidden"
-        className="max-w-[439px] min-w-[439px] !rounded-b-[32px] !rounded-t-[12px] !gap-0 !m-0 !p-0 !border-none"
+        className="max-w-[439px] min-w-[439px] !rounded-[32px] !gap-0 !m-0 !p-0 !border-none"
       >
         <DialogHeader
           className="
           h-[107px]
           flex gap-2
           pt-3 px-8 pb-3
-          rounded-t-xl
+          rounded-t-[32px]
           bg-gradient-to-r from-blue-600 to-purple-600
           shadow-[0px_4px_6px_-4px_rgba(0,0,0,0.1),0px_10px_15px_-3px_rgba(0,0,0,0.1)] justify-center"
         >
@@ -238,8 +238,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     label="Full Name"
                     onChange={formik.handleChange}
                     // onBlur={formik.handleBlur}
-                    className="h-[36px] placeholder:text-[14px] placeholder:font-secondary"
-                    classNameLabel="font-secondary"
+                    className="h-[40px] text-[14px] placeholder:text-[13px] placeholder:font-secondary"
+                    classNameLabel="font-secondary !text-[12px] !font-semibold !text-[#6B7280] tracking-wide"
                     name="name"
                     isRequired={false}
                     value={formik.values.name}
@@ -283,8 +283,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   onChange={formik.handleChange}
                   // onBlur={formik.handleBlur}
                   name="email"
-                  className="h-[36px] !text-[14px] placeholder:!text-[14px] placeholder:!font-secondary font-normal"
-                  classNameLabel="font-secondary"
+                  className="h-[40px] text-[14px] placeholder:text-[13px] placeholder:font-secondary font-normal"
+                  classNameLabel="font-secondary !text-[12px] !font-semibold !text-[#6B7280] tracking-wide"
                   isRequired={false}
                   value={formik.values.email}
                   isInvalid={isFormSubmitted && !!formik.errors.email}
@@ -325,7 +325,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                       formik.setFieldValue("role", value)
                     }
                   >
-                    <SelectTrigger className="h-[36px] rounded-[8px] font-secondary text-[14px]">
+                    <SelectTrigger className="h-[40px] rounded-[8px] font-secondary text-[14px]">
                       <div className="flex items-center gap-2">
                         <svg
                           className="w-4 h-4 shrink-0"
@@ -386,8 +386,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     onChange={formik.handleChange}
                     // onBlur={formik.handleBlur}
                     name="password"
-                    className="h-[36px] placeholder:text-[14px] placeholder:font-secondary"
-                    classNameLabel="font-secondary"
+                    className="h-[40px] text-[14px] placeholder:text-[13px] placeholder:font-secondary"
+                    classNameLabel="font-secondary !text-[12px] !font-semibold !text-[#6B7280] tracking-wide"
                     isRequired={false}
                     value={formik.values.password}
                     isInvalid={isFormSubmitted && !!formik.errors.password}
@@ -415,7 +415,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 </FormControl>
 
                 {mode === "login" && (
-                  <p className="text-body-4 text-right hover:cursor-pointer font-secondary font-medium text-black">
+                  <p className="text-[12px] text-right hover:cursor-pointer font-secondary font-medium text-[#9CA3AF] hover:text-[#6B7280] transition-colors">
                     forgot password?
                   </p>
                 )}
@@ -425,7 +425,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <Button
                 type="submit"
                 className={clsx(
-                  "font-bold bg-gradient-to-r font-secondary from-blue-500 to-purple-600 text-white border-0 px-4 py-3 h-11 w-full rounded-2xl text-sm lg:text-base",
+                  "font-bold bg-gradient-to-r font-secondary from-blue-500 to-purple-600 text-white border-0 px-4 py-3 h-11 w-full rounded-2xl text-[14px]",
                   isSubmitting && "cursor-progress"
                 )}
                 disabled={isSubmitting}
@@ -435,7 +435,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 ) : null}
                 {mode === "login" ? "Login" : "Join"}
               </Button>
-              <p className="text-body-4 font-normal text-black font-secondary">
+              <p className="text-[11px] font-normal text-[#C0C0C0] font-secondary tracking-widest uppercase">
                 or
               </p>
               <div className="p-[1px] w-full rounded-[16px] bg-gradient-to-r from-blue-600 to-purple-600">
@@ -443,7 +443,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   type="submit"
                   variant="outline"
                   onClick={googleAuth}
-                  className="w-full h-11 font-bold text-sm lg:text-base font-secondary rounded-[16px] bg-white text-black"
+                  className="w-full h-11 font-bold text-[14px] font-secondary rounded-[16px] bg-white text-black"
                 >
                   <svg
                     width="17"
@@ -490,7 +490,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             </div>
           </form>
           <div className="flex justify-center items-center w-full">
-            <p className="w-full text-sm text-[#000000] text-center font-secondary">
+            <p className="w-full text-[13px] text-[#6B7280] text-center font-secondary">
               {mode === "login"
                 ? "Don’t have an account ?"
                 : "Already have an account?"}

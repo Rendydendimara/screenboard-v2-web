@@ -10,12 +10,23 @@ import AdminModules from "@/pages/AdminModules";
 import AdminPlans from "@/pages/AdminPlans";
 import AdminScreenshots from "@/pages/AdminScreenshots";
 import AdminUsers from "@/pages/AdminUsers";
-import AppDetails from "@/pages/AppDetail/useView";
 import Index from "@/pages/Home/useView";
+import HomeV2 from "@/pages/HomeV2/useView";
+import ProductIdeasPage from "@/pages/ProductIdeas/useView";
+import AppDetailsV2 from "@/pages/AppDetailV2/useView";
+import RequestPage from "@/pages/Request";
+import PrivacyPolicyPage from "@/pages/PrivacyPolicy";
+import TermsPage from "@/pages/Terms";
 import NotFound from "@/pages/NotFound";
 import Profile from "@/pages/Profile";
 import { useEffect, useState } from "react";
-import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useParams,
+} from "react-router-dom";
 import AdminAuthAPI from "./api/admin/auth/api";
 import CModalDialogLoading from "./components/modal-dialog-loading";
 import { usePageTracking } from "./hooks/use-page-tracking";
@@ -40,6 +51,11 @@ function ScrollToTop() {
     window.scrollTo(0, 0);
   }, [pathname]);
   return null;
+}
+
+function RedirectAppV2() {
+  const { id } = useParams<{ id: string }>();
+  return <Navigate to={`/app/${id}`} replace />;
 }
 
 const App = () => {
@@ -95,14 +111,33 @@ const App = () => {
     <>
       <ScrollToTop />
       <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/module" element={<AdminOnlyRoute><ModulePage /></AdminOnlyRoute>} />
-        <Route path="/module/:id" element={<AdminOnlyRoute><ModuleDetailPage /></AdminOnlyRoute>} />
-        <Route path="/app/:id" element={<AppDetails />} />
+        <Route path="/" element={<HomeV2 />} />
+        <Route path="/product-ideas" element={<ProductIdeasPage />} />
+        <Route
+          path="/module"
+          element={
+            <AdminOnlyRoute>
+              <ModulePage />
+            </AdminOnlyRoute>
+          }
+        />
+        <Route
+          path="/module/:id"
+          element={
+            <AdminOnlyRoute>
+              <ModuleDetailPage />
+            </AdminOnlyRoute>
+          }
+        />
+        <Route path="/app/:id" element={<AppDetailsV2 />} />
+        <Route path="/app-v2/:id" element={<RedirectAppV2 />} />
         {/* <Route path="/favorites" element={<FavoritesPage />} /> */}
         <Route path="/profile" element={<Profile />} />
         <Route path="/subscription" element={<Subscription />} />
         <Route path="/subscription/success" element={<SubscriptionSuccess />} />
+        <Route path="/request" element={<RequestPage />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+        <Route path="/terms" element={<TermsPage />} />
         {/* <Route path="/component" element={<Component />} /> */}
         {/* <Route path="/component/:id" element={<ComponentDetail />} /> */}
         <Route path="/login-admin" element={<LoginAdmin />} />

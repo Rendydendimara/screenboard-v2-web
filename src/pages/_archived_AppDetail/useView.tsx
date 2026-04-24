@@ -26,13 +26,16 @@ import {
   Star,
   Filter,
   X,
+  ChevronRight,
 } from "lucide-react";
 import React, { useMemo, useState } from "react";
+import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import useController from "./useController";
 import ScrollContainer from "react-indiana-drag-scroll";
 import FilterItem from "@/components/FilterItem";
 import { Header } from "@/components/molecules";
+import { Footer } from "@/components/molecules";
 import { isValidUrl } from "@/utils";
 
 const useView: React.FC = () => {
@@ -760,11 +763,116 @@ const useView: React.FC = () => {
           />
         )}
       </div>
+
+      {/* ── SIMILAR APPS ── */}
+      {(() => {
+        const similarApps = listApp
+          .filter(
+            (a) =>
+              a.id !== app.id &&
+              (a.category?._id === app.category?._id ||
+                a.category?.name === app.category?.name)
+          )
+          .slice(0, 8);
+        const fallback =
+          similarApps.length < 4
+            ? listApp.filter((a) => a.id !== app.id).slice(0, 8)
+            : similarApps;
+        const displayed = fallback.length > 0 ? fallback : [];
+        if (displayed.length === 0) return null;
+        return (
+          <motion.section
+            initial={{ opacity: 0, y: 32 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.1 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="w-full bg-[#F6F6F6] py-14"
+          >
+            <div className="w-full flex justify-center px-4 md:px-0">
+              <div className="w-full max-w-[1200px] flex flex-col gap-6">
+                {/* Header */}
+                <div className="flex items-center justify-between">
+                  <div className="flex flex-col gap-1">
+                    <div className="flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 rounded-full bg-gradient-to-br from-blue-500 to-purple-600" />
+                      <span className="text-[11px] font-secondary font-semibold tracking-[0.14em] text-[#939393] uppercase">
+                        Similar Apps
+                      </span>
+                    </div>
+                    <h2 className="text-[24px] font-secondary font-extrabold text-[#0F0F0F]">
+                      You might also like
+                    </h2>
+                  </div>
+                  <Link
+                    to="/"
+                    className="flex items-center gap-1 text-[13px] font-secondary font-medium text-purple-600 hover:text-purple-700 transition-colors"
+                  >
+                    See all
+                    <ChevronRight className="w-4 h-4" />
+                  </Link>
+                </div>
+
+                {/* Cards grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                  {displayed.map((similarApp, i) => (
+                    <motion.div
+                      key={similarApp.id}
+                      initial={{ opacity: 0, y: 16 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{
+                        delay: i * 0.06,
+                        duration: 0.45,
+                        ease: [0.22, 1, 0.36, 1],
+                      }}
+                      whileHover={{ y: -4, boxShadow: "0px 12px 28px -6px rgba(0,0,0,0.14)" }}
+                    >
+                      <Link
+                        to={`/app/${similarApp.id}`}
+                        className="flex flex-col gap-3 bg-white rounded-[20px] p-4 h-full transition-all"
+                      >
+                        <div className="flex items-center gap-3">
+                          <ImageWithFallback
+                            src={similarApp.image ?? "https://placehold.co/400"}
+                            fallbackSrc="https://placehold.co/400"
+                            alt={similarApp.name}
+                            containerClassName="w-10 h-10 shrink-0"
+                            className="w-10 h-10 rounded-[10px] object-contain"
+                          />
+                          <div className="min-w-0">
+                            <p className="font-secondary font-bold text-[14px] text-[#0F0F0F] truncate leading-tight">
+                              {similarApp.name}
+                            </p>
+                            <p className="font-secondary text-[12px] text-[#939393] truncate">
+                              {similarApp.category?.name ?? ""}
+                            </p>
+                          </div>
+                        </div>
+                        {similarApp.screens?.[0]?.image && (
+                          <ImageWithFallback
+                            src={similarApp.screens[0].image}
+                            fallbackSrc="https://placehold.co/400"
+                            alt={similarApp.name}
+                            containerClassName="w-full h-[160px]"
+                            className="w-full h-[160px] rounded-[12px] object-cover"
+                          />
+                        )}
+                      </Link>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </motion.section>
+        );
+      })()}
+
       <AuthModal
         initialMode="login"
         isOpen={isOpenAuth}
         onClose={onCloseOpenAuth}
       />
+      <Footer />
     </>
   );
 };

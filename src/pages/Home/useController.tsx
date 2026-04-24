@@ -23,7 +23,7 @@ import { RootState } from "@/provider/store";
 import { TItemMenuFilter, TMenuFilter } from "@/types/filter";
 import { adapterListAppBEToFEPublic } from "@/utils/adapterBEToFE";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { TSelect } from "@/types";
 import { set } from "date-fns";
 
@@ -121,9 +121,10 @@ const MENU_FILTER_MARKET: TMenuFilter = {
 const ITEMS_PER_PAGE = 20; // Jumlah item yang di-load per batch
 
 const useController = () => {
+  const [searchParams] = useSearchParams();
   const [listApp, setListApp] = useState<AppPublic[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchTermHeader, setSearchTermHeader] = useState("");
+  const [searchTerm, setSearchTerm] = useState(searchParams.get("q") ?? "");
+  const [searchTermHeader, setSearchTermHeader] = useState(searchParams.get("q") ?? "");
   const [selectedCategory, setSelectedCategory] = useState<TCategoryRes>();
   const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
