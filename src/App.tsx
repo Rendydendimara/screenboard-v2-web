@@ -20,7 +20,13 @@ import TermsPage from "@/pages/Terms";
 import NotFound from "@/pages/NotFound";
 import Profile from "@/pages/Profile";
 import { useEffect, useState } from "react";
-import { Navigate, Route, Routes, useLocation, useParams } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useParams,
+} from "react-router-dom";
 import AdminAuthAPI from "./api/admin/auth/api";
 import CModalDialogLoading from "./components/modal-dialog-loading";
 import { usePageTracking } from "./hooks/use-page-tracking";
@@ -105,11 +111,24 @@ const App = () => {
     <>
       <ScrollToTop />
       <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/home-v2" element={<HomeV2 />} />
+        <Route path="/" element={<HomeV2 />} />
         <Route path="/product-ideas" element={<ProductIdeasPage />} />
-        <Route path="/module" element={<AdminOnlyRoute><ModulePage /></AdminOnlyRoute>} />
-        <Route path="/module/:id" element={<AdminOnlyRoute><ModuleDetailPage /></AdminOnlyRoute>} />
+        <Route
+          path="/module"
+          element={
+            <AdminOnlyRoute>
+              <ModulePage />
+            </AdminOnlyRoute>
+          }
+        />
+        <Route
+          path="/module/:id"
+          element={
+            <AdminOnlyRoute>
+              <ModuleDetailPage />
+            </AdminOnlyRoute>
+          }
+        />
         <Route path="/app/:id" element={<AppDetailsV2 />} />
         <Route path="/app-v2/:id" element={<RedirectAppV2 />} />
         {/* <Route path="/favorites" element={<FavoritesPage />} /> */}
