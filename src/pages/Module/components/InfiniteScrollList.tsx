@@ -64,7 +64,7 @@ const InfiniteScrollListComponent = ({
       <motion.div
         className={clsx(
           "w-full mb-20",
-          "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
+          "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5"
         )}
         initial="hidden"
         animate="visible"

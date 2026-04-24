@@ -4,6 +4,7 @@ import { AuthModal } from "@/components/AuthModal";
 import { FavoritesModal } from "@/components/FavoritesModal";
 import { HeroSection } from "@/components/HeroSection";
 import { Header } from "@/components/molecules";
+import { Footer } from "@/components/molecules";
 import SEO from "@/components/SEO";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -608,6 +609,7 @@ const Index = () => {
           </Dialog>
         )} */}
       </div>
+      <Footer />
     </>
   );
 };

@@ -23,6 +23,8 @@ interface SEOProps {
   image?: string; // absolute or relative URL for og:image
   type?: "website" | "article" | "profile";
   canonical?: string;
+  keywords?: string;
+  structuredData?: object | object[];
 }
 
 const SEO: React.FC<SEOProps> = ({
@@ -31,6 +33,8 @@ const SEO: React.FC<SEOProps> = ({
   image = DEFAULT_OG_IMAGE,
   type = "website",
   canonical,
+  keywords,
+  structuredData,
 }) => {
   const location = useLocation();
   const pageUrl =
@@ -48,6 +52,12 @@ const SEO: React.FC<SEOProps> = ({
       <meta name="description" content={description} />
       <meta name="robots" content="index, follow" />
       {pageUrl && <link rel="canonical" href={pageUrl} />}
+      {keywords && <meta name="keywords" content={keywords} />}
+      {structuredData && (
+        <script type="application/ld+json">
+          {JSON.stringify(structuredData)}
+        </script>
+      )}
 
       {/* Open Graph */}
       <meta property="og:site_name" content={SITE_NAME} />

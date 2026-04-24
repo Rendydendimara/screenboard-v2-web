@@ -27,6 +27,7 @@ interface HeaderProps {
   showSearch?: boolean;
   searchTerm?: string;
   onSearchChange?: (value: string) => void;
+  onSearchSubmit?: (term: string) => void;
   scrolled?: boolean;
   scrolledSearch?: boolean;
   onOpenAuthModal?: () => void;
@@ -40,6 +41,7 @@ export const Header = ({
   showSearch = false,
   searchTerm = "",
   onSearchChange,
+  onSearchSubmit,
   scrolled = false,
   scrolledSearch = false,
   onOpenAuthModal,
@@ -166,6 +168,9 @@ export const Header = ({
                       placeholder="Search apps..."
                       value={searchTerm}
                       onChange={(e) => onSearchChange(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && onSearchSubmit) onSearchSubmit(searchTerm);
+                      }}
                       className="w-full h-[40px] pl-10 pr-8 rounded-[20px] border border-input bg-background font-primary text-[13px] outline-none focus:ring-0"
                     />
                     {searchTerm && (
@@ -194,6 +199,15 @@ export const Header = ({
                       )}
                     >
                       Applications
+                    </Link>
+                    <Link
+                      to="/home-v2"
+                      className={clsx(
+                        "h-[36px] flex justify-center items-center opacity-100 gap-[8px] rounded-[6px] pr-[12px] pl-[12px] font-secondary text-[14px] text-center align-middle text-[#323638] whitespace-nowrap",
+                        location.pathname === "/home-v2" ? "font-bold" : "font-normal"
+                      )}
+                    >
+                      Home v2.0
                     </Link>
                     {user?.userType === "administrator" && (
                       <Link
@@ -391,6 +405,17 @@ export const Header = ({
                             )}
                           >
                             Applications
+                          </Button>
+                        </Link>
+                        <Link to="/home-v2" onClick={() => setMobileMenuOpen(false)}>
+                          <Button
+                            variant="ghost"
+                            className={clsx(
+                              "w-full justify-start gap-2",
+                              location.pathname === "/home-v2" && "bg-slate-100 font-bold"
+                            )}
+                          >
+                            Home v2.0
                           </Button>
                         </Link>
                         {user?.userType === "administrator" && (
