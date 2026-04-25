@@ -1,5 +1,5 @@
 import ModulAPI from "@/api/user/modul/api";
-import { TModulApp, TModulAppScreen } from "@/api/user/modul/type";
+import { TModulApp, TModulAppScreen, TModulRes } from "@/api/user/modul/type";
 import { useToast } from "@/hooks/use-toast";
 import { useTypedSelector } from "@/hooks/use-typed-selector";
 import { RootState } from "@/provider/store";
@@ -39,6 +39,7 @@ const useController = () => {
   const [modulDescription, setModulDescription] = useState<string | null>(null);
   const [totalApps, setTotalApps] = useState(0);
   const [apps, setApps] = useState<TModulApp[]>([]);
+  const [allModuls, setAllModuls] = useState<TModulRes[]>([]);
   const [isLoadingDetail, setIsLoadingDetail] = useState(false);
 
   const [selectedScreen, setSelectedScreen] = useState<ScreenPublic | null>(null);
@@ -139,9 +140,19 @@ const useController = () => {
     setIsOpenAuth(true);
   }, [user]);
 
+  const getAllModuls = useCallback(async () => {
+    try {
+      const res = await ModulAPI.getAll();
+      setAllModuls(res.data ?? []);
+    } catch {
+      // silent — not critical
+    }
+  }, []);
+
   useEffect(() => {
     getModulDetail();
-  }, [getModulDetail]);
+    getAllModuls();
+  }, [getModulDetail, getAllModuls]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -159,6 +170,8 @@ const useController = () => {
     modulDescription,
     totalApps,
     apps,
+    allModuls,
+    id,
     filteredApps,
     isLoadingDetail,
     selectedScreen,

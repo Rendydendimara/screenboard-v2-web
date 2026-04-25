@@ -237,7 +237,7 @@ export const AppCard: React.FC<AppCardProps> = ({
   }
 
   return (
-    <div className="w-full py-[1px] flex-col flex bg-[#F6F6F6]  rounded-[20px]">
+    <div className="group/card w-full py-[1px] flex-col flex bg-[#F6F6F6] rounded-[20px] transition-shadow duration-300 hover:shadow-[0_4px_24px_rgba(0,0,0,0.09)]">
       {/* Header */}
       <div className="w-full flex gap-2 flex-col py-4 pr-5 pb-2 pl-4">
         <div
@@ -384,22 +384,35 @@ export const AppCard: React.FC<AppCardProps> = ({
         className="w-full gap-2  flex items-center pt-2 pr-4 pb-4 pl-4"
       >
         {app.screens.slice(0, 3).map((screen, i) => (
-          <div className="relative w-[161px] aspect-[9/20] flex-shrink-0">
+          <div
+            key={screen.id}
+            className="group/screen relative w-[161px] aspect-[9/20] flex-shrink-0 overflow-hidden rounded-[10px] cursor-pointer"
+            onClick={() => i + 1 !== 3 ? setSelectedScreen(screen) : onDetail()}
+          >
             <ImageWithFallback
               src={screen.image}
               fallbackSrc={screen.image}
               alt={screen.name}
-              containerClassName="w-full h-full rounded-[10px] border-[0.5px] border-[solid] border-[#CECECE]"
-              className="w-full h-full rounded-[10px] object-cover group-hover:scale-105 transition-transform duration-500"
+              containerClassName="w-full h-full border-[0.5px] border-[solid] border-[#CECECE] rounded-[10px]"
+              className="w-full h-full rounded-[10px] object-cover transition-transform duration-500 ease-out group-hover/screen:scale-[1.05]"
             />
-            {i + 1 === 3 && (
-              <div
-                onClick={onDetail}
-                className="absolute inset-0 hover:cursor-pointer flex justify-center items-center rounded-[10px] bg-[linear-gradient(180deg,_rgba(255,_255,_255,_0.3)_0%,_#FFFFFF_100%)] border-[0.5px] border-[solid] border-[#CECECE]"
-              >
+            {/* hover scrim */}
+            <div className="absolute inset-0 rounded-[10px] bg-black/0 group-hover/screen:bg-black/15 transition-colors duration-300 pointer-events-none" />
+            {i + 1 === 3 ? (
+              <div className="absolute inset-0 flex justify-center items-center rounded-[10px] bg-[linear-gradient(180deg,_rgba(255,_255,_255,_0.3)_0%,_#FFFFFF_100%)] border-[0.5px] border-[solid] border-[#CECECE]">
                 <p className="font-secondary font-semibold text-[16px] leading-[100%] tracking-[0%] align-middle">
                   See More
                 </p>
+              </div>
+            ) : (
+              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 opacity-0 group-hover/screen:opacity-100 transition-opacity duration-200 pointer-events-none">
+                <div className="flex items-center gap-1 bg-black/60 backdrop-blur-sm px-2 py-0.5 rounded-full">
+                  <svg width="10" height="10" viewBox="0 0 16 16" fill="none">
+                    <path d="M1 8C1 8 3.5 3 8 3s7 5 7 5-2.5 5-7 5-7-5-7-5Z" stroke="white" strokeWidth="1.5" strokeLinejoin="round"/>
+                    <circle cx="8" cy="8" r="2" stroke="white" strokeWidth="1.5"/>
+                  </svg>
+                  <span className="text-white text-[10px] font-medium leading-none">View</span>
+                </div>
               </div>
             )}
           </div>

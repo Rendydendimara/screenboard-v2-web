@@ -101,127 +101,138 @@ function ScreenLightbox({
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.18 }}
-      className="fixed inset-0 z-[9999] bg-black/97 flex flex-col"
+      className="fixed inset-0 z-[9999] bg-black/70 backdrop-blur-sm flex items-center justify-center p-4"
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
-      {/* ── Top bar ── */}
-      <div className="flex items-center justify-between px-6 py-4 shrink-0 border-b border-white/[0.07]">
-        <span className="font-secondary text-[13px] text-white/30 tabular-nums w-[80px]">
-          {idx + 1} / {screens.length}
-        </span>
-        <p className="font-secondary font-semibold text-[14px] text-white truncate max-w-[380px] text-center">
-          {screen.name}
-        </p>
-        <div className="flex items-center gap-2 w-[80px] justify-end">
-          <button
-            onClick={() => setSaveOpen((v) => !v)}
-            className={clsx(
-              "flex items-center gap-1.5 h-7 px-2.5 rounded-full border font-secondary text-[12px] font-semibold transition-all",
-              isSaved(screen.image)
-                ? "bg-purple-600 border-purple-600 text-white"
-                : saveOpen
-                ? "bg-white/15 border-white/20 text-white"
-                : "border-white/15 text-white/50 hover:border-purple-400/50 hover:text-white/80"
-            )}
-          >
-            <Bookmark className={clsx("w-3.5 h-3.5", isSaved(screen.image) && "fill-white")} />
-            Save
-          </button>
-          <button
-            onClick={onClose}
-            className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-all"
-          >
-            <X className="w-4 h-4 text-white" />
-          </button>
+      {/* ── Nav arrows — outside the card ── */}
+      <button
+        onClick={() => go(idx - 1)}
+        disabled={idx === 0}
+        className="absolute left-6 top-1/2 -translate-y-1/2 z-10 shrink-0 w-11 h-11 rounded-full bg-white/10 border border-white/15 flex items-center justify-center disabled:opacity-20 hover:bg-white/20 transition-all"
+      >
+        <ChevronLeft className="w-5 h-5 text-white" />
+      </button>
+      <button
+        onClick={() => go(idx + 1)}
+        disabled={idx === screens.length - 1}
+        className="absolute right-6 top-1/2 -translate-y-1/2 z-10 shrink-0 w-11 h-11 rounded-full bg-white/10 border border-white/15 flex items-center justify-center disabled:opacity-20 hover:bg-white/20 transition-all"
+      >
+        <ChevronRight className="w-5 h-5 text-white" />
+      </button>
+
+      {/* ── Modal card ── */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.96, y: 16 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.96, y: 16 }}
+        transition={{ ease: [0.32, 0.72, 0, 1], duration: 0.3 }}
+        className="relative flex flex-col bg-[#0f0f0f] border border-white/[0.09] rounded-[28px] shadow-[0_30px_80px_rgba(0,0,0,0.8)] overflow-hidden"
+        style={{ maxHeight: "92vh", width: saveOpen ? "820px" : "440px", maxWidth: "calc(100vw - 120px)" }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* ── Top bar ── */}
+        <div className="flex items-center justify-between px-5 py-3.5 shrink-0 border-b border-white/[0.07]">
+          <span className="font-secondary text-[12px] text-white/30 tabular-nums">
+            {idx + 1} / {screens.length}
+          </span>
+          <p className="font-secondary font-semibold text-[13px] text-white truncate max-w-[220px] text-center">
+            {screen.name}
+          </p>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setSaveOpen((v) => !v)}
+              className={clsx(
+                "flex items-center gap-1.5 h-7 px-2.5 rounded-full border font-secondary text-[12px] font-semibold transition-all",
+                isSaved(screen.image)
+                  ? "bg-purple-600 border-purple-600 text-white"
+                  : saveOpen
+                  ? "bg-white/15 border-white/20 text-white"
+                  : "border-white/15 text-white/50 hover:border-purple-400/50 hover:text-white/80"
+              )}
+            >
+              <Bookmark className={clsx("w-3.5 h-3.5", isSaved(screen.image) && "fill-white")} />
+              Save
+            </button>
+            <button
+              onClick={onClose}
+              className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-all"
+            >
+              <X className="w-3.5 h-3.5 text-white" />
+            </button>
+          </div>
         </div>
-      </div>
 
-      {/* ── Body: image area + optional save panel ── */}
-      <div className="flex-1 flex min-h-0">
-        {/* Image + arrows */}
-        <div className="flex-1 flex items-center justify-center gap-6 px-8 min-h-0 py-6">
-          <button
-            onClick={() => go(idx - 1)}
-            disabled={idx === 0}
-            className="shrink-0 w-11 h-11 rounded-full bg-white/8 border border-white/10 flex items-center justify-center disabled:opacity-20 hover:bg-white/16 transition-all"
-          >
-            <ChevronLeft className="w-5 h-5 text-white" />
-          </button>
-
-          <div className="flex-1 flex items-center justify-center min-h-0 overflow-hidden">
+        {/* ── Body: image + optional save panel ── */}
+        <div className="flex flex-1 min-h-0 overflow-hidden">
+          {/* Image */}
+          <div className="flex-1 flex items-center justify-center p-6 min-h-0">
             <AnimatePresence mode="wait" custom={slideDir.current}>
               <motion.img
                 key={idx}
                 custom={slideDir.current}
                 variants={{
-                  enter: (d: number) => ({ x: d * 80, opacity: 0, scale: 0.95 }),
+                  enter: (d: number) => ({ x: d * 60, opacity: 0, scale: 0.97 }),
                   center: { x: 0, opacity: 1, scale: 1 },
-                  exit: (d: number) => ({ x: d * -80, opacity: 0, scale: 0.95 }),
+                  exit: (d: number) => ({ x: d * -60, opacity: 0, scale: 0.97 }),
                 }}
                 initial="enter"
                 animate="center"
                 exit="exit"
-                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
                 src={screen.image}
                 alt={screen.name}
-                className="max-h-[68vh] max-w-[300px] w-auto rounded-[24px] object-contain select-none"
+                className="w-auto rounded-[20px] object-contain select-none"
                 style={{
-                  boxShadow: "0 40px 80px -12px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,255,255,0.08)",
+                  maxHeight: "calc(92vh - 140px)",
+                  maxWidth: "100%",
+                  boxShadow: "0 24px 60px -8px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,255,255,0.07)",
                 }}
                 draggable={false}
               />
             </AnimatePresence>
           </div>
 
-          <button
-            onClick={() => go(idx + 1)}
-            disabled={idx === screens.length - 1}
-            className="shrink-0 w-11 h-11 rounded-full bg-white/8 border border-white/10 flex items-center justify-center disabled:opacity-20 hover:bg-white/16 transition-all"
-          >
-            <ChevronRight className="w-5 h-5 text-white" />
-          </button>
-        </div>
-
-        {/* Save panel */}
-        <AnimatePresence>
-          {saveOpen && (
-            <SavePanel
-              screen={screen}
-              appId={appId}
-              appName={appName}
-              onClose={() => setSaveOpen(false)}
-            />
-          )}
-        </AnimatePresence>
-      </div>
-
-      {/* ── Thumbnail strip ── */}
-      {screens.length > 1 && (
-        <div className="shrink-0 pb-6 pt-2">
-          <div
-            ref={thumbRef}
-            className={clsx(
-              "px-8 flex gap-2 overflow-x-auto [&::-webkit-scrollbar]:hidden [scrollbar-width:none]",
-              screens.length <= 10 ? "justify-center" : "justify-start"
+          {/* Save panel */}
+          <AnimatePresence>
+            {saveOpen && (
+              <SavePanel
+                screen={screen}
+                appId={appId}
+                appName={appName}
+                onClose={() => setSaveOpen(false)}
+              />
             )}
-          >
-            {screens.map((s, i) => (
-              <button
-                key={(s.id ?? s.name) + i}
-                onClick={() => go(i)}
-                className={clsx(
-                  "shrink-0 w-[36px] rounded-[7px] overflow-hidden border-2 transition-all duration-200",
-                  i === idx
-                    ? "border-purple-400 opacity-100 scale-110"
-                    : "border-transparent opacity-30 hover:opacity-60"
-                )}
-              >
-                <img src={s.image} alt="" className="w-full aspect-[9/19] object-cover" draggable={false} />
-              </button>
-            ))}
-          </div>
+          </AnimatePresence>
         </div>
-      )}
+
+        {/* ── Thumbnail strip ── */}
+        {screens.length > 1 && (
+          <div className="shrink-0 px-5 pb-4 pt-2 border-t border-white/[0.06]">
+            <div
+              ref={thumbRef}
+              className={clsx(
+                "flex gap-1.5 overflow-x-auto [&::-webkit-scrollbar]:hidden [scrollbar-width:none]",
+                screens.length <= 8 ? "justify-center" : "justify-start"
+              )}
+            >
+              {screens.map((s, i) => (
+                <button
+                  key={(s.id ?? s.name) + i}
+                  onClick={() => go(i)}
+                  className={clsx(
+                    "shrink-0 w-[30px] rounded-[6px] overflow-hidden border-2 transition-all duration-200",
+                    i === idx
+                      ? "border-purple-400 opacity-100 scale-110"
+                      : "border-transparent opacity-30 hover:opacity-60"
+                  )}
+                >
+                  <img src={s.image} alt="" className="w-full aspect-[9/19] object-cover" draggable={false} />
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </motion.div>
     </motion.div>
   );
 }
