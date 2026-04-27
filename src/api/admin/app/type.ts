@@ -116,4 +116,20 @@ export type TAppResPublic = {
   linkPlayStore?: string;
   linkAppStore?: string;
   linkWebsite?: string;
+  competitors?: Array<{
+    _id: string;
+    name: string;
+    iconFile?: string;
+    iconUrl?: string;
+  }>;
+  aiInsights?: {
+    companyDescription?: string;
+    industry?: string;
+    businessModel?: string;
+    founded?: string;
+    headquarters?: string;
+    targetAudience?: string;
+    keyFeatures?: string[];
+    generatedAt?: string;
+  };
 };

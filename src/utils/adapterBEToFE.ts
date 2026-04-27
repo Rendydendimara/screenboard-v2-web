@@ -174,6 +174,12 @@ export const adapterSingleAppBEToFEPublic = (
     linkAppStore: data.linkAppStore,
     linkWebsite: data.linkWebsite,
     createdAt: data.createdAt,
+    competitors: data.competitors?.map((c) => ({
+      id: c._id,
+      name: c.name,
+      image: c.iconFile ? getImageUrl(c.iconFile) : c.iconUrl ?? "",
+    })) ?? [],
+    aiInsights: data.aiInsights,
   };
   return result;
 };
