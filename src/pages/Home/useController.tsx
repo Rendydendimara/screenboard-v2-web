@@ -75,6 +75,20 @@ export interface AppPublic {
   linkPlayStore?: string;
   linkAppStore?: string;
   linkWebsite?: string;
+  competitors?: Array<{
+    id: string;
+    name: string;
+    image: string;
+  }>;
+  aiInsights?: {
+    companyDescription?: string;
+    industry?: string;
+    businessModel?: string;
+    founded?: string;
+    headquarters?: string;
+    targetAudience?: string;
+    keyFeatures?: string[];
+  };
 }
 
 const MENU_FILTER_SORT_BY: TMenuFilter = {
