@@ -2,13 +2,16 @@ import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Bookmark,
+  Check,
+  ChevronRight,
+  Edit2,
   FolderOpen,
   Search,
   Tag,
   Trash2,
   X,
 } from "lucide-react";
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { BookmarkedScreen, useBookmarks } from "@/hooks/useBookmarks";
 
 interface CollectionsModalProps {

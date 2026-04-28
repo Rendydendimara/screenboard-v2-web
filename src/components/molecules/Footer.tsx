@@ -5,6 +5,7 @@ const NAV_LINKS = [
   { label: "Home v2.0", to: "/home-v2" },
   { label: "Product Ideas", to: "/product-ideas" },
   { label: "Request a Screenshot", to: "/request" },
+  { label: "Pricing", to: "/pricing" },
 ];
 
 export const Footer = () => {
@@ -91,6 +92,14 @@ export const Footer = () => {
                     className="font-secondary text-[14px] text-white/60 hover:text-white transition-colors"
                   >
                     Terms &amp; Conditions
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/contact"
+                    className="font-secondary text-[14px] text-white/60 hover:text-white transition-colors"
+                  >
+                    Contact Us
                   </Link>
                 </li>
               </ul>

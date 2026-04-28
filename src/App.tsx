@@ -4,6 +4,7 @@ import AdminAppDetails from "@/pages/AdminAppDetails";
 import AdminApps from "@/pages/AdminApps";
 import AdminComponentDetails from "@/pages/AdminComponentDetails";
 import AdminDashboard from "@/pages/AdminDashboard";
+import AdminFlowDiagram from "@/pages/AdminFlowDiagram";
 import AdminGlobalComponentDetails from "@/pages/AdminGlobalComponentDetails";
 import AdminGlobalComponents from "@/pages/AdminGlobalComponents";
 import AdminModules from "@/pages/AdminModules";
@@ -17,6 +18,9 @@ import AppDetailsV2 from "@/pages/AppDetailV2/useView";
 import RequestPage from "@/pages/Request";
 import PrivacyPolicyPage from "@/pages/PrivacyPolicy";
 import TermsPage from "@/pages/Terms";
+import ContactUsPage from "@/pages/ContactUs";
+import BookmarksPage from "@/pages/Bookmarks";
+import PricingPage from "@/pages/Pricing";
 import NotFound from "@/pages/NotFound";
 import Profile from "@/pages/Profile";
 import { useEffect, useState } from "react";
@@ -138,6 +142,9 @@ const App = () => {
         <Route path="/request" element={<RequestPage />} />
         <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
         <Route path="/terms" element={<TermsPage />} />
+        <Route path="/contact" element={<ContactUsPage />} />
+        <Route path="/bookmarks" element={<BookmarksPage />} />
+        <Route path="/pricing" element={<PricingPage />} />
         {/* <Route path="/component" element={<Component />} /> */}
         {/* <Route path="/component/:id" element={<ComponentDetail />} /> */}
         <Route path="/login-admin" element={<LoginAdmin />} />
@@ -152,6 +159,7 @@ const App = () => {
           element={<AdminGlobalComponents />}
         />
         <Route path="/admin/users" element={<AdminUsers />} />
+        <Route path="/admin/flow-diagram" element={<AdminFlowDiagram />} />
         <Route path="/admin/app/:id" element={<AdminAppDetails />} />
         <Route
           path="/admin/component/:appId"
