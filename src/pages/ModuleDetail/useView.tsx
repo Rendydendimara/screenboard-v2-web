@@ -363,6 +363,7 @@ const ModuleDetailPage: React.FC = () => {
 
   const [activeCategoryId, setActiveCategoryId] = useState<string | null>(null);
   const [appSearch, setAppSearch] = useState("");
+  const [globalSearch, setGlobalSearch] = useState("");
   const [showFullDesc, setShowFullDesc] = useState(false);
   const [showCollections, setShowCollections] = useState(false);
 
@@ -492,6 +493,11 @@ const ModuleDetailPage: React.FC = () => {
           onOpenAuthModal={handleOpenAuthModal}
           transparentBg={true}
           scrolledSearch={true}
+          searchTerm={globalSearch}
+          onSearchChange={setGlobalSearch}
+          onSearchSubmit={(term) => {
+            if (term.trim()) navigate(`/?q=${encodeURIComponent(term.trim())}`);
+          }}
         />
 
         {/* ── CINEMATIC HERO ── */}
@@ -513,7 +519,7 @@ const ModuleDetailPage: React.FC = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/80" />
 
           {/* Back button */}
-          <div className="absolute top-[88px] left-0 right-0 flex justify-center px-4 md:px-0">
+          <div className="absolute top-[88px] left-0 right-0 flex justify-center px-4 md:px-0 z-10">
             <div className="w-full max-w-[1200px]">
               <button
                 onClick={() => navigate(-1 as any)}

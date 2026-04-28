@@ -20,6 +20,7 @@ import { RootState } from "@/provider/store";
 import { AppPublic } from "@/pages/Home/useController";
 import clsx from "clsx";
 import { useFavorites } from "@/hooks/useFavorites";
+import { useBookmarks } from "@/hooks/useBookmarks";
 import { Bookmark, GitCompare, Menu, Search, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -56,6 +57,7 @@ export const Header = ({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [localScrolled, setLocalScrolled] = useState(false);
   const { favorites } = useFavorites();
+  const { bookmarks } = useBookmarks();
 
   const user = useTypedSelector((state: RootState) => state.auth.user);
   const compareApps = useTypedSelector(
@@ -226,10 +228,8 @@ export const Header = ({
                       Module
                     </Link>
                   )}
-                  <a
-                    href="https://forms.gle/Mi4GsDznBocUdrMz8"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <Link
+                    to="/request"
                     className={clsx(
                       "h-9 flex items-center px-3 rounded-md font-secondary font-normal text-[14px] transition-colors",
                       isDark
@@ -238,7 +238,7 @@ export const Header = ({
                     )}
                   >
                     Request
-                  </a>
+                  </Link>
 
                   {/* Divider */}
                   <div
@@ -252,8 +252,8 @@ export const Header = ({
                   {user ? (
                     <>
                       {/* Bookmarks */}
-                      <button
-                        onClick={onOpenFavoritesModal}
+                      <Link
+                        to="/bookmarks"
                         title="Bookmarks"
                         className={clsx(
                           "relative w-9 h-9 rounded-lg flex items-center justify-center transition-colors",
@@ -263,12 +263,12 @@ export const Header = ({
                         )}
                       >
                         <Bookmark size={16} />
-                        {favorites.length > 0 && (
+                        {bookmarks.length > 0 && (
                           <Badge className="absolute -top-1.5 -right-1.5 h-4 min-w-4 p-0 flex items-center justify-center text-[10px] leading-none">
-                            {favorites.length}
+                            {bookmarks.length}
                           </Badge>
                         )}
-                      </button>
+                      </Link>
 
                       {/* Compare */}
                       <button
@@ -449,10 +449,8 @@ export const Header = ({
                             </Button>
                           </Link>
                         )}
-                        <a
-                          href="https://forms.gle/Mi4GsDznBocUdrMz8"
-                          target="_blank"
-                          rel="noopener noreferrer"
+                        <Link
+                          to="/request"
                           onClick={() => setMobileMenuOpen(false)}
                           className="w-full"
                         >
@@ -462,7 +460,7 @@ export const Header = ({
                           >
                             Request
                           </Button>
-                        </a>
+                        </Link>
                       </div>
 
                       {user ? (
@@ -488,22 +486,23 @@ export const Header = ({
                             </p>
                           </div>
 
-                          <Button
-                            variant="ghost"
-                            onClick={() => {
-                              setMobileMenuOpen(false);
-                              onOpenFavoritesModal?.();
-                            }}
-                            className="w-full justify-start gap-2 relative"
+                          <Link
+                            to="/bookmarks"
+                            onClick={() => setMobileMenuOpen(false)}
                           >
-                            <Bookmark className="h-5 w-5" />
-                            Bookmarks
-                            {favorites.length > 0 && (
-                              <Badge className="absolute right-4 h-5 w-5 p-0 flex items-center justify-center text-xs">
-                                {favorites.length}
-                              </Badge>
-                            )}
-                          </Button>
+                            <Button
+                              variant="ghost"
+                              className="w-full justify-start gap-2 relative"
+                            >
+                              <Bookmark className="h-5 w-5" />
+                              Bookmarks
+                              {bookmarks.length > 0 && (
+                                <Badge className="absolute right-4 h-5 w-5 p-0 flex items-center justify-center text-xs">
+                                  {bookmarks.length}
+                                </Badge>
+                              )}
+                            </Button>
+                          </Link>
 
                           <Button
                             variant="ghost"

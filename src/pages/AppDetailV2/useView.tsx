@@ -1,4 +1,5 @@
 import { AuthModal } from "@/components/AuthModal";
+import BookmarkFolderPickerModal, { ScreenToBookmark } from "@/components/BookmarkFolderPickerModal";
 import SEO from "@/components/SEO";
 import ImageWithFallback from "@/components/ui/ImageWithFallback";
 import { Footer, Header } from "@/components/molecules";
@@ -31,6 +32,7 @@ import {
   X,
 } from "lucide-react";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
 import useController from "@/pages/AppDetailV2/useController";
 import { isValidUrl } from "@/utils";
@@ -66,10 +68,9 @@ function ScreenLightbox({
   appName: string;
 }) {
   const [idx, setIdx] = useState(initialIndex);
-  const [saveOpen, setSaveOpen] = useState(false);
+  const [pickerScreen, setPickerScreen] = useState<ScreenToBookmark | null>(null);
   const slideDir = useRef(0);
   const thumbRef = useRef<HTMLDivElement>(null);
-  const { isSaved } = useScreenSaves(appId);
 
   const go = (newIdx: number) => {
     if (newIdx < 0 || newIdx >= screens.length || newIdx === idx) return;
@@ -759,6 +760,7 @@ const AppDetailV2: React.FC = () => {
 
   /* ── view mode (grid | flow) ── */
   const [browseMode, setBrowseMode] = useState<"grid" | "flow">("grid");
+  const { toast } = useToast();
 
   /* ── save/annotate hook ── */
   const { isSaved, saves } = useScreenSaves(app?.id ?? "");
@@ -913,7 +915,13 @@ const AppDetailV2: React.FC = () => {
         <div className="absolute top-[88px] left-0 right-0 flex justify-center px-4 md:px-0">
           <div className="w-full max-w-[1200px]">
             <button
-              onClick={() => navigate(-1 as any)}
+              onClick={() => {
+                if (window.history.length > 2) {
+                  navigate(-1);
+                } else {
+                  navigate('/');
+                }
+              }}
               className="flex items-center gap-1.5 text-[13px] font-secondary text-white/60 hover:text-white transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
@@ -1355,7 +1363,12 @@ const AppDetailV2: React.FC = () => {
                       Grid
                     </button>
                     <button
-                      onClick={() => setBrowseMode("flow")}
+                      onClick={() => {
+                        toast({
+                          title: "Coming Soon",
+                          description: "Fitur Flow akan segera hadir!",
+                        });
+                      }}
                       className={clsx(
                         "flex items-center gap-1.5 h-full px-3 font-secondary text-[12px] font-semibold transition-all whitespace-nowrap",
                         browseMode === "flow"

@@ -14,6 +14,7 @@ import {
   Package,
   Layers,
   ArrowLeft,
+  GitBranch,
 } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useLocation, Link } from "react-router-dom";
@@ -122,6 +123,11 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       path: "/admin/users",
       label: "Users",
       icon: Users,
+    },
+    {
+      path: "/admin/flow-diagram",
+      label: "Flow Diagram",
+      icon: GitBranch,
     },
   ];
 
